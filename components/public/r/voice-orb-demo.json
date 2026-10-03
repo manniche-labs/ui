@@ -1,0 +1,20 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "voice-orb-demo",
+  "title": "Voice orb demo",
+  "description": "How to use Voice orb.",
+  "registryDependencies": [
+    "@manniche/voice-orb"
+  ],
+  "files": [
+    {
+      "path": "registry/manniche/examples/voice-orb-demo.tsx",
+      "content": "import { useEffect, useState } from 'react'\nimport { VoiceOrb, type VoiceOrbState } from '@/registry/manniche/voice-orb/voice-orb'\n\nconst STATES: VoiceOrbState[] = ['idle', 'listening', 'thinking', 'speaking']\n\nexport default function VoiceOrbDemo() {\n  const [state, setState] = useState<VoiceOrbState>('listening')\n  const [level, setLevel] = useState(0)\n\n  // Stand-in for a microphone: a wobbling loudness while someone is talking.\n  useEffect(() => {\n    if (state !== 'listening' && state !== 'speaking') return\n    let raf = 0\n    const tick = (now: number) => {\n      const s = now / 1000\n      setLevel(Math.max(0, Math.sin(s * 7) * 0.5 + Math.sin(s * 2.3) * 0.4 + Math.sin(s * 13) * 0.2))\n      raf = requestAnimationFrame(tick)\n    }\n    raf = requestAnimationFrame(tick)\n    return () => cancelAnimationFrame(raf)\n  }, [state])\n\n  return (\n    <div className=\"flex flex-col items-center gap-6 py-4\">\n      <VoiceOrb state={state} level={level} />\n      <div role=\"group\" aria-label=\"State\" className=\"flex flex-wrap justify-center gap-1 rounded-full bg-muted p-1\">\n        {STATES.map((s) => (\n          <button\n            key={s}\n            type=\"button\"\n            aria-pressed={state === s}\n            onClick={() => setState(s)}\n            className=\"min-h-10 rounded-full px-3.5 text-sm text-muted-foreground capitalize transition-colors duration-150 hover:text-foreground aria-pressed:bg-background aria-pressed:text-foreground aria-pressed:shadow-sm\"\n          >\n            {s}\n          </button>\n        ))}\n      </div>\n    </div>\n  )\n}\n",
+      "type": "registry:example"
+    }
+  ],
+  "categories": [
+    "agent"
+  ],
+  "type": "registry:example"
+}

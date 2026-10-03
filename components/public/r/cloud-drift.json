@@ -1,0 +1,26 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "cloud-drift",
+  "title": "Cloud drift",
+  "description": "A slow sky of soft clouds drifting behind your content, drawn on a tiny canvas.",
+  "dependencies": [],
+  "registryDependencies": [
+    "utils"
+  ],
+  "files": [
+    {
+      "path": "registry/manniche/cloud-drift/cloud-drift.tsx",
+      "content": "import { useEffect, useRef, type ReactNode } from 'react'\nimport { useReducedMotion } from '@/registry/manniche/hooks/use-reduced-motion'\nimport { cn } from '@/lib/utils'\n\nexport type CloudDriftProps = {\n  /** Cloud colour as a hex value. */\n  color?: string\n  /** 0 to 1: how much of the sky is cloud. */\n  cover?: number\n  /** Drift speed; 1 is a calm breeze. */\n  speed?: number\n  /** Content shown on top of the sky. */\n  children?: ReactNode\n  className?: string\n}\n\n// The clouds are drawn at a tiny size and scaled up by the browser, which blurs them for free.\nconst COLS = 96\nconst ROWS = 54\n\nfunction hash(x: number, y: number) {\n  let h = (x * 374761393 + y * 668265263) | 0\n  h = Math.imul(h ^ (h >>> 13), 1274126177)\n  return ((h ^ (h >>> 16)) >>> 0) / 4294967295\n}\n\nfunction noise(x: number, y: number) {\n  const xi = Math.floor(x)\n  const yi = Math.floor(y)\n  const xf = x - xi\n  const yf = y - yi\n  const u = xf * xf * (3 - 2 * xf)\n  const v = yf * yf * (3 - 2 * yf)\n  const a = hash(xi, yi)\n  const b = hash(xi + 1, yi)\n  const c = hash(xi, yi + 1)\n  const d = hash(xi + 1, yi + 1)\n  return a + (b - a) * u + (c - a) * v + (a - b - c + d) * u * v\n}\n\n/** Four layers of noise on top of each other: big soft shapes with finer wisps. */\nfunction fbm(x: number, y: number) {\n  let sum = 0\n  let amp = 0.5\n  for (let o = 0; o < 4; o++) {\n    sum += noise(x, y) * amp\n    x *= 2.03\n    y *= 2.03\n    amp *= 0.5\n  }\n  return sum\n}\n\nfunction rgb(hex: string) {\n  const h = hex.replace('#', '')\n  const full = h.length === 3 ? [...h].map((c) => c + c).join('') : h\n  const n = parseInt(full, 16) || 0xffffff\n  return [(n >> 16) & 255, (n >> 8) & 255, n & 255]\n}\n\n/** A slow sky of soft clouds drifting past, drawn on a small canvas. Background colour comes from the class. */\nexport function CloudDrift({ color = '#ffffff', cover = 0.5, speed = 1, children, className }: CloudDriftProps) {\n  const canvas = useRef<HTMLCanvasElement>(null)\n  const reduce = useReducedMotion()\n\n  useEffect(() => {\n    const el = canvas.current\n    const ctx = el?.getContext('2d')\n    if (!el || !ctx) return\n    const img = ctx.createImageData(COLS, ROWS)\n    const [r, g, b] = rgb(color)\n    const edge = 0.62 - Math.min(1, Math.max(0, cover)) * 0.3 // where noise turns into cloud\n\n    const draw = (t: number) => {\n      const shift = t * 0.00004 * speed\n      for (let y = 0; y < ROWS; y++) {\n        for (let x = 0; x < COLS; x++) {\n          // A second noise warps the first, so the shapes billow instead of just sliding.\n          const nx = x / 22 + shift\n          const ny = y / 22\n          const warp = fbm(nx * 0.7 - shift * 0.6, ny * 0.7 + 4.1)\n          const n = fbm(nx + warp * 1.4, ny + warp * 0.8 + shift * 0.3)\n          const a = Math.min(1, Math.max(0, (n - edge) / 0.22))\n          const i = (y * COLS + x) * 4\n          img.data[i] = r\n          img.data[i + 1] = g\n          img.data[i + 2] = b\n          img.data[i + 3] = a * a * (3 - 2 * a) * 235\n        }\n      }\n      ctx.putImageData(img, 0, 0)\n    }\n\n    if (reduce) {\n      draw(0)\n      return\n    }\n\n    // Only animate while the sky is on screen.\n    let raf = 0\n    let visible = false\n    const loop = (now: number) => {\n      draw(now)\n      raf = requestAnimationFrame(loop)\n    }\n    const io = new IntersectionObserver(([entry]) => {\n      if (entry.isIntersecting === visible) return\n      visible = entry.isIntersecting\n      if (visible) raf = requestAnimationFrame(loop)\n      else cancelAnimationFrame(raf)\n    })\n    draw(performance.now())\n    io.observe(el)\n    return () => {\n      io.disconnect()\n      cancelAnimationFrame(raf)\n    }\n  }, [color, cover, speed, reduce])\n\n  return (\n    <div className={cn('relative isolate overflow-hidden bg-sky-500 dark:bg-sky-950', className)}>\n      <canvas ref={canvas} width={COLS} height={ROWS} aria-hidden className=\"absolute inset-0 -z-10 size-full blur-[2px]\" />\n      {children}\n    </div>\n  )\n}\n",
+      "type": "registry:component"
+    },
+    {
+      "path": "registry/manniche/hooks/use-reduced-motion.ts",
+      "content": "import { useSyncExternalStore } from 'react'\n\nconst QUERY = '(prefers-reduced-motion: reduce)'\n\nfunction subscribe(onChange: () => void) {\n  const mq = window.matchMedia(QUERY)\n  mq.addEventListener('change', onChange)\n  return () => mq.removeEventListener('change', onChange)\n}\n\n/** True when the visitor has asked the system for less motion. */\nexport function useReducedMotion() {\n  return useSyncExternalStore(\n    subscribe,\n    () => window.matchMedia(QUERY).matches,\n    () => false,\n  )\n}\n",
+      "type": "registry:hook"
+    }
+  ],
+  "categories": [
+    "surfaces"
+  ],
+  "type": "registry:component"
+}

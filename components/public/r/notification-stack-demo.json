@@ -1,0 +1,20 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "notification-stack-demo",
+  "title": "Notification stack demo",
+  "description": "How to use Notification stack.",
+  "registryDependencies": [
+    "@manniche/notification-stack"
+  ],
+  "files": [
+    {
+      "path": "registry/manniche/examples/notification-stack-demo.tsx",
+      "content": "import { CreditCard, MessageSquare, Package, Star, Truck } from 'lucide-react'\nimport { useState } from 'react'\nimport { NotificationStack, type StackedNotification } from '@/registry/manniche/notification-stack/notification-stack'\n\nconst START: StackedNotification[] = [\n  { id: '1', icon: <Package />, title: 'New order #1042', body: 'Two linen shirts and a canvas tote, paid by card.', time: 'now' },\n  { id: '2', icon: <MessageSquare />, title: 'Question from a customer', body: 'Does the wool scarf come in a darker grey?', time: '4 min' },\n  { id: '3', icon: <Truck />, title: 'Parcel delivered', body: 'Order #1037 was handed over at the door.', time: '18 min' },\n  { id: '4', icon: <Star />, title: 'New five-star review', body: '“Lovely quality and fast shipping.”', time: '1 h' },\n  { id: '5', icon: <CreditCard />, title: 'Payout sent', body: '€1,284.50 is on its way to your bank.', time: '3 h' },\n]\n\nexport default function NotificationStackDemo() {\n  const [items, setItems] = useState(START)\n\n  return (\n    <div className=\"flex min-h-[420px] flex-col items-center gap-4\">\n      <NotificationStack items={items} onDismiss={(id) => setItems((list) => list.filter((n) => n.id !== id))} />\n      {items.length < START.length && (\n        <button type=\"button\" onClick={() => setItems(START)} className=\"min-h-11 rounded-full border px-4 text-sm transition-colors duration-150 hover:bg-muted\">\n          Bring them back\n        </button>\n      )}\n    </div>\n  )\n}\n",
+      "type": "registry:example"
+    }
+  ],
+  "categories": [
+    "overlays"
+  ],
+  "type": "registry:example"
+}

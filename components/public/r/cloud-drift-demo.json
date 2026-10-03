@@ -1,0 +1,20 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "cloud-drift-demo",
+  "title": "Cloud drift demo",
+  "description": "How to use Cloud drift.",
+  "registryDependencies": [
+    "@manniche/cloud-drift"
+  ],
+  "files": [
+    {
+      "path": "registry/manniche/examples/cloud-drift-demo.tsx",
+      "content": "import { CloudDrift } from '@/registry/manniche/cloud-drift/cloud-drift'\n\nexport default function CloudDriftDemo() {\n  return (\n    <CloudDrift cover={0.55} className=\"grid h-72 place-items-center rounded-3xl bg-linear-to-b from-sky-500 to-sky-300 dark:from-slate-900 dark:to-sky-900\">\n      <div className=\"px-6 text-center text-white\">\n        <p className=\"text-sm font-medium tracking-wide uppercase opacity-90\">This weekend</p>\n        <p className=\"mt-1 text-3xl font-semibold tracking-tight text-balance\">Free delivery on orders over €50</p>\n      </div>\n    </CloudDrift>\n  )\n}\n",
+      "type": "registry:example"
+    }
+  ],
+  "categories": [
+    "surfaces"
+  ],
+  "type": "registry:example"
+}

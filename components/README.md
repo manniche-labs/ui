@@ -70,6 +70,18 @@ There is also a hosted MCP server just for this registry, with no key: `https://
 | `event-reminders` | When and how people are reminded of an event |
 | `opening-hours` | Opening hours per weekday, several ranges a day |
 | `ai-action-bar` | Toolbar that morphs into a one-line prompt for the agent |
+| `task-rows` | An agent's steps as rows: queued, running, done or failed, with details that fold out |
+| `image-generation` | An image being made: a glow that sharpens into the result as progress rises |
+| `voice-orb` | Orb for a voice assistant that reacts to state and loudness |
+| `trade-ticket` | Buy or sell one of two outcomes, with the payout worked out as you type |
+| `receipt-printer` | Checkout terminal; the receipt rolls out of the slot after payment |
+| `cube-carousel` | Carousel on the sides of a cube, a quarter turn per step |
+| `wave-loader` | A ball hops along bars and sends a spring wave through them |
+| `jelly-slider` | Slider whose soft thumb stretches with drag speed |
+| `notification-stack` | Notifications in a pile that fans out into a list |
+| `cloud-drift` | Soft clouds drifting behind content, on a tiny canvas |
+| `liquid-metal` | Flowing chrome surface from a small WebGL shader |
+| `logo-grid` | Logos around a centre heading, for integrations or partners |
 | `use-reduced-motion` | Hook: true when the visitor asked for less motion |
 
 Several of the newer components are adapted from [Watermelon UI](https://github.com/WatermelonCorp/watermelon-platform) (MIT). Each such file says so at the top; see [THIRD_PARTY_NOTICES.md](../THIRD_PARTY_NOTICES.md).
