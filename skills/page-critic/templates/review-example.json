@@ -1,0 +1,109 @@
+{
+  "title": "Review of the test pages",
+  "tab": "Test pages review",
+  "product": "Test pages",
+  "subtitle": "Two of the test pages are judged: the one made with faults and the one made without.",
+  "note": "The pages are made to test the measurement. The faults on the page with faults are there on purpose.",
+  "summary": "The page with faults cannot be used on a phone. The calm page works, but is flat to look at.",
+  "pages": {
+    "faults": {
+      "title": "The page with faults",
+      "job": "Get the user to sign up with their email address.",
+      "type": "tool",
+      "layer1": [
+        { "item": "One job", "score": 1, "note": "The page has two h1s and five sections that have nothing to do with each other. The form is more than two screen heights down." },
+        { "item": "Order and weight", "score": 2, "note": "The most important thing is at the bottom, and everything at the top is centred and the same size." },
+        { "item": "Copy", "score": 2, "note": "The button only says “Send”, and the field only has a placeholder." },
+        { "item": "Forms", "score": 1, "note": "The field has no label, blocks paste and is 30 px tall with 13 px text (`test/pages/faults.html:21`)." },
+        { "item": "States", "score": 1, "note": "After an error the page comes back without a message and with an empty field (`test/server.mjs:75`)." },
+        { "item": "Feedback on actions", "score": 2, "note": "The button looks the same before, during and after a press." },
+        { "item": "Wayfinding", "score": 2, "note": "No menu and no main landmark. The only link is 14 px tall." },
+        { "item": "Mobile", "score": 1, "note": "The page scrolls sideways at 390 px, and zoom is disabled." },
+        { "item": "Accessibility", "score": 1, "note": "Light grey text on white (2.05:1), a link without a focus ring and a button that cannot be reached by keyboard." },
+        { "item": "Whole", "score": 2, "note": "The page looks like a collection of parts, not one page." }
+      ],
+      "layer3": [
+        { "item": "Typography", "score": 2, "note": "Arial carries all the text. One paragraph has a line height of 1.05, and another is 10 px tall." },
+        { "item": "Spacing and alignment", "score": 2, "note": "A paragraph sits 3 px to the right of its heading. Field and button are 30 and 36 px tall." },
+        { "item": "Depth and surfaces", "score": 2, "note": "Cards inside cards, and frosted glass on three surfaces that do not lie on top of anything." },
+        { "item": "Colour", "score": 2, "note": "Purple gradient with a glow, and grey text on top of the coloured surface." },
+        { "item": "States for every element", "score": 1, "note": "The send button has neither a hover nor a pressed state." },
+        { "item": "Motion that exists", "score": 1, "note": "`transition: all`, a width that is animated, a curve that bounces, and a spinner that keeps running under “reduce motion”." },
+        { "item": "Motion that is missing", "score": 2, "note": "The button does not respond to a press." },
+        { "item": "Details", "score": 2, "note": "Inner corners of 16 px inside a frame with 8 px (`test/pages/faults.html:80`)." }
+      ],
+      "good": [
+        "The email field has `type=\"email\"`, so the phone shows the right keyboard."
+      ],
+      "life": [
+        {
+          "element": "`form .btn` (Send)",
+          "moment": "Press",
+          "pattern": "Pressed state",
+          "values": "`scale(.97)` over 120 ms with `cubic-bezier(.23,1,.32,1)`, and a shade darker",
+          "reduced": "Only the colour change",
+          "fix": "F3"
+        }
+      ],
+      "dontAnimate": "The headings and the error message. They must be readable at once."
+    },
+    "clean": {
+      "title": "The calm page",
+      "job": "Get the user to sign up with their email address.",
+      "type": "tool",
+      "layer1": [
+        { "item": "One job", "score": 5 },
+        { "item": "Order and weight", "score": 4 },
+        { "item": "Copy", "score": 5 },
+        { "item": "Forms", "score": 5 },
+        { "item": "States", "score": 4 },
+        { "item": "Feedback on actions", "score": 4 },
+        { "item": "Wayfinding", "score": 3, "note": "The menu has one link, and it points to the page itself." },
+        { "item": "Mobile", "score": 5 },
+        { "item": "Accessibility", "score": 4, "note": "axe finds no errors, and focus can be seen. The page has not been tried with a screen reader." },
+        { "item": "Whole", "score": 4 }
+      ],
+      "layer3": [
+        { "item": "Typography", "score": 4 },
+        { "item": "Spacing and alignment", "score": 4 },
+        { "item": "Depth and surfaces", "score": 3, "note": "The page is completely flat. Nothing sets the form apart from the text around it." },
+        { "item": "Colour", "score": 4 },
+        { "item": "States for every element", "score": 4 },
+        { "item": "Motion that exists", "score": 4 },
+        { "item": "Motion that is missing", "score": 3, "note": "The button's text changes to “Sending …” in one jump." },
+        { "item": "Details", "score": 4 }
+      ],
+      "good": [
+        "The button says what happens: “Send me a link”. It locks after the first press.",
+        "The error sits next to the field, and what was typed stays.",
+        "Field and button are 48 px tall with 18 px text."
+      ]
+    }
+  },
+  "aiLook": {
+    "answer": "Yes, for the page with faults. The purple gradient, the three matching cards and the centred text say nothing about what the page is for. No, for the calm page.",
+    "findings": [
+      "The three cards “Fast”, “Secure” and “Simple” could be on any page at all."
+    ]
+  },
+  "customer": {
+    "task": "Sign up with your email address on the page with faults",
+    "result": "ABANDONED",
+    "conclusion": "The form came back empty without saying why.",
+    "steps": [
+      { "step": "Opened the page on a phone", "saw": "A purple heading, three cards and a lot of text", "thought": "Where do I sign up?" },
+      { "step": "Scrolled down to the form", "saw": "A small field with the text “Your email”", "thought": "It must be here." },
+      { "step": "Typed an address without a domain and pressed Send", "saw": "The same page with an empty field", "thought": "Was it sent? I do not know." }
+    ],
+    "stumbled": [
+      "The form is more than two screen heights down, and nothing at the top points down to it.",
+      "After the error the field is empty, and the page does not say what was wrong."
+    ]
+  },
+  "notSeen": [
+    { "page": "The receipt after a valid address", "why": "The test server always answers with an error." }
+  ],
+  "limits": [
+    "Only two of the pages are judged in layers 1 and 3. The rest are only measured."
+  ]
+}

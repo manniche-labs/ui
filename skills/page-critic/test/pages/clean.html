@@ -1,0 +1,188 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<!-- Test page without faults: every measurement must give zero here. {{…}} is filled in by test/server.mjs. -->
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{{title}}</title>
+<style>
+  :root { --ink: #1c1f26; --muted: #4b5160; --line: #6b7280; --surface: #f4f1ea; --accent: #0b4f6c; --out: cubic-bezier(0.23, 1, 0.32, 1); --short: 180ms; }
+  * { box-sizing: border-box; }
+  body { margin: 0; font-family: Georgia, "Times New Roman", serif; font-size: 18px; line-height: 1.55; color: var(--ink); background: #fff; overflow-wrap: anywhere; }
+  header, main, footer { max-width: 640px; margin: 0 auto; padding: 24px 16px; }
+  h1 { font-size: 36px; line-height: 1.15; margin: 0 0 16px; text-wrap: balance; }
+  h2 { font-family: "Trebuchet MS", Verdana, sans-serif; font-size: 20px; line-height: 1.3; margin: 32px 0 8px; text-wrap: balance; }
+  p { margin: 0 0 16px; color: var(--ink); }
+  .note { color: var(--muted); font-size: 16px; }
+  a { color: var(--accent); }
+  nav a { display: inline-block; padding: 12px 0; min-height: 44px; min-width: 44px; }
+  /* The page you are on: the link responds to neither mouse nor press, because a press changes nothing. */
+  nav a[aria-current="page"] { color: var(--ink); text-decoration: none; cursor: default; }
+  /* The other link only responds with a line drawn on ::after. The duration stands in its own rule and in a variable. */
+  nav a.underline { position: relative; margin-left: 24px; text-decoration: none; }
+  nav a.underline::after { content: ""; position: absolute; inset: auto 0 8px; height: 2px; background-color: currentColor; scale: 0 1; transform-origin: left; transition-property: scale; transition-timing-function: var(--out); }
+  nav a.underline:focus-visible::after { scale: 1 1; }
+  @media (prefers-reduced-motion: no-preference) {
+    nav a.underline::after { transition-duration: var(--short); }
+  }
+
+  form { display: grid; gap: 8px; }
+  label { font-family: "Trebuchet MS", Verdana, sans-serif; font-size: 16px; font-weight: 700; }
+  input { font: inherit; font-size: 18px; height: 48px; padding: 0 12px; border: 1px solid var(--line); border-radius: 6px; color: var(--ink); background: #fff; width: 100%; }
+  input[aria-invalid="true"] { border-color: #9b1c1c; border-width: 2px; }
+  .error { color: #9b1c1c; margin: 0; font-size: 16px; }
+  button { font: inherit; font-family: "Trebuchet MS", Verdana, sans-serif; font-size: 18px; height: 48px; padding: 0 20px; border: 0; border-radius: 6px; background: var(--accent); color: #fff; cursor: pointer; transition: background-color 0.15s ease-out, transform 0.12s ease-out; }
+  button[disabled] { background: #4b5160; cursor: default; }
+  :focus-visible { outline: 3px solid #0b4f6c; outline-offset: 2px; }
+  @media (hover: hover) and (pointer: fine) {
+    button:hover { background: #083c52; }
+    a:not(.underline):not([aria-current]):hover { color: #06303f; text-decoration-thickness: 2px; }
+    nav a.underline:hover::after { scale: 1 1; }
+    .tab:hover { background: var(--surface); }
+    .tab[aria-selected="true"]:hover { background: transparent; }
+  }
+  /* The pressed state comes after hover and is just as specific, so it wins when both apply. */
+  button:active { transform: scale(0.97); background: #06303f; }
+  a:any-link:not([aria-current]):active { color: #000; }
+  .tab:active { transform: none; background: #e6dfcf; }
+  .tab[aria-selected="true"]:active { background: transparent; }
+  /* A colour change written with "background" is not motion, not even when "reduce motion" is on. */
+  @keyframes blink { from { background: #f4f1ea; } to { background: #e6dfcf; } }
+  .new { display: inline-block; padding: 2px 8px; border-radius: 4px; animation: blink 1.2s ease-in-out infinite alternate; }
+  /* A switch: the field itself is invisible, and the track next to it shows both state and focus. */
+  .switch { position: relative; display: inline-flex; align-items: center; gap: 12px; min-height: 48px; font-weight: 400; }
+  .switch input { position: absolute; opacity: 0; width: 44px; height: 24px; margin: 0; padding: 0; }
+  .switch .track { flex: none; width: 44px; height: 24px; border-radius: 12px; background-color: var(--line); transition: background-color var(--short) var(--out); }
+  .switch .track::before { content: ""; display: block; width: 20px; height: 20px; margin: 2px; border-radius: 50%; background-color: #fff; }
+  .switch input:checked + .track { background-color: var(--accent); }
+  .switch input:checked + .track::before { translate: 20px 0; }
+  .switch input:focus-visible + .track { outline: 3px solid #0b4f6c; outline-offset: 2px; }
+  /* A checkbox and two radio buttons: the fields are small, but the whole label is the tap target. */
+  .choice { display: flex; align-items: center; gap: 12px; min-height: 48px; font-weight: 400; }
+  .choice input { flex: none; width: 20px; height: 20px; margin: 0; padding: 0; accent-color: var(--accent); }
+  fieldset { min-width: 0; margin: 0 0 16px; padding: 0; border: 0; }
+  legend { padding: 0; font-family: "Trebuchet MS", Verdana, sans-serif; font-size: 16px; font-weight: 700; }
+  /* Tabs: the selected one does not respond to mouse and press, and only it is in the Tab order. The arrow keys move between them. */
+  .tabs { display: flex; gap: 8px; }
+  .tab { padding: 0 16px; border-radius: 6px 6px 0 0; background: transparent; color: var(--ink); box-shadow: inset 0 -2px 0 transparent; transition: background-color 0.15s ease-out; }
+  .tab[aria-selected="true"] { box-shadow: inset 0 -2px 0 var(--accent); cursor: default; }
+  .panel { padding: 16px 0 0; }
+  /* A table wider than a phone scrolls inside its own area. The area can take focus, so it can be scrolled with the keyboard. */
+  .scroller { overflow-x: auto; margin: 0 0 16px; }
+  table { border-collapse: collapse; font-size: 16px; white-space: nowrap; }
+  th, td { padding: 8px 24px 8px 0; text-align: left; border-bottom: 1px solid var(--line); }
+  th { font-family: "Trebuchet MS", Verdana, sans-serif; }
+  /* Three things that look like faults without being faults. */
+  h3 { font-family: "Trebuchet MS", Verdana, sans-serif; font-size: 18px; line-height: 1.3; margin: 0 0 4px; }
+  /* 1. Two cards fill two rows of the grid on purpose, one set with span and the other with line numbers. They must be taller than their neighbours. */
+  .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin: 0 0 16px; }
+  .grid > div { padding: 16px; border: 1px solid var(--line); border-radius: 12px; }
+  .grid p { margin: 0; font-size: 16px; }
+  .grid .two { grid-row: span 2; }
+  .grid .lines { grid-area: 1 / 3 / 3 / 4; }
+  @media (max-width: 600px) { .grid { grid-template-columns: 1fr; } .grid .two, .grid .lines { grid-area: auto; } }
+  /* 2. The key has a small corner in a frame with more space than the frame's radius. There the inner corner is free. */
+  .tip { padding: 12px; border-radius: 10px; background: var(--surface); font-size: 16px; }
+  kbd { display: inline-block; font: inherit; font-family: "Trebuchet MS", Verdana, sans-serif; padding: 0 8px; border: 1px solid var(--line); border-radius: 5px; background: #fff; }
+  /* 3. The edge fades out with three layers of blur, each behind its own mask. It is a soft edge, not frosted glass. */
+  .band { position: relative; padding-right: 56px; }
+  .fade { position: absolute; inset: 0 0 0 auto; width: 48px; pointer-events: none; }
+  .fade i { position: absolute; inset: 0; }
+  .fade i:nth-child(1) { -webkit-backdrop-filter: blur(1px); backdrop-filter: blur(1px); -webkit-mask-image: linear-gradient(to right, transparent, #000 30%); mask-image: linear-gradient(to right, transparent, #000 30%); }
+  .fade i:nth-child(2) { -webkit-backdrop-filter: blur(2px); backdrop-filter: blur(2px); -webkit-mask-image: linear-gradient(to right, transparent 30%, #000 60%); mask-image: linear-gradient(to right, transparent 30%, #000 60%); }
+  .fade i:nth-child(3) { -webkit-backdrop-filter: blur(4px); backdrop-filter: blur(4px); -webkit-mask-image: linear-gradient(to right, transparent 60%, #000); mask-image: linear-gradient(to right, transparent 60%, #000); }
+  @media (prefers-reduced-motion: reduce) {
+    button { transition: background-color 0.15s ease-out; }
+    button:active { transform: none; }
+  }
+</style>
+</head>
+<body>
+<header>
+  <nav aria-label="Main menu"><a href="/clean" aria-current="page"><svg aria-hidden="true" width="16" height="16" viewBox="0 0 16 16"><path d="M2 8l6-6 6 6v6H2z" fill="currentColor"/></svg> To the front page</a> <a class="underline" href="/clean">About the page</a></nav>
+</header>
+<main>
+  <h1>A calm page without faults</h1>
+  <p>This page is made so that every measurement gives zero. It has one font for headings and one for text, clear contrast, large tap targets and a visible focus ring.</p>
+  <h2>Sign up</h2>
+  <form method="post" action="/clean-form" novalidate>
+    <label for="mail">Your email address</label>
+    <input id="mail" name="mail" type="email" autocomplete="email" inputmode="email" value="{{value}}" {{field}}>
+    {{error}}
+    <button type="submit">Send me a link</button>
+  </form>
+  <p><label class="switch"><input type="checkbox" role="switch" name="remind"><span class="track"></span>Remind me about it again in a week</label></p>
+  <p class="note">We only use the address to send the link. <span class="new">New</span></p>
+
+  <h2>What do you want to hear about?</h2>
+  <label class="choice"><input type="checkbox" name="copy"> Send me a copy of what I write</label>
+  <fieldset>
+    <legend>How often?</legend>
+    <label class="choice"><input type="radio" name="often" value="now" checked> Right away</label>
+    <label class="choice"><input type="radio" name="often" value="week"> Once a week</label>
+  </fieldset>
+
+  <h2>How it works</h2>
+  <div class="tabs" role="tablist" aria-label="How it works">
+    <button class="tab" type="button" role="tab" id="tab-1" aria-selected="true" aria-controls="panel-1">First</button>
+    <button class="tab" type="button" role="tab" id="tab-2" aria-selected="false" aria-controls="panel-2" tabindex="-1">Afterwards</button>
+  </div>
+  <div class="panel" role="tabpanel" id="panel-1" aria-labelledby="tab-1" tabindex="0"><p>You get a link by email. It works for an hour.</p></div>
+  <div class="panel" role="tabpanel" id="panel-2" aria-labelledby="tab-2" tabindex="0" hidden><p>The link opens your own page, where you can follow along.</p></div>
+
+  <h2>The test pages</h2>
+  <div class="scroller" role="region" aria-label="The test pages" tabindex="0">
+    <table>
+      <thead><tr><th scope="col">Page</th><th scope="col">What it tests</th><th scope="col">What must happen</th></tr></thead>
+      <tbody>
+        <tr><td>The calm page</td><td>That the measurement stays quiet when nothing is wrong</td><td>Every number is zero</td></tr>
+        <tr><td>The page with faults</td><td>That each measurement fires on its fault</td><td>Every number is above zero</td></tr>
+        <tr><td>The tight page</td><td>That longer text makes a tight page break</td><td>The stress test reports breaks</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h2>It looks like a fault, but it is not</h2>
+  <div class="grid">
+    <div class="two"><h3>Over two rows</h3><p>The card is tall on purpose.</p></div>
+    <div><h3>A short card</h3><p>It sits in the first row.</p></div>
+    <div class="lines"><h3>Also over two</h3><p>Set with line numbers.</p></div>
+    <div><h3>Another short one</h3><p>It sits in the second row.</p></div>
+  </div>
+  <p class="tip"><kbd>Tab</kbd> moves to the next field, and <kbd>Enter</kbd> sends the form.</p>
+  <p class="band">Open Monday to Friday from 9 a.m. to 3 p.m.<span class="fade" aria-hidden="true"><i></i><i></i><i></i></span></p>
+</main>
+<footer>
+  <p class="note">Test page for page-critic.</p>
+</footer>
+<script>
+  // The button is disabled on the first press, so the form is only sent once.
+  const f = document.querySelector("form");
+  f.addEventListener("submit", () => {
+    const k = f.querySelector("button");
+    setTimeout(() => { k.disabled = true; k.textContent = "Sending …"; }, 0);
+  });
+
+  // The tabs: a press or an arrow key selects, and only the selected tab is in the Tab order.
+  const tabs = [...document.querySelectorAll('[role="tab"]')];
+  const select = (tab) => {
+    for (const x of tabs) {
+      const selected = x === tab;
+      x.setAttribute("aria-selected", String(selected));
+      x.tabIndex = selected ? 0 : -1;
+      document.getElementById(x.getAttribute("aria-controls")).hidden = !selected;
+    }
+  };
+  tabs.forEach((tab, n) => {
+    tab.addEventListener("click", () => select(tab));
+    tab.addEventListener("keydown", (e) => {
+      const step = { ArrowRight: 1, ArrowLeft: -1 }[e.key];
+      if (!step) return;
+      const next = tabs[(n + step + tabs.length) % tabs.length];
+      select(next);
+      next.focus();
+    });
+  });
+</script>
+</body>
+</html>

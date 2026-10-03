@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<!-- Test page for the Tab walk: a table where every cell can take focus. That gives more stops than the walk goes (600 presses),
+     so it is interrupted. The rest of the page must be listed as not tried, not as something Tab does not reach.
+     The rows are filled in by test/server.mjs. -->
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Visitors day by day</title>
+<style>
+  :root { --ink: #1c1f26; --muted: #4b5160; --line: #6b7280; --accent: #0b4f6c; }
+  * { box-sizing: border-box; }
+  body { margin: 0; font-family: Georgia, "Times New Roman", serif; font-size: 18px; line-height: 1.55; color: var(--ink); background: #fff; overflow-wrap: anywhere; }
+  header, main { max-width: 640px; margin: 0 auto; padding: 8px 16px; }
+  h1 { font-size: 36px; line-height: 1.15; margin: 0 0 16px; text-wrap: balance; }
+  p { margin: 0 0 16px; }
+  a { color: var(--accent); }
+  :focus-visible { outline: 3px solid #0b4f6c; outline-offset: 2px; }
+  .block { display: block; min-height: 44px; padding: 8px 0; }
+
+  /* Six equally wide columns. On a 320 px screen each cell is 48 px wide, so the table never gets wider than the screen. */
+  table { width: 100%; margin: 0 0 16px; border-collapse: collapse; table-layout: fixed; font-variant-numeric: tabular-nums; }
+  caption { padding: 0 0 8px; text-align: left; color: var(--muted); }
+  th, td { height: 48px; padding: 0; border-bottom: 1px solid var(--line); text-align: center; }
+  th { font-family: "Trebuchet MS", Verdana, sans-serif; }
+  /* The ring sits inside the cell, so the neighbouring cells do not cover it. */
+  td:focus-visible { outline-offset: -3px; }
+
+  @media (hover: hover) and (pointer: fine) {
+    a:hover { color: #06303f; text-decoration-thickness: 2px; }
+  }
+  a:any-link:active { color: #000; }
+</style>
+</head>
+<body>
+<header>
+  <nav aria-label="Main menu"><a class="block" href="/walk">To the long page</a></nav>
+</header>
+<main>
+  <h1>Visitors day by day</h1>
+  <!-- The link can be seen and pressed, but Tab does not reach it. It lies in the stretch the walk manages to cover, so it is a real finding. -->
+  <p>Every cell in the table can take focus, so a screen reader can read it. That gives 640 places to stop for someone using Tab. The numbers are counted as described in <a href="/walk-long#method" tabindex="-1">the description of the method behind the count</a>, and they are made up.</p>
+  <table>
+    <caption>Number of visitors per day over 128 weeks</caption>
+    <thead>
+      <tr><th scope="col">Week</th><th scope="col">Mon</th><th scope="col">Tue</th><th scope="col">Wed</th><th scope="col">Thu</th><th scope="col">Fri</th></tr>
+    </thead>
+    <tbody>
+      {{weeks}}
+    </tbody>
+  </table>
+  <p><a class="block" href="/walk-long#top">To the top</a></p>
+</main>
+</body>
+</html>

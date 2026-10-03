@@ -1,0 +1,85 @@
+{
+  "product": "Test pages",
+  "rules": [
+    "The pages live in test/pages and are served by test/server.mjs. Never measure against production."
+  ],
+  "systemDecisions": [
+    {
+      "id": "S1",
+      "title": "Fields and buttons are at least 44 px tall and use 16 px text",
+      "why": "The field is 30 px tall with 13 px text, and the button next to it is 36 px. Fixed one at a time, they end up at different heights again.",
+      "proposal": "One shared height of 44 px and 16 px text for every field and button.",
+      "affects": ["F2"]
+    }
+  ],
+  "fixes": [
+    {
+      "id": "F1",
+      "title": "The form does not say what went wrong",
+      "pages": ["faults-form"],
+      "layer": 2,
+      "severity": "Blocker",
+      "finding": "When an address without a domain is sent, the page comes back without an error message, the field is empty and nothing is marked. A double click sends the form twice.",
+      "evidence": ["faults-form-desk.png", "measurement.json: formGaps = 3 and doubleSubmits = 1 on faults-form"],
+      "change": "Show the error next to the field with role=\"alert\", set aria-invalid on the field, keep what was typed, and lock the button after the first press.",
+      "files": ["test/server.mjs:75", "test/pages/faults.html:128"],
+      "effort": "medium",
+      "targets": [
+        { "page": "faults-form", "metric": "formGaps", "atMost": 0 },
+        { "page": "faults-form", "metric": "doubleSubmits", "atMost": 0 }
+      ]
+    },
+    {
+      "id": "F2",
+      "title": "The email field makes the iPhone zoom in",
+      "pages": ["faults"],
+      "layer": 2,
+      "severity": "Friction",
+      "finding": "The field has 13 px text. The iPhone zooms in on fields under 16 px, and the page sits askew when the keyboard closes.",
+      "evidence": ["faults-mobile.png", "measurement.json: fieldsUnder16px = 1 on faults"],
+      "change": "Set the field's text to 16 px and its height to 44 px.",
+      "files": ["test/pages/faults.html:21"],
+      "effort": "small",
+      "targets": [{ "page": "faults", "metric": "fieldsUnder16px", "atMost": 0 }]
+    },
+    {
+      "id": "F3",
+      "title": "The send button does not respond when pressed",
+      "pages": ["faults"],
+      "layer": 3,
+      "severity": "Upgrade",
+      "finding": "The button looks the same before, during and after a press. The user is not told that the press was seen.",
+      "evidence": ["faults-desk.png", "measurement.json: noPressed on faults lists button.btn"],
+      "change": "Give the button a pressed state.",
+      "files": ["test/pages/faults.html:22"],
+      "effort": "small",
+      "preview": {
+        "page": "faults",
+        "width": 390,
+        "height": 600,
+        "crop": "form",
+        "replay": "press: form .btn",
+        "variants": [
+          {
+            "letter": "A",
+            "name": "Calm",
+            "what": "The button turns a shade darker while it is held down. No motion.",
+            "css": "form .btn:active { background: #1a3fb0; }"
+          },
+          {
+            "letter": "B",
+            "name": "Medium",
+            "what": "The button turns darker and shrinks by 3 % over 120 ms. Under \"reduce motion\" only the colour changes.",
+            "css": "form .btn { transition: background-color 120ms ease-out; }\nform .btn:active { background: #1a3fb0; }\n@media (prefers-reduced-motion: no-preference) {\n  form .btn { transition: background-color 120ms ease-out, transform 120ms cubic-bezier(.23,1,.32,1); }\n  form .btn:active { transform: scale(.97); }\n}"
+          },
+          {
+            "letter": "C",
+            "name": "Clear",
+            "what": "Like B, and the button lightens under the mouse before it is pressed, so it shows that it can be pressed.",
+            "css": "form .btn { transition: background-color 120ms ease-out; }\n@media (hover: hover) and (pointer: fine) {\n  form .btn:hover { background: #2f5fe6; }\n}\nform .btn:active { background: #1a3fb0; }\n@media (prefers-reduced-motion: no-preference) {\n  form .btn { transition: background-color 120ms ease-out, transform 120ms cubic-bezier(.23,1,.32,1); }\n  form .btn:active { transform: scale(.97); }\n}"
+          }
+        ]
+      }
+    }
+  ]
+}

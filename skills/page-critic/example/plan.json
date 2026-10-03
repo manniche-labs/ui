@@ -1,0 +1,51 @@
+{
+  "base": "http://127.0.0.1:8799",
+  "impeccable": false,
+  "pages": [
+    {
+      "name": "faults",
+      "path": "/faults"
+    },
+    {
+      "name": "faults-form",
+      "path": "/faults",
+      "performance": false,
+      "steps": [
+        {
+          "fill": [
+            "input[name=mail]",
+            "not-an-email"
+          ]
+        },
+        {
+          "submit": "form"
+        }
+      ]
+    },
+    {
+      "name": "clean",
+      "path": "/clean"
+    },
+    {
+      "name": "clean-form",
+      "path": "/clean",
+      "performance": false,
+      "steps": [
+        {
+          "fill": [
+            "#mail",
+            "not-an-email"
+          ]
+        },
+        {
+          "submit": "form"
+        }
+      ]
+    },
+    {
+      "name": "tight",
+      "path": "/tight",
+      "performance": false
+    }
+  ]
+}
