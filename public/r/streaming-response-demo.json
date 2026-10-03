@@ -1,0 +1,17 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "streaming-response-demo",
+  "title": "Streaming response demo",
+  "description": "How to use Streaming response.",
+  "registryDependencies": [
+    "@manniche/streaming-response"
+  ],
+  "files": [
+    {
+      "path": "registry/manniche/examples/streaming-response-demo.tsx",
+      "content": "import { useEffect, useState } from 'react'\nimport { StreamingResponse } from '@/registry/manniche/streaming-response/streaming-response'\n\nconst REPLY = 'Your order ships tomorrow morning. It should reach you on Thursday.'\n\nexport default function StreamingResponseDemo() {\n  const [shown, setShown] = useState('')\n\n  // Stand-in for a streamed model reply: pass the text so far and whether more is coming.\n  useEffect(() => {\n    const words = REPLY.split(/(\\s+)/)\n    let i = 0\n    const id = setInterval(() => {\n      i += 2\n      setShown(words.slice(0, i).join(''))\n      if (i >= words.length) clearInterval(id)\n    }, 70)\n    return () => clearInterval(id)\n  }, [])\n\n  return <StreamingResponse text={shown} streaming={shown.length < REPLY.length} />\n}\n",
+      "type": "registry:example"
+    }
+  ],
+  "type": "registry:example"
+}

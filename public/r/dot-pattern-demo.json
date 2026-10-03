@@ -1,0 +1,17 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "dot-pattern-demo",
+  "title": "Dot pattern demo",
+  "description": "How to use Dot pattern.",
+  "registryDependencies": [
+    "@manniche/dot-pattern"
+  ],
+  "files": [
+    {
+      "path": "registry/manniche/examples/dot-pattern-demo.tsx",
+      "content": "import { DotPattern } from '@/registry/manniche/dot-pattern/dot-pattern'\n\nexport default function DotPatternDemo() {\n  return (\n    <DotPattern className=\"rounded-3xl px-6 py-14 text-center\">\n      <p className=\"font-serif text-2xl\">Depth without images</p>\n    </DotPattern>\n  )\n}\n",
+      "type": "registry:example"
+    }
+  ],
+  "type": "registry:example"
+}

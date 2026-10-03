@@ -1,0 +1,17 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "shimmer-button-demo",
+  "title": "Shimmer button demo",
+  "description": "How to use Shimmer button.",
+  "registryDependencies": [
+    "@manniche/shimmer-button"
+  ],
+  "files": [
+    {
+      "path": "registry/manniche/examples/shimmer-button-demo.tsx",
+      "content": "import { ShimmerButton } from '@/registry/manniche/shimmer-button/shimmer-button'\n\n// Use it once per page, for the main action.\nexport default function ShimmerButtonDemo() {\n  return <ShimmerButton magnetic>Go to checkout</ShimmerButton>\n}\n",
+      "type": "registry:example"
+    }
+  ],
+  "type": "registry:example"
+}

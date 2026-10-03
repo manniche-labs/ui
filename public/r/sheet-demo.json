@@ -1,0 +1,17 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "sheet-demo",
+  "title": "Sheet demo",
+  "description": "How to use Sheet.",
+  "registryDependencies": [
+    "@manniche/sheet"
+  ],
+  "files": [
+    {
+      "path": "registry/manniche/examples/sheet-demo.tsx",
+      "content": "import { useState } from 'react'\nimport { Sheet } from '@/registry/manniche/sheet/sheet'\n\nexport default function SheetDemo() {\n  const [open, setOpen] = useState(false)\n\n  return (\n    <>\n      <button type=\"button\" className=\"min-h-11 rounded-xl border bg-card px-4 text-sm font-medium\" onClick={() => setOpen(true)}>\n        Open delivery options\n      </button>\n      <Sheet open={open} onOpenChange={setOpen} title=\"Delivery options\">\n        <p>Standard delivery takes 3 to 5 days and is free.</p>\n        <button\n          type=\"button\"\n          onClick={() => setOpen(false)}\n          className=\"mt-4 min-h-11 w-full rounded-xl bg-primary text-sm font-medium text-primary-foreground\"\n        >\n          Done\n        </button>\n      </Sheet>\n    </>\n  )\n}\n",
+      "type": "registry:example"
+    }
+  ],
+  "type": "registry:example"
+}

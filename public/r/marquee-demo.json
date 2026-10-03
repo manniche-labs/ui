@@ -1,0 +1,17 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "marquee-demo",
+  "title": "Marquee demo",
+  "description": "How to use Marquee.",
+  "registryDependencies": [
+    "@manniche/marquee"
+  ],
+  "files": [
+    {
+      "path": "registry/manniche/examples/marquee-demo.tsx",
+      "content": "import { Marquee } from '@/registry/manniche/marquee/marquee'\n\nexport default function MarqueeDemo() {\n  return (\n    <Marquee label=\"Product categories\">\n      {['Kitchen', 'Garden', 'Lighting', 'Textiles', 'Storage', 'Tools'].map((c) => (\n        <span key={c} className=\"rounded-full border bg-card px-4 py-2 whitespace-nowrap\">\n          {c}\n        </span>\n      ))}\n    </Marquee>\n  )\n}\n",
+      "type": "registry:example"
+    }
+  ],
+  "type": "registry:example"
+}

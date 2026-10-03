@@ -1,0 +1,17 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "agent-activity-demo",
+  "title": "Agent activity demo",
+  "description": "How to use Agent activity.",
+  "registryDependencies": [
+    "@manniche/agent-activity"
+  ],
+  "files": [
+    {
+      "path": "registry/manniche/examples/agent-activity-demo.tsx",
+      "content": "import { AgentActivity, type AgentStep } from '@/registry/manniche/agent-activity/agent-activity'\n\nconst steps: AgentStep[] = [\n  { id: 'read', label: 'Reading the order', detail: 'Order 4821, two items', status: 'done', ms: 640 },\n  { id: 'stock', label: 'Checking stock', status: 'done', ms: 980 },\n  { id: 'ship', label: 'Booking the shipment', status: 'running' },\n  { id: 'mail', label: 'Writing the confirmation', status: 'pending' },\n]\n\nexport default function AgentActivityDemo() {\n  return <AgentActivity title=\"Handling order 4821\" steps={steps} />\n}\n",
+      "type": "registry:example"
+    }
+  ],
+  "type": "registry:example"
+}

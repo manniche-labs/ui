@@ -266,6 +266,231 @@
           "type": "registry:component"
         }
       ]
+    },
+    {
+      "name": "prompt-input-demo",
+      "type": "registry:example",
+      "title": "Prompt input demo",
+      "description": "How to use Prompt input.",
+      "registryDependencies": [
+        "@manniche/prompt-input"
+      ],
+      "files": [
+        {
+          "path": "registry/manniche/examples/prompt-input-demo.tsx",
+          "type": "registry:example"
+        }
+      ]
+    },
+    {
+      "name": "tool-approval-demo",
+      "type": "registry:example",
+      "title": "Tool approval demo",
+      "description": "How to use Tool approval.",
+      "registryDependencies": [
+        "@manniche/tool-approval"
+      ],
+      "files": [
+        {
+          "path": "registry/manniche/examples/tool-approval-demo.tsx",
+          "type": "registry:example"
+        }
+      ]
+    },
+    {
+      "name": "agent-activity-demo",
+      "type": "registry:example",
+      "title": "Agent activity demo",
+      "description": "How to use Agent activity.",
+      "registryDependencies": [
+        "@manniche/agent-activity"
+      ],
+      "files": [
+        {
+          "path": "registry/manniche/examples/agent-activity-demo.tsx",
+          "type": "registry:example"
+        }
+      ]
+    },
+    {
+      "name": "streaming-response-demo",
+      "type": "registry:example",
+      "title": "Streaming response demo",
+      "description": "How to use Streaming response.",
+      "registryDependencies": [
+        "@manniche/streaming-response"
+      ],
+      "files": [
+        {
+          "path": "registry/manniche/examples/streaming-response-demo.tsx",
+          "type": "registry:example"
+        }
+      ]
+    },
+    {
+      "name": "number-ticker-demo",
+      "type": "registry:example",
+      "title": "Number ticker demo",
+      "description": "How to use Number ticker.",
+      "registryDependencies": [
+        "@manniche/number-ticker"
+      ],
+      "files": [
+        {
+          "path": "registry/manniche/examples/number-ticker-demo.tsx",
+          "type": "registry:example"
+        }
+      ]
+    },
+    {
+      "name": "blur-fade-demo",
+      "type": "registry:example",
+      "title": "Blur fade demo",
+      "description": "How to use Blur fade.",
+      "registryDependencies": [
+        "@manniche/blur-fade"
+      ],
+      "files": [
+        {
+          "path": "registry/manniche/examples/blur-fade-demo.tsx",
+          "type": "registry:example"
+        }
+      ]
+    },
+    {
+      "name": "highlighter-demo",
+      "type": "registry:example",
+      "title": "Highlighter demo",
+      "description": "How to use Highlighter.",
+      "registryDependencies": [
+        "@manniche/highlighter"
+      ],
+      "files": [
+        {
+          "path": "registry/manniche/examples/highlighter-demo.tsx",
+          "type": "registry:example"
+        }
+      ]
+    },
+    {
+      "name": "text-reveal-demo",
+      "type": "registry:example",
+      "title": "Text reveal demo",
+      "description": "How to use Text reveal.",
+      "registryDependencies": [
+        "@manniche/text-reveal"
+      ],
+      "files": [
+        {
+          "path": "registry/manniche/examples/text-reveal-demo.tsx",
+          "type": "registry:example"
+        }
+      ]
+    },
+    {
+      "name": "spotlight-card-demo",
+      "type": "registry:example",
+      "title": "Spotlight card demo",
+      "description": "How to use Spotlight card.",
+      "registryDependencies": [
+        "@manniche/spotlight-card"
+      ],
+      "files": [
+        {
+          "path": "registry/manniche/examples/spotlight-card-demo.tsx",
+          "type": "registry:example"
+        }
+      ]
+    },
+    {
+      "name": "marquee-demo",
+      "type": "registry:example",
+      "title": "Marquee demo",
+      "description": "How to use Marquee.",
+      "registryDependencies": [
+        "@manniche/marquee"
+      ],
+      "files": [
+        {
+          "path": "registry/manniche/examples/marquee-demo.tsx",
+          "type": "registry:example"
+        }
+      ]
+    },
+    {
+      "name": "dot-pattern-demo",
+      "type": "registry:example",
+      "title": "Dot pattern demo",
+      "description": "How to use Dot pattern.",
+      "registryDependencies": [
+        "@manniche/dot-pattern"
+      ],
+      "files": [
+        {
+          "path": "registry/manniche/examples/dot-pattern-demo.tsx",
+          "type": "registry:example"
+        }
+      ]
+    },
+    {
+      "name": "shimmer-button-demo",
+      "type": "registry:example",
+      "title": "Shimmer button demo",
+      "description": "How to use Shimmer button.",
+      "registryDependencies": [
+        "@manniche/shimmer-button"
+      ],
+      "files": [
+        {
+          "path": "registry/manniche/examples/shimmer-button-demo.tsx",
+          "type": "registry:example"
+        }
+      ]
+    },
+    {
+      "name": "toast-demo",
+      "type": "registry:example",
+      "title": "Toast demo",
+      "description": "How to use Toast.",
+      "registryDependencies": [
+        "@manniche/toast"
+      ],
+      "files": [
+        {
+          "path": "registry/manniche/examples/toast-demo.tsx",
+          "type": "registry:example"
+        }
+      ]
+    },
+    {
+      "name": "command-palette-demo",
+      "type": "registry:example",
+      "title": "Command palette demo",
+      "description": "How to use Command palette.",
+      "registryDependencies": [
+        "@manniche/command-palette"
+      ],
+      "files": [
+        {
+          "path": "registry/manniche/examples/command-palette-demo.tsx",
+          "type": "registry:example"
+        }
+      ]
+    },
+    {
+      "name": "sheet-demo",
+      "type": "registry:example",
+      "title": "Sheet demo",
+      "description": "How to use Sheet.",
+      "registryDependencies": [
+        "@manniche/sheet"
+      ],
+      "files": [
+        {
+          "path": "registry/manniche/examples/sheet-demo.tsx",
+          "type": "registry:example"
+        }
+      ]
     }
   ]
 }

@@ -19,7 +19,17 @@ Or add the registry once in `components.json`:
 }
 ```
 
-and then `npx shadcn@latest add @manniche/prompt-input`. The shadcn MCP server (`npx shadcn@latest mcp init --client claude`) can browse and install from it too.
+and then `npx shadcn@latest add @manniche/prompt-input`.
+
+## Use it from an agent (shadcn MCP)
+
+With `@manniche` in `components.json`, run this in the project:
+
+```bash
+npx shadcn@latest mcp init --client claude
+```
+
+It writes `.mcp.json` with the shadcn MCP server. The agent can then list and search `@manniche`, read each component's source, get a usage example (`<name>-demo`, e.g. `toast-demo`) and the install command.
 
 > The registry is not deployed yet. Until it is, run it locally (see below).
 
@@ -33,6 +43,15 @@ and then `npx shadcn@latest add @manniche/prompt-input`. The shadcn MCP server (
 | `streaming-response` | A reply as it is written, with a caret at the end |
 | `number-ticker` | Counts up to a number when it scrolls into view |
 | `blur-fade` | Fades an element up out of a soft blur the first time it enters the view |
+| `toast` | Short messages that stack in a corner and leave on their own; `toast()` works from anywhere |
+| `command-palette` | Searchable commands in a modal, opened with Cmd+K, on the native `<dialog>` |
+| `sheet` | A panel from the bottom that can be dragged down to close |
+| `shimmer-button` | Primary button with a slow sheen and an optional lean towards the mouse |
+| `highlighter` | A marker stroke draws behind a phrase when it scrolls into view |
+| `text-reveal` | Words go from faint to full as the reader scrolls |
+| `spotlight-card` | A card with a soft light that follows the mouse |
+| `marquee` | Items scroll sideways in a loop and pause on hover or focus |
+| `dot-pattern` | A quiet dot grid behind content, CSS only |
 | `use-reduced-motion` | Hook: true when the visitor asked for less motion |
 
 ## Rules every component follows
@@ -52,4 +71,4 @@ npm run build            # type-check and build the gallery
 npx shadcn build         # write the registry to public/r
 ```
 
-Source files live in `registry/manniche/<name>/`. Add each new item to `registry.json`.
+Source files live in `registry/manniche/<name>/`, examples in `registry/manniche/examples/<name>-demo.tsx`. Add each new item and its demo to `registry.json`.

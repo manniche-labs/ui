@@ -1,0 +1,17 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "blur-fade-demo",
+  "title": "Blur fade demo",
+  "description": "How to use Blur fade.",
+  "registryDependencies": [
+    "@manniche/blur-fade"
+  ],
+  "files": [
+    {
+      "path": "registry/manniche/examples/blur-fade-demo.tsx",
+      "content": "import { BlurFade } from '@/registry/manniche/blur-fade/blur-fade'\n\nexport default function BlurFadeDemo() {\n  return (\n    <ul className=\"space-y-2\">\n      {['Packed', 'Shipped', 'Delivered'].map((s, i) => (\n        <BlurFade as=\"li\" key={s} delay={i * 70} className=\"rounded-xl border bg-card px-4 py-3\">\n          {s}\n        </BlurFade>\n      ))}\n    </ul>\n  )\n}\n",
+      "type": "registry:example"
+    }
+  ],
+  "type": "registry:example"
+}

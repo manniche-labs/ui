@@ -1,0 +1,17 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "highlighter-demo",
+  "title": "Highlighter demo",
+  "description": "How to use Highlighter.",
+  "registryDependencies": [
+    "@manniche/highlighter"
+  ],
+  "files": [
+    {
+      "path": "registry/manniche/examples/highlighter-demo.tsx",
+      "content": "import { Highlighter } from '@/registry/manniche/highlighter/highlighter'\n\nexport default function HighlighterDemo() {\n  return (\n    <p className=\"font-serif text-2xl leading-snug\">\n      Every parcel leaves the warehouse <Highlighter>within one working day</Highlighter>.\n    </p>\n  )\n}\n",
+      "type": "registry:example"
+    }
+  ],
+  "type": "registry:example"
+}
