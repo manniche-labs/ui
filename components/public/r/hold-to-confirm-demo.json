@@ -1,0 +1,20 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "hold-to-confirm-demo",
+  "title": "Hold to confirm demo",
+  "description": "How to use Hold to confirm.",
+  "registryDependencies": [
+    "@manniche/hold-to-confirm"
+  ],
+  "files": [
+    {
+      "path": "registry/manniche/examples/hold-to-confirm-demo.tsx",
+      "content": "import { HoldToConfirm } from '@/registry/manniche/hold-to-confirm/hold-to-confirm'\n\nexport default function HoldToConfirmDemo() {\n  return (\n    <div className=\"flex justify-center\">\n      <HoldToConfirm onConfirm={() => console.log('store closed')} doneLabel=\"Store closed\">\n        Hold to close the store\n      </HoldToConfirm>\n    </div>\n  )\n}\n",
+      "type": "registry:example"
+    }
+  ],
+  "categories": [
+    "controls"
+  ],
+  "type": "registry:example"
+}

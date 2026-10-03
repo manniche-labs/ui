@@ -51,6 +51,8 @@ for (const item of registry.items) {
     type: item.type,
     dependencies: item.dependencies ?? [],
     registryDependencies: item.registryDependencies ?? [],
+    // Set on items adapted from another MIT library; the page names the source.
+    credit: item.meta?.credit ?? null,
     files,
     demo: demoCode && { code: demoCode, html: await html(demoCode, 'tsx') },
   })

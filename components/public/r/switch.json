@@ -1,0 +1,23 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "switch",
+  "title": "Switch",
+  "description": "An on and off switch whose knob stretches when pressed and springs across.",
+  "dependencies": [
+    "motion"
+  ],
+  "registryDependencies": [
+    "utils"
+  ],
+  "files": [
+    {
+      "path": "registry/manniche/switch/switch.tsx",
+      "content": "import { MotionConfig, motion } from 'motion/react'\nimport { useId, useState } from 'react'\nimport { cn } from '@/lib/utils'\n\nexport type SwitchProps = {\n  /** Controlled state. */\n  checked?: boolean\n  defaultChecked?: boolean\n  onChange?: (checked: boolean) => void\n  /** Visible label. Leave it out and pass `aria-label` instead. */\n  label?: string\n  'aria-label'?: string\n  disabled?: boolean\n  className?: string\n}\n\n/** A switch whose knob stretches as you press it and springs across, like the one on a phone. */\nexport function Switch({ checked, defaultChecked = false, onChange, label, disabled, className, ...aria }: SwitchProps) {\n  const [own, setOwn] = useState(defaultChecked)\n  const on = checked ?? own\n  const id = useId()\n\n  const flip = () => {\n    setOwn(!on)\n    onChange?.(!on)\n  }\n\n  return (\n    <MotionConfig reducedMotion=\"user\">\n      <span className={cn('inline-flex items-center gap-3', className)}>\n        <motion.button\n          id={id}\n          type=\"button\"\n          role=\"switch\"\n          aria-checked={on}\n          aria-label={aria['aria-label']}\n          disabled={disabled}\n          onClick={flip}\n          whileTap=\"pressed\"\n          className={cn(\n            'relative flex h-8 w-[52px] shrink-0 items-center rounded-full p-[3px] transition-colors duration-200 outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:opacity-40',\n            on ? 'justify-end bg-emerald-500' : 'justify-start bg-muted',\n          )}\n        >\n          <motion.span\n            layout\n            // Pressed, the knob stretches towards the side it is about to move to.\n            variants={{ pressed: { scaleX: 1.2 } }}\n            style={{ originX: on ? 1 : 0 }}\n            transition={{ type: 'spring', stiffness: 520, damping: 46 }}\n            className=\"block h-[26px] w-[26px] rounded-full bg-white shadow-[0_2px_6px_rgb(0_0_0/0.18),0_0_0_0.5px_rgb(0_0_0/0.06)]\"\n          />\n        </motion.button>\n        {label && (\n          <label htmlFor={id} className=\"text-sm font-medium select-none\">\n            {label}\n          </label>\n        )}\n      </span>\n    </MotionConfig>\n  )\n}\n",
+      "type": "registry:component"
+    }
+  ],
+  "categories": [
+    "controls"
+  ],
+  "type": "registry:component"
+}

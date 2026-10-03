@@ -1,0 +1,20 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "ai-action-bar-demo",
+  "title": "AI action bar demo",
+  "description": "How to use AI action bar.",
+  "registryDependencies": [
+    "@manniche/ai-action-bar"
+  ],
+  "files": [
+    {
+      "path": "registry/manniche/examples/ai-action-bar-demo.tsx",
+      "content": "import { Bold, Heading, Image, Link } from 'lucide-react'\nimport { AiActionBar } from '@/registry/manniche/ai-action-bar/ai-action-bar'\n\nexport default function AiActionBarDemo() {\n  return (\n    <div className=\"flex justify-center\">\n      <AiActionBar\n        onAsk={(prompt) => console.log('send to the agent:', prompt)}\n        placeholder=\"Make the product text shorter…\"\n        tools={[\n          { id: 'heading', label: 'Heading', icon: Heading },\n          { id: 'bold', label: 'Bold', icon: Bold },\n          { id: 'link', label: 'Link', icon: Link },\n          { id: 'image', label: 'Image', icon: Image },\n        ]}\n      />\n    </div>\n  )\n}\n",
+      "type": "registry:example"
+    }
+  ],
+  "categories": [
+    "agent"
+  ],
+  "type": "registry:example"
+}

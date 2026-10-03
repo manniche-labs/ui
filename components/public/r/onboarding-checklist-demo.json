@@ -1,0 +1,20 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "onboarding-checklist-demo",
+  "title": "Onboarding checklist demo",
+  "description": "How to use Onboarding checklist.",
+  "registryDependencies": [
+    "@manniche/onboarding-checklist"
+  ],
+  "files": [
+    {
+      "path": "registry/manniche/examples/onboarding-checklist-demo.tsx",
+      "content": "import { OnboardingChecklist } from '@/registry/manniche/onboarding-checklist/onboarding-checklist'\n\nexport default function OnboardingChecklistDemo() {\n  return (\n    <OnboardingChecklist\n      title=\"Set up your shop\"\n      defaultOpen\n      steps={[\n        { id: 'account', title: 'Create your account', done: true },\n        { id: 'product', title: 'Add your first product', done: true },\n        { id: 'payments', title: 'Connect payments', onSelect: () => console.log('open payments') },\n        { id: 'shipping', title: 'Choose shipping rates' },\n        { id: 'domain', title: 'Add your own domain' },\n      ]}\n    />\n  )\n}\n",
+      "type": "registry:example"
+    }
+  ],
+  "categories": [
+    "widgets"
+  ],
+  "type": "registry:example"
+}
