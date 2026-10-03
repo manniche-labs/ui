@@ -1,0 +1,24 @@
+@import "./index.css";
+
+/* On mikkelmanniche.dk the preview uses the site's own self-hosted fonts, so the page loads nothing from third parties. */
+@font-face {
+  font-family: "Inter";
+  src: url("/assets/fonts/inter-latin.woff2") format("woff2");
+  font-weight: 100 900;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Lora";
+  src: url("/assets/fonts/lora-latin.woff2") format("woff2");
+  font-weight: 400 700;
+  font-display: swap;
+}
+
+@theme inline {
+  --font-serif: "Lora", Georgia, serif;
+}
+
+/* The site's background, so the frame sits flush in the page. */
+.dark {
+  --background: #141416;
+}

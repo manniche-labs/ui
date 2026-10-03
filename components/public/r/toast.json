@@ -16,5 +16,8 @@
       "type": "registry:component"
     }
   ],
+  "categories": [
+    "overlays"
+  ],
   "type": "registry:component"
 }

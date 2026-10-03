@@ -13,6 +13,9 @@
           "path": "registry/manniche/hooks/use-reduced-motion.ts",
           "type": "registry:hook"
         }
+      ],
+      "categories": [
+        "hooks"
       ]
     },
     {
@@ -31,6 +34,9 @@
           "path": "registry/manniche/prompt-input/prompt-input.tsx",
           "type": "registry:component"
         }
+      ],
+      "categories": [
+        "agent"
       ]
     },
     {
@@ -49,6 +55,9 @@
           "path": "registry/manniche/tool-approval/tool-approval.tsx",
           "type": "registry:component"
         }
+      ],
+      "categories": [
+        "agent"
       ]
     },
     {
@@ -67,6 +76,9 @@
           "path": "registry/manniche/agent-activity/agent-activity.tsx",
           "type": "registry:component"
         }
+      ],
+      "categories": [
+        "agent"
       ]
     },
     {
@@ -82,6 +94,9 @@
           "path": "registry/manniche/streaming-response/streaming-response.tsx",
           "type": "registry:component"
         }
+      ],
+      "categories": [
+        "agent"
       ]
     },
     {
@@ -100,6 +115,9 @@
           "path": "registry/manniche/reasoning/reasoning.tsx",
           "type": "registry:component"
         }
+      ],
+      "categories": [
+        "agent"
       ]
     },
     {
@@ -118,6 +136,9 @@
           "path": "registry/manniche/code-block/code-block.tsx",
           "type": "registry:component"
         }
+      ],
+      "categories": [
+        "agent"
       ]
     },
     {
@@ -136,6 +157,9 @@
           "path": "registry/manniche/sources/sources.tsx",
           "type": "registry:component"
         }
+      ],
+      "categories": [
+        "agent"
       ]
     },
     {
@@ -154,6 +178,9 @@
           "path": "registry/manniche/file-diff/file-diff.tsx",
           "type": "registry:component"
         }
+      ],
+      "categories": [
+        "agent"
       ]
     },
     {
@@ -173,6 +200,9 @@
           "path": "registry/manniche/hooks/use-reduced-motion.ts",
           "type": "registry:hook"
         }
+      ],
+      "categories": [
+        "motion"
       ]
     },
     {
@@ -188,6 +218,9 @@
           "path": "registry/manniche/blur-fade/blur-fade.tsx",
           "type": "registry:component"
         }
+      ],
+      "categories": [
+        "motion"
       ]
     },
     {
@@ -203,6 +236,9 @@
           "path": "registry/manniche/highlighter/highlighter.tsx",
           "type": "registry:component"
         }
+      ],
+      "categories": [
+        "motion"
       ]
     },
     {
@@ -222,6 +258,9 @@
           "path": "registry/manniche/hooks/use-reduced-motion.ts",
           "type": "registry:hook"
         }
+      ],
+      "categories": [
+        "motion"
       ]
     },
     {
@@ -237,6 +276,9 @@
           "path": "registry/manniche/spotlight-card/spotlight-card.tsx",
           "type": "registry:component"
         }
+      ],
+      "categories": [
+        "surfaces"
       ]
     },
     {
@@ -252,6 +294,9 @@
           "path": "registry/manniche/marquee/marquee.tsx",
           "type": "registry:component"
         }
+      ],
+      "categories": [
+        "motion"
       ]
     },
     {
@@ -267,6 +312,9 @@
           "path": "registry/manniche/dot-pattern/dot-pattern.tsx",
           "type": "registry:component"
         }
+      ],
+      "categories": [
+        "surfaces"
       ]
     },
     {
@@ -286,6 +334,9 @@
           "path": "registry/manniche/hooks/use-reduced-motion.ts",
           "type": "registry:hook"
         }
+      ],
+      "categories": [
+        "surfaces"
       ]
     },
     {
@@ -304,6 +355,9 @@
           "path": "registry/manniche/toast/toast.tsx",
           "type": "registry:component"
         }
+      ],
+      "categories": [
+        "overlays"
       ]
     },
     {
@@ -322,6 +376,9 @@
           "path": "registry/manniche/command-palette/command-palette.tsx",
           "type": "registry:component"
         }
+      ],
+      "categories": [
+        "overlays"
       ]
     },
     {
@@ -337,6 +394,9 @@
           "path": "registry/manniche/sheet/sheet.tsx",
           "type": "registry:component"
         }
+      ],
+      "categories": [
+        "overlays"
       ]
     },
     {
@@ -352,6 +412,9 @@
           "path": "registry/manniche/examples/prompt-input-demo.tsx",
           "type": "registry:example"
         }
+      ],
+      "categories": [
+        "agent"
       ]
     },
     {
@@ -367,6 +430,9 @@
           "path": "registry/manniche/examples/tool-approval-demo.tsx",
           "type": "registry:example"
         }
+      ],
+      "categories": [
+        "agent"
       ]
     },
     {
@@ -382,6 +448,9 @@
           "path": "registry/manniche/examples/agent-activity-demo.tsx",
           "type": "registry:example"
         }
+      ],
+      "categories": [
+        "agent"
       ]
     },
     {
@@ -397,6 +466,9 @@
           "path": "registry/manniche/examples/streaming-response-demo.tsx",
           "type": "registry:example"
         }
+      ],
+      "categories": [
+        "agent"
       ]
     },
     {
@@ -412,6 +484,9 @@
           "path": "registry/manniche/examples/number-ticker-demo.tsx",
           "type": "registry:example"
         }
+      ],
+      "categories": [
+        "motion"
       ]
     },
     {
@@ -427,6 +502,9 @@
           "path": "registry/manniche/examples/blur-fade-demo.tsx",
           "type": "registry:example"
         }
+      ],
+      "categories": [
+        "motion"
       ]
     },
     {
@@ -442,6 +520,9 @@
           "path": "registry/manniche/examples/highlighter-demo.tsx",
           "type": "registry:example"
         }
+      ],
+      "categories": [
+        "motion"
       ]
     },
     {
@@ -457,6 +538,9 @@
           "path": "registry/manniche/examples/text-reveal-demo.tsx",
           "type": "registry:example"
         }
+      ],
+      "categories": [
+        "motion"
       ]
     },
     {
@@ -472,6 +556,9 @@
           "path": "registry/manniche/examples/spotlight-card-demo.tsx",
           "type": "registry:example"
         }
+      ],
+      "categories": [
+        "surfaces"
       ]
     },
     {
@@ -487,6 +574,9 @@
           "path": "registry/manniche/examples/marquee-demo.tsx",
           "type": "registry:example"
         }
+      ],
+      "categories": [
+        "motion"
       ]
     },
     {
@@ -502,6 +592,9 @@
           "path": "registry/manniche/examples/dot-pattern-demo.tsx",
           "type": "registry:example"
         }
+      ],
+      "categories": [
+        "surfaces"
       ]
     },
     {
@@ -517,6 +610,9 @@
           "path": "registry/manniche/examples/shimmer-button-demo.tsx",
           "type": "registry:example"
         }
+      ],
+      "categories": [
+        "surfaces"
       ]
     },
     {
@@ -532,6 +628,9 @@
           "path": "registry/manniche/examples/toast-demo.tsx",
           "type": "registry:example"
         }
+      ],
+      "categories": [
+        "overlays"
       ]
     },
     {
@@ -547,6 +646,9 @@
           "path": "registry/manniche/examples/command-palette-demo.tsx",
           "type": "registry:example"
         }
+      ],
+      "categories": [
+        "overlays"
       ]
     },
     {
@@ -562,6 +664,9 @@
           "path": "registry/manniche/examples/sheet-demo.tsx",
           "type": "registry:example"
         }
+      ],
+      "categories": [
+        "overlays"
       ]
     },
     {
@@ -577,6 +682,9 @@
           "path": "registry/manniche/examples/reasoning-demo.tsx",
           "type": "registry:example"
         }
+      ],
+      "categories": [
+        "agent"
       ]
     },
     {
@@ -592,6 +700,9 @@
           "path": "registry/manniche/examples/code-block-demo.tsx",
           "type": "registry:example"
         }
+      ],
+      "categories": [
+        "agent"
       ]
     },
     {
@@ -607,6 +718,9 @@
           "path": "registry/manniche/examples/sources-demo.tsx",
           "type": "registry:example"
         }
+      ],
+      "categories": [
+        "agent"
       ]
     },
     {
@@ -622,6 +736,9 @@
           "path": "registry/manniche/examples/file-diff-demo.tsx",
           "type": "registry:example"
         }
+      ],
+      "categories": [
+        "agent"
       ]
     }
   ]
