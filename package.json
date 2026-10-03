@@ -1,0 +1,26 @@
+{
+  "name": "page-critic",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Claude Code skill: review every page of an app in three layers (works, holds, finish), measure in a real browser and compare before and after.",
+  "type": "module",
+  "license": "MIT",
+  "scripts": {
+    "measure": "node scripts/measure.mjs",
+    "compare": "node scripts/compare.mjs",
+    "fixes": "node scripts/fixes.mjs",
+    "preview": "node scripts/preview.mjs",
+    "report": "node scripts/report.mjs",
+    "extract": "node scripts/extract.mjs",
+    "slices": "node scripts/slices.mjs",
+    "browse": "node scripts/browse.mjs",
+    "test": "node test/run.mjs"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "dependencies": {
+    "axe-core": "^4.10.0",
+    "playwright-core": "^1.50.0"
+  }
+}

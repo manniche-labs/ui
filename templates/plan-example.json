@@ -1,0 +1,43 @@
+{
+  "base": "http://localhost:3000",
+  "locale": "en-GB",
+  "login": [
+    { "goto": "/sign-in" },
+    { "fill": ["input[type=email]", "demo@example.com"] },
+    { "fill": ["input[type=password]", "only-for-testing"] },
+    { "click": "button[type=submit]" },
+    { "wait": "main h1" }
+  ],
+  "pages": [
+    { "name": "home", "path": "/" },
+    { "name": "contact", "path": "/contact", "inp": ["button[aria-expanded]"] },
+    {
+      "name": "contact-error",
+      "path": "/contact",
+      "performance": false,
+      "steps": [
+        { "fill": ["input[name=email]", "not-an-email"] },
+        { "submit": "main form" }
+      ]
+    },
+    {
+      "name": "menu-open",
+      "path": "/",
+      "performance": false,
+      "steps": [{ "click": "button[aria-controls=menu]" }, { "wait": 400 }]
+    }
+  ],
+  "ignore": [
+    {
+      "metric": "contrastErrors",
+      "element": "div.demo-banner",
+      "page": "*",
+      "why": "The demo banner only exists on the demo"
+    },
+    {
+      "metric": "aiLook:allCentred",
+      "page": "home",
+      "why": "The home page is centred on purpose; chosen in the design"
+    }
+  ]
+}

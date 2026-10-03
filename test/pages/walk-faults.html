@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<!-- Counter-tests for the Tab walk: every fault here is a real fault that the measurement must still find.
+     The page is short on purpose. At 1440 × 900 px it must not scroll, or the link at the bottom no longer sits under the bar. -->
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Walk with faults</title>
+<style>
+  :root { --ink: #1c1f26; --muted: #4b5160; --line: #6b7280; --surface: #f4f1ea; --accent: #0b4f6c; }
+  * { box-sizing: border-box; }
+  body { position: relative; min-height: 100vh; margin: 0; font-family: Georgia, "Times New Roman", serif; font-size: 18px; line-height: 1.55; color: var(--ink); background: #fff; overflow-wrap: anywhere; }
+  header, main, footer { max-width: 640px; margin: 0 auto; padding: 8px 16px; }
+  /* Below the footer there is room for the link at the very bottom of the page, so the two do not overlap on a narrow screen. */
+  footer { padding-bottom: 96px; }
+  h1 { font-size: 36px; line-height: 1.15; margin: 0 0 8px; text-wrap: balance; }
+  p { margin: 0 0 8px; }
+  a { color: var(--accent); }
+  :focus-visible { outline: 3px solid #0b4f6c; outline-offset: 2px; }
+  .block { display: block; min-height: 44px; padding: 8px 0; }
+
+  /* 1. The link can take focus, but it sits in a box that is transparent. Focus lands where nobody can see it. */
+  .hidden-box { opacity: 0; }
+
+  /* 2. The first link in the code sits at the bottom of the page, and the next sits at the top: focus jumps back. */
+  .reversed { display: flex; flex-direction: column-reverse; }
+
+  /* 4. The box is clipped at the corners, but everything in it can be seen. The small button in it is still too small for a finger. */
+  .clipped { padding: 8px 16px; background: var(--surface); clip-path: inset(0 round 12px); overflow: hidden; }
+  .small { display: inline-block; height: 28px; padding: 0 12px; border: 1px solid var(--accent); border-radius: 4px; font-size: 16px; line-height: 26px; text-decoration: none; }
+
+  /* 5. A band that runs by itself and does not stop when a link in it has focus. The link runs out of sight with its focus ring. */
+  .band { overflow: hidden; margin: 0 0 8px; }
+  .track { display: flex; width: max-content; animation: run 16s linear infinite; }
+  .track a { flex: none; width: 240px; margin-right: 80px; min-height: 44px; padding: 8px 0; white-space: nowrap; }
+  .dup { display: flex; }
+  @keyframes run { to { transform: translateX(-50%); } }
+
+  /* 6. The link sits to the left of the screen and stays there, also when it has focus. */
+  .anchor { position: relative; min-height: 44px; }
+  .outside { position: absolute; left: -1000px; top: 0; width: 240px; min-height: 44px; padding: 8px 0; }
+
+  /* 7. The bar is fixed at the bottom of the screen and covers the link below it. */
+  .bar { position: fixed; inset: auto 0 0; z-index: 5; height: 120px; padding: 16px; background: var(--ink); color: #fff; }
+  .under { position: absolute; left: 16px; bottom: 36px; min-height: 44px; padding: 8px 0; }
+
+  /* 8. The note field uses Tab to indent the text and does not give up focus. The button after it cannot be reached by keyboard. */
+  label { display: block; }
+  textarea { display: block; width: 100%; min-height: 74px; margin: 0 0 8px; padding: 8px; border: 1px solid var(--line); border-radius: 4px; font: inherit; color: inherit; background: #fff; resize: vertical; }
+  button { font: inherit; font-family: "Trebuchet MS", Verdana, sans-serif; min-height: 48px; padding: 0 20px; border: 0; border-radius: 6px; background: var(--accent); color: #fff; cursor: pointer; transition: background-color 0.15s ease-out; }
+
+  @media (hover: hover) and (pointer: fine) {
+    a:hover { color: #06303f; text-decoration-thickness: 2px; }
+    button:hover { background: #083c52; }
+  }
+  a:any-link:active { color: #000; }
+  button:active { background: #06303f; }
+  @media (prefers-reduced-motion: reduce) {
+    .track { animation: none; }
+  }
+</style>
+</head>
+<body>
+<header>
+  <nav aria-label="Main menu"><a class="block" href="/walk">To the long page</a></nav>
+</header>
+<main>
+  <h1>A short page with focus faults</h1>
+  <div class="hidden-box"><a class="block" href="/walk-faults#hidden">A link nobody can see</a></div>
+  <div class="reversed">
+    <a class="block" id="bottom" href="/walk-faults#bottom">First in the code, bottom of the page</a>
+    <p>Between the two links there is a paragraph, so it is a long way from one to the other. The eye reads from top to bottom, but focus goes the other way.</p>
+    <a class="block" id="top" href="/walk-faults#top">Last in the code, top of the page</a>
+  </div>
+  <!-- 3. The link can be seen and pressed, but Tab does not reach it, and no other link leads to the same place. -->
+  <a class="block" href="/walk-faults#mouse-only" tabindex="-1">Only for the mouse</a>
+  <div class="clipped"><a class="small" href="/walk-faults#small">Small button</a></div>
+  <div class="band">
+    <div class="track">
+      <a href="/walk-faults#news-1">North Library has news</a>
+      <a href="/walk-faults#news-2">West Library has news</a>
+      <span class="dup" aria-hidden="true"><a href="/walk-faults#news-1" tabindex="-1">North Library has news</a><a href="/walk-faults#news-2" tabindex="-1">West Library has news</a></span>
+    </div>
+  </div>
+  <p class="anchor"><a class="outside" href="/walk-faults#outside">Outside the screen</a></p>
+</main>
+<aside class="bar" aria-label="Message">We use no cookies. The bar stays until it is closed, and it cannot be closed.</aside>
+<footer>
+  <a class="under" href="/walk-faults#under">Under the bar</a>
+  <label for="note">Your note</label>
+  <textarea id="note" name="note" rows="2"></textarea>
+  <button type="button">Save the note</button>
+</footer>
+<script>
+  // Tab writes an indent in the note, like in an editor. The field has no other way out, so focus stays put.
+  document.getElementById("note").addEventListener("keydown", (e) => {
+    if (e.key !== "Tab") return;
+    e.preventDefault();
+    e.target.setRangeText("\t", e.target.selectionStart, e.target.selectionEnd, "end");
+  });
+</script>
+</body>
+</html>

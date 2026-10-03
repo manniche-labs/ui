@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<!-- Test page for the blind customer (scripts/browse.mjs): links off the site, a new tab, things the eye cannot see, and things further down. {{…}} is filled in by test/server.mjs. -->
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Links off the page</title>
+<style>
+  * { box-sizing: border-box; }
+  body { margin: 0; font-family: Georgia, "Times New Roman", serif; font-size: 18px; line-height: 1.55; color: #1c1f26; background: #fff; }
+  main { max-width: 640px; margin: 0 auto; padding: 24px 16px; }
+  h1 { font-size: 32px; line-height: 1.15; margin: 0 0 16px; }
+  h2 { font-size: 22px; margin: 0 0 8px; }
+  p { margin: 0 0 12px; }
+  a { color: #0b4f6c; display: inline-block; padding: 10px 0; }
+  button, select { font: inherit; height: 48px; padding: 0 16px; border: 1px solid #6b7280; border-radius: 6px; background: #fff; color: #1c1f26; }
+  button[disabled] { color: #6b7280; background: #f4f1ea; }
+  label { display: block; font-weight: 700; margin: 0 0 4px; }
+  label.tick { font-weight: 400; padding: 10px 0; }
+  .icon { width: 48px; padding: 0; }
+  /* Only for screen readers: in the code, but cannot be seen. */
+  .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+  /* Clipped away by a closed box without height. */
+  .clipped { height: 0; overflow: hidden; }
+  /* A button under a transparent layer: it can be seen, but not pressed. */
+  .under { position: relative; display: inline-block; }
+  .under .layer { position: absolute; inset: 0; }
+  .space { height: 1400px; }
+</style>
+</head>
+<body>
+<main>
+  <h1>Links off the page</h1>
+  <p>This tests what a customer can and cannot see.</p>
+  <p><a href="http://localhost:{{port}}/clean">To another site on the web</a></p>
+  <p><a href="/clean" target="_blank" rel="noopener">Open the calm page in a new tab</a></p>
+  <p><a href="mailto:hello@example.com">Write to us</a></p>
+  <p>
+    <button type="button" disabled>Cannot be pressed</button>
+    <button type="button" class="icon" aria-label="Close"><svg aria-hidden="true" width="16" height="16" viewBox="0 0 16 16"><path d="M3 3l10 10M13 3L3 13" stroke="currentColor" stroke-width="2"/></svg></button>
+    <span class="under"><button type="button">Lies under something</button><span class="layer"></span></span>
+  </p>
+  <p class="sr-only">Only for screen readers</p>
+  <div class="clipped"><a href="/clean">Hidden link</a></div>
+
+  <label for="topic">Topic</label>
+  <p><select id="topic" name="topic"><option>Choose a topic</option><option>Book club</option><option>Opening hours</option></select></p>
+  <label class="tick"><input type="checkbox" name="copy"> Send me a copy</label>
+  <details><summary>What happens afterwards?</summary><p>You get an answer within seven days.</p></details>
+  <p><button type="button" id="counter">Count up</button></p>
+  <p id="count" role="status">Pressed 0 times</p>
+
+  <div class="space"></div>
+  <h2>At the bottom of the page</h2>
+  <p><a href="/clean">To the calm page</a></p>
+</main>
+<script>
+  let n = 0;
+  document.getElementById("counter").addEventListener("click", () => {
+    n += 1;
+    document.getElementById("count").textContent = `Pressed ${n} ${n === 1 ? "time" : "times"}`;
+  });
+</script>
+</body>
+</html>

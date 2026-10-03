@@ -1,0 +1,159 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<!-- Test page for the pattern catalogue. test/server.mjs inserts the code blocks from templates/patterns.md where it says {{…}}:
+     all CSS in the first stylesheet and all JS at the bottom. The page uses every pattern once and gives its own colours and responses to mouse and press. -->
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The pattern catalogue</title>
+<style id="catalog">
+{{css}}
+</style>
+<style>
+  /* The colours and surfaces the catalogue asks the page for. They are on :root, so the self-test can look them up. */
+  :root {
+    --ink: #1c1f26; --muted: #4b5160; --line: #6b7280; --surface: #f4f1ea; --accent: #0b4f6c;
+    --btn-text: #fff; --btn-hover: #083c52; --btn-pressed: #06303f;
+    --surface-hover: #faf8f3; --surface-pressed: #e6dfcf; --shadow-large: 0 8px 24px rgba(0, 0, 0, 0.18);
+    --track: #6b7280; --track-on: #0b4f6c; --knob: #fff; --skeleton: #e6dfcf; --fill: #0b4f6c; --highlight: #fdf3c4; --edge: #d9d2c0;
+  }
+  * { box-sizing: border-box; }
+  /* What gets focus must not lie under the header, which stays put. */
+  html { scroll-padding-top: 72px; }
+  body { margin: 0; font-family: Georgia, "Times New Roman", serif; font-size: 18px; line-height: 1.55; color: var(--ink); background: #fff; overflow-wrap: anywhere; }
+  header, main, footer { max-width: 640px; margin: 0 auto; padding: 24px 16px; }
+  .top-sentinel { height: 1px; }
+  /* The header stays put. The catalogue puts it on top, and the page gives it a background that covers what scrolls under it. */
+  .top { padding: 0 16px; background-color: #fff; }
+  h1 { font-size: 36px; line-height: 1.15; margin: 0 0 16px; text-wrap: balance; }
+  h2, h3 { font-family: "Trebuchet MS", Verdana, sans-serif; line-height: 1.3; text-wrap: balance; }
+  h2 { font-size: 20px; margin: 32px 0 8px; }
+  h3 { font-size: 18px; margin: 0 0 8px; }
+  p, ul, figure { margin: 0 0 16px; }
+  ul { padding: 0; list-style: none; }
+  li { padding: 4px 0; }
+  img { display: block; max-width: 100%; height: auto; }
+  .note { color: var(--muted); font-size: 16px; }
+  a { color: var(--accent); }
+  label { font-family: "Trebuchet MS", Verdana, sans-serif; font-size: 16px; }
+  :focus-visible { outline: 3px solid #0b4f6c; outline-offset: 2px; }
+
+  .nav a { display: inline-block; padding: 12px 0; min-height: 44px; min-width: 44px; margin-right: 24px; }
+  /* The link has room below the text, so the line is lifted up under it. */
+  .nav a::after { bottom: 8px; }
+
+  button { font: inherit; font-family: "Trebuchet MS", Verdana, sans-serif; font-size: 18px; color: var(--ink); cursor: pointer; }
+  .btn { min-height: 48px; padding: 8px 20px; border: 0; border-radius: 6px; background-color: var(--accent); color: var(--btn-text); }
+  /* Quiet controls: no surface at rest, a surface under the mouse. */
+  .quiet, summary, [role="tab"], .toggle { min-height: 44px; min-width: 44px; padding: 8px 16px; border: 0; border-radius: 6px; background-color: transparent; transition: background-color 140ms var(--out); }
+  .toggle { place-items: center; padding: 0; }
+  .icon { width: 20px; height: 20px; }
+  summary { display: flex; align-items: center; gap: 8px; list-style: none; cursor: pointer; font-family: "Trebuchet MS", Verdana, sans-serif; }
+  summary::-webkit-details-marker { display: none; }
+  .fold-arrow { flex: none; }
+  .tabs { display: flex; flex-wrap: wrap; margin: 0 0 16px; }
+  [role="tab"][aria-selected="true"] { color: var(--accent); }
+
+  .card { display: block; margin: 0 0 16px; padding: 24px; border: 1px solid var(--edge); border-radius: 8px; background-color: #fff; color: var(--ink); text-decoration: none; }
+  .card img { margin: 0 0 16px; }
+  .card > :last-child { margin-bottom: 0; }
+  /* The dialogs stand open in the flow of the page, so they can be measured without being opened. */
+  main dialog.box, main dialog.drawer { position: static; width: auto; height: auto; max-width: none; max-height: none; margin: 16px 0; padding: 24px; border: 1px solid var(--line); border-radius: 8px; color: var(--ink); background-color: #fff; }
+  .menu { padding: 8px 16px; border: 1px solid var(--edge); }
+  .toast { padding: 12px 16px; background-color: var(--surface); }
+  .progress { margin: 0 0 16px; }
+  .skeleton { height: 16px; margin: 8px 0; }
+
+  /* The catalogue gives the motion. The response to mouse and press is the page's own, and every element must have it. */
+  @media (hover: hover) and (pointer: fine) {
+    a:not(.card):hover { color: #06303f; text-decoration-thickness: 2px; }
+    .btn:hover { background-color: var(--btn-hover); }
+    .quiet:hover, summary:hover, [role="tab"]:hover, .toggle:hover { background-color: var(--surface); }
+  }
+  /* The pressed state comes after hover and is just as specific, so it wins when both apply. */
+  .btn:active { background-color: var(--btn-pressed); }
+  .quiet:active, summary:active, [role="tab"]:active, .toggle:active, .card:active { background-color: var(--surface-pressed); }
+  a:not(.card):any-link:active { color: #000; }
+</style>
+</head>
+<body>
+<div class="top-sentinel"></div>
+<header class="top">
+  <nav class="nav" aria-label="Main menu"><a href="/patterns" aria-current="page">Patterns</a><a href="/clean">Calm page</a><a href="/tight">Tight page</a></nav>
+</header>
+<main>
+  <h1><span class="line"><span>Motion</span></span> <span class="line"><span>that answers</span></span> <span class="line"><span>what you do</span></span></h1>
+  <p>The page uses every pattern in the catalogue once, so the measurement can see them all.</p>
+  <ul class="group">
+    <li>Search for the book you want.</li>
+    <li>Choose the library that has it.</li>
+    <li>Reserve it, and follow your loan here on the page.</li>
+  </ul>
+
+  <h2>Response to an action</h2>
+  <p><button class="btn" type="button">Reserve a book</button></p>
+  <a class="card" href="/clean">
+    <img class="card-image" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='320' height='180'%3E%3Crect width='320' height='180' fill='%23d9d2c0'/%3E%3C/svg%3E" width="320" height="180" alt="Light surface standing in for an image">
+    <h3>A card that can be pressed</h3>
+    <p>The whole surface is a link, and it lifts a little under the mouse.</p>
+  </a>
+  <p>
+    <button class="toggle" type="button" aria-pressed="false" aria-label="Save the book"><svg class="icon icon-off" aria-hidden="true" viewBox="0 0 20 20"><path d="M5 3h10v14l-5-4-5 4z" fill="none" stroke="currentColor" stroke-width="2"/></svg><svg class="icon icon-on" aria-hidden="true" viewBox="0 0 20 20"><path d="M5 3h10v14l-5-4-5 4z" fill="currentColor"/></svg></button>
+    <button class="toggle" type="button" aria-pressed="true" aria-label="Follow the author"><svg class="icon icon-off" aria-hidden="true" viewBox="0 0 20 20"><path d="M10 2l2.5 5 5.5.8-4 3.9.9 5.5-4.9-2.6-4.9 2.6.9-5.5-4-3.9 5.5-.8z" fill="none" stroke="currentColor" stroke-width="2"/></svg><svg class="icon icon-on" aria-hidden="true" viewBox="0 0 20 20"><path d="M10 2l2.5 5 5.5.8-4 3.9.9 5.5-4.9-2.6-4.9 2.6.9-5.5-4-3.9 5.5-.8z" fill="currentColor"/></svg></button>
+  </p>
+  <p><label class="switch"><input type="checkbox" role="switch" name="notify"><span class="track"></span>Email me when the book is ready</label></p>
+
+  <h2>Something comes or goes</h2>
+  <p class="fades-in">This line fades in when the page opens.</p>
+  <p class="rises-in">This line fades in and lifts a little.</p>
+  <p><button class="quiet" type="button" popovertarget="more">More choices</button></p>
+  <div class="menu" id="more" popover>
+    <ul>
+      <li><a href="/clean">Calm page</a></li>
+      <li><a href="/tight">Tight page</a></li>
+    </ul>
+  </div>
+  <dialog class="box" open aria-labelledby="box-title">
+    <h3 id="box-title">Do you want to reserve the book?</h3>
+    <p>The library gets the reservation at once, and you get a receipt by email.</p>
+    <button class="quiet" type="button">Close the box</button>
+  </dialog>
+  <dialog class="drawer" open aria-labelledby="drawer-title">
+    <h3 id="drawer-title">Filters</h3>
+    <p>Choose which books the list shows.</p>
+    <button class="quiet" type="button">Close the drawer</button>
+  </dialog>
+  <p class="toast" role="status">The book is reserved.</p>
+  <details class="fold" open>
+    <summary><svg class="fold-arrow" aria-hidden="true" width="16" height="16" viewBox="0 0 16 16"><path d="M6 3l5 5-5 5" fill="none" stroke="currentColor" stroke-width="2"/></svg>What happens afterwards?</summary>
+    <div class="fold-content"><p>The library writes by email when the book is ready, and the news also shows here on the page.</p></div>
+  </details>
+
+  <h2>A state changes</h2>
+  <div class="progress" role="progressbar" aria-label="Filled in" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100"><div class="fill" style="--share: 0.6"></div></div>
+  <ul>
+    <li>Reservation at the North Library</li>
+    <li class="row-new">Reservation at the West Library</li>
+  </ul>
+
+  <h2>Continuity</h2>
+  <div class="tabs" role="tablist" aria-label="Loans"><button role="tab" type="button" aria-selected="true">Active</button><button role="tab" type="button" aria-selected="false">Returned</button><button role="tab" type="button" aria-selected="false">All</button><span class="marker" aria-hidden="true"></span></div>
+
+  <h2>Entrance</h2>
+  <p class="scroll-in">This section fades in the first time it scrolls into view.</p>
+  <figure><img loading="lazy" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='320' height='180'%3E%3Crect width='320' height='180' fill='%23d9d2c0'/%3E%3C/svg%3E" width="320" height="180" alt="Light surface that loads when it scrolls into view"></figure>
+
+  <!-- What runs without end comes last, so it is on screen when the measurement looks for animations off screen. -->
+  <h2>While the page waits</h2>
+  <div class="skeleton" aria-hidden="true"></div>
+  <div class="skeleton" aria-hidden="true"></div>
+  <p><button class="btn" type="button" aria-busy="true" disabled>Reserving the book</button></p>
+</main>
+<footer>
+  <p class="note">Test page for page-critic. <a href="/clean">To the calm page</a></p>
+</footer>
+<script>
+{{js}}
+</script>
+</body>
+</html>
