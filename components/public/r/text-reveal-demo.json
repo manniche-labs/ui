@@ -1,0 +1,17 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "text-reveal-demo",
+  "title": "Text reveal demo",
+  "description": "How to use Text reveal.",
+  "registryDependencies": [
+    "@manniche/text-reveal"
+  ],
+  "files": [
+    {
+      "path": "registry/manniche/examples/text-reveal-demo.tsx",
+      "content": "import { TextReveal } from '@/registry/manniche/text-reveal/text-reveal'\n\nexport default function TextRevealDemo() {\n  return (\n    <TextReveal className=\"font-serif text-3xl leading-snug\">\n      A good shop page answers three questions before the visitor asks them: what it costs, when it arrives, and how to send it back.\n    </TextReveal>\n  )\n}\n",
+      "type": "registry:example"
+    }
+  ],
+  "type": "registry:example"
+}

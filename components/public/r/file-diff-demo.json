@@ -1,0 +1,17 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "file-diff-demo",
+  "title": "File diff demo",
+  "description": "How to use File diff.",
+  "registryDependencies": [
+    "@manniche/file-diff"
+  ],
+  "files": [
+    {
+      "path": "registry/manniche/examples/file-diff-demo.tsx",
+      "content": "import { FileDiff } from '@/registry/manniche/file-diff/file-diff'\n\nconst diff = `@@ -1,4 +1,4 @@ export function total\n export function total(items: Item[]) {\n-  return items.reduce((sum, i) => sum + i.price, 0)\n+  return items.reduce((sum, i) => sum + i.price * i.qty, 0)\n }\n`\n\nexport default function FileDiffDemo() {\n  return <FileDiff filename=\"lib/total.ts\" diff={diff} />\n}\n",
+      "type": "registry:example"
+    }
+  ],
+  "type": "registry:example"
+}

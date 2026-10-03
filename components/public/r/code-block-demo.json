@@ -1,0 +1,17 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "code-block-demo",
+  "title": "Code block demo",
+  "description": "How to use Code block.",
+  "registryDependencies": [
+    "@manniche/code-block"
+  ],
+  "files": [
+    {
+      "path": "registry/manniche/examples/code-block-demo.tsx",
+      "content": "import { CodeBlock } from '@/registry/manniche/code-block/code-block'\n\nconst code = `export function total(items: { price: number; qty: number }[]) {\n  return items.reduce((sum, i) => sum + i.price * i.qty, 0)\n}`\n\nexport default function CodeBlockDemo() {\n  return <CodeBlock filename=\"lib/total.ts\" code={code} lineNumbers />\n}\n",
+      "type": "registry:example"
+    }
+  ],
+  "type": "registry:example"
+}

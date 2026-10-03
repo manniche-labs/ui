@@ -1,0 +1,17 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "prompt-input-demo",
+  "title": "Prompt input demo",
+  "description": "How to use Prompt input.",
+  "registryDependencies": [
+    "@manniche/prompt-input"
+  ],
+  "files": [
+    {
+      "path": "registry/manniche/examples/prompt-input-demo.tsx",
+      "content": "import { useState } from 'react'\nimport { PromptInput } from '@/registry/manniche/prompt-input/prompt-input'\n\nexport default function PromptInputDemo() {\n  const [busy, setBusy] = useState(false)\n\n  return (\n    <PromptInput\n      accept=\"image/*,.pdf\"\n      busy={busy}\n      placeholder=\"Ask about an order\"\n      onSubmit={(text, files) => {\n        console.log(text, files)\n        setBusy(true)\n        setTimeout(() => setBusy(false), 2000)\n      }}\n      onStop={() => setBusy(false)}\n      footer={<span className=\"text-sm text-muted-foreground\">Enter sends · Shift+Enter for a new line</span>}\n    />\n  )\n}\n",
+      "type": "registry:example"
+    }
+  ],
+  "type": "registry:example"
+}

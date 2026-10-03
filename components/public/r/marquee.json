@@ -1,0 +1,17 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "marquee",
+  "title": "Marquee",
+  "description": "Items scroll sideways in an endless loop and pause on hover or focus. Static under reduced motion.",
+  "registryDependencies": [
+    "utils"
+  ],
+  "files": [
+    {
+      "path": "registry/manniche/marquee/marquee.tsx",
+      "content": "import type { CSSProperties, ReactNode } from 'react'\nimport { cn } from '@/lib/utils'\n\nexport type MarqueeProps = {\n  children: ReactNode\n  /** Seconds for one full loop. */\n  duration?: number\n  /** Gap between items in pixels. */\n  gap?: number\n  reverse?: boolean\n  /** Accessible name for the list, e.g. \"Customers\". */\n  label?: string\n  className?: string\n}\n\n/**\n * Items scroll sideways in an endless loop with soft edges. It pauses while hovered or focused.\n * The items are rendered twice for a seamless loop; the copy is hidden from screen readers and the keyboard.\n * Under reduced motion the items wrap onto lines and stand still.\n */\nexport function Marquee({ children, duration = 30, gap = 14, reverse = false, label, className }: MarqueeProps) {\n  const vars = { '--mq-duration': `${duration}s`, '--mq-gap': `${gap}px` } as CSSProperties\n\n  return (\n    <div\n      role=\"region\"\n      aria-label={label}\n      style={vars}\n      className={cn(\n        'group/mq overflow-hidden mask-[linear-gradient(90deg,transparent,#000_8%,#000_92%,transparent)]',\n        'motion-reduce:mask-none',\n        className,\n      )}\n    >\n      <style href=\"manniche-marquee\" precedence=\"default\">\n        {'@keyframes manniche-marquee { to { transform: translateX(calc(-50% - var(--mq-gap) / 2)) } }'}\n      </style>\n      <div\n        className={cn(\n          'flex w-max gap-(--mq-gap) animate-[manniche-marquee_var(--mq-duration)_linear_infinite]',\n          reverse && '[animation-direction:reverse]',\n          'group-hover/mq:[animation-play-state:paused] group-focus-within/mq:[animation-play-state:paused]',\n          'motion-reduce:w-auto motion-reduce:flex-wrap motion-reduce:animate-none',\n        )}\n      >\n        <div className=\"flex shrink-0 gap-(--mq-gap) motion-reduce:shrink motion-reduce:flex-wrap\">{children}</div>\n        <div className=\"flex shrink-0 gap-(--mq-gap) motion-reduce:hidden\" aria-hidden inert>\n          {children}\n        </div>\n      </div>\n    </div>\n  )\n}\n",
+      "type": "registry:component"
+    }
+  ],
+  "type": "registry:component"
+}

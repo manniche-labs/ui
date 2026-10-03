@@ -1,0 +1,628 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry.json",
+  "name": "manniche",
+  "homepage": "https://mikkelmanniche.dk",
+  "items": [
+    {
+      "name": "use-reduced-motion",
+      "type": "registry:hook",
+      "title": "useReducedMotion",
+      "description": "True when the visitor has asked the system for less motion.",
+      "files": [
+        {
+          "path": "registry/manniche/hooks/use-reduced-motion.ts",
+          "type": "registry:hook"
+        }
+      ]
+    },
+    {
+      "name": "prompt-input",
+      "type": "registry:component",
+      "title": "Prompt input",
+      "description": "A chat input that grows with the text, takes files, and turns into a stop button while the agent writes.",
+      "dependencies": [
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "utils"
+      ],
+      "files": [
+        {
+          "path": "registry/manniche/prompt-input/prompt-input.tsx",
+          "type": "registry:component"
+        }
+      ]
+    },
+    {
+      "name": "tool-approval",
+      "type": "registry:component",
+      "title": "Tool approval",
+      "description": "Asks the person before the agent runs a tool, with the arguments in full and a clear mark on risky calls.",
+      "dependencies": [
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "utils"
+      ],
+      "files": [
+        {
+          "path": "registry/manniche/tool-approval/tool-approval.tsx",
+          "type": "registry:component"
+        }
+      ]
+    },
+    {
+      "name": "agent-activity",
+      "type": "registry:component",
+      "title": "Agent activity",
+      "description": "The agent's steps as a list: waiting, running, done or failed, with timings.",
+      "dependencies": [
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "utils"
+      ],
+      "files": [
+        {
+          "path": "registry/manniche/agent-activity/agent-activity.tsx",
+          "type": "registry:component"
+        }
+      ]
+    },
+    {
+      "name": "streaming-response",
+      "type": "registry:component",
+      "title": "Streaming response",
+      "description": "Shows a reply as it is written. New words fade in and a caret marks the end.",
+      "registryDependencies": [
+        "utils"
+      ],
+      "files": [
+        {
+          "path": "registry/manniche/streaming-response/streaming-response.tsx",
+          "type": "registry:component"
+        }
+      ]
+    },
+    {
+      "name": "reasoning",
+      "type": "registry:component",
+      "title": "Reasoning",
+      "description": "The model's thinking, folded away. Open while it thinks, closed when the answer starts.",
+      "dependencies": [
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "utils"
+      ],
+      "files": [
+        {
+          "path": "registry/manniche/reasoning/reasoning.tsx",
+          "type": "registry:component"
+        }
+      ]
+    },
+    {
+      "name": "code-block",
+      "type": "registry:component",
+      "title": "Code block",
+      "description": "Code with a file name and a copy button. Bring your own highlighting, or none.",
+      "dependencies": [
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "utils"
+      ],
+      "files": [
+        {
+          "path": "registry/manniche/code-block/code-block.tsx",
+          "type": "registry:component"
+        }
+      ]
+    },
+    {
+      "name": "sources",
+      "type": "registry:component",
+      "title": "Sources",
+      "description": "Numbered citations after a claim and the list of sources they point to.",
+      "dependencies": [
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "utils"
+      ],
+      "files": [
+        {
+          "path": "registry/manniche/sources/sources.tsx",
+          "type": "registry:component"
+        }
+      ]
+    },
+    {
+      "name": "file-diff",
+      "type": "registry:component",
+      "title": "File diff",
+      "description": "A change to one file as a coding agent proposes it, from a unified diff.",
+      "dependencies": [
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "utils"
+      ],
+      "files": [
+        {
+          "path": "registry/manniche/file-diff/file-diff.tsx",
+          "type": "registry:component"
+        }
+      ]
+    },
+    {
+      "name": "number-ticker",
+      "type": "registry:component",
+      "title": "Number ticker",
+      "description": "Counts up to a number when it scrolls into view. Screen readers hear only the final number.",
+      "registryDependencies": [
+        "utils"
+      ],
+      "files": [
+        {
+          "path": "registry/manniche/number-ticker/number-ticker.tsx",
+          "type": "registry:component"
+        },
+        {
+          "path": "registry/manniche/hooks/use-reduced-motion.ts",
+          "type": "registry:hook"
+        }
+      ]
+    },
+    {
+      "name": "blur-fade",
+      "type": "registry:component",
+      "title": "Blur fade",
+      "description": "Fades an element up out of a soft blur the first time it enters the view.",
+      "registryDependencies": [
+        "utils"
+      ],
+      "files": [
+        {
+          "path": "registry/manniche/blur-fade/blur-fade.tsx",
+          "type": "registry:component"
+        }
+      ]
+    },
+    {
+      "name": "highlighter",
+      "type": "registry:component",
+      "title": "Highlighter",
+      "description": "A marker stroke draws behind a phrase the first time it scrolls into view.",
+      "registryDependencies": [
+        "utils"
+      ],
+      "files": [
+        {
+          "path": "registry/manniche/highlighter/highlighter.tsx",
+          "type": "registry:component"
+        }
+      ]
+    },
+    {
+      "name": "text-reveal",
+      "type": "registry:component",
+      "title": "Text reveal",
+      "description": "Words go from faint to full as the reader scrolls through a paragraph.",
+      "registryDependencies": [
+        "utils"
+      ],
+      "files": [
+        {
+          "path": "registry/manniche/text-reveal/text-reveal.tsx",
+          "type": "registry:component"
+        },
+        {
+          "path": "registry/manniche/hooks/use-reduced-motion.ts",
+          "type": "registry:hook"
+        }
+      ]
+    },
+    {
+      "name": "spotlight-card",
+      "type": "registry:component",
+      "title": "Spotlight card",
+      "description": "A card with a soft light that follows the mouse pointer.",
+      "registryDependencies": [
+        "utils"
+      ],
+      "files": [
+        {
+          "path": "registry/manniche/spotlight-card/spotlight-card.tsx",
+          "type": "registry:component"
+        }
+      ]
+    },
+    {
+      "name": "marquee",
+      "type": "registry:component",
+      "title": "Marquee",
+      "description": "Items scroll sideways in an endless loop and pause on hover or focus. Static under reduced motion.",
+      "registryDependencies": [
+        "utils"
+      ],
+      "files": [
+        {
+          "path": "registry/manniche/marquee/marquee.tsx",
+          "type": "registry:component"
+        }
+      ]
+    },
+    {
+      "name": "dot-pattern",
+      "type": "registry:component",
+      "title": "Dot pattern",
+      "description": "A quiet dot grid behind content, drawn with CSS only.",
+      "registryDependencies": [
+        "utils"
+      ],
+      "files": [
+        {
+          "path": "registry/manniche/dot-pattern/dot-pattern.tsx",
+          "type": "registry:component"
+        }
+      ]
+    },
+    {
+      "name": "shimmer-button",
+      "type": "registry:component",
+      "title": "Shimmer button",
+      "description": "A primary button with a slow sheen, and an optional lean towards the pointer.",
+      "registryDependencies": [
+        "utils"
+      ],
+      "files": [
+        {
+          "path": "registry/manniche/shimmer-button/shimmer-button.tsx",
+          "type": "registry:component"
+        },
+        {
+          "path": "registry/manniche/hooks/use-reduced-motion.ts",
+          "type": "registry:hook"
+        }
+      ]
+    },
+    {
+      "name": "toast",
+      "type": "registry:component",
+      "title": "Toast",
+      "description": "Short messages that stack in a corner and leave on their own. Call toast() from anywhere.",
+      "dependencies": [
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "utils"
+      ],
+      "files": [
+        {
+          "path": "registry/manniche/toast/toast.tsx",
+          "type": "registry:component"
+        }
+      ]
+    },
+    {
+      "name": "command-palette",
+      "type": "registry:component",
+      "title": "Command palette",
+      "description": "A searchable list of commands in a modal, opened with Cmd+K. Built on the native dialog.",
+      "dependencies": [
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "utils"
+      ],
+      "files": [
+        {
+          "path": "registry/manniche/command-palette/command-palette.tsx",
+          "type": "registry:component"
+        }
+      ]
+    },
+    {
+      "name": "sheet",
+      "type": "registry:component",
+      "title": "Sheet",
+      "description": "A panel that slides up from the bottom and can be dragged down to close.",
+      "registryDependencies": [
+        "utils"
+      ],
+      "files": [
+        {
+          "path": "registry/manniche/sheet/sheet.tsx",
+          "type": "registry:component"
+        }
+      ]
+    },
+    {
+      "name": "prompt-input-demo",
+      "type": "registry:example",
+      "title": "Prompt input demo",
+      "description": "How to use Prompt input.",
+      "registryDependencies": [
+        "@manniche/prompt-input"
+      ],
+      "files": [
+        {
+          "path": "registry/manniche/examples/prompt-input-demo.tsx",
+          "type": "registry:example"
+        }
+      ]
+    },
+    {
+      "name": "tool-approval-demo",
+      "type": "registry:example",
+      "title": "Tool approval demo",
+      "description": "How to use Tool approval.",
+      "registryDependencies": [
+        "@manniche/tool-approval"
+      ],
+      "files": [
+        {
+          "path": "registry/manniche/examples/tool-approval-demo.tsx",
+          "type": "registry:example"
+        }
+      ]
+    },
+    {
+      "name": "agent-activity-demo",
+      "type": "registry:example",
+      "title": "Agent activity demo",
+      "description": "How to use Agent activity.",
+      "registryDependencies": [
+        "@manniche/agent-activity"
+      ],
+      "files": [
+        {
+          "path": "registry/manniche/examples/agent-activity-demo.tsx",
+          "type": "registry:example"
+        }
+      ]
+    },
+    {
+      "name": "streaming-response-demo",
+      "type": "registry:example",
+      "title": "Streaming response demo",
+      "description": "How to use Streaming response.",
+      "registryDependencies": [
+        "@manniche/streaming-response"
+      ],
+      "files": [
+        {
+          "path": "registry/manniche/examples/streaming-response-demo.tsx",
+          "type": "registry:example"
+        }
+      ]
+    },
+    {
+      "name": "number-ticker-demo",
+      "type": "registry:example",
+      "title": "Number ticker demo",
+      "description": "How to use Number ticker.",
+      "registryDependencies": [
+        "@manniche/number-ticker"
+      ],
+      "files": [
+        {
+          "path": "registry/manniche/examples/number-ticker-demo.tsx",
+          "type": "registry:example"
+        }
+      ]
+    },
+    {
+      "name": "blur-fade-demo",
+      "type": "registry:example",
+      "title": "Blur fade demo",
+      "description": "How to use Blur fade.",
+      "registryDependencies": [
+        "@manniche/blur-fade"
+      ],
+      "files": [
+        {
+          "path": "registry/manniche/examples/blur-fade-demo.tsx",
+          "type": "registry:example"
+        }
+      ]
+    },
+    {
+      "name": "highlighter-demo",
+      "type": "registry:example",
+      "title": "Highlighter demo",
+      "description": "How to use Highlighter.",
+      "registryDependencies": [
+        "@manniche/highlighter"
+      ],
+      "files": [
+        {
+          "path": "registry/manniche/examples/highlighter-demo.tsx",
+          "type": "registry:example"
+        }
+      ]
+    },
+    {
+      "name": "text-reveal-demo",
+      "type": "registry:example",
+      "title": "Text reveal demo",
+      "description": "How to use Text reveal.",
+      "registryDependencies": [
+        "@manniche/text-reveal"
+      ],
+      "files": [
+        {
+          "path": "registry/manniche/examples/text-reveal-demo.tsx",
+          "type": "registry:example"
+        }
+      ]
+    },
+    {
+      "name": "spotlight-card-demo",
+      "type": "registry:example",
+      "title": "Spotlight card demo",
+      "description": "How to use Spotlight card.",
+      "registryDependencies": [
+        "@manniche/spotlight-card"
+      ],
+      "files": [
+        {
+          "path": "registry/manniche/examples/spotlight-card-demo.tsx",
+          "type": "registry:example"
+        }
+      ]
+    },
+    {
+      "name": "marquee-demo",
+      "type": "registry:example",
+      "title": "Marquee demo",
+      "description": "How to use Marquee.",
+      "registryDependencies": [
+        "@manniche/marquee"
+      ],
+      "files": [
+        {
+          "path": "registry/manniche/examples/marquee-demo.tsx",
+          "type": "registry:example"
+        }
+      ]
+    },
+    {
+      "name": "dot-pattern-demo",
+      "type": "registry:example",
+      "title": "Dot pattern demo",
+      "description": "How to use Dot pattern.",
+      "registryDependencies": [
+        "@manniche/dot-pattern"
+      ],
+      "files": [
+        {
+          "path": "registry/manniche/examples/dot-pattern-demo.tsx",
+          "type": "registry:example"
+        }
+      ]
+    },
+    {
+      "name": "shimmer-button-demo",
+      "type": "registry:example",
+      "title": "Shimmer button demo",
+      "description": "How to use Shimmer button.",
+      "registryDependencies": [
+        "@manniche/shimmer-button"
+      ],
+      "files": [
+        {
+          "path": "registry/manniche/examples/shimmer-button-demo.tsx",
+          "type": "registry:example"
+        }
+      ]
+    },
+    {
+      "name": "toast-demo",
+      "type": "registry:example",
+      "title": "Toast demo",
+      "description": "How to use Toast.",
+      "registryDependencies": [
+        "@manniche/toast"
+      ],
+      "files": [
+        {
+          "path": "registry/manniche/examples/toast-demo.tsx",
+          "type": "registry:example"
+        }
+      ]
+    },
+    {
+      "name": "command-palette-demo",
+      "type": "registry:example",
+      "title": "Command palette demo",
+      "description": "How to use Command palette.",
+      "registryDependencies": [
+        "@manniche/command-palette"
+      ],
+      "files": [
+        {
+          "path": "registry/manniche/examples/command-palette-demo.tsx",
+          "type": "registry:example"
+        }
+      ]
+    },
+    {
+      "name": "sheet-demo",
+      "type": "registry:example",
+      "title": "Sheet demo",
+      "description": "How to use Sheet.",
+      "registryDependencies": [
+        "@manniche/sheet"
+      ],
+      "files": [
+        {
+          "path": "registry/manniche/examples/sheet-demo.tsx",
+          "type": "registry:example"
+        }
+      ]
+    },
+    {
+      "name": "reasoning-demo",
+      "type": "registry:example",
+      "title": "Reasoning demo",
+      "description": "How to use Reasoning.",
+      "registryDependencies": [
+        "@manniche/reasoning"
+      ],
+      "files": [
+        {
+          "path": "registry/manniche/examples/reasoning-demo.tsx",
+          "type": "registry:example"
+        }
+      ]
+    },
+    {
+      "name": "code-block-demo",
+      "type": "registry:example",
+      "title": "Code block demo",
+      "description": "How to use Code block.",
+      "registryDependencies": [
+        "@manniche/code-block"
+      ],
+      "files": [
+        {
+          "path": "registry/manniche/examples/code-block-demo.tsx",
+          "type": "registry:example"
+        }
+      ]
+    },
+    {
+      "name": "sources-demo",
+      "type": "registry:example",
+      "title": "Sources demo",
+      "description": "How to use Sources.",
+      "registryDependencies": [
+        "@manniche/sources"
+      ],
+      "files": [
+        {
+          "path": "registry/manniche/examples/sources-demo.tsx",
+          "type": "registry:example"
+        }
+      ]
+    },
+    {
+      "name": "file-diff-demo",
+      "type": "registry:example",
+      "title": "File diff demo",
+      "description": "How to use File diff.",
+      "registryDependencies": [
+        "@manniche/file-diff"
+      ],
+      "files": [
+        {
+          "path": "registry/manniche/examples/file-diff-demo.tsx",
+          "type": "registry:example"
+        }
+      ]
+    }
+  ]
+}

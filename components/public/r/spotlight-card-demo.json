@@ -1,0 +1,17 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "spotlight-card-demo",
+  "title": "Spotlight card demo",
+  "description": "How to use Spotlight card.",
+  "registryDependencies": [
+    "@manniche/spotlight-card"
+  ],
+  "files": [
+    {
+      "path": "registry/manniche/examples/spotlight-card-demo.tsx",
+      "content": "import { SpotlightCard } from '@/registry/manniche/spotlight-card/spotlight-card'\n\nexport default function SpotlightCardDemo() {\n  return (\n    <SpotlightCard>\n      <p className=\"font-medium\">Free returns</p>\n      <p className=\"mt-1 text-sm text-muted-foreground\">30 days, no questions.</p>\n    </SpotlightCard>\n  )\n}\n",
+      "type": "registry:example"
+    }
+  ],
+  "type": "registry:example"
+}

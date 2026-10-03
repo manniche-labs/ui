@@ -1,0 +1,17 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "spotlight-card",
+  "title": "Spotlight card",
+  "description": "A card with a soft light that follows the mouse pointer.",
+  "registryDependencies": [
+    "utils"
+  ],
+  "files": [
+    {
+      "path": "registry/manniche/spotlight-card/spotlight-card.tsx",
+      "content": "import { useRef, type CSSProperties, type HTMLAttributes, type PointerEvent } from 'react'\nimport { cn } from '@/lib/utils'\n\nexport type SpotlightCardProps = HTMLAttributes<HTMLDivElement> & {\n  /** Radius of the light in pixels. */\n  size?: number\n}\n\n/**\n * A card with a soft light that follows the pointer. Only opacity animates;\n * the position is written straight to CSS variables, so React does not re-render on move.\n * On touch screens and under reduced motion the card is a plain card.\n */\nexport function SpotlightCard({ size = 340, className, children, onPointerMove, style, ...rest }: SpotlightCardProps) {\n  const el = useRef<HTMLDivElement>(null)\n\n  function move(e: PointerEvent<HTMLDivElement>) {\n    onPointerMove?.(e)\n    if (e.pointerType !== 'mouse' || !el.current) return\n    const r = el.current.getBoundingClientRect()\n    el.current.style.setProperty('--spot-x', `${e.clientX - r.left}px`)\n    el.current.style.setProperty('--spot-y', `${e.clientY - r.top}px`)\n  }\n\n  return (\n    <div\n      ref={el}\n      onPointerMove={move}\n      style={{ '--spot-size': `${size}px`, ...style } as CSSProperties}\n      className={cn(\n        'group/spot relative isolate overflow-hidden rounded-2xl border bg-card p-6 text-card-foreground shadow-sm',\n        className,\n      )}\n      {...rest}\n    >\n      <span\n        aria-hidden\n        className={cn(\n          'pointer-events-none absolute inset-0 -z-10 opacity-0 transition-opacity duration-300',\n          'bg-[radial-gradient(var(--spot-size)_circle_at_var(--spot-x,50%)_var(--spot-y,50%),color-mix(in_oklch,var(--color-primary)_14%,transparent),transparent_65%)]',\n          'group-hover/spot:opacity-100 motion-reduce:hidden',\n        )}\n      />\n      {children}\n    </div>\n  )\n}\n",
+      "type": "registry:component"
+    }
+  ],
+  "type": "registry:component"
+}

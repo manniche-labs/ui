@@ -1,0 +1,17 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "reasoning-demo",
+  "title": "Reasoning demo",
+  "description": "How to use Reasoning.",
+  "registryDependencies": [
+    "@manniche/reasoning"
+  ],
+  "files": [
+    {
+      "path": "registry/manniche/examples/reasoning-demo.tsx",
+      "content": "import { useEffect, useState } from 'react'\nimport { Reasoning } from '@/registry/manniche/reasoning/reasoning'\n\nexport default function ReasoningDemo() {\n  const [streaming, setStreaming] = useState(true)\n\n  // Stand-in for a model that thinks for two seconds before it answers.\n  useEffect(() => {\n    const id = setTimeout(() => setStreaming(false), 2000)\n    return () => clearTimeout(id)\n  }, [])\n\n  return (\n    <Reasoning streaming={streaming} ms={2000}>\n      The customer asks when order 4821 arrives. It left the warehouse this morning, and standard delivery takes two days.\n    </Reasoning>\n  )\n}\n",
+      "type": "registry:example"
+    }
+  ],
+  "type": "registry:example"
+}

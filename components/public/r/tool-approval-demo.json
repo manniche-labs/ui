@@ -1,0 +1,17 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "tool-approval-demo",
+  "title": "Tool approval demo",
+  "description": "How to use Tool approval.",
+  "registryDependencies": [
+    "@manniche/tool-approval"
+  ],
+  "files": [
+    {
+      "path": "registry/manniche/examples/tool-approval-demo.tsx",
+      "content": "import { ToolApproval } from '@/registry/manniche/tool-approval/tool-approval'\n\nexport default function ToolApprovalDemo() {\n  return (\n    <ToolApproval\n      tool=\"issue_refund\"\n      summary=\"Refund 349 kr to the customer's card.\"\n      args={{ order: 4821, amount: 349, currency: 'DKK' }}\n      risky\n      onApprove={() => console.log('run the tool')}\n      onDeny={() => console.log('tell the agent no')}\n    />\n  )\n}\n",
+      "type": "registry:example"
+    }
+  ],
+  "type": "registry:example"
+}

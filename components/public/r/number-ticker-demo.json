@@ -1,0 +1,17 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "number-ticker-demo",
+  "title": "Number ticker demo",
+  "description": "How to use Number ticker.",
+  "registryDependencies": [
+    "@manniche/number-ticker"
+  ],
+  "files": [
+    {
+      "path": "registry/manniche/examples/number-ticker-demo.tsx",
+      "content": "import { NumberTicker } from '@/registry/manniche/number-ticker/number-ticker'\n\nexport default function NumberTickerDemo() {\n  return (\n    <p className=\"font-serif text-6xl tracking-tight\">\n      <NumberTicker value={1284} locale=\"da-DK\" />\n    </p>\n  )\n}\n",
+      "type": "registry:example"
+    }
+  ],
+  "type": "registry:example"
+}

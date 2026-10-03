@@ -1,0 +1,17 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "command-palette-demo",
+  "title": "Command palette demo",
+  "description": "How to use Command palette.",
+  "registryDependencies": [
+    "@manniche/command-palette"
+  ],
+  "files": [
+    {
+      "path": "registry/manniche/examples/command-palette-demo.tsx",
+      "content": "import { Package, Settings, Truck } from 'lucide-react'\nimport { useState } from 'react'\nimport { CommandPalette, type Command } from '@/registry/manniche/command-palette/command-palette'\n\nconst commands: Command[] = [\n  { id: 'track', label: 'Track a parcel', group: 'Orders', icon: <Truck />, keywords: ['shipping'], onSelect: () => {} },\n  { id: 'stock', label: 'Check stock', group: 'Warehouse', icon: <Package />, onSelect: () => {} },\n  { id: 'settings', label: 'Open settings', group: 'General', icon: <Settings />, onSelect: () => {} },\n]\n\n// Cmd+K or Ctrl+K opens it too.\nexport default function CommandPaletteDemo() {\n  const [open, setOpen] = useState(false)\n\n  return (\n    <>\n      <button type=\"button\" className=\"min-h-11 rounded-xl border bg-card px-4 text-sm font-medium\" onClick={() => setOpen(true)}>\n        Search commands\n      </button>\n      <CommandPalette commands={commands} open={open} onOpenChange={setOpen} placeholder=\"Search orders and settings\" />\n    </>\n  )\n}\n",
+      "type": "registry:example"
+    }
+  ],
+  "type": "registry:example"
+}
