@@ -1,0 +1,122 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry.json",
+  "name": "manniche",
+  "homepage": "https://mikkelmanniche.dk",
+  "items": [
+    {
+      "name": "use-reduced-motion",
+      "type": "registry:hook",
+      "title": "useReducedMotion",
+      "description": "True when the visitor has asked the system for less motion.",
+      "files": [
+        {
+          "path": "registry/manniche/hooks/use-reduced-motion.ts",
+          "type": "registry:hook"
+        }
+      ]
+    },
+    {
+      "name": "prompt-input",
+      "type": "registry:component",
+      "title": "Prompt input",
+      "description": "A chat input that grows with the text, takes files, and turns into a stop button while the agent writes.",
+      "dependencies": [
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "utils"
+      ],
+      "files": [
+        {
+          "path": "registry/manniche/prompt-input/prompt-input.tsx",
+          "type": "registry:component"
+        }
+      ]
+    },
+    {
+      "name": "tool-approval",
+      "type": "registry:component",
+      "title": "Tool approval",
+      "description": "Asks the person before the agent runs a tool, with the arguments in full and a clear mark on risky calls.",
+      "dependencies": [
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "utils"
+      ],
+      "files": [
+        {
+          "path": "registry/manniche/tool-approval/tool-approval.tsx",
+          "type": "registry:component"
+        }
+      ]
+    },
+    {
+      "name": "agent-activity",
+      "type": "registry:component",
+      "title": "Agent activity",
+      "description": "The agent's steps as a list: waiting, running, done or failed, with timings.",
+      "dependencies": [
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "utils"
+      ],
+      "files": [
+        {
+          "path": "registry/manniche/agent-activity/agent-activity.tsx",
+          "type": "registry:component"
+        }
+      ]
+    },
+    {
+      "name": "streaming-response",
+      "type": "registry:component",
+      "title": "Streaming response",
+      "description": "Shows a reply as it is written. New words fade in and a caret marks the end.",
+      "registryDependencies": [
+        "utils"
+      ],
+      "files": [
+        {
+          "path": "registry/manniche/streaming-response/streaming-response.tsx",
+          "type": "registry:component"
+        }
+      ]
+    },
+    {
+      "name": "number-ticker",
+      "type": "registry:component",
+      "title": "Number ticker",
+      "description": "Counts up to a number when it scrolls into view. Screen readers hear only the final number.",
+      "registryDependencies": [
+        "utils"
+      ],
+      "files": [
+        {
+          "path": "registry/manniche/number-ticker/number-ticker.tsx",
+          "type": "registry:component"
+        },
+        {
+          "path": "registry/manniche/hooks/use-reduced-motion.ts",
+          "type": "registry:hook"
+        }
+      ]
+    },
+    {
+      "name": "blur-fade",
+      "type": "registry:component",
+      "title": "Blur fade",
+      "description": "Fades an element up out of a soft blur the first time it enters the view.",
+      "registryDependencies": [
+        "utils"
+      ],
+      "files": [
+        {
+          "path": "registry/manniche/blur-fade/blur-fade.tsx",
+          "type": "registry:component"
+        }
+      ]
+    }
+  ]
+}
