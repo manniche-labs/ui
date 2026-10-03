@@ -1,11 +1,23 @@
-import { Moon, RotateCcw, Sun } from 'lucide-react'
-import { useEffect, useRef, useState, type ReactNode } from 'react'
+import { Moon, Package, RotateCcw, Search, Settings, Sun, Truck } from 'lucide-react'
+import { useEffect, useMemo, useRef, useState, type ReactNode } from 'react'
 import { AgentActivity, type AgentStep } from '@/registry/manniche/agent-activity/agent-activity'
 import { BlurFade } from '@/registry/manniche/blur-fade/blur-fade'
+import { CommandPalette, type Command } from '@/registry/manniche/command-palette/command-palette'
+import { DotPattern } from '@/registry/manniche/dot-pattern/dot-pattern'
+import { Highlighter } from '@/registry/manniche/highlighter/highlighter'
+import { Marquee } from '@/registry/manniche/marquee/marquee'
 import { NumberTicker } from '@/registry/manniche/number-ticker/number-ticker'
 import { PromptInput } from '@/registry/manniche/prompt-input/prompt-input'
+import { Sheet } from '@/registry/manniche/sheet/sheet'
+import { ShimmerButton } from '@/registry/manniche/shimmer-button/shimmer-button'
+import { SpotlightCard } from '@/registry/manniche/spotlight-card/spotlight-card'
 import { StreamingResponse } from '@/registry/manniche/streaming-response/streaming-response'
+import { TextReveal } from '@/registry/manniche/text-reveal/text-reveal'
+import { toast, Toaster } from '@/registry/manniche/toast/toast'
 import { ToolApproval } from '@/registry/manniche/tool-approval/tool-approval'
+
+const btn =
+  'inline-flex min-h-11 items-center gap-2 rounded-xl border bg-card px-4 text-sm font-medium transition-[background-color,transform] duration-150 ease-out-quint hover:bg-muted active:scale-[0.97]'
 
 const REPLY =
   'Your order ships from the warehouse tomorrow morning. It should reach you on Thursday.\n\nI have added the tracking link to your account, and you will get an email when the parcel leaves.'
@@ -24,7 +36,7 @@ function Demo({ name, title, children, wide }: { name: string; title: string; ch
         <h2 className="font-serif text-xl">{title}</h2>
         <code className="text-sm text-muted-foreground">@manniche/{name}</code>
       </div>
-      <div className="rounded-3xl border bg-muted/40 p-4 sm:p-6">{children}</div>
+      <div className="rounded-3xl bg-muted/40 p-4 sm:p-6">{children}</div>
     </section>
   )
 }
@@ -93,11 +105,25 @@ export default function App() {
   const [sent, setSent] = useState<string[]>([])
   const [orders, setOrders] = useState(1284)
   const [approvalKey, setApprovalKey] = useState(0)
+  const [palette, setPalette] = useState(false)
+  const [sheet, setSheet] = useState(false)
+  const [highlightKey, setHighlightKey] = useState(0)
+
+  const commands = useMemo<Command[]>(
+    () => [
+      { id: 'find', label: 'Find an order', group: 'Orders', icon: <Search />, hint: 'F', onSelect: () => toast('Searching orders') },
+      { id: 'track', label: 'Track a parcel', group: 'Orders', icon: <Truck />, keywords: ['shipping', 'delivery'], onSelect: () => toast('Opening tracking') },
+      { id: 'stock', label: 'Check stock', group: 'Warehouse', icon: <Package />, onSelect: () => toast('Stock is up to date', { tone: 'success' }) },
+      { id: 'settings', label: 'Open settings', group: 'General', icon: <Settings />, onSelect: () => setSheet(true) },
+      { id: 'theme', label: 'Switch theme', group: 'General', icon: <Moon />, onSelect: () => setDark((d) => !d) },
+    ],
+    [],
+  )
 
   return (
     <div className="mx-auto max-w-5xl px-4 py-10 sm:px-6 sm:py-16">
       <header className="mb-12 flex items-start justify-between gap-6">
-        <div>
+        <div className="min-w-0 wrap-break-word">
           <p className="mb-2 text-sm text-muted-foreground">Manniche UI</p>
           <h1 className="font-serif text-4xl tracking-tight text-balance sm:text-5xl">Components for agents and calm interfaces</h1>
           <p className="mt-4 max-w-[60ch] text-lg text-muted-foreground text-pretty">
@@ -195,7 +221,122 @@ export default function App() {
           </ul>
           <p className="mt-3 text-sm text-muted-foreground">Each item fades up the first time it scrolls into view.</p>
         </Demo>
+
+        <h2 className="mt-6 font-serif text-3xl tracking-tight md:col-span-2">Feedback and navigation</h2>
+
+        <Demo name="toast" title="Toast">
+          <div className="flex flex-wrap gap-2">
+            <button type="button" className={btn} onClick={() => toast('Order saved', { tone: 'success', description: 'The customer gets an email in a moment.' })}>
+              Save order
+            </button>
+            <button type="button" className={btn} onClick={() => toast('Payment failed', { tone: 'error', description: 'The card was declined. Ask for another card.' })}>
+              Fail a payment
+            </button>
+            <button
+              type="button"
+              className={btn}
+              onClick={() => toast('Order archived', { action: { label: 'Undo', onClick: () => toast('Order restored') } })}
+            >
+              Archive with undo
+            </button>
+          </div>
+          <p className="mt-3 text-sm text-muted-foreground">Toasts pause while you point at them.</p>
+        </Demo>
+
+        <Demo name="command-palette" title="Command palette">
+          <button type="button" className={btn} onClick={() => setPalette(true)}>
+            <Search className="size-4" aria-hidden /> Search commands
+            <kbd className="ml-2 rounded border bg-muted px-1.5 font-sans text-xs text-muted-foreground">Ctrl K</kbd>
+          </button>
+          <p className="mt-3 text-sm text-muted-foreground">Arrow keys move, Enter runs, Esc closes.</p>
+          <CommandPalette commands={commands} open={palette} onOpenChange={setPalette} placeholder="Search orders and settings" />
+        </Demo>
+
+        <Demo name="sheet" title="Sheet">
+          <button type="button" className={btn} onClick={() => setSheet(true)}>
+            Open delivery options
+          </button>
+          <p className="mt-3 text-sm text-muted-foreground">Drag it down, press Esc or tap outside to close.</p>
+          <Sheet open={sheet} onOpenChange={setSheet} title="Delivery options">
+            <ul className="divide-y">
+              {[
+                ['Standard', '3 to 5 days', 'Free'],
+                ['Express', 'Next working day', '79 kr'],
+                ['Pick-up point', '2 to 3 days', '29 kr'],
+              ].map(([name, time, price]) => (
+                <li key={name} className="flex items-baseline justify-between gap-4 py-3">
+                  <span>
+                    <span className="font-medium">{name}</span>
+                    <span className="block text-sm text-muted-foreground">{time}</span>
+                  </span>
+                  <span className="tabular-nums">{price}</span>
+                </li>
+              ))}
+            </ul>
+            <button
+              type="button"
+              onClick={() => setSheet(false)}
+              className="mt-4 min-h-11 w-full rounded-xl bg-primary text-sm font-medium text-primary-foreground transition-transform duration-150 ease-out-quint active:scale-[0.98]"
+            >
+              Done
+            </button>
+          </Sheet>
+        </Demo>
+
+        <Demo name="shimmer-button" title="Shimmer button">
+          <ShimmerButton magnetic onClick={() => toast('Checkout started')}>
+            Go to checkout
+          </ShimmerButton>
+          <p className="mt-3 text-sm text-muted-foreground">Use it once per page, for the main action. It leans towards the mouse.</p>
+        </Demo>
+
+        <h2 className="mt-6 font-serif text-3xl tracking-tight md:col-span-2">Text and surfaces</h2>
+
+        <Demo name="highlighter" title="Highlighter">
+          <p key={highlightKey} className="font-serif text-2xl leading-snug text-balance">
+            Every parcel leaves the warehouse <Highlighter>within one working day</Highlighter>.
+          </p>
+          <Restart onClick={() => setHighlightKey((k) => k + 1)} />
+        </Demo>
+
+        <Demo name="spotlight-card" title="Spotlight card">
+          <div className="grid gap-3 sm:grid-cols-2">
+            <SpotlightCard>
+              <p className="font-medium">Free returns</p>
+              <p className="mt-1 text-sm text-muted-foreground">30 days, no questions.</p>
+            </SpotlightCard>
+            <SpotlightCard>
+              <p className="font-medium">Fast delivery</p>
+              <p className="mt-1 text-sm text-muted-foreground">Point the mouse at a card.</p>
+            </SpotlightCard>
+          </div>
+        </Demo>
+
+        <Demo name="marquee" title="Marquee" wide>
+          <Marquee label="Product categories">
+            {['Kitchen', 'Garden', 'Lighting', 'Textiles', 'Storage', 'Tools', 'Ceramics', 'Outdoor'].map((c) => (
+              <span key={c} className="rounded-full border bg-card px-4 py-2 whitespace-nowrap">
+                {c}
+              </span>
+            ))}
+          </Marquee>
+        </Demo>
+
+        <Demo name="text-reveal" title="Text reveal" wide>
+          <TextReveal className="font-serif text-2xl leading-snug sm:text-3xl">
+            A good shop page answers three questions before the visitor asks them: what it costs, when it arrives, and how to send it back.
+          </TextReveal>
+          <p className="mt-3 text-sm text-muted-foreground">Scroll the page. The words light up as the paragraph passes.</p>
+        </Demo>
+
+        <Demo name="dot-pattern" title="Dot pattern" wide>
+          <DotPattern className="px-6 py-14 text-center">
+            <p className="font-serif text-2xl">Depth without images</p>
+            <p className="mt-2 text-muted-foreground">Two CSS gradients: a dot grid and a soft edge.</p>
+          </DotPattern>
+        </Demo>
       </main>
+      <Toaster />
 
       <footer className="mt-16 border-t pt-6 text-sm text-muted-foreground">
         Respects reduced motion. Only opacity, transform and filter animate.

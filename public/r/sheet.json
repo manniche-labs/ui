@@ -1,0 +1,17 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "sheet",
+  "title": "Sheet",
+  "description": "A panel that slides up from the bottom and can be dragged down to close.",
+  "registryDependencies": [
+    "utils"
+  ],
+  "files": [
+    {
+      "path": "registry/manniche/sheet/sheet.tsx",
+      "content": "import { useEffect, useRef, type PointerEvent, type ReactNode } from 'react'\nimport { cn } from '@/lib/utils'\n\nexport type SheetProps = {\n  open: boolean\n  onOpenChange: (open: boolean) => void\n  /** Accessible name, and the heading at the top of the sheet. */\n  title: string\n  children: ReactNode\n  className?: string\n}\n\n/**\n * A panel that slides up from the bottom. Drag it down, press Esc or tap outside to close.\n * Built on the native <dialog>, so focus is trapped and returns to the opener on close.\n */\nexport function Sheet({ open, onOpenChange, title, children, className }: SheetProps) {\n  const dialog = useRef<HTMLDialogElement>(null)\n  const drag = useRef<{ y: number; id: number } | null>(null)\n\n  useEffect(() => {\n    const d = dialog.current\n    if (!d) return\n    if (open && !d.open) {\n      d.style.transform = ''\n      d.showModal()\n    } else if (!open && d.open) d.close()\n  }, [open])\n\n  function down(e: PointerEvent<HTMLDivElement>) {\n    drag.current = { y: e.clientY, id: e.pointerId }\n    e.currentTarget.setPointerCapture(e.pointerId)\n    dialog.current!.style.transition = 'none'\n  }\n  function move(e: PointerEvent<HTMLDivElement>) {\n    if (!drag.current) return\n    dialog.current!.style.transform = `translateY(${Math.max(0, e.clientY - drag.current.y)}px)`\n  }\n  function up(e: PointerEvent<HTMLDivElement>) {\n    if (!drag.current) return\n    const d = dialog.current!\n    const dy = e.clientY - drag.current.y\n    drag.current = null\n    d.style.transition = ''\n    if (dy > d.offsetHeight * 0.3) onOpenChange(false)\n    else d.style.transform = ''\n  }\n\n  return (\n    <dialog\n      ref={dialog}\n      onClose={() => onOpenChange(false)}\n      onClick={(e) => e.target === dialog.current && onOpenChange(false)}\n      aria-label={title}\n      className={cn(\n        'mx-auto mt-auto mb-0 w-full max-w-xl rounded-t-3xl border border-b-0 bg-card p-0 text-card-foreground shadow-2xl',\n        'max-h-[85dvh] overflow-hidden transition-transform duration-300 ease-out-quint',\n        'backdrop:bg-black/40 open:animate-[manniche-sheet-in_380ms_cubic-bezier(0.23,1,0.32,1)] motion-reduce:open:animate-none',\n        className,\n      )}\n    >\n      <style href=\"manniche-sheet\" precedence=\"default\">\n        {'@keyframes manniche-sheet-in { from { transform: translateY(100%) } }'}\n      </style>\n      <div\n        onPointerDown={down}\n        onPointerMove={move}\n        onPointerUp={up}\n        onPointerCancel={up}\n        className=\"cursor-grab touch-none px-6 pt-3 pb-2 active:cursor-grabbing\"\n      >\n        <div className=\"mx-auto mb-4 h-1.5 w-11 rounded-full bg-border\" aria-hidden />\n        <h2 className=\"text-lg font-medium\">{title}</h2>\n      </div>\n      <div className=\"max-h-[calc(85dvh-5rem)] overflow-y-auto px-6 pb-[max(2rem,env(safe-area-inset-bottom))]\">{children}</div>\n    </dialog>\n  )\n}\n",
+      "type": "registry:component"
+    }
+  ],
+  "type": "registry:component"
+}

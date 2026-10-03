@@ -41,12 +41,13 @@ export function NumberTicker({
   }, [seen])
 
   useEffect(() => {
-    if (!seen) return
+    // Under reduced motion the final number is shown at once, even before it is in view.
     if (reduced) {
       shown.current = value
       setDisplay(value)
       return
     }
+    if (!seen) return
     const start = shown.current
     const t0 = performance.now()
     let frame = 0

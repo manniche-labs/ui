@@ -40,7 +40,7 @@ export function StreamingResponse({ text, streaming = false, className }: Stream
           </p>
         )
       })}
-      <style>{`
+      <style href="manniche-streaming" precedence="default">{`
         @keyframes stream-in { from { opacity: 0 } }
         @keyframes stream-caret { 50% { opacity: 0 } }
       `}</style>

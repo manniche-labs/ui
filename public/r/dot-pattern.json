@@ -1,0 +1,17 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "dot-pattern",
+  "title": "Dot pattern",
+  "description": "A quiet dot grid behind content, drawn with CSS only.",
+  "registryDependencies": [
+    "utils"
+  ],
+  "files": [
+    {
+      "path": "registry/manniche/dot-pattern/dot-pattern.tsx",
+      "content": "import type { CSSProperties, HTMLAttributes } from 'react'\nimport { cn } from '@/lib/utils'\n\nexport type DotPatternProps = HTMLAttributes<HTMLDivElement> & {\n  /** Distance between dots in pixels. */\n  spacing?: number\n  /** Fade the dots out towards the edges. */\n  vignette?: boolean\n}\n\n/**\n * A quiet dot grid behind content, drawn with CSS gradients only. No images, no motion.\n * The dots take the foreground colour at low strength, so they work in light and dark.\n */\nexport function DotPattern({ spacing = 18, vignette = true, className, style, children, ...rest }: DotPatternProps) {\n  return (\n    <div\n      style={{ '--dot-gap': `${spacing}px`, ...style } as CSSProperties}\n      className={cn(\n        'relative isolate overflow-hidden rounded-2xl bg-card',\n        'bg-[radial-gradient(color-mix(in_oklch,var(--color-foreground)_16%,transparent)_1px,transparent_1.5px)] bg-size-[var(--dot-gap)_var(--dot-gap)]',\n        className,\n      )}\n      {...rest}\n    >\n      {vignette && (\n        <span\n          aria-hidden\n          className=\"pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(ellipse_at_center,transparent_30%,var(--color-card)_78%)]\"\n        />\n      )}\n      {children}\n    </div>\n  )\n}\n",
+      "type": "registry:component"
+    }
+  ],
+  "type": "registry:component"
+}

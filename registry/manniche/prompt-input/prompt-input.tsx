@@ -101,7 +101,7 @@ export function PromptInput({
         placeholder={placeholder}
         aria-label={label}
         aria-describedby={hintId}
-        className="block w-full resize-none bg-transparent px-2 py-2 text-base leading-6 outline-none placeholder:text-muted-foreground focus-visible:outline-none"
+        className="block w-full resize-none bg-transparent px-2 py-2.5 text-base leading-6 outline-none placeholder:text-muted-foreground focus-visible:outline-none"
       />
       <span id={hintId} className="sr-only">
         Enter sends. Shift and Enter makes a new line.

@@ -1,0 +1,22 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "text-reveal",
+  "title": "Text reveal",
+  "description": "Words go from faint to full as the reader scrolls through a paragraph.",
+  "registryDependencies": [
+    "utils"
+  ],
+  "files": [
+    {
+      "path": "registry/manniche/text-reveal/text-reveal.tsx",
+      "content": "import { useEffect, useRef, useState } from 'react'\nimport { useReducedMotion } from '@/registry/manniche/hooks/use-reduced-motion'\nimport { cn } from '@/lib/utils'\n\nexport type TextRevealProps = {\n  /** Plain text. Each word lights up as the paragraph scrolls past. */\n  children: string\n  className?: string\n}\n\n/**\n * Words go from faint to full as the reader scrolls through the paragraph.\n * The text is always in the DOM in full, so screen readers and search engines read it normally.\n * Under reduced motion every word is at full strength from the start.\n */\nexport function TextReveal({ children, className }: TextRevealProps) {\n  const reduced = useReducedMotion()\n  const el = useRef<HTMLParagraphElement>(null)\n  const words = children.split(/(\\s+)/)\n  const count = words.filter((w) => !/^\\s+$/.test(w)).length\n  const [lit, setLit] = useState(count)\n\n  useEffect(() => {\n    if (reduced) {\n      setLit(count)\n      return\n    }\n    let frame = 0\n    const run = () => {\n      cancelAnimationFrame(frame)\n      frame = requestAnimationFrame(() => {\n        const p = el.current\n        if (!p) return\n        const r = p.getBoundingClientRect()\n        const t = Math.min(1, Math.max(0, (innerHeight * 0.85 - r.top) / (r.height + innerHeight * 0.35)))\n        setLit(Math.round(t * count))\n      })\n    }\n    run()\n    addEventListener('scroll', run, { passive: true })\n    addEventListener('resize', run)\n    return () => {\n      cancelAnimationFrame(frame)\n      removeEventListener('scroll', run)\n      removeEventListener('resize', run)\n    }\n  }, [reduced, count])\n\n  let i = 0\n  return (\n    <p ref={el} className={cn('text-pretty', className)}>\n      {words.map((w, j) => {\n        if (/^\\s+$/.test(w)) return w\n        const on = i++ < lit\n        return (\n          <span key={j} className={cn('transition-opacity duration-200', on ? 'opacity-100' : 'opacity-20')}>\n            {w}\n          </span>\n        )\n      })}\n    </p>\n  )\n}\n",
+      "type": "registry:component"
+    },
+    {
+      "path": "registry/manniche/hooks/use-reduced-motion.ts",
+      "content": "import { useSyncExternalStore } from 'react'\n\nconst QUERY = '(prefers-reduced-motion: reduce)'\n\nfunction subscribe(onChange: () => void) {\n  const mq = window.matchMedia(QUERY)\n  mq.addEventListener('change', onChange)\n  return () => mq.removeEventListener('change', onChange)\n}\n\n/** True when the visitor has asked the system for less motion. */\nexport function useReducedMotion() {\n  return useSyncExternalStore(\n    subscribe,\n    () => window.matchMedia(QUERY).matches,\n    () => false,\n  )\n}\n",
+      "type": "registry:hook"
+    }
+  ],
+  "type": "registry:component"
+}
