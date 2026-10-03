@@ -1,0 +1,20 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "switch-demo",
+  "title": "Switch demo",
+  "description": "How to use Switch.",
+  "registryDependencies": [
+    "@manniche/switch"
+  ],
+  "files": [
+    {
+      "path": "registry/manniche/examples/switch-demo.tsx",
+      "content": "import { Switch } from '@/registry/manniche/switch/switch'\n\nexport default function SwitchDemo() {\n  return (\n    <div className=\"flex flex-col items-start gap-4\">\n      <Switch label=\"Email me when an order comes in\" defaultChecked />\n      <Switch label=\"Show prices with VAT\" />\n    </div>\n  )\n}\n",
+      "type": "registry:example"
+    }
+  ],
+  "categories": [
+    "controls"
+  ],
+  "type": "registry:example"
+}

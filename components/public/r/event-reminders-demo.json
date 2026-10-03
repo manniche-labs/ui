@@ -1,0 +1,20 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "event-reminders-demo",
+  "title": "Event reminders demo",
+  "description": "How to use Event reminders.",
+  "registryDependencies": [
+    "@manniche/event-reminders"
+  ],
+  "files": [
+    {
+      "path": "registry/manniche/examples/event-reminders-demo.tsx",
+      "content": "import { EventReminders } from '@/registry/manniche/event-reminders/event-reminders'\n\nexport default function EventRemindersDemo() {\n  return (\n    <div className=\"flex justify-center\">\n      <EventReminders\n        title=\"Spring sale opens\"\n        when=\"Thursday 9 October, 10:00\"\n        defaultValue={[\n          { id: 'a', channel: 'notification', amount: 30, unit: 'minutes' },\n          { id: 'b', channel: 'email', amount: 1, unit: 'days' },\n        ]}\n      />\n    </div>\n  )\n}\n",
+      "type": "registry:example"
+    }
+  ],
+  "categories": [
+    "widgets"
+  ],
+  "type": "registry:example"
+}

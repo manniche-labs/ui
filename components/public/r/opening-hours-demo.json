@@ -1,0 +1,20 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "opening-hours-demo",
+  "title": "Opening hours demo",
+  "description": "How to use Opening hours.",
+  "registryDependencies": [
+    "@manniche/opening-hours"
+  ],
+  "files": [
+    {
+      "path": "registry/manniche/examples/opening-hours-demo.tsx",
+      "content": "import { OpeningHours } from '@/registry/manniche/opening-hours/opening-hours'\n\nexport default function OpeningHoursDemo() {\n  return (\n    <div className=\"flex justify-center\">\n      <OpeningHours\n        defaultValue={[\n          { id: 'mon', label: 'Monday', open: true, ranges: [{ id: 'm1', from: '10:00', to: '18:00' }] },\n          { id: 'tue', label: 'Tuesday', open: true, ranges: [{ id: 't1', from: '10:00', to: '13:00' }, { id: 't2', from: '14:00', to: '18:00' }] },\n          { id: 'sat', label: 'Saturday', open: false, ranges: [] },\n          { id: 'sun', label: 'Sunday', open: false, ranges: [] },\n        ]}\n      />\n    </div>\n  )\n}\n",
+      "type": "registry:example"
+    }
+  ],
+  "categories": [
+    "widgets"
+  ],
+  "type": "registry:example"
+}

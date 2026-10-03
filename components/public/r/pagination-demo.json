@@ -1,0 +1,20 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "pagination-demo",
+  "title": "Pagination demo",
+  "description": "How to use Pagination.",
+  "registryDependencies": [
+    "@manniche/pagination"
+  ],
+  "files": [
+    {
+      "path": "registry/manniche/examples/pagination-demo.tsx",
+      "content": "import { Pagination } from '@/registry/manniche/pagination/pagination'\n\nexport default function PaginationDemo() {\n  return (\n    <div className=\"flex justify-center\">\n      <Pagination total={24} defaultPage={8} onChange={(page) => console.log('load page', page)} />\n    </div>\n  )\n}\n",
+      "type": "registry:example"
+    }
+  ],
+  "categories": [
+    "navigation"
+  ],
+  "type": "registry:example"
+}

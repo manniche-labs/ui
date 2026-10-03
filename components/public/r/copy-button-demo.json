@@ -1,0 +1,20 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "copy-button-demo",
+  "title": "Copy button demo",
+  "description": "How to use Copy button.",
+  "registryDependencies": [
+    "@manniche/copy-button"
+  ],
+  "files": [
+    {
+      "path": "registry/manniche/examples/copy-button-demo.tsx",
+      "content": "import { CopyButton } from '@/registry/manniche/copy-button/copy-button'\n\nexport default function CopyButtonDemo() {\n  return (\n    <div className=\"flex items-center justify-center gap-3\">\n      <code className=\"rounded-xl bg-muted px-3 py-2.5 font-mono text-sm\">SPRING-25</code>\n      <CopyButton value=\"SPRING-25\" />\n    </div>\n  )\n}\n",
+      "type": "registry:example"
+    }
+  ],
+  "categories": [
+    "controls"
+  ],
+  "type": "registry:example"
+}
