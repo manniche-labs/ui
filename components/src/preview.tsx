@@ -42,7 +42,7 @@ function Preview() {
         </div>
       ) : (
         <div className="grid min-h-dvh place-items-center px-6 py-14">
-          <div className="w-full max-w-xl">{demo}</div>
+          <div className="w-full min-w-0 max-w-xl">{demo}</div>
         </div>
       )}
     </main>
