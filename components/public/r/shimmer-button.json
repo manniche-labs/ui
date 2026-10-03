@@ -18,5 +18,8 @@
       "type": "registry:hook"
     }
   ],
+  "categories": [
+    "surfaces"
+  ],
   "type": "registry:component"
 }
