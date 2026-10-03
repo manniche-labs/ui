@@ -4,7 +4,7 @@ Everything from Manniche Labs that has to do with interfaces: components you can
 
 | Folder | What it is |
 |---|---|
-| [components](components) | Manniche UI: 33 React components for agent interfaces, everyday controls and calm motion, served as a shadcn registry. Install them with `npx shadcn add`, or let an agent find them through the shadcn MCP. |
+| [components](components) | Manniche UI: 45 React components and a hook for agent interfaces, everyday controls and calm motion, served as a shadcn registry. Install them with `npx shadcn add`, or let an agent find them through the shadcn MCP. |
 | [skills/design-bake-off](skills/design-bake-off) | A Claude Code skill. Three agents compete on a landing-page design, you pick the winner, and one agent ports it into your app. In React and shadcn apps it installs the components from this repo. |
 | [skills/page-critic](skills/page-critic) | A Claude Code skill. It reviews the pages of a web app in three layers, measures them in a real browser and compares before and after. |
 

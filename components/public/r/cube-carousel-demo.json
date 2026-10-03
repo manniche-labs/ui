@@ -1,0 +1,20 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "cube-carousel-demo",
+  "title": "Cube carousel demo",
+  "description": "How to use Cube carousel.",
+  "registryDependencies": [
+    "@manniche/cube-carousel"
+  ],
+  "files": [
+    {
+      "path": "registry/manniche/examples/cube-carousel-demo.tsx",
+      "content": "import { CubeCarousel } from '@/registry/manniche/cube-carousel/cube-carousel'\n\nconst SLIDES = [\n  { name: 'Linen shirt', price: '€59', bg: 'from-amber-200 to-orange-300' },\n  { name: 'Canvas tote', price: '€24', bg: 'from-lime-200 to-emerald-300' },\n  { name: 'Wool scarf', price: '€45', bg: 'from-sky-200 to-indigo-300' },\n  { name: 'Leather wallet', price: '€39', bg: 'from-rose-200 to-fuchsia-300' },\n  { name: 'Cotton socks', price: '€12', bg: 'from-stone-200 to-stone-400' },\n]\n\nexport default function CubeCarouselDemo() {\n  return (\n    <div className=\"flex justify-center py-4\">\n      <CubeCarousel\n        label=\"New arrivals\"\n        slides={SLIDES.map((s) => (\n          <div key={s.name} className={`flex size-full flex-col justify-end bg-linear-to-br p-5 text-neutral-900 ${s.bg}`}>\n            <p className=\"text-sm font-medium opacity-70\">New in</p>\n            <p className=\"text-2xl font-semibold tracking-tight\">{s.name}</p>\n            <p className=\"font-mono\">{s.price}</p>\n          </div>\n        ))}\n      />\n    </div>\n  )\n}\n",
+      "type": "registry:example"
+    }
+  ],
+  "categories": [
+    "widgets"
+  ],
+  "type": "registry:example"
+}

@@ -1,0 +1,20 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "trade-ticket-demo",
+  "title": "Trade ticket demo",
+  "description": "How to use Trade ticket.",
+  "registryDependencies": [
+    "@manniche/trade-ticket"
+  ],
+  "files": [
+    {
+      "path": "registry/manniche/examples/trade-ticket-demo.tsx",
+      "content": "import { useState } from 'react'\nimport { TradeTicket, type TradeOrder } from '@/registry/manniche/trade-ticket/trade-ticket'\n\nexport default function TradeTicketDemo() {\n  const [last, setLast] = useState<TradeOrder | null>(null)\n\n  return (\n    <div className=\"flex flex-col items-center gap-3\">\n      <p className=\"max-w-sm text-center text-sm font-medium\">Will the spring collection sell out before Friday?</p>\n      <TradeTicket\n        outcomes={[\n          { id: 'yes', label: 'Yes', price: 0.62 },\n          { id: 'no', label: 'No', price: 0.38 },\n        ]}\n        balance={250}\n        onTrade={setLast}\n      />\n      <p className=\"min-h-5 text-sm text-muted-foreground\" aria-live=\"polite\">\n        {last && `${last.side === 'buy' ? 'Bought' : 'Sold'} ${last.shares.toFixed(1)} × ${last.outcome} for $${last.amount}`}\n      </p>\n    </div>\n  )\n}\n",
+      "type": "registry:example"
+    }
+  ],
+  "categories": [
+    "widgets"
+  ],
+  "type": "registry:example"
+}

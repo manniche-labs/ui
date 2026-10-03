@@ -1,0 +1,20 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "wave-loader-demo",
+  "title": "Wave loader demo",
+  "description": "How to use Wave loader.",
+  "registryDependencies": [
+    "@manniche/wave-loader"
+  ],
+  "files": [
+    {
+      "path": "registry/manniche/examples/wave-loader-demo.tsx",
+      "content": "import { WaveLoader } from '@/registry/manniche/wave-loader/wave-loader'\n\nexport default function WaveLoaderDemo() {\n  return (\n    <div className=\"flex flex-col items-center gap-4 py-6\">\n      <WaveLoader label=\"Loading your orders\" />\n      <p className=\"text-sm text-muted-foreground\">Loading your orders</p>\n    </div>\n  )\n}\n",
+      "type": "registry:example"
+    }
+  ],
+  "categories": [
+    "motion"
+  ],
+  "type": "registry:example"
+}

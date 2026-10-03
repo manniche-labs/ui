@@ -32,8 +32,9 @@ export function OnboardingChecklist({ steps, title = 'Getting started', defaultO
 
   return (
     <MotionConfig reducedMotion="user" transition={spring}>
-      <motion.section layout className={cn('w-full overflow-hidden rounded-2xl border bg-card text-card-foreground shadow-sm', className)}>
-        <button
+      <motion.section layout style={{ borderRadius: 16 }} className={cn('relative w-full overflow-hidden rounded-2xl border bg-card text-card-foreground shadow-sm', className)}>
+        <motion.button
+          layout="position"
           type="button"
           aria-expanded={open}
           aria-controls={panel}
@@ -62,16 +63,18 @@ export function OnboardingChecklist({ steps, title = 'Getting started', defaultO
               {done}/{steps.length}
             </span>
           </span>
-        </button>
+        </motion.button>
 
-        <AnimatePresence initial={false}>
+        {/* The card grows with a layout (transform) animation; the list only fades. popLayout lets the card shrink while it fades out. */}
+        <AnimatePresence initial={false} mode="popLayout">
           {open && (
             <motion.div
               id={panel}
-              initial={{ height: 0, opacity: 0 }}
-              animate={{ height: 'auto', opacity: 1 }}
-              exit={{ height: 0, opacity: 0 }}
-              className="border-t bg-background"
+              layout="position"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="w-full border-t bg-background"
             >
               <ol className="space-y-1 p-2">
                 {steps.map((step, i) => (
