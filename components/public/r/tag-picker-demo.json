@@ -1,0 +1,20 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "tag-picker-demo",
+  "title": "Tag picker demo",
+  "description": "How to use Tag picker.",
+  "registryDependencies": [
+    "@manniche/tag-picker"
+  ],
+  "files": [
+    {
+      "path": "registry/manniche/examples/tag-picker-demo.tsx",
+      "content": "import { TagPicker } from '@/registry/manniche/tag-picker/tag-picker'\n\nexport default function TagPickerDemo() {\n  return (\n    <TagPicker\n      label=\"Product tags\"\n      defaultValue={['linen']}\n      options={[\n        { id: 'linen', label: 'Linen' },\n        { id: 'organic', label: 'Organic' },\n        { id: 'handmade', label: 'Handmade' },\n        { id: 'summer', label: 'Summer' },\n        { id: 'gift', label: 'Gift idea' },\n        { id: 'sale', label: 'On sale' },\n        { id: 'new', label: 'New in' },\n      ]}\n    />\n  )\n}\n",
+      "type": "registry:example"
+    }
+  ],
+  "categories": [
+    "controls"
+  ],
+  "type": "registry:example"
+}

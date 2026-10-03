@@ -31,7 +31,7 @@ npx shadcn@latest mcp init --client claude
 
 It writes `.mcp.json` with the shadcn MCP server. The agent can then list and search `@manniche`, read each component's source, get a usage example (`<name>-demo`, e.g. `toast-demo`) and the install command.
 
-> The registry is not deployed yet. Until it is, run it locally (see below).
+There is also a hosted MCP server just for this registry, with no key: `https://mikkelmanniche.dk/api/mcp`. See [mikkelmanniche.dk/lab/ui/mcp](https://mikkelmanniche.dk/lab/ui/mcp).
 
 ## Components
 
@@ -56,7 +56,23 @@ It writes `.mcp.json` with the shadcn MCP server. The agent can then list and se
 | `spotlight-card` | A card with a soft light that follows the mouse |
 | `marquee` | Items scroll sideways in a loop and pause on hover or focus |
 | `dot-pattern` | A quiet dot grid behind content, CSS only |
+| `rolling-number` | A number whose changed digits roll up or down |
+| `stepper` | Plus and minus counter with rolling digits and arrow keys |
+| `switch` | On and off switch whose knob stretches when pressed |
+| `copy-button` | Copies a value; icon and label roll over to say it worked or failed |
+| `timed-undo` | Delete button that counts down and can be undone first |
+| `hold-to-confirm` | Fills while held and fires when full |
+| `tag-picker` | Pick tags from a pool; they fly into the box and back |
+| `signature-pad` | Draw or type a signature, get a sharp PNG |
+| `continuous-tabs` | Tab list with a sliding pill and arrow keys |
+| `pagination` | Previous and next with a rolling page number |
+| `onboarding-checklist` | Collapsible getting-started card with progress |
+| `event-reminders` | When and how people are reminded of an event |
+| `opening-hours` | Opening hours per weekday, several ranges a day |
+| `ai-action-bar` | Toolbar that morphs into a one-line prompt for the agent |
 | `use-reduced-motion` | Hook: true when the visitor asked for less motion |
+
+Several of the newer components are adapted from [Watermelon UI](https://github.com/WatermelonCorp/watermelon-platform) (MIT). Each such file says so at the top; see [THIRD_PARTY_NOTICES.md](../THIRD_PARTY_NOTICES.md).
 
 ## Rules every component follows
 

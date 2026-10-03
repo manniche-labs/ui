@@ -1,0 +1,20 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "stepper-demo",
+  "title": "Stepper demo",
+  "description": "How to use Stepper.",
+  "registryDependencies": [
+    "@manniche/stepper"
+  ],
+  "files": [
+    {
+      "path": "registry/manniche/examples/stepper-demo.tsx",
+      "content": "import { Stepper } from '@/registry/manniche/stepper/stepper'\n\nexport default function StepperDemo() {\n  return (\n    <div className=\"flex justify-center\">\n      <Stepper label=\"Quantity\" defaultValue={2} min={1} max={20} />\n    </div>\n  )\n}\n",
+      "type": "registry:example"
+    }
+  ],
+  "categories": [
+    "controls"
+  ],
+  "type": "registry:example"
+}

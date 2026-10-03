@@ -1,0 +1,20 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "signature-pad-demo",
+  "title": "Signature pad demo",
+  "description": "How to use Signature pad.",
+  "registryDependencies": [
+    "@manniche/signature-pad"
+  ],
+  "files": [
+    {
+      "path": "registry/manniche/examples/signature-pad-demo.tsx",
+      "content": "import { SignaturePad } from '@/registry/manniche/signature-pad/signature-pad'\n\nexport default function SignaturePadDemo() {\n  return (\n    <div className=\"flex justify-center\">\n      <SignaturePad onSign={(s) => console.log(s.kind === 'drawn' ? 'PNG ready' : `typed: ${s.name}`)} />\n    </div>\n  )\n}\n",
+      "type": "registry:example"
+    }
+  ],
+  "categories": [
+    "controls"
+  ],
+  "type": "registry:example"
+}

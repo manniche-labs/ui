@@ -1,0 +1,20 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "timed-undo-demo",
+  "title": "Timed undo demo",
+  "description": "How to use Timed undo.",
+  "registryDependencies": [
+    "@manniche/timed-undo"
+  ],
+  "files": [
+    {
+      "path": "registry/manniche/examples/timed-undo-demo.tsx",
+      "content": "import { TimedUndo } from '@/registry/manniche/timed-undo/timed-undo'\n\nexport default function TimedUndoDemo() {\n  return (\n    <div className=\"flex justify-center\">\n      <TimedUndo label=\"Delete order\" seconds={5} onConfirm={() => console.log('deleted')} />\n    </div>\n  )\n}\n",
+      "type": "registry:example"
+    }
+  ],
+  "categories": [
+    "controls"
+  ],
+  "type": "registry:example"
+}

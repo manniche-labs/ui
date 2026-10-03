@@ -1,0 +1,32 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "stepper",
+  "title": "Stepper",
+  "description": "A plus and minus counter with rolling digits that also works with the arrow keys.",
+  "dependencies": [
+    "motion",
+    "lucide-react"
+  ],
+  "registryDependencies": [
+    "utils"
+  ],
+  "files": [
+    {
+      "path": "registry/manniche/stepper/stepper.tsx",
+      "content": "// Based on Watermelon UI's “Stepper” (MIT, © 2026 Watermelon Platform Contributors,\n// github.com/WatermelonCorp/watermelon-platform). Rewritten with keyboard support and labels.\nimport { Minus, Plus } from 'lucide-react'\nimport { useState, type KeyboardEvent } from 'react'\nimport { RollingNumber } from '@/registry/manniche/rolling-number/rolling-number'\nimport { cn } from '@/lib/utils'\n\nexport type StepperProps = {\n  /** Controlled value. Leave it out and the stepper keeps its own. */\n  value?: number\n  defaultValue?: number\n  min?: number\n  max?: number\n  step?: number\n  /** Read aloud by screen readers, e.g. \"Guests\". */\n  label: string\n  onChange?: (value: number) => void\n  className?: string\n}\n\nexport function Stepper({ value, defaultValue = 0, min = 0, max = 99, step = 1, label, onChange, className }: StepperProps) {\n  const [own, setOwn] = useState(defaultValue)\n  const current = value ?? own\n\n  const set = (next: number) => {\n    const v = Math.min(max, Math.max(min, next))\n    if (v === current) return\n    setOwn(v)\n    onChange?.(v)\n  }\n\n  // The number is a spinbutton, so arrow keys, Home and End work as in a native number input.\n  const onKey = (e: KeyboardEvent) => {\n    const to: Record<string, number> = {\n      ArrowUp: current + step,\n      ArrowRight: current + step,\n      ArrowDown: current - step,\n      ArrowLeft: current - step,\n      Home: min,\n      End: max,\n    }\n    if (e.key in to) {\n      e.preventDefault()\n      set(to[e.key])\n    }\n  }\n\n  const btn =\n    'grid size-11 shrink-0 place-items-center rounded-xl bg-muted text-foreground transition-[background-color,transform] duration-150 hover:bg-accent active:scale-[0.94] disabled:pointer-events-none disabled:opacity-40'\n\n  return (\n    <div className={cn('inline-flex items-center gap-2 rounded-2xl border bg-card p-1.5 shadow-sm', className)}>\n      <button type=\"button\" className={btn} onClick={() => set(current - step)} disabled={current <= min} aria-label={`Fewer: ${label}`}>\n        <Minus className=\"size-4\" aria-hidden />\n      </button>\n      <div\n        role=\"spinbutton\"\n        tabIndex={0}\n        aria-label={label}\n        aria-valuenow={current}\n        aria-valuemin={min}\n        aria-valuemax={max}\n        onKeyDown={onKey}\n        className=\"min-w-12 rounded-lg px-1 text-center text-2xl font-semibold outline-none focus-visible:ring-2 focus-visible:ring-ring\"\n      >\n        <RollingNumber value={current} />\n      </div>\n      <button type=\"button\" className={btn} onClick={() => set(current + step)} disabled={current >= max} aria-label={`More: ${label}`}>\n        <Plus className=\"size-4\" aria-hidden />\n      </button>\n    </div>\n  )\n}\n",
+      "type": "registry:component"
+    },
+    {
+      "path": "registry/manniche/rolling-number/rolling-number.tsx",
+      "content": "// Based on the rolling digits in Watermelon UI's “Stepper” and “Pagination”\n// (MIT, © 2026 Watermelon Platform Contributors, github.com/WatermelonCorp/watermelon-platform).\nimport { AnimatePresence, MotionConfig, motion } from 'motion/react'\nimport { useState } from 'react'\nimport { cn } from '@/lib/utils'\n\nexport type RollingNumberProps = {\n  value: number\n  /** Passed to Intl.NumberFormat, e.g. \"da-DK\". Leave it out for plain digits. */\n  locale?: string\n  className?: string\n}\n\n/** A number whose changed digits roll up or down. Screen readers get the whole number once. */\nexport function RollingNumber({ value, locale, className }: RollingNumberProps) {\n  // Remember the last value in state (not a ref), so the direction survives a double render.\n  const [last, setLast] = useState({ value, dir: 1 })\n  const dir = last.value === value ? last.dir : value > last.value ? 1 : -1\n  if (last.value !== value) setLast({ value, dir })\n  const text = locale ? new Intl.NumberFormat(locale).format(value) : String(value)\n  const chars = text.split('')\n\n  return (\n    <MotionConfig reducedMotion=\"user\">\n      <span className={cn('inline-flex tabular-nums', className)}>\n        <span className=\"sr-only\">{text}</span>\n        <span aria-hidden className=\"inline-flex\">\n          {chars.map((ch, i) => {\n            // Count from the right, so the ones stay the ones when the number grows a digit.\n            const place = chars.length - i\n            return (\n              <span key={place} className=\"relative inline-flex min-w-[1ch] justify-center overflow-hidden\">\n                <AnimatePresence mode=\"popLayout\" initial={false} custom={dir}>\n                  <motion.span\n                    key={ch}\n                    initial={{ y: `${dir * 70}%`, opacity: 0, filter: 'blur(2px)' }}\n                    animate={{ y: 0, opacity: 1, filter: 'blur(0px)' }}\n                    exit={{ y: `${dir * -70}%`, opacity: 0, filter: 'blur(2px)' }}\n                    transition={{ type: 'spring', stiffness: 260, damping: 32 }}\n                    className=\"inline-block\"\n                  >\n                    {ch}\n                  </motion.span>\n                </AnimatePresence>\n              </span>\n            )\n          })}\n        </span>\n      </span>\n    </MotionConfig>\n  )\n}\n",
+      "type": "registry:component"
+    }
+  ],
+  "meta": {
+    "credit": "Adapted from Watermelon UI (MIT)."
+  },
+  "categories": [
+    "controls"
+  ],
+  "type": "registry:component"
+}

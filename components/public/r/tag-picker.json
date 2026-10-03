@@ -1,0 +1,27 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "tag-picker",
+  "title": "Tag picker",
+  "description": "Pick tags from a pool, and each one flies into the box and back out when removed.",
+  "dependencies": [
+    "motion",
+    "lucide-react"
+  ],
+  "registryDependencies": [
+    "utils"
+  ],
+  "files": [
+    {
+      "path": "registry/manniche/tag-picker/tag-picker.tsx",
+      "content": "// Based on Watermelon UI's “Tags” (MIT, © 2026 Watermelon Platform Contributors,\n// github.com/WatermelonCorp/watermelon-platform). Rewritten as a controlled picker with labelled buttons.\nimport { X } from 'lucide-react'\nimport { LayoutGroup, MotionConfig, motion } from 'motion/react'\nimport { useId, useState } from 'react'\nimport { cn } from '@/lib/utils'\n\nexport type TagOption = { id: string; label: string }\n\nexport type TagPickerProps = {\n  options: TagOption[]\n  /** Controlled ids of the picked tags, in the order they were picked. */\n  value?: string[]\n  defaultValue?: string[]\n  onChange?: (ids: string[]) => void\n  label?: string\n  /** Shown in the empty box before anything is picked. */\n  placeholder?: string\n  className?: string\n}\n\n/** Pick tags from a pool; each one flies up into the box and back down when removed. */\nexport function TagPicker({ options, value, defaultValue = [], onChange, label = 'Tags', placeholder = 'Pick a few below', className }: TagPickerProps) {\n  const [own, setOwn] = useState(defaultValue)\n  const picked = value ?? own\n  const group = useId()\n  const heading = useId()\n\n  const set = (ids: string[]) => {\n    setOwn(ids)\n    onChange?.(ids)\n  }\n\n  const byId = new Map(options.map((o) => [o.id, o]))\n  const pool = options.filter((o) => !picked.includes(o.id))\n\n  return (\n    <MotionConfig reducedMotion=\"user\" transition={{ type: 'spring', stiffness: 300, damping: 35 }}>\n      <LayoutGroup id={group}>\n        <div className={cn('w-full', className)} role=\"group\" aria-labelledby={heading}>\n          <p id={heading} className=\"text-sm font-medium\">\n            {label}\n          </p>\n          <motion.ul layout aria-label=\"Picked\" className=\"mt-2 flex min-h-14 flex-wrap items-center gap-1.5 rounded-2xl border bg-card p-1.5\">\n            {picked.length === 0 && <li className=\"px-2.5 text-sm text-muted-foreground\">{placeholder}</li>}\n            {picked.map((id) => {\n              const tag = byId.get(id)\n              if (!tag) return null\n              return (\n                <motion.li key={id} layoutId={id} style={{ borderRadius: 12 }} className=\"z-20 flex items-center gap-0.5 border bg-background py-0.5 pr-0.5 pl-3 text-sm font-medium\">\n                  <motion.span layout=\"position\">{tag.label}</motion.span>\n                  <button\n                    type=\"button\"\n                    onClick={() => set(picked.filter((p) => p !== id))}\n                    aria-label={`Remove ${tag.label}`}\n                    className=\"grid size-9 place-items-center rounded-[10px] text-muted-foreground transition-colors duration-150 hover:bg-muted hover:text-foreground\"\n                  >\n                    <X className=\"size-4\" aria-hidden />\n                  </button>\n                </motion.li>\n              )\n            })}\n          </motion.ul>\n          {pool.length > 0 && (\n            <motion.ul layout aria-label=\"Available\" className=\"mt-3 flex flex-wrap gap-2 rounded-2xl border bg-card p-2\">\n              {pool.map((tag) => (\n                <motion.li key={tag.id} layoutId={tag.id} style={{ borderRadius: 12 }} className=\"z-10 bg-muted\">\n                  <button\n                    type=\"button\"\n                    onClick={() => set([...picked, tag.id])}\n                    className=\"min-h-10 px-4 text-sm font-medium text-muted-foreground transition-colors duration-150 hover:text-foreground\"\n                  >\n                    <motion.span layout=\"position\" className=\"inline-block\">\n                      {tag.label}\n                    </motion.span>\n                  </button>\n                </motion.li>\n              ))}\n            </motion.ul>\n          )}\n        </div>\n      </LayoutGroup>\n    </MotionConfig>\n  )\n}\n",
+      "type": "registry:component"
+    }
+  ],
+  "meta": {
+    "credit": "Adapted from Watermelon UI (MIT)."
+  },
+  "categories": [
+    "controls"
+  ],
+  "type": "registry:component"
+}

@@ -1,0 +1,20 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "rolling-number-demo",
+  "title": "Rolling number demo",
+  "description": "How to use Rolling number.",
+  "registryDependencies": [
+    "@manniche/rolling-number"
+  ],
+  "files": [
+    {
+      "path": "registry/manniche/examples/rolling-number-demo.tsx",
+      "content": "import { useState } from 'react'\nimport { RollingNumber } from '@/registry/manniche/rolling-number/rolling-number'\n\nexport default function RollingNumberDemo() {\n  const [n, setN] = useState(1284)\n  return (\n    <div className=\"flex flex-col items-center gap-6\">\n      <p className=\"font-serif text-6xl tracking-tight\">\n        <RollingNumber value={n} locale=\"da-DK\" />\n      </p>\n      <div className=\"flex gap-2\">\n        <button type=\"button\" onClick={() => setN(n - 37)} className=\"min-h-11 rounded-xl border px-4 text-sm\">−37</button>\n        <button type=\"button\" onClick={() => setN(n + 137)} className=\"min-h-11 rounded-xl border px-4 text-sm\">+137</button>\n      </div>\n    </div>\n  )\n}\n",
+      "type": "registry:example"
+    }
+  ],
+  "categories": [
+    "motion"
+  ],
+  "type": "registry:example"
+}

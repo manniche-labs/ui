@@ -1,0 +1,20 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "continuous-tabs-demo",
+  "title": "Continuous tabs demo",
+  "description": "How to use Continuous tabs.",
+  "registryDependencies": [
+    "@manniche/continuous-tabs"
+  ],
+  "files": [
+    {
+      "path": "registry/manniche/examples/continuous-tabs-demo.tsx",
+      "content": "import { ContinuousTabs } from '@/registry/manniche/continuous-tabs/continuous-tabs'\n\nexport default function ContinuousTabsDemo() {\n  return (\n    <div className=\"flex justify-center\">\n      <ContinuousTabs\n        label=\"Orders\"\n        tabs={[\n          { id: 'all', label: 'All' },\n          { id: 'open', label: 'Open' },\n          { id: 'shipped', label: 'Shipped' },\n          { id: 'returned', label: 'Returned' },\n        ]}\n      />\n    </div>\n  )\n}\n",
+      "type": "registry:example"
+    }
+  ],
+  "categories": [
+    "navigation"
+  ],
+  "type": "registry:example"
+}

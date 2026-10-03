@@ -1,0 +1,28 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "hold-to-confirm",
+  "title": "Hold to confirm",
+  "description": "A button for actions that must not happen by accident: it fills while held and fires when full.",
+  "dependencies": [
+    "lucide-react"
+  ],
+  "registryDependencies": [
+    "utils"
+  ],
+  "files": [
+    {
+      "path": "registry/manniche/hold-to-confirm/hold-to-confirm.tsx",
+      "content": "import { Check } from 'lucide-react'\nimport { useEffect, useRef, useState, type ReactNode } from 'react'\nimport { useReducedMotion } from '@/registry/manniche/hooks/use-reduced-motion'\nimport { cn } from '@/lib/utils'\n\nexport type HoldToConfirmProps = {\n  children: ReactNode\n  /** Milliseconds the button must be held. */\n  duration?: number\n  onConfirm: () => void\n  doneLabel?: ReactNode\n  /** Said to screen readers, since holding is not obvious. */\n  hint?: string\n  className?: string\n}\n\n/**\n * A button for actions that should not happen by accident: it fills while held and fires when full.\n * Letting go early drains it again. Space or Enter held down works the same way.\n */\nexport function HoldToConfirm({ children, duration = 1200, onConfirm, doneLabel = 'Done', hint = 'Press and hold to confirm', className }: HoldToConfirmProps) {\n  const reduced = useReducedMotion()\n  const [progress, setProgress] = useState(0)\n  const [done, setDone] = useState(false)\n  const holding = useRef(false)\n  const value = useRef(0)\n  const frame = useRef(0)\n  const fire = useRef(onConfirm)\n  useEffect(() => {\n    fire.current = onConfirm\n  })\n\n  const loop = (prev: number) => (now: number) => {\n    const dt = now - prev\n    // Fill at the set speed while held; drain twice as fast when let go.\n    value.current = Math.min(1, Math.max(0, value.current + (holding.current ? dt / duration : (-2 * dt) / duration)))\n    setProgress(value.current)\n    if (value.current >= 1) {\n      holding.current = false\n      setDone(true)\n      fire.current()\n      return\n    }\n    if (value.current > 0 || holding.current) frame.current = requestAnimationFrame(loop(now))\n  }\n\n  const start = () => {\n    if (done) return\n    holding.current = true\n    cancelAnimationFrame(frame.current)\n    frame.current = requestAnimationFrame(loop(performance.now()))\n  }\n  const stop = () => {\n    holding.current = false\n  }\n\n  useEffect(() => () => cancelAnimationFrame(frame.current), [])\n\n  useEffect(() => {\n    if (!done) return\n    const t = setTimeout(() => {\n      setDone(false)\n      value.current = 0\n      setProgress(0)\n    }, 2000)\n    return () => clearTimeout(t)\n  }, [done])\n\n  // Under reduced motion the fill jumps in steps of a quarter instead of sliding.\n  const fill = done ? 1 : reduced ? Math.floor(progress * 4) / 4 : progress\n  const label = done ? (\n    <>\n      <Check className=\"size-4\" aria-hidden />\n      {doneLabel}\n    </>\n  ) : (\n    children\n  )\n\n  return (\n    <button\n      type=\"button\"\n      aria-description={hint}\n      onPointerDown={start}\n      onPointerUp={stop}\n      onPointerLeave={stop}\n      onPointerCancel={stop}\n      onKeyDown={(e) => {\n        if ((e.key === ' ' || e.key === 'Enter') && !e.repeat) {\n          e.preventDefault()\n          start()\n        }\n      }}\n      onKeyUp={(e) => (e.key === ' ' || e.key === 'Enter') && stop()}\n      onContextMenu={(e) => e.preventDefault()}\n      className={cn(\n        'relative isolate inline-flex min-h-11 touch-none items-center justify-center overflow-hidden rounded-full bg-destructive/10 px-6 font-medium text-destructive select-none',\n        className,\n      )}\n    >\n      <span className=\"flex items-center gap-2\">{label}</span>\n      {/* A white copy of the label sits on the fill and is clipped to the filled part. */}\n      <span\n        aria-hidden\n        className=\"absolute inset-0 flex items-center justify-center gap-2 bg-destructive text-white\"\n        style={{ clipPath: `inset(0 ${100 - fill * 100}% 0 0)` }}\n      >\n        {label}\n      </span>\n      <span className=\"sr-only\" aria-live=\"polite\">\n        {done ? doneLabel : ''}\n      </span>\n    </button>\n  )\n}\n",
+      "type": "registry:component"
+    },
+    {
+      "path": "registry/manniche/hooks/use-reduced-motion.ts",
+      "content": "import { useSyncExternalStore } from 'react'\n\nconst QUERY = '(prefers-reduced-motion: reduce)'\n\nfunction subscribe(onChange: () => void) {\n  const mq = window.matchMedia(QUERY)\n  mq.addEventListener('change', onChange)\n  return () => mq.removeEventListener('change', onChange)\n}\n\n/** True when the visitor has asked the system for less motion. */\nexport function useReducedMotion() {\n  return useSyncExternalStore(\n    subscribe,\n    () => window.matchMedia(QUERY).matches,\n    () => false,\n  )\n}\n",
+      "type": "registry:hook"
+    }
+  ],
+  "categories": [
+    "controls"
+  ],
+  "type": "registry:component"
+}

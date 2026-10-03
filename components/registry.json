@@ -740,6 +740,618 @@
       "categories": [
         "agent"
       ]
+    },
+    {
+      "name": "rolling-number",
+      "type": "registry:component",
+      "title": "Rolling number",
+      "description": "A number whose changed digits roll up or down, read once by screen readers.",
+      "dependencies": [
+        "motion"
+      ],
+      "registryDependencies": [
+        "utils"
+      ],
+      "files": [
+        {
+          "path": "registry/manniche/rolling-number/rolling-number.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "categories": [
+        "motion"
+      ],
+      "meta": {
+        "credit": "Adapted from Watermelon UI (MIT)."
+      }
+    },
+    {
+      "name": "rolling-number-demo",
+      "type": "registry:example",
+      "title": "Rolling number demo",
+      "description": "How to use Rolling number.",
+      "registryDependencies": [
+        "@manniche/rolling-number"
+      ],
+      "files": [
+        {
+          "path": "registry/manniche/examples/rolling-number-demo.tsx",
+          "type": "registry:example"
+        }
+      ],
+      "categories": [
+        "motion"
+      ]
+    },
+    {
+      "name": "stepper",
+      "type": "registry:component",
+      "title": "Stepper",
+      "description": "A plus and minus counter with rolling digits that also works with the arrow keys.",
+      "dependencies": [
+        "motion",
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "utils"
+      ],
+      "files": [
+        {
+          "path": "registry/manniche/stepper/stepper.tsx",
+          "type": "registry:component"
+        },
+        {
+          "path": "registry/manniche/rolling-number/rolling-number.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "categories": [
+        "controls"
+      ],
+      "meta": {
+        "credit": "Adapted from Watermelon UI (MIT)."
+      }
+    },
+    {
+      "name": "stepper-demo",
+      "type": "registry:example",
+      "title": "Stepper demo",
+      "description": "How to use Stepper.",
+      "registryDependencies": [
+        "@manniche/stepper"
+      ],
+      "files": [
+        {
+          "path": "registry/manniche/examples/stepper-demo.tsx",
+          "type": "registry:example"
+        }
+      ],
+      "categories": [
+        "controls"
+      ]
+    },
+    {
+      "name": "switch",
+      "type": "registry:component",
+      "title": "Switch",
+      "description": "An on and off switch whose knob stretches when pressed and springs across.",
+      "dependencies": [
+        "motion"
+      ],
+      "registryDependencies": [
+        "utils"
+      ],
+      "files": [
+        {
+          "path": "registry/manniche/switch/switch.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "categories": [
+        "controls"
+      ]
+    },
+    {
+      "name": "switch-demo",
+      "type": "registry:example",
+      "title": "Switch demo",
+      "description": "How to use Switch.",
+      "registryDependencies": [
+        "@manniche/switch"
+      ],
+      "files": [
+        {
+          "path": "registry/manniche/examples/switch-demo.tsx",
+          "type": "registry:example"
+        }
+      ],
+      "categories": [
+        "controls"
+      ]
+    },
+    {
+      "name": "copy-button",
+      "type": "registry:component",
+      "title": "Copy button",
+      "description": "Copies a value, and the icon and label roll over to say it worked, or that the browser said no.",
+      "dependencies": [
+        "motion",
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "utils"
+      ],
+      "files": [
+        {
+          "path": "registry/manniche/copy-button/copy-button.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "categories": [
+        "controls"
+      ],
+      "meta": {
+        "credit": "Adapted from Watermelon UI (MIT)."
+      }
+    },
+    {
+      "name": "copy-button-demo",
+      "type": "registry:example",
+      "title": "Copy button demo",
+      "description": "How to use Copy button.",
+      "registryDependencies": [
+        "@manniche/copy-button"
+      ],
+      "files": [
+        {
+          "path": "registry/manniche/examples/copy-button-demo.tsx",
+          "type": "registry:example"
+        }
+      ],
+      "categories": [
+        "controls"
+      ]
+    },
+    {
+      "name": "timed-undo",
+      "type": "registry:component",
+      "title": "Timed undo",
+      "description": "A delete button that counts down a few seconds and can be undone before anything happens.",
+      "dependencies": [
+        "motion",
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "utils"
+      ],
+      "files": [
+        {
+          "path": "registry/manniche/timed-undo/timed-undo.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "categories": [
+        "controls"
+      ],
+      "meta": {
+        "credit": "Adapted from Watermelon UI (MIT)."
+      }
+    },
+    {
+      "name": "timed-undo-demo",
+      "type": "registry:example",
+      "title": "Timed undo demo",
+      "description": "How to use Timed undo.",
+      "registryDependencies": [
+        "@manniche/timed-undo"
+      ],
+      "files": [
+        {
+          "path": "registry/manniche/examples/timed-undo-demo.tsx",
+          "type": "registry:example"
+        }
+      ],
+      "categories": [
+        "controls"
+      ]
+    },
+    {
+      "name": "hold-to-confirm",
+      "type": "registry:component",
+      "title": "Hold to confirm",
+      "description": "A button for actions that must not happen by accident: it fills while held and fires when full.",
+      "dependencies": [
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "utils"
+      ],
+      "files": [
+        {
+          "path": "registry/manniche/hold-to-confirm/hold-to-confirm.tsx",
+          "type": "registry:component"
+        },
+        {
+          "path": "registry/manniche/hooks/use-reduced-motion.ts",
+          "type": "registry:hook"
+        }
+      ],
+      "categories": [
+        "controls"
+      ]
+    },
+    {
+      "name": "hold-to-confirm-demo",
+      "type": "registry:example",
+      "title": "Hold to confirm demo",
+      "description": "How to use Hold to confirm.",
+      "registryDependencies": [
+        "@manniche/hold-to-confirm"
+      ],
+      "files": [
+        {
+          "path": "registry/manniche/examples/hold-to-confirm-demo.tsx",
+          "type": "registry:example"
+        }
+      ],
+      "categories": [
+        "controls"
+      ]
+    },
+    {
+      "name": "tag-picker",
+      "type": "registry:component",
+      "title": "Tag picker",
+      "description": "Pick tags from a pool, and each one flies into the box and back out when removed.",
+      "dependencies": [
+        "motion",
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "utils"
+      ],
+      "files": [
+        {
+          "path": "registry/manniche/tag-picker/tag-picker.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "categories": [
+        "controls"
+      ],
+      "meta": {
+        "credit": "Adapted from Watermelon UI (MIT)."
+      }
+    },
+    {
+      "name": "tag-picker-demo",
+      "type": "registry:example",
+      "title": "Tag picker demo",
+      "description": "How to use Tag picker.",
+      "registryDependencies": [
+        "@manniche/tag-picker"
+      ],
+      "files": [
+        {
+          "path": "registry/manniche/examples/tag-picker-demo.tsx",
+          "type": "registry:example"
+        }
+      ],
+      "categories": [
+        "controls"
+      ]
+    },
+    {
+      "name": "signature-pad",
+      "type": "registry:component",
+      "title": "Signature pad",
+      "description": "Draw a signature with mouse, finger or pen, or type it, and get a sharp PNG back.",
+      "dependencies": [
+        "motion",
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "utils"
+      ],
+      "files": [
+        {
+          "path": "registry/manniche/signature-pad/signature-pad.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "categories": [
+        "controls"
+      ],
+      "meta": {
+        "credit": "Adapted from Watermelon UI (MIT)."
+      }
+    },
+    {
+      "name": "signature-pad-demo",
+      "type": "registry:example",
+      "title": "Signature pad demo",
+      "description": "How to use Signature pad.",
+      "registryDependencies": [
+        "@manniche/signature-pad"
+      ],
+      "files": [
+        {
+          "path": "registry/manniche/examples/signature-pad-demo.tsx",
+          "type": "registry:example"
+        }
+      ],
+      "categories": [
+        "controls"
+      ]
+    },
+    {
+      "name": "continuous-tabs",
+      "type": "registry:component",
+      "title": "Continuous tabs",
+      "description": "Tabs where a pill slides to the one you pick, with arrow keys like a proper tab list.",
+      "dependencies": [
+        "motion"
+      ],
+      "registryDependencies": [
+        "utils"
+      ],
+      "files": [
+        {
+          "path": "registry/manniche/continuous-tabs/continuous-tabs.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "categories": [
+        "navigation"
+      ],
+      "meta": {
+        "credit": "Adapted from Watermelon UI (MIT)."
+      }
+    },
+    {
+      "name": "continuous-tabs-demo",
+      "type": "registry:example",
+      "title": "Continuous tabs demo",
+      "description": "How to use Continuous tabs.",
+      "registryDependencies": [
+        "@manniche/continuous-tabs"
+      ],
+      "files": [
+        {
+          "path": "registry/manniche/examples/continuous-tabs-demo.tsx",
+          "type": "registry:example"
+        }
+      ],
+      "categories": [
+        "navigation"
+      ]
+    },
+    {
+      "name": "pagination",
+      "type": "registry:component",
+      "title": "Pagination",
+      "description": "Previous and next with a page number that rolls digit by digit.",
+      "dependencies": [
+        "motion",
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "utils"
+      ],
+      "files": [
+        {
+          "path": "registry/manniche/pagination/pagination.tsx",
+          "type": "registry:component"
+        },
+        {
+          "path": "registry/manniche/rolling-number/rolling-number.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "categories": [
+        "navigation"
+      ],
+      "meta": {
+        "credit": "Adapted from Watermelon UI (MIT)."
+      }
+    },
+    {
+      "name": "pagination-demo",
+      "type": "registry:example",
+      "title": "Pagination demo",
+      "description": "How to use Pagination.",
+      "registryDependencies": [
+        "@manniche/pagination"
+      ],
+      "files": [
+        {
+          "path": "registry/manniche/examples/pagination-demo.tsx",
+          "type": "registry:example"
+        }
+      ],
+      "categories": [
+        "navigation"
+      ]
+    },
+    {
+      "name": "onboarding-checklist",
+      "type": "registry:component",
+      "title": "Onboarding checklist",
+      "description": "A collapsible getting-started card with a progress meter and the next step marked.",
+      "dependencies": [
+        "motion",
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "utils"
+      ],
+      "files": [
+        {
+          "path": "registry/manniche/onboarding-checklist/onboarding-checklist.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "categories": [
+        "widgets"
+      ],
+      "meta": {
+        "credit": "Adapted from Watermelon UI (MIT)."
+      }
+    },
+    {
+      "name": "onboarding-checklist-demo",
+      "type": "registry:example",
+      "title": "Onboarding checklist demo",
+      "description": "How to use Onboarding checklist.",
+      "registryDependencies": [
+        "@manniche/onboarding-checklist"
+      ],
+      "files": [
+        {
+          "path": "registry/manniche/examples/onboarding-checklist-demo.tsx",
+          "type": "registry:example"
+        }
+      ],
+      "categories": [
+        "widgets"
+      ]
+    },
+    {
+      "name": "event-reminders",
+      "type": "registry:component",
+      "title": "Event reminders",
+      "description": "Set when and how people are reminded of an event, by notification or email.",
+      "dependencies": [
+        "motion",
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "utils"
+      ],
+      "files": [
+        {
+          "path": "registry/manniche/event-reminders/event-reminders.tsx",
+          "type": "registry:component"
+        },
+        {
+          "path": "registry/manniche/rolling-number/rolling-number.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "categories": [
+        "widgets"
+      ],
+      "meta": {
+        "credit": "Adapted from Watermelon UI (MIT)."
+      }
+    },
+    {
+      "name": "event-reminders-demo",
+      "type": "registry:example",
+      "title": "Event reminders demo",
+      "description": "How to use Event reminders.",
+      "registryDependencies": [
+        "@manniche/event-reminders"
+      ],
+      "files": [
+        {
+          "path": "registry/manniche/examples/event-reminders-demo.tsx",
+          "type": "registry:example"
+        }
+      ],
+      "categories": [
+        "widgets"
+      ]
+    },
+    {
+      "name": "opening-hours",
+      "type": "registry:component",
+      "title": "Opening hours",
+      "description": "Opening hours or availability per weekday, with more than one range a day.",
+      "dependencies": [
+        "motion",
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "utils"
+      ],
+      "files": [
+        {
+          "path": "registry/manniche/opening-hours/opening-hours.tsx",
+          "type": "registry:component"
+        },
+        {
+          "path": "registry/manniche/switch/switch.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "categories": [
+        "widgets"
+      ],
+      "meta": {
+        "credit": "Adapted from Watermelon UI (MIT)."
+      }
+    },
+    {
+      "name": "opening-hours-demo",
+      "type": "registry:example",
+      "title": "Opening hours demo",
+      "description": "How to use Opening hours.",
+      "registryDependencies": [
+        "@manniche/opening-hours"
+      ],
+      "files": [
+        {
+          "path": "registry/manniche/examples/opening-hours-demo.tsx",
+          "type": "registry:example"
+        }
+      ],
+      "categories": [
+        "widgets"
+      ]
+    },
+    {
+      "name": "ai-action-bar",
+      "type": "registry:component",
+      "title": "AI action bar",
+      "description": "A toolbar that morphs into a one-line prompt for the agent, and back.",
+      "dependencies": [
+        "motion",
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "utils"
+      ],
+      "files": [
+        {
+          "path": "registry/manniche/ai-action-bar/ai-action-bar.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "categories": [
+        "agent"
+      ],
+      "meta": {
+        "credit": "Adapted from Watermelon UI (MIT)."
+      }
+    },
+    {
+      "name": "ai-action-bar-demo",
+      "type": "registry:example",
+      "title": "AI action bar demo",
+      "description": "How to use AI action bar.",
+      "registryDependencies": [
+        "@manniche/ai-action-bar"
+      ],
+      "files": [
+        {
+          "path": "registry/manniche/examples/ai-action-bar-demo.tsx",
+          "type": "registry:example"
+        }
+      ],
+      "categories": [
+        "agent"
+      ]
     }
   ]
 }
