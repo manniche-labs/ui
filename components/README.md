@@ -6,7 +6,7 @@ They use the standard shadcn tokens (`bg-card`, `text-muted-foreground`, `bg-pri
 ## Install a component
 
 ```bash
-npx shadcn@latest add https://mikkelmanniche.dk/r/prompt-input.json
+npx shadcn@latest add https://mikkelmanniche.dk/lab/r/prompt-input.json
 ```
 
 Or add the registry once in `components.json`:
@@ -14,7 +14,7 @@ Or add the registry once in `components.json`:
 ```json
 {
   "registries": {
-    "@manniche": "https://mikkelmanniche.dk/r/{name}.json"
+    "@manniche": "https://mikkelmanniche.dk/lab/r/{name}.json"
   }
 }
 ```
