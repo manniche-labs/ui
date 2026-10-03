@@ -1,0 +1,20 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "sources",
+  "title": "Sources",
+  "description": "Numbered citations after a claim and the list of sources they point to.",
+  "dependencies": [
+    "lucide-react"
+  ],
+  "registryDependencies": [
+    "utils"
+  ],
+  "files": [
+    {
+      "path": "registry/manniche/sources/sources.tsx",
+      "content": "import { ExternalLink } from 'lucide-react'\nimport { cn } from '@/lib/utils'\n\nexport type Source = {\n  /** The page's title. */\n  title: string\n  href: string\n  /** A line from the source that backs the claim. */\n  quote?: string\n}\n\nfunction host(href: string) {\n  try {\n    return new URL(href).hostname.replace(/^www\\./, '')\n  } catch {\n    return href\n  }\n}\n\nexport type CitationProps = {\n  /** The source's number, counted from 1. It matches its place in <Sources>. */\n  n: number\n  source: Source\n  className?: string\n}\n\n/** A small numbered link after a claim. It jumps to the source in the list below and names it for screen readers. */\nexport function Citation({ n, source, className }: CitationProps) {\n  return (\n    <a\n      href={`#source-${n}`}\n      title={`${source.title} (${host(source.href)})`}\n      className={cn(\n        // The visible chip is small; the ::after area makes it 24 px to tap without moving the text around it.\n        'relative ml-0.5 inline-grid h-[1.4em] min-w-[1.4em] place-items-center rounded-md bg-muted px-1 align-[0.45em] text-[0.7em] leading-none font-medium text-muted-foreground tabular-nums no-underline transition-colors duration-150 hover:bg-primary hover:text-primary-foreground',\n        \"after:absolute after:-inset-x-1.5 after:-inset-y-2 after:content-['']\",\n        className,\n      )}\n    >\n      <span aria-hidden>{n}</span>\n      <span className=\"sr-only\">Source {n}: {source.title}</span>\n    </a>\n  )\n}\n\nexport type SourcesProps = {\n  sources: Source[]\n  title?: string\n  className?: string\n}\n\n/** The numbered list the citations point to. Links open in a new tab. */\nexport function Sources({ sources, title = 'Sources', className }: SourcesProps) {\n  return (\n    <section aria-label={title} className={cn('text-sm', className)}>\n      <h3 className=\"mb-2 font-medium\">{title}</h3>\n      <ol className=\"space-y-1\">\n        {sources.map((s, i) => (\n          <li key={s.href + i} id={`source-${i + 1}`} className=\"scroll-mt-24\">\n            <a\n              href={s.href}\n              target=\"_blank\"\n              rel=\"noreferrer\"\n              className=\"group flex min-h-11 items-start gap-3 rounded-xl px-2 py-2 leading-6 transition-colors duration-150 hover:bg-muted target:bg-muted\"\n            >\n              <span className=\"mt-0.5 grid size-5 shrink-0 place-items-center rounded-md bg-muted text-xs font-medium text-muted-foreground tabular-nums group-hover:bg-card\">\n                {i + 1}\n              </span>\n              <span className=\"min-w-0 flex-1\">\n                <span className=\"block font-medium text-pretty\">{s.title}</span>\n                <span className=\"block truncate text-muted-foreground\">{host(s.href)}</span>\n                {s.quote && <span className=\"mt-1 block border-l-2 pl-3 text-muted-foreground italic\">{s.quote}</span>}\n              </span>\n              <ExternalLink className=\"mt-0.5 size-4 shrink-0 text-muted-foreground\" aria-hidden />\n              <span className=\"sr-only\">(opens in a new tab)</span>\n            </a>\n          </li>\n        ))}\n      </ol>\n    </section>\n  )\n}\n",
+      "type": "registry:component"
+    }
+  ],
+  "type": "registry:component"
+}

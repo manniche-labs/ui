@@ -1,0 +1,20 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "code-block",
+  "title": "Code block",
+  "description": "Code with a file name and a copy button. Bring your own highlighting, or none.",
+  "dependencies": [
+    "lucide-react"
+  ],
+  "registryDependencies": [
+    "utils"
+  ],
+  "files": [
+    {
+      "path": "registry/manniche/code-block/code-block.tsx",
+      "content": "import { Check, Copy } from 'lucide-react'\nimport { useEffect, useState, type ReactNode } from 'react'\nimport { cn } from '@/lib/utils'\n\nexport type CodeBlockProps = {\n  /** The code as text. This is what the copy button copies. */\n  code: string\n  /** Shown in the header, e.g. \"tsx\" or \"bash\". */\n  language?: string\n  /** Shown in the header instead of the language, e.g. \"src/app.tsx\". */\n  filename?: string\n  /** Already highlighted markup (from Shiki or similar). Without it the plain code is shown. */\n  children?: ReactNode\n  /** Number the lines. */\n  lineNumbers?: boolean\n  className?: string\n}\n\n/**\n * Code with a header and a copy button. It does no highlighting itself, so it adds no weight;\n * pass highlighted markup as children if you want colours.\n */\nexport function CodeBlock({ code, language, filename, children, lineNumbers = false, className }: CodeBlockProps) {\n  const [copied, setCopied] = useState(false)\n\n  useEffect(() => {\n    if (!copied) return\n    const id = setTimeout(() => setCopied(false), 1800)\n    return () => clearTimeout(id)\n  }, [copied])\n\n  async function copy() {\n    try {\n      await navigator.clipboard.writeText(code)\n      setCopied(true)\n    } catch {\n      // The clipboard can be blocked (an insecure page, a denied permission). The code can still be selected by hand.\n    }\n  }\n\n  const lines = code.replace(/\\n$/, '').split('\\n')\n\n  return (\n    <figure className={cn('overflow-hidden rounded-2xl border bg-card text-card-foreground', className)}>\n      <figcaption className=\"flex items-center justify-between gap-3 border-b bg-muted/50 py-1 pr-1 pl-4\">\n        <span className=\"truncate font-mono text-[0.8125rem] text-muted-foreground\">{filename ?? language ?? 'Code'}</span>\n        <button\n          type=\"button\"\n          onClick={copy}\n          className=\"inline-flex min-h-11 shrink-0 items-center gap-1.5 rounded-xl px-3 text-sm text-muted-foreground transition-colors duration-150 hover:bg-muted hover:text-foreground\"\n        >\n          {copied ? <Check className=\"size-4 text-success\" aria-hidden /> : <Copy className=\"size-4\" aria-hidden />}\n          <span aria-live=\"polite\">{copied ? 'Copied' : 'Copy'}</span>\n        </button>\n      </figcaption>\n      <pre className=\"max-h-[28rem] overflow-auto py-3 font-mono text-[0.8125rem] leading-6\" tabIndex={0}>\n        {children ? (\n          <div className=\"px-4\">{children}</div>\n        ) : lineNumbers ? (\n          <code className=\"grid grid-cols-[auto_1fr]\">\n            {lines.map((line, i) => (\n              <span key={i} className=\"contents\">\n                <span className=\"pr-4 pl-4 text-right text-muted-foreground select-none\" aria-hidden>\n                  {i + 1}\n                </span>\n                <span className=\"pr-4\">{line || ' '}</span>\n              </span>\n            ))}\n          </code>\n        ) : (\n          <code className=\"block px-4\">{code}</code>\n        )}\n      </pre>\n    </figure>\n  )\n}\n",
+      "type": "registry:component"
+    }
+  ],
+  "type": "registry:component"
+}

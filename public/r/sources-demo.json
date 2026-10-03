@@ -1,0 +1,17 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "sources-demo",
+  "title": "Sources demo",
+  "description": "How to use Sources.",
+  "registryDependencies": [
+    "@manniche/sources"
+  ],
+  "files": [
+    {
+      "path": "registry/manniche/examples/sources-demo.tsx",
+      "content": "import { Citation, Sources, type Source } from '@/registry/manniche/sources/sources'\n\nconst sources: Source[] = [\n  { title: 'Delivery times and prices', href: 'https://example.com/help/delivery', quote: 'Standard delivery takes 3 to 5 working days.' },\n  { title: 'Returns policy', href: 'https://example.com/help/returns' },\n]\n\nexport default function SourcesDemo() {\n  return (\n    <div className=\"space-y-4\">\n      <p>\n        Standard delivery is free and takes 3 to 5 days.\n        <Citation n={1} source={sources[0]} /> You can send items back within 30 days.\n        <Citation n={2} source={sources[1]} />\n      </p>\n      <Sources sources={sources} />\n    </div>\n  )\n}\n",
+      "type": "registry:example"
+    }
+  ],
+  "type": "registry:example"
+}

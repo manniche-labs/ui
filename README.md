@@ -41,6 +41,10 @@ It writes `.mcp.json` with the shadcn MCP server. The agent can then list and se
 | `tool-approval` | Asks before the agent runs a tool, shows the arguments in full, marks risky calls |
 | `agent-activity` | The agent's steps: waiting, running, done or failed, with timings |
 | `streaming-response` | A reply as it is written, with a caret at the end |
+| `reasoning` | The model's thinking, folded away; open while it thinks, closed when the answer starts |
+| `code-block` | Code with a file name, optional line numbers and a copy button; bring your own highlighting |
+| `sources` | Numbered citations after a claim and the list of sources they point to |
+| `file-diff` | A change to one file from a unified diff, with line numbers and +/− |
 | `number-ticker` | Counts up to a number when it scrolls into view |
 | `blur-fade` | Fades an element up out of a soft blur the first time it enters the view |
 | `toast` | Short messages that stack in a corner and leave on their own; `toast()` works from anywhere |

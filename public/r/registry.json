@@ -85,6 +85,78 @@
       ]
     },
     {
+      "name": "reasoning",
+      "type": "registry:component",
+      "title": "Reasoning",
+      "description": "The model's thinking, folded away. Open while it thinks, closed when the answer starts.",
+      "dependencies": [
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "utils"
+      ],
+      "files": [
+        {
+          "path": "registry/manniche/reasoning/reasoning.tsx",
+          "type": "registry:component"
+        }
+      ]
+    },
+    {
+      "name": "code-block",
+      "type": "registry:component",
+      "title": "Code block",
+      "description": "Code with a file name and a copy button. Bring your own highlighting, or none.",
+      "dependencies": [
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "utils"
+      ],
+      "files": [
+        {
+          "path": "registry/manniche/code-block/code-block.tsx",
+          "type": "registry:component"
+        }
+      ]
+    },
+    {
+      "name": "sources",
+      "type": "registry:component",
+      "title": "Sources",
+      "description": "Numbered citations after a claim and the list of sources they point to.",
+      "dependencies": [
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "utils"
+      ],
+      "files": [
+        {
+          "path": "registry/manniche/sources/sources.tsx",
+          "type": "registry:component"
+        }
+      ]
+    },
+    {
+      "name": "file-diff",
+      "type": "registry:component",
+      "title": "File diff",
+      "description": "A change to one file as a coding agent proposes it, from a unified diff.",
+      "dependencies": [
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "utils"
+      ],
+      "files": [
+        {
+          "path": "registry/manniche/file-diff/file-diff.tsx",
+          "type": "registry:component"
+        }
+      ]
+    },
+    {
       "name": "number-ticker",
       "type": "registry:component",
       "title": "Number ticker",
@@ -488,6 +560,66 @@
       "files": [
         {
           "path": "registry/manniche/examples/sheet-demo.tsx",
+          "type": "registry:example"
+        }
+      ]
+    },
+    {
+      "name": "reasoning-demo",
+      "type": "registry:example",
+      "title": "Reasoning demo",
+      "description": "How to use Reasoning.",
+      "registryDependencies": [
+        "@manniche/reasoning"
+      ],
+      "files": [
+        {
+          "path": "registry/manniche/examples/reasoning-demo.tsx",
+          "type": "registry:example"
+        }
+      ]
+    },
+    {
+      "name": "code-block-demo",
+      "type": "registry:example",
+      "title": "Code block demo",
+      "description": "How to use Code block.",
+      "registryDependencies": [
+        "@manniche/code-block"
+      ],
+      "files": [
+        {
+          "path": "registry/manniche/examples/code-block-demo.tsx",
+          "type": "registry:example"
+        }
+      ]
+    },
+    {
+      "name": "sources-demo",
+      "type": "registry:example",
+      "title": "Sources demo",
+      "description": "How to use Sources.",
+      "registryDependencies": [
+        "@manniche/sources"
+      ],
+      "files": [
+        {
+          "path": "registry/manniche/examples/sources-demo.tsx",
+          "type": "registry:example"
+        }
+      ]
+    },
+    {
+      "name": "file-diff-demo",
+      "type": "registry:example",
+      "title": "File diff demo",
+      "description": "How to use File diff.",
+      "registryDependencies": [
+        "@manniche/file-diff"
+      ],
+      "files": [
+        {
+          "path": "registry/manniche/examples/file-diff-demo.tsx",
           "type": "registry:example"
         }
       ]

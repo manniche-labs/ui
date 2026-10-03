@@ -2,14 +2,18 @@ import { Moon, Package, RotateCcw, Search, Settings, Sun, Truck } from 'lucide-r
 import { useEffect, useMemo, useRef, useState, type ReactNode } from 'react'
 import { AgentActivity, type AgentStep } from '@/registry/manniche/agent-activity/agent-activity'
 import { BlurFade } from '@/registry/manniche/blur-fade/blur-fade'
+import { CodeBlock } from '@/registry/manniche/code-block/code-block'
 import { CommandPalette, type Command } from '@/registry/manniche/command-palette/command-palette'
 import { DotPattern } from '@/registry/manniche/dot-pattern/dot-pattern'
+import { FileDiff } from '@/registry/manniche/file-diff/file-diff'
 import { Highlighter } from '@/registry/manniche/highlighter/highlighter'
 import { Marquee } from '@/registry/manniche/marquee/marquee'
 import { NumberTicker } from '@/registry/manniche/number-ticker/number-ticker'
 import { PromptInput } from '@/registry/manniche/prompt-input/prompt-input'
+import { Reasoning } from '@/registry/manniche/reasoning/reasoning'
 import { Sheet } from '@/registry/manniche/sheet/sheet'
 import { ShimmerButton } from '@/registry/manniche/shimmer-button/shimmer-button'
+import { Citation, Sources, type Source } from '@/registry/manniche/sources/sources'
 import { SpotlightCard } from '@/registry/manniche/spotlight-card/spotlight-card'
 import { StreamingResponse } from '@/registry/manniche/streaming-response/streaming-response'
 import { TextReveal } from '@/registry/manniche/text-reveal/text-reveal'
@@ -28,6 +32,37 @@ const STEPS: Omit<AgentStep, 'status'>[] = [
   { id: 'ship', label: 'Booking the shipment' },
   { id: 'mail', label: 'Writing the confirmation' },
 ]
+
+const CODE = `export function total(items: Item[]) {
+  return items.reduce((sum, i) => sum + i.price * i.qty, 0)
+}
+`
+
+const DIFF = `@@ -12,6 +12,7 @@ export function total
+ type Item = { price: number; qty: number }
+ 
+ export function total(items: Item[]) {
+-  return items.reduce((sum, i) => sum + i.price, 0)
++  // Each line counts as many times as it was ordered.
++  return items.reduce((sum, i) => sum + i.price * i.qty, 0)
+ }
+`
+
+const SOURCES: Source[] = [
+  { title: 'Delivery times and prices', href: 'https://example.com/help/delivery', quote: 'Standard delivery takes 3 to 5 working days.' },
+  { title: 'Returns and refunds', href: 'https://example.com/help/returns' },
+]
+
+function useThinking() {
+  const [thinking, setThinking] = useState(true)
+  const [run, setRun] = useState(0)
+  useEffect(() => {
+    setThinking(true)
+    const id = setTimeout(() => setThinking(false), 2400)
+    return () => clearTimeout(id)
+  }, [run])
+  return { thinking, restart: () => setRun((r) => r + 1) }
+}
 
 function Demo({ name, title, children, wide }: { name: string; title: string; children: ReactNode; wide?: boolean }) {
   return (
@@ -101,6 +136,7 @@ export default function App() {
 
   const stream = useStream(REPLY)
   const activity = useSteps()
+  const thinking = useThinking()
   const [busy, setBusy] = useState(false)
   const [sent, setSent] = useState<string[]>([])
   const [orders, setOrders] = useState(1284)
@@ -220,6 +256,38 @@ export default function App() {
             ))}
           </ul>
           <p className="mt-3 text-sm text-muted-foreground">Each item fades up the first time it scrolls into view.</p>
+        </Demo>
+
+        <h2 className="mt-6 font-serif text-3xl tracking-tight md:col-span-2">Agent output</h2>
+
+        <Demo name="reasoning" title="Reasoning">
+          <div className="rounded-2xl border bg-card p-4">
+            <Reasoning streaming={thinking.thinking} ms={2400}>
+              The customer asks when order 4821 arrives. It left the warehouse this morning, and standard delivery takes two days, so
+              Thursday is the honest answer.
+            </Reasoning>
+            {!thinking.thinking && <p className="mt-2">Your order should reach you on Thursday.</p>}
+          </div>
+          <Restart onClick={thinking.restart} />
+        </Demo>
+
+        <Demo name="sources" title="Sources">
+          <div className="rounded-2xl border bg-card p-4">
+            <p className="leading-7">
+              Standard delivery is free and takes 3 to 5 days.
+              <Citation n={1} source={SOURCES[0]} /> You can send items back within 30 days.
+              <Citation n={2} source={SOURCES[1]} />
+            </p>
+            <Sources sources={SOURCES} className="mt-4 border-t pt-4" />
+          </div>
+        </Demo>
+
+        <Demo name="code-block" title="Code block">
+          <CodeBlock filename="lib/total.ts" code={CODE} lineNumbers />
+        </Demo>
+
+        <Demo name="file-diff" title="File diff">
+          <FileDiff filename="lib/total.ts" diff={DIFF} />
         </Demo>
 
         <h2 className="mt-6 font-serif text-3xl tracking-tight md:col-span-2">Feedback and navigation</h2>
