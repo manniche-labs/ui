@@ -45,23 +45,25 @@ To build it again, start the test pages with `node test/server.mjs 8799` and run
 
 ## Install
 
+The skill lives in the [manniche-labs/ui](https://github.com/manniche-labs/ui) repository. Clone it once and link the skill folder into Claude Code.
+
 macOS and Linux:
 
-    git clone <repo-url> ~/.claude/skills/page-critic
+    git clone https://github.com/manniche-labs/ui.git ~/manniche-labs-ui
+    ln -s ~/manniche-labs-ui/skills/page-critic ~/.claude/skills/page-critic
     cd ~/.claude/skills/page-critic
     npm install
     npm test
 
 Windows (PowerShell):
 
-    git clone <repo-url> "$env:USERPROFILE\.claude\skills\page-critic"
+    git clone https://github.com/manniche-labs/ui.git "$env:USERPROFILE\manniche-labs-ui"
+    New-Item -ItemType Junction -Path "$env:USERPROFILE\.claude\skills\page-critic" -Target "$env:USERPROFILE\manniche-labs-ui\skills\page-critic"
     cd "$env:USERPROFILE\.claude\skills\page-critic"
     npm install
     npm test
 
 `npm test` measures the skill's own test pages in a real browser and takes four to five minutes. It ends with a line like `427 of 427 checks passed.` This version is tested on Windows 11. macOS and Linux have not been tried with it yet.
-
-If you keep the repository somewhere else, link it instead: `ln -s "$PWD" ~/.claude/skills/page-critic`.
 
 ## Use
 

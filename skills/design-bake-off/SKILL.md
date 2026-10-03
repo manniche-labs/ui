@@ -57,7 +57,7 @@ Start three `general-purpose` agents in the same message with `run_in_background
 
 Use `$DB/templates/agent-port.md`. The key points:
 - The mockup is the source of truth. Nothing visual or animated may be lost.
-- If the app is React with shadcn (`components.json`), install the effects as components instead of rewriting them. [Manniche UI](https://github.com/mikkelmanniche-dk/manniche-ui) is a shadcn registry with the same effects (blur-fade, text-reveal, highlighter, number-ticker, spotlight-card, marquee, dot-pattern, shimmer-button, toast, command-palette, sheet) plus agent components. Add it under `registries` in `components.json` and use `npx shadcn add @manniche/<name>` or the shadcn MCP. Each item has a `<name>-demo` example.
+- If the app is React with shadcn (`components.json`), install the effects as components instead of rewriting them. [Manniche UI](https://github.com/manniche-labs/ui/tree/main/components) is a shadcn registry with the same effects (blur-fade, text-reveal, highlighter, number-ticker, spotlight-card, marquee, dot-pattern, shimmer-button, toast, command-palette, sheet) plus agent components. Add it under `registries` in `components.json` and use `npx shadcn add @manniche/<name>` or the shadcn MCP. Each item has a `<name>-demo` example.
 - Check the app's CSP first. If it only allows `'self'` scripts, the JS must be served by the app itself. Write small replacements for CDN libraries, and pass data in `<script type="application/json">` with escaping.
 - Replace demo text with real data. The page must look intentional when the database is empty.
 - The page must work without JS, with reduced motion and with a keyboard.

@@ -13,8 +13,18 @@ The rules are strict on purpose: no invented numbers or testimonials, no generic
 
 ## Install
 
+The skill lives in the [manniche-labs/ui](https://github.com/manniche-labs/ui) repository. Clone it once and link the skill folder into Claude Code.
+
 ```bash
-git clone https://github.com/mikkelmanniche-dk/design-bake-off.git ~/.claude/skills/design-bake-off
+git clone https://github.com/manniche-labs/ui.git ~/manniche-labs-ui
+ln -s ~/manniche-labs-ui/skills/design-bake-off ~/.claude/skills/design-bake-off
+```
+
+On Windows (PowerShell):
+
+```powershell
+git clone https://github.com/manniche-labs/ui.git "$env:USERPROFILE\manniche-labs-ui"
+New-Item -ItemType Junction -Path "$env:USERPROFILE\.claude\skills\design-bake-off" -Target "$env:USERPROFILE\manniche-labs-ui\skills\design-bake-off"
 ```
 
 Then ask Claude Code for "a design bake-off for the front page", or run `/design-bake-off`.
