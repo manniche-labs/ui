@@ -1,0 +1,20 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "liquid-metal-demo",
+  "title": "Liquid metal demo",
+  "description": "How to use Liquid metal.",
+  "registryDependencies": [
+    "@manniche/liquid-metal"
+  ],
+  "files": [
+    {
+      "path": "registry/manniche/examples/liquid-metal-demo.tsx",
+      "content": "import { ArrowRight } from 'lucide-react'\nimport { LiquidMetal } from '@/registry/manniche/liquid-metal/liquid-metal'\n\nexport default function LiquidMetalDemo() {\n  return (\n    <div className=\"flex flex-col items-center gap-6\">\n      <LiquidMetal className=\"aspect-[1.586] w-full max-w-sm rounded-3xl shadow-xl\">\n        <div className=\"flex h-full flex-col justify-between p-6 text-neutral-950\">\n          <p className=\"text-sm font-semibold tracking-[0.2em] uppercase\">Members</p>\n          <div>\n            <p className=\"font-mono text-lg tracking-widest\">0042 1987 5531</p>\n            <p className=\"text-sm\">Platinum since 2021</p>\n          </div>\n        </div>\n      </LiquidMetal>\n      <LiquidMetal className=\"rounded-full p-[3px]\">\n        <button type=\"button\" className=\"inline-flex min-h-11 items-center gap-2 rounded-full bg-neutral-950 px-5 text-sm font-medium text-white\">\n          Join the club\n          <ArrowRight className=\"size-4\" aria-hidden />\n        </button>\n      </LiquidMetal>\n    </div>\n  )\n}\n",
+      "type": "registry:example"
+    }
+  ],
+  "categories": [
+    "surfaces"
+  ],
+  "type": "registry:example"
+}

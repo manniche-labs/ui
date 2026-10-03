@@ -1,0 +1,26 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "wave-loader",
+  "title": "Wave loader",
+  "description": "A ball hops from bar to bar, and each landing sends a spring wave through the row.",
+  "dependencies": [],
+  "registryDependencies": [
+    "utils"
+  ],
+  "files": [
+    {
+      "path": "registry/manniche/wave-loader/wave-loader.tsx",
+      "content": "import { useEffect, useRef } from 'react'\nimport { useReducedMotion } from '@/registry/manniche/hooks/use-reduced-motion'\nimport { cn } from '@/lib/utils'\n\nexport type WaveLoaderProps = {\n  /** Number of bars. */\n  bars?: number\n  /** Read by screen readers. */\n  label?: string\n  className?: string\n}\n\nconst W = 8 // bar width\nconst GAP = 6\nconst H = 28 // bar height\nconst BALL = 10\nconst HOP = 26 // how high the ball jumps\nconst HOP_TIME = 0.34 // seconds per hop\n\n/**\n * A loader where a ball hops from bar to bar, and each landing sends a wave through the row.\n * The bars are a tiny spring chain: every bar pulls on its neighbours, so the push travels and fades.\n */\nexport function WaveLoader({ bars = 9, label = 'Loading', className }: WaveLoaderProps) {\n  const reduce = useReducedMotion()\n  const barRefs = useRef<(HTMLSpanElement | null)[]>([])\n  const ball = useRef<HTMLSpanElement>(null)\n\n  useEffect(() => {\n    if (reduce) return\n    const n = bars\n    const u = new Float32Array(n) // how far each bar is pushed down, in px\n    const v = new Float32Array(n)\n    let from = 0\n    let dir = 1\n    let t = 0\n    let last = performance.now()\n    let raf = 0\n\n    const frame = (now: number) => {\n      const dt = Math.min(0.033, (now - last) / 1000)\n      last = now\n\n      // Spring chain: neighbours pull on each other (the wave), each bar pulls home, friction calms it.\n      for (let s = 0; s < 2; s++) {\n        const h = dt / 2\n        for (let i = 0; i < n; i++) {\n          const l = u[i - 1] ?? u[i]\n          const r = u[i + 1] ?? u[i]\n          v[i] += (260 * (l + r - 2 * u[i]) - 90 * u[i] - 7 * v[i]) * h\n        }\n        for (let i = 0; i < n; i++) u[i] += v[i] * h\n      }\n\n      t += dt / HOP_TIME\n      if (t >= 1) {\n        t -= 1\n        from += dir\n        v[from] += 120 // the landing pushes the bar down\n        if (from === n - 1 || from === 0) dir = -dir\n      }\n      const to = from + dir\n\n      for (let i = 0; i < n; i++) barRefs.current[i]?.style.setProperty('transform', `translateY(${u[i].toFixed(2)}px)`)\n      const x = (from + (to - from) * t) * (W + GAP) + W / 2 - BALL / 2\n      const surface = u[from] + (u[to] - u[from]) * t\n      const y = surface - Math.sin(Math.PI * t) * HOP - BALL - 2\n      ball.current?.style.setProperty('transform', `translate(${x.toFixed(2)}px, ${y.toFixed(2)}px)`)\n      raf = requestAnimationFrame(frame)\n    }\n    raf = requestAnimationFrame(frame)\n    return () => cancelAnimationFrame(raf)\n  }, [bars, reduce])\n\n  return (\n    <span role=\"status\" aria-label={label} className={cn('relative inline-block', className)} style={{ width: bars * (W + GAP) - GAP, height: H + HOP + BALL + 6 }}>\n      <span aria-hidden className=\"absolute inset-x-0 bottom-0 flex items-end\" style={{ gap: GAP, height: H }}>\n        {Array.from({ length: bars }, (_, i) => (\n          <span\n            key={i}\n            ref={(el) => {\n              barRefs.current[i] = el\n            }}\n            className=\"block shrink-0 rounded-full bg-foreground/80 will-change-transform\"\n            // With reduced motion the row rests in a gentle, still wave.\n            style={{ width: W, height: H, transform: reduce ? `translateY(${(Math.sin((i / (bars - 1)) * Math.PI * 2) * 4).toFixed(2)}px)` : undefined }}\n          />\n        ))}\n      </span>\n      <span\n        ref={ball}\n        aria-hidden\n        className=\"absolute left-0 block rounded-full bg-primary will-change-transform\"\n        style={{ width: BALL, height: BALL, top: HOP + BALL + 6, transform: reduce ? `translate(${(W - BALL) / 2}px, ${-BALL - 2}px)` : undefined }}\n      />\n    </span>\n  )\n}\n",
+      "type": "registry:component"
+    },
+    {
+      "path": "registry/manniche/hooks/use-reduced-motion.ts",
+      "content": "import { useSyncExternalStore } from 'react'\n\nconst QUERY = '(prefers-reduced-motion: reduce)'\n\nfunction subscribe(onChange: () => void) {\n  const mq = window.matchMedia(QUERY)\n  mq.addEventListener('change', onChange)\n  return () => mq.removeEventListener('change', onChange)\n}\n\n/** True when the visitor has asked the system for less motion. */\nexport function useReducedMotion() {\n  return useSyncExternalStore(\n    subscribe,\n    () => window.matchMedia(QUERY).matches,\n    () => false,\n  )\n}\n",
+      "type": "registry:hook"
+    }
+  ],
+  "categories": [
+    "motion"
+  ],
+  "type": "registry:component"
+}

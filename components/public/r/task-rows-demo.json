@@ -1,0 +1,20 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "task-rows-demo",
+  "title": "Task rows demo",
+  "description": "How to use Task rows.",
+  "registryDependencies": [
+    "@manniche/task-rows"
+  ],
+  "files": [
+    {
+      "path": "registry/manniche/examples/task-rows-demo.tsx",
+      "content": "import { TaskRows, type Task } from '@/registry/manniche/task-rows/task-rows'\n\nconst tasks: Task[] = [\n  { id: 'import', title: 'Import 240 products', status: 'done', meta: '12 s' },\n  { id: 'photos', title: 'Resize product photos', status: 'running', meta: '38 / 120' },\n  {\n    id: 'sync',\n    title: 'Sync stock with the warehouse',\n    status: 'failed',\n    detail: 'The warehouse answered with a timeout after 30 seconds. Nothing was changed, so it is safe to try again.',\n  },\n  { id: 'copy', title: 'Write product descriptions', status: 'queued' },\n  { id: 'publish', title: 'Publish the spring collection', status: 'queued' },\n]\n\nexport default function TaskRowsDemo() {\n  return (\n    <div className=\"flex justify-center\">\n      <TaskRows tasks={tasks} className=\"w-full max-w-md\" />\n    </div>\n  )\n}\n",
+      "type": "registry:example"
+    }
+  ],
+  "categories": [
+    "agent"
+  ],
+  "type": "registry:example"
+}

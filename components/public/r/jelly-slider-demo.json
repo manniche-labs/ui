@@ -1,0 +1,20 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "jelly-slider-demo",
+  "title": "Jelly slider demo",
+  "description": "How to use Jelly slider.",
+  "registryDependencies": [
+    "@manniche/jelly-slider"
+  ],
+  "files": [
+    {
+      "path": "registry/manniche/examples/jelly-slider-demo.tsx",
+      "content": "import { useState } from 'react'\nimport { JellySlider } from '@/registry/manniche/jelly-slider/jelly-slider'\n\nexport default function JellySliderDemo() {\n  const [max, setMax] = useState(80)\n  const euro = (v: number) => `€${v}`\n\n  return (\n    <div className=\"mx-auto w-full max-w-sm space-y-2\">\n      <p className=\"flex justify-between text-sm\">\n        <span className=\"font-medium\">Price up to</span>\n        <span className=\"text-muted-foreground tabular-nums\">{euro(max)}</span>\n      </p>\n      <JellySlider label=\"Price up to\" value={max} onValueChange={setMax} min={0} max={200} step={5} format={euro} />\n      <p className=\"text-sm text-muted-foreground\">Drag it quickly and let go.</p>\n    </div>\n  )\n}\n",
+      "type": "registry:example"
+    }
+  ],
+  "categories": [
+    "controls"
+  ],
+  "type": "registry:example"
+}

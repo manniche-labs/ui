@@ -1,0 +1,20 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "image-generation-demo",
+  "title": "Image generation demo",
+  "description": "How to use Image generation.",
+  "registryDependencies": [
+    "@manniche/image-generation"
+  ],
+  "files": [
+    {
+      "path": "registry/manniche/examples/image-generation-demo.tsx",
+      "content": "import { RotateCcw } from 'lucide-react'\nimport { useEffect, useState } from 'react'\nimport { ImageGeneration } from '@/registry/manniche/image-generation/image-generation'\n\nexport default function ImageGenerationDemo() {\n  const [progress, setProgress] = useState(0)\n  const [run, setRun] = useState(0)\n\n  useEffect(() => {\n    const id = setInterval(() => setProgress((p) => Math.min(1, p + 0.04 + Math.random() * 0.05)), 260)\n    return () => clearInterval(id)\n  }, [run])\n\n  return (\n    <div className=\"flex flex-col items-center gap-4\">\n      <ImageGeneration progress={progress} size=\"1024 × 1024\" prompt=\"A ceramic mug on a linen table in soft morning light\">\n        {/* Stand-in for a real <img>: a mug drawn with gradients. */}\n        <div className=\"relative size-full bg-[radial-gradient(ellipse_at_50%_115%,#c9b79c_0_38%,transparent_39%),linear-gradient(#efe6d8,#e2d3bd)]\">\n          <div className=\"absolute top-[30%] left-[30%] h-[42%] w-[34%] rounded-t-md rounded-b-[28%] bg-[linear-gradient(90deg,#4c6b73,#7d9ea5_45%,#3d5960)]\" />\n          <div className=\"absolute top-[38%] left-[61%] h-[22%] w-[13%] rounded-r-full border-[7px] border-l-0 border-[#56767e]\" />\n        </div>\n      </ImageGeneration>\n      <button\n        type=\"button\"\n        onClick={() => {\n          setProgress(0)\n          setRun((r) => r + 1)\n        }}\n        className=\"inline-flex min-h-11 items-center gap-2 rounded-full border px-4 text-sm transition-colors duration-150 hover:bg-muted\"\n      >\n        <RotateCcw className=\"size-4\" aria-hidden />\n        Generate again\n      </button>\n    </div>\n  )\n}\n",
+      "type": "registry:example"
+    }
+  ],
+  "categories": [
+    "agent"
+  ],
+  "type": "registry:example"
+}

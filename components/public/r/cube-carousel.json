@@ -1,0 +1,24 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "cube-carousel",
+  "title": "Cube carousel",
+  "description": "A carousel on the sides of a cube that turns a quarter round per step, by drag, keys or buttons.",
+  "dependencies": [
+    "motion",
+    "lucide-react"
+  ],
+  "registryDependencies": [
+    "utils"
+  ],
+  "files": [
+    {
+      "path": "registry/manniche/cube-carousel/cube-carousel.tsx",
+      "content": "import { ChevronLeft, ChevronRight } from 'lucide-react'\r\nimport { motion, useReducedMotion } from 'motion/react'\r\nimport { useState, type ReactNode } from 'react'\r\nimport { cn } from '@/lib/utils'\r\n\r\nexport type CubeCarouselProps = {\r\n  /** One slide per face. Only the four around the cube are used at a time, so any number works. */\r\n  slides: ReactNode[]\r\n  /** Read by screen readers, e.g. “New arrivals”. */\r\n  label: string\r\n  labels?: Partial<Record<'previous' | 'next' | 'slide', string>>\r\n  className?: string\r\n}\r\n\r\nconst EN = { previous: 'Previous', next: 'Next', slide: 'Slide' }\r\n\r\n/**\r\n * A carousel on the sides of a cube: each step turns it a quarter round.\r\n * Drag, swipe, the arrow keys or the buttons all turn it.\r\n */\r\nexport function CubeCarousel({ slides, label, labels = {}, className }: CubeCarouselProps) {\r\n  const t = { ...EN, ...labels }\r\n  const [turn, setTurn] = useState(0) // counts quarter turns, may go negative or past the end\r\n  const reduce = useReducedMotion()\r\n  const n = slides.length\r\n  const index = ((turn % n) + n) % n\r\n  const go = (d: number) => setTurn((v) => v + d)\r\n\r\n  // The four faces around the current one: which slide each face shows, worked out from the turn count.\r\n  const faces = [0, 1, 2, 3].map((face) => {\r\n    const offset = (((face - turn) % 4) + 4) % 4 // 0 front, 1 right, 2 back, 3 left\r\n    const step = offset === 3 ? -1 : offset\r\n    return { face, slide: (((turn + step) % n) + n) % n, front: offset === 0 }\r\n  })\r\n\r\n  return (\r\n    <section\r\n      aria-roledescription=\"carousel\"\r\n      aria-label={label}\r\n      className={cn('w-full max-w-sm', className)}\r\n      onKeyDown={(e) => {\r\n        if (e.key === 'ArrowRight') go(1)\r\n        else if (e.key === 'ArrowLeft') go(-1)\r\n      }}\r\n    >\r\n      {/* The frame is a size container, so the cube's depth (half a side) can be written as 50cqw. */}\r\n      <motion.div\r\n        className=\"@container relative aspect-[4/3] touch-pan-y [perspective:1100px]\"\r\n        onPanEnd={(_, info) => {\r\n          if (Math.abs(info.offset.x) > 40) go(info.offset.x < 0 ? 1 : -1)\r\n        }}\r\n      >\r\n        {/* Pull the cube back by half a side so the front face sits where the frame is. */}\r\n        <div className=\"absolute inset-0 [transform:translateZ(-50cqw)] [transform-style:preserve-3d]\">\r\n          <motion.div\r\n            className=\"absolute inset-0 [transform-style:preserve-3d]\"\r\n            initial={false}\r\n            animate={{ rotateY: -turn * 90 }}\r\n            transition={reduce ? { duration: 0 } : { type: 'spring', bounce: 0, duration: 0.7 }}\r\n          >\r\n            {faces.map(({ face, slide, front }) => (\r\n              <div\r\n                key={face}\r\n                role=\"group\"\r\n                aria-roledescription=\"slide\"\r\n                aria-label={`${t.slide} ${slide + 1} / ${n}`}\r\n                aria-hidden={!front}\r\n                inert={!front}\r\n                className=\"absolute inset-0 overflow-hidden rounded-2xl border bg-card [backface-visibility:hidden]\"\r\n                style={{ transform: `rotateY(${face * 90}deg) translateZ(50cqw)` }}\r\n              >\r\n                {slides[slide]}\r\n              </div>\r\n            ))}\r\n          </motion.div>\r\n        </div>\r\n      </motion.div>\r\n\r\n      <div className=\"mt-3 flex items-center justify-between gap-2\">\r\n        <button type=\"button\" onClick={() => go(-1)} aria-label={t.previous} className=\"grid size-11 place-items-center rounded-full border transition-colors duration-150 hover:bg-muted\">\r\n          <ChevronLeft className=\"size-5\" aria-hidden />\r\n        </button>\r\n        <p aria-live=\"polite\" className=\"text-sm text-muted-foreground tabular-nums\">\r\n          {index + 1} / {n}\r\n        </p>\r\n        <button type=\"button\" onClick={() => go(1)} aria-label={t.next} className=\"grid size-11 place-items-center rounded-full border transition-colors duration-150 hover:bg-muted\">\r\n          <ChevronRight className=\"size-5\" aria-hidden />\r\n        </button>\r\n      </div>\r\n    </section>\r\n  )\r\n}\r\n",
+      "type": "registry:component"
+    }
+  ],
+  "categories": [
+    "widgets"
+  ],
+  "type": "registry:component"
+}

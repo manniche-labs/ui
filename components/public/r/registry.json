@@ -1352,6 +1352,490 @@
       "categories": [
         "agent"
       ]
+    },
+    {
+      "name": "task-rows",
+      "type": "registry:component",
+      "title": "Task rows",
+      "description": "A list of steps an agent works through, each queued, running, done or failed, with details that fold out.",
+      "dependencies": [
+        "motion",
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "utils"
+      ],
+      "files": [
+        {
+          "path": "registry/manniche/task-rows/task-rows.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "categories": [
+        "agent"
+      ]
+    },
+    {
+      "name": "task-rows-demo",
+      "type": "registry:example",
+      "title": "Task rows demo",
+      "description": "How to use Task rows.",
+      "registryDependencies": [
+        "@manniche/task-rows"
+      ],
+      "files": [
+        {
+          "path": "registry/manniche/examples/task-rows-demo.tsx",
+          "type": "registry:example"
+        }
+      ],
+      "categories": [
+        "agent"
+      ]
+    },
+    {
+      "name": "image-generation",
+      "type": "registry:component",
+      "title": "Image generation",
+      "description": "A tile that shows an image being made: a soft glow that sharpens into the result as progress rises.",
+      "dependencies": [
+        "motion",
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "utils"
+      ],
+      "files": [
+        {
+          "path": "registry/manniche/image-generation/image-generation.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "categories": [
+        "agent"
+      ]
+    },
+    {
+      "name": "image-generation-demo",
+      "type": "registry:example",
+      "title": "Image generation demo",
+      "description": "How to use Image generation.",
+      "registryDependencies": [
+        "@manniche/image-generation"
+      ],
+      "files": [
+        {
+          "path": "registry/manniche/examples/image-generation-demo.tsx",
+          "type": "registry:example"
+        }
+      ],
+      "categories": [
+        "agent"
+      ]
+    },
+    {
+      "name": "voice-orb",
+      "type": "registry:component",
+      "title": "Voice orb",
+      "description": "A round orb for a voice assistant that turns faster while thinking and swells with the loudness of the voice.",
+      "dependencies": [
+        "motion"
+      ],
+      "registryDependencies": [
+        "utils"
+      ],
+      "files": [
+        {
+          "path": "registry/manniche/voice-orb/voice-orb.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "categories": [
+        "agent"
+      ]
+    },
+    {
+      "name": "voice-orb-demo",
+      "type": "registry:example",
+      "title": "Voice orb demo",
+      "description": "How to use Voice orb.",
+      "registryDependencies": [
+        "@manniche/voice-orb"
+      ],
+      "files": [
+        {
+          "path": "registry/manniche/examples/voice-orb-demo.tsx",
+          "type": "registry:example"
+        }
+      ],
+      "categories": [
+        "agent"
+      ]
+    },
+    {
+      "name": "trade-ticket",
+      "type": "registry:component",
+      "title": "Trade ticket",
+      "description": "Buy or sell one of two outcomes, with amount chips and the payout worked out as you type.",
+      "dependencies": [
+        "motion"
+      ],
+      "registryDependencies": [
+        "utils"
+      ],
+      "files": [
+        {
+          "path": "registry/manniche/trade-ticket/trade-ticket.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "categories": [
+        "widgets"
+      ]
+    },
+    {
+      "name": "trade-ticket-demo",
+      "type": "registry:example",
+      "title": "Trade ticket demo",
+      "description": "How to use Trade ticket.",
+      "registryDependencies": [
+        "@manniche/trade-ticket"
+      ],
+      "files": [
+        {
+          "path": "registry/manniche/examples/trade-ticket-demo.tsx",
+          "type": "registry:example"
+        }
+      ],
+      "categories": [
+        "widgets"
+      ]
+    },
+    {
+      "name": "receipt-printer",
+      "type": "registry:component",
+      "title": "Receipt printer",
+      "description": "A small checkout terminal: pay, wait for the card, then the receipt rolls out of the slot.",
+      "dependencies": [
+        "motion",
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "utils"
+      ],
+      "files": [
+        {
+          "path": "registry/manniche/receipt-printer/receipt-printer.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "categories": [
+        "widgets"
+      ]
+    },
+    {
+      "name": "receipt-printer-demo",
+      "type": "registry:example",
+      "title": "Receipt printer demo",
+      "description": "How to use Receipt printer.",
+      "registryDependencies": [
+        "@manniche/receipt-printer"
+      ],
+      "files": [
+        {
+          "path": "registry/manniche/examples/receipt-printer-demo.tsx",
+          "type": "registry:example"
+        }
+      ],
+      "categories": [
+        "widgets"
+      ]
+    },
+    {
+      "name": "cube-carousel",
+      "type": "registry:component",
+      "title": "Cube carousel",
+      "description": "A carousel on the sides of a cube that turns a quarter round per step, by drag, keys or buttons.",
+      "dependencies": [
+        "motion",
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "utils"
+      ],
+      "files": [
+        {
+          "path": "registry/manniche/cube-carousel/cube-carousel.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "categories": [
+        "widgets"
+      ]
+    },
+    {
+      "name": "cube-carousel-demo",
+      "type": "registry:example",
+      "title": "Cube carousel demo",
+      "description": "How to use Cube carousel.",
+      "registryDependencies": [
+        "@manniche/cube-carousel"
+      ],
+      "files": [
+        {
+          "path": "registry/manniche/examples/cube-carousel-demo.tsx",
+          "type": "registry:example"
+        }
+      ],
+      "categories": [
+        "widgets"
+      ]
+    },
+    {
+      "name": "wave-loader",
+      "type": "registry:component",
+      "title": "Wave loader",
+      "description": "A ball hops from bar to bar, and each landing sends a spring wave through the row.",
+      "dependencies": [],
+      "registryDependencies": [
+        "utils"
+      ],
+      "files": [
+        {
+          "path": "registry/manniche/wave-loader/wave-loader.tsx",
+          "type": "registry:component"
+        },
+        {
+          "path": "registry/manniche/hooks/use-reduced-motion.ts",
+          "type": "registry:hook"
+        }
+      ],
+      "categories": [
+        "motion"
+      ]
+    },
+    {
+      "name": "wave-loader-demo",
+      "type": "registry:example",
+      "title": "Wave loader demo",
+      "description": "How to use Wave loader.",
+      "registryDependencies": [
+        "@manniche/wave-loader"
+      ],
+      "files": [
+        {
+          "path": "registry/manniche/examples/wave-loader-demo.tsx",
+          "type": "registry:example"
+        }
+      ],
+      "categories": [
+        "motion"
+      ]
+    },
+    {
+      "name": "jelly-slider",
+      "type": "registry:component",
+      "title": "Jelly slider",
+      "description": "A slider whose soft thumb stretches with the speed you drag it and wobbles back into shape.",
+      "dependencies": [
+        "motion"
+      ],
+      "registryDependencies": [
+        "utils"
+      ],
+      "files": [
+        {
+          "path": "registry/manniche/jelly-slider/jelly-slider.tsx",
+          "type": "registry:component"
+        },
+        {
+          "path": "registry/manniche/hooks/use-reduced-motion.ts",
+          "type": "registry:hook"
+        }
+      ],
+      "categories": [
+        "controls"
+      ]
+    },
+    {
+      "name": "jelly-slider-demo",
+      "type": "registry:example",
+      "title": "Jelly slider demo",
+      "description": "How to use Jelly slider.",
+      "registryDependencies": [
+        "@manniche/jelly-slider"
+      ],
+      "files": [
+        {
+          "path": "registry/manniche/examples/jelly-slider-demo.tsx",
+          "type": "registry:example"
+        }
+      ],
+      "categories": [
+        "controls"
+      ]
+    },
+    {
+      "name": "notification-stack",
+      "type": "registry:component",
+      "title": "Notification stack",
+      "description": "Notifications folded into a neat pile that fans out into a list, each one dismissable.",
+      "dependencies": [
+        "motion",
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "utils"
+      ],
+      "files": [
+        {
+          "path": "registry/manniche/notification-stack/notification-stack.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "categories": [
+        "overlays"
+      ]
+    },
+    {
+      "name": "notification-stack-demo",
+      "type": "registry:example",
+      "title": "Notification stack demo",
+      "description": "How to use Notification stack.",
+      "registryDependencies": [
+        "@manniche/notification-stack"
+      ],
+      "files": [
+        {
+          "path": "registry/manniche/examples/notification-stack-demo.tsx",
+          "type": "registry:example"
+        }
+      ],
+      "categories": [
+        "overlays"
+      ]
+    },
+    {
+      "name": "cloud-drift",
+      "type": "registry:component",
+      "title": "Cloud drift",
+      "description": "A slow sky of soft clouds drifting behind your content, drawn on a tiny canvas.",
+      "dependencies": [],
+      "registryDependencies": [
+        "utils"
+      ],
+      "files": [
+        {
+          "path": "registry/manniche/cloud-drift/cloud-drift.tsx",
+          "type": "registry:component"
+        },
+        {
+          "path": "registry/manniche/hooks/use-reduced-motion.ts",
+          "type": "registry:hook"
+        }
+      ],
+      "categories": [
+        "surfaces"
+      ]
+    },
+    {
+      "name": "cloud-drift-demo",
+      "type": "registry:example",
+      "title": "Cloud drift demo",
+      "description": "How to use Cloud drift.",
+      "registryDependencies": [
+        "@manniche/cloud-drift"
+      ],
+      "files": [
+        {
+          "path": "registry/manniche/examples/cloud-drift-demo.tsx",
+          "type": "registry:example"
+        }
+      ],
+      "categories": [
+        "surfaces"
+      ]
+    },
+    {
+      "name": "liquid-metal",
+      "type": "registry:component",
+      "title": "Liquid metal",
+      "description": "A surface of flowing chrome from a tiny WebGL shader, with still metal bands as fallback.",
+      "dependencies": [],
+      "registryDependencies": [
+        "utils"
+      ],
+      "files": [
+        {
+          "path": "registry/manniche/liquid-metal/liquid-metal.tsx",
+          "type": "registry:component"
+        },
+        {
+          "path": "registry/manniche/hooks/use-reduced-motion.ts",
+          "type": "registry:hook"
+        }
+      ],
+      "categories": [
+        "surfaces"
+      ]
+    },
+    {
+      "name": "liquid-metal-demo",
+      "type": "registry:example",
+      "title": "Liquid metal demo",
+      "description": "How to use Liquid metal.",
+      "registryDependencies": [
+        "@manniche/liquid-metal"
+      ],
+      "files": [
+        {
+          "path": "registry/manniche/examples/liquid-metal-demo.tsx",
+          "type": "registry:example"
+        }
+      ],
+      "categories": [
+        "surfaces"
+      ]
+    },
+    {
+      "name": "logo-grid",
+      "type": "registry:component",
+      "title": "Logo grid",
+      "description": "A grid of logos around a centre cell with a heading, for integrations or partners.",
+      "dependencies": [],
+      "registryDependencies": [
+        "utils"
+      ],
+      "files": [
+        {
+          "path": "registry/manniche/logo-grid/logo-grid.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "categories": [
+        "surfaces"
+      ],
+      "meta": {
+        "credit": "Adapted from Watermelon UI (MIT)."
+      }
+    },
+    {
+      "name": "logo-grid-demo",
+      "type": "registry:example",
+      "title": "Logo grid demo",
+      "description": "How to use Logo grid.",
+      "registryDependencies": [
+        "@manniche/logo-grid"
+      ],
+      "files": [
+        {
+          "path": "registry/manniche/examples/logo-grid-demo.tsx",
+          "type": "registry:example"
+        }
+      ],
+      "categories": [
+        "surfaces"
+      ]
     }
   ]
 }

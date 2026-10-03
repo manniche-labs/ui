@@ -1,0 +1,20 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "logo-grid-demo",
+  "title": "Logo grid demo",
+  "description": "How to use Logo grid.",
+  "registryDependencies": [
+    "@manniche/logo-grid"
+  ],
+  "files": [
+    {
+      "path": "registry/manniche/examples/logo-grid-demo.tsx",
+      "content": "import { BarChart3, Bell, Calendar, Cloud, CreditCard, Database, FileText, Mail, MessageSquare, Package, ShoppingCart, Truck } from 'lucide-react'\nimport { LogoGrid } from '@/registry/manniche/logo-grid/logo-grid'\n\nconst ITEMS = [\n  { name: 'Mail', logo: <Mail /> },\n  { name: 'Calendar', logo: <Calendar /> },\n  { name: 'Payments', logo: <CreditCard /> },\n  { name: 'Shipping', logo: <Truck /> },\n  { name: 'Inventory', logo: <Package /> },\n  { name: 'Chat', logo: <MessageSquare /> },\n  { name: 'Database', logo: <Database /> },\n  { name: 'Storage', logo: <Cloud /> },\n  { name: 'Analytics', logo: <BarChart3 /> },\n  { name: 'Checkout', logo: <ShoppingCart /> },\n  { name: 'Invoices', logo: <FileText /> },\n  { name: 'Alerts', logo: <Bell /> },\n]\n\nexport default function LogoGridDemo() {\n  return (\n    <LogoGrid\n      items={ITEMS}\n      title=\"Works with the tools you already use\"\n      description=\"Connect your shop to payments, shipping and stock in a few clicks.\"\n      action={\n        <a href=\"#integrations\" className=\"inline-flex min-h-11 items-center rounded-full bg-foreground px-5 text-sm font-medium text-background\">\n          See all integrations\n        </a>\n      }\n    />\n  )\n}\n",
+      "type": "registry:example"
+    }
+  ],
+  "categories": [
+    "surfaces"
+  ],
+  "type": "registry:example"
+}
