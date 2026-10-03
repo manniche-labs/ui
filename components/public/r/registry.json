@@ -1,7 +1,7 @@
 {
   "$schema": "https://ui.shadcn.com/schema/registry.json",
   "name": "manniche",
-  "homepage": "https://mikkelmanniche.dk",
+  "homepage": "https://mikkelmanniche.dk/lab/ui",
   "items": [
     {
       "name": "use-reduced-motion",

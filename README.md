@@ -11,7 +11,7 @@ Everything from Manniche Labs that has to do with interfaces: components you can
 ## Components in one line
 
 ```bash
-npx shadcn@latest add https://mikkelmanniche.dk/r/prompt-input.json
+npx shadcn@latest add https://mikkelmanniche.dk/lab/r/prompt-input.json
 ```
 
 See [components/README.md](components/README.md) for the full list and for setting up the `@manniche` registry.
