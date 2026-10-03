@@ -18,5 +18,8 @@
       "type": "registry:hook"
     }
   ],
+  "categories": [
+    "motion"
+  ],
   "type": "registry:component"
 }

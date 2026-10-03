@@ -16,5 +16,8 @@
       "type": "registry:component"
     }
   ],
+  "categories": [
+    "agent"
+  ],
   "type": "registry:component"
 }
