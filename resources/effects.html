@@ -1,0 +1,356 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Vanilla effects reference</title>
+<!--
+  Reference for the design agents: effects known from Magic UI, Aceternity, React Bits,
+  Sonner, cmdk, Vaul and NumberFlow, rewritten in plain JS/CSS with no build step.
+  Each section is self-contained: copy its CSS block and its JS function.
+  Everything falls back to a static end state under prefers-reduced-motion.
+  The only external script is canvas-confetti (optional).
+-->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js" defer></script>
+<style>
+:root{
+  color-scheme:light;
+  --bg:#f6f5f0; --surface:#fff; --surface-2:#eeece4; --border:#dcd8cc;
+  --text:#1b1a17; --text-dim:#6b685d; --accent:#1f5eff; --accent-soft:#e3eaff; --mark:#ffe08a;
+  --shadow:0 18px 40px -20px rgba(20,19,15,.35);
+  --ease:cubic-bezier(.16,1,.3,1);
+  --serif:'Fraunces',Georgia,serif; --sans:'Inter',system-ui,sans-serif;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  color-scheme:dark;
+  --bg:#121210; --surface:#1b1a17; --surface-2:#24231f; --border:#36332c;
+  --text:#f1efe7; --text-dim:#a6a396; --accent:#7ea2ff; --accent-soft:#1d2747; --mark:#6b5410;
+  --shadow:0 18px 40px -20px rgba(0,0,0,.8);
+}}
+:root[data-theme="dark"]{
+  color-scheme:dark;
+  --bg:#121210; --surface:#1b1a17; --surface-2:#24231f; --border:#36332c;
+  --text:#f1efe7; --text-dim:#a6a396; --accent:#7ea2ff; --accent-soft:#1d2747; --mark:#6b5410;
+  --shadow:0 18px 40px -20px rgba(0,0,0,.8);
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font:16px/1.55 var(--sans);-webkit-font-smoothing:antialiased;overflow-x:hidden}
+main{max-width:980px;margin:0 auto;padding:64px 16px 120px}
+h1,h2{font-family:var(--serif);font-weight:500;letter-spacing:-.02em;text-wrap:balance;margin:0}
+h1{font-size:clamp(2.4rem,6vw,4.2rem);line-height:1.08}
+h2{font-size:1.5rem;margin-bottom:6px}
+section{margin-top:72px}
+.note{color:var(--text-dim);font-size:.92rem;margin:0 0 18px;max-width:62ch}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:18px;padding:24px;box-shadow:var(--shadow)}
+button{font:inherit;color:inherit;cursor:pointer}
+:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:8px}
+kbd{font:600 .75rem var(--sans);border:1px solid var(--border);border-bottom-width:2px;border-radius:5px;padding:0 5px;color:var(--text-dim);background:var(--surface)}
+
+/* 1. Blur fade (Magic UI blur-fade): elements fade up out of a blur when they enter the viewport */
+.bf{opacity:0;filter:blur(8px);transform:translateY(14px);transition:opacity .7s var(--ease),filter .7s var(--ease),transform .7s var(--ease)}
+.bf.in{opacity:1;filter:none;transform:none}
+
+/* 2. Text reveal (Magic UI text-reveal): words light up as you scroll past */
+.tr{font-family:var(--serif);font-size:clamp(1.6rem,3.6vw,2.4rem);line-height:1.3}
+.tr span{opacity:.18;transition:opacity .25s linear}
+.tr span.on{opacity:1}
+
+/* 3. Highlighter (Magic UI highlighter): a marker stroke draws behind a phrase */
+.hl{background:linear-gradient(var(--mark),var(--mark)) no-repeat 0 85%/0% 40%;transition:background-size .9s var(--ease) .2s;padding:0 2px}
+.hl.in{background-size:100% 40%}
+
+/* 4. Number ticker (Magic UI number-ticker / NumberFlow) */
+.ticker{font:700 clamp(2.4rem,7vw,4rem)/1 var(--sans);font-variant-numeric:tabular-nums;letter-spacing:-.03em}
+
+/* 5. Spotlight card (Magic UI magic-card / Aceternity card-spotlight) */
+.spot{position:relative;overflow:hidden}
+.spot::before{content:"";position:absolute;inset:0;pointer-events:none;opacity:0;transition:opacity .3s;
+  background:radial-gradient(360px circle at var(--x,50%) var(--y,50%),color-mix(in srgb,var(--accent) 22%,transparent),transparent 60%)}
+.spot:hover::before{opacity:1}
+.grid3{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px}
+
+/* 6. Marquee (Magic UI marquee): pauses on hover, masked edges */
+.marquee{overflow:hidden;mask-image:linear-gradient(90deg,transparent,#000 10%,#000 90%,transparent)}
+.marquee-track{display:flex;gap:14px;width:max-content;animation:mq 28s linear infinite}
+.marquee:hover .marquee-track{animation-play-state:paused}
+.pill{white-space:nowrap;padding:8px 16px;border:1px solid var(--border);border-radius:999px;background:var(--surface)}
+@keyframes mq{to{transform:translateX(calc(-50% - 7px))}}
+
+/* 7. Dot pattern + noise (Magic UI dot-pattern) as a pure CSS backdrop */
+.dots{position:relative;border-radius:18px;padding:56px 24px;text-align:center;overflow:hidden;
+  background:radial-gradient(color-mix(in srgb,var(--text) 18%,transparent) 1px,transparent 1.5px) 0 0/18px 18px,var(--surface)}
+.dots::after{content:"";position:absolute;inset:0;background:radial-gradient(ellipse at center,transparent 30%,var(--bg) 75%)}
+.dots > *{position:relative;z-index:1}
+
+/* 8. Shimmer + magnetic button (Magic UI shimmer-button) */
+.shimmer{position:relative;overflow:hidden;border:0;border-radius:999px;padding:14px 26px;font-weight:600;color:#fff;background:#111;transition:transform .25s var(--ease)}
+.shimmer::after{content:"";position:absolute;inset:0;transform:translateX(-100%);
+  background:linear-gradient(110deg,transparent 30%,rgba(255,255,255,.35) 50%,transparent 70%);animation:sh 2.6s ease-in-out infinite}
+@keyframes sh{60%,100%{transform:translateX(100%)}}
+
+/* 9. Toast (Sonner) */
+.toasts{position:fixed;right:16px;bottom:16px;display:flex;flex-direction:column;gap:8px;z-index:50}
+.toast{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:12px 16px;box-shadow:var(--shadow);
+  animation:tin .35s var(--ease)}
+.toast.out{animation:tout .25s ease forwards}
+@keyframes tin{from{opacity:0;transform:translateY(12px) scale(.97)}}
+@keyframes tout{to{opacity:0;transform:translateY(6px) scale(.97)}}
+
+/* 10. Command palette (cmdk) */
+.cmdk{position:fixed;inset:0;display:none;place-items:start center;padding-top:14vh;background:rgba(10,10,8,.45);z-index:60}
+.cmdk.open{display:grid}
+.cmdk-box{width:min(560px,calc(100vw - 32px));background:var(--surface);border:1px solid var(--border);border-radius:16px;box-shadow:var(--shadow);overflow:hidden;animation:tin .25s var(--ease)}
+.cmdk input{width:100%;border:0;border-bottom:1px solid var(--border);padding:16px 18px;font:inherit;background:transparent;color:inherit;outline:none}
+.cmdk ul{list-style:none;margin:0;padding:6px;max-height:280px;overflow:auto}
+.cmdk li{padding:10px 12px;border-radius:10px;cursor:pointer}
+.cmdk li[aria-selected="true"]{background:var(--accent-soft)}
+
+/* 11. Bottom sheet (Vaul) */
+.sheet-back{position:fixed;inset:0;background:rgba(10,10,8,.4);opacity:0;pointer-events:none;transition:opacity .3s;z-index:70}
+.sheet{position:fixed;left:0;right:0;bottom:0;max-width:640px;margin:0 auto;background:var(--surface);border-radius:20px 20px 0 0;
+  padding:12px 24px 32px;transform:translateY(105%);visibility:hidden;transition:transform .45s var(--ease),visibility 0s .45s;z-index:71;touch-action:none}
+.sheet .grip{width:44px;height:5px;border-radius:9px;background:var(--border);margin:0 auto 18px}
+.sheet-open .sheet{transform:none;visibility:visible;transition:transform .45s var(--ease)}
+.sheet-open .sheet-back{opacity:1;pointer-events:auto}
+
+.row{display:flex;flex-wrap:wrap;gap:12px;align-items:center}
+.btn{border:1px solid var(--border);background:var(--surface);border-radius:10px;padding:10px 16px;font-weight:600}
+
+@media (prefers-reduced-motion: reduce){
+  .bf{opacity:1;filter:none;transform:none;transition:none}
+  .tr span{opacity:1}
+  .hl{background-size:100% 40%;transition:none}
+  .marquee-track,.shimmer::after{animation:none}
+  .toast,.cmdk-box{animation:none}
+  .sheet{transition:none}
+}
+</style>
+</head>
+<body>
+<main>
+  <header class="bf">
+    <p class="note">Reference for design agents · plain JS and CSS · no build step</p>
+    <h1>Effects you can <span class="hl">copy straight</span> into any page.</h1>
+  </header>
+
+  <section>
+    <h2 class="bf">1. Blur fade</h2>
+    <p class="note bf">IntersectionObserver adds <code>.in</code>. Stagger with <code>transition-delay</code>.</p>
+    <div class="grid3">
+      <div class="card bf" style="transition-delay:0s">First</div>
+      <div class="card bf" style="transition-delay:.08s">Second</div>
+      <div class="card bf" style="transition-delay:.16s">Third</div>
+    </div>
+  </section>
+
+  <section>
+    <h2>2. Text reveal on scroll</h2>
+    <p class="note">Each word is a span; its opacity follows the scroll position of the paragraph.</p>
+    <p class="tr" data-reveal>Good design is mostly subtraction. Remove what does not help the reader, then make what is left impossible to misread.</p>
+  </section>
+
+  <section>
+    <h2>3. Highlighter</h2>
+    <p class="note">A background gradient that grows from 0 to 100 % width when the phrase enters view.</p>
+    <p style="font-size:1.3rem">The page should feel <span class="hl bf">written by a person who cares</span>, not generated.</p>
+  </section>
+
+  <section>
+    <h2>4. Number ticker</h2>
+    <p class="note">Counts up once with an ease-out curve. The final number is in the HTML, so it reads correctly without JS. Use real numbers only.</p>
+    <div class="row"><span class="ticker" data-count="1284">1,284</span><span class="note" style="margin:0">demo value</span></div>
+  </section>
+
+  <section>
+    <h2>5. Spotlight cards</h2>
+    <p class="note">The pointer position is written to CSS variables; a radial gradient follows it.</p>
+    <div class="grid3">
+      <div class="card spot"><b>Fast</b><p class="note">Hover me.</p></div>
+      <div class="card spot"><b>Readable</b><p class="note">And me.</p></div>
+      <div class="card spot"><b>Honest</b><p class="note">And me.</p></div>
+    </div>
+  </section>
+
+  <section>
+    <h2>6. Marquee</h2>
+    <p class="note">The list is duplicated once so the loop is seamless. Pauses on hover.</p>
+    <div class="marquee"><div class="marquee-track" data-marquee>
+      <span class="pill">Typography</span><span class="pill">Spacing</span><span class="pill">Contrast</span><span class="pill">Motion</span><span class="pill">States</span><span class="pill">Empty states</span><span class="pill">Keyboard</span>
+    </div></div>
+  </section>
+
+  <section>
+    <h2>7. Dot pattern backdrop</h2>
+    <div class="dots"><h2>Depth without images</h2><p class="note" style="margin:8px auto 0">Two gradients: a dot grid and a vignette.</p></div>
+  </section>
+
+  <section>
+    <h2>8. Shimmer, magnetic button</h2>
+    <p class="note">The button leans a few pixels towards the pointer.</p>
+    <button class="shimmer" data-magnetic type="button">Get started</button>
+  </section>
+
+  <section>
+    <h2>9–11. Toast, command palette and sheet</h2>
+    <p class="note">Toasts stack and leave on their own. The palette opens with <kbd>⌘K</kbd>/<kbd>Ctrl K</kbd> and is a combobox for screen readers. The sheet can be dragged down to close.</p>
+    <div class="row">
+      <button class="btn" type="button" data-toast>Show toast</button>
+      <button class="btn" type="button" data-cmdk>Open palette <kbd>⌘K</kbd></button>
+      <button class="btn" type="button" data-sheet>Open sheet</button>
+      <button class="btn" type="button" data-confetti>Confetti (demo only)</button>
+    </div>
+  </section>
+</main>
+
+<div class="toasts" aria-live="polite"></div>
+
+<div class="cmdk" role="dialog" aria-modal="true" aria-label="Command palette">
+  <div class="cmdk-box">
+    <input type="text" role="combobox" aria-expanded="true" aria-controls="cmdk-list" aria-autocomplete="list" placeholder="Search sections…" autocomplete="off">
+    <ul id="cmdk-list" role="listbox"></ul>
+  </div>
+</div>
+
+<div class="sheet-back" data-sheet-close></div>
+<div class="sheet" role="dialog" aria-modal="true" aria-label="Sheet">
+  <div class="grip"></div>
+  <h2>A bottom sheet</h2>
+  <p class="note">Drag the sheet down, press Esc or tap outside to close.</p>
+  <button class="btn" type="button" data-sheet-close>Close</button>
+</div>
+
+<script>
+const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+// 1 + 3: reveal on enter
+const io = new IntersectionObserver(es => es.forEach(e => {
+  if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
+}), { threshold: .2 });
+document.querySelectorAll('.bf, .hl').forEach(el => io.observe(el));
+
+// 2: text reveal
+document.querySelectorAll('[data-reveal]').forEach(p => {
+  p.innerHTML = p.textContent.split(/(\s+)/).map(w => /\s/.test(w) ? w : `<span>${w}</span>`).join('');
+  const words = [...p.querySelectorAll('span')];
+  if (still) return;
+  const run = () => {
+    const r = p.getBoundingClientRect();
+    const t = Math.min(1, Math.max(0, (innerHeight * .85 - r.top) / (r.height + innerHeight * .35)));
+    const n = Math.round(t * words.length);
+    words.forEach((w, i) => w.classList.toggle('on', i < n));
+  };
+  addEventListener('scroll', run, { passive: true }); run();
+});
+
+// 4: number ticker (final value stays in the HTML)
+document.querySelectorAll('[data-count]').forEach(el => {
+  const end = +el.dataset.count, fmt = new Intl.NumberFormat(document.documentElement.lang);
+  if (still) return;
+  const o = new IntersectionObserver(([e]) => {
+    if (!e.isIntersecting) return; o.disconnect();
+    const t0 = performance.now(), d = 1400;
+    const step = now => {
+      const k = Math.min(1, (now - t0) / d), ease = 1 - Math.pow(1 - k, 4);
+      el.textContent = fmt.format(Math.round(end * ease));
+      if (k < 1) requestAnimationFrame(step);
+    };
+    requestAnimationFrame(step);
+  });
+  o.observe(el);
+});
+
+// 5: spotlight
+document.querySelectorAll('.spot').forEach(c => c.addEventListener('pointermove', e => {
+  const r = c.getBoundingClientRect();
+  c.style.setProperty('--x', `${e.clientX - r.left}px`);
+  c.style.setProperty('--y', `${e.clientY - r.top}px`);
+}));
+
+// 6: marquee (duplicate the items once, hidden from screen readers)
+document.querySelectorAll('[data-marquee]').forEach(t => {
+  [...t.children].forEach(c => { const d = c.cloneNode(true); d.setAttribute('aria-hidden', 'true'); t.append(d); });
+});
+
+// 8: magnetic
+document.querySelectorAll('[data-magnetic]').forEach(b => {
+  if (still) return;
+  b.addEventListener('pointermove', e => {
+    const r = b.getBoundingClientRect();
+    b.style.transform = `translate(${(e.clientX - r.left - r.width / 2) * .15}px, ${(e.clientY - r.top - r.height / 2) * .25}px)`;
+  });
+  b.addEventListener('pointerleave', () => { b.style.transform = ''; });
+});
+
+// 9: toast
+const toasts = document.querySelector('.toasts');
+function toast(text) {
+  const t = document.createElement('div');
+  t.className = 'toast'; t.textContent = text; toasts.append(t);
+  setTimeout(() => { t.classList.add('out'); t.addEventListener('animationend', () => t.remove()); if (still) t.remove(); }, 3200);
+}
+document.querySelector('[data-toast]').addEventListener('click', () => toast('Saved. This toast leaves on its own.'));
+
+// 10: command palette
+const pal = document.querySelector('.cmdk'), q = pal.querySelector('input'), list = pal.querySelector('ul');
+const items = [...document.querySelectorAll('section h2')].map(h => ({ label: h.textContent, el: h }));
+let sel = 0, shown = items, lastFocus = null;
+function render() {
+  const s = q.value.toLowerCase();
+  shown = items.filter(i => i.label.toLowerCase().includes(s));
+  sel = Math.min(sel, Math.max(0, shown.length - 1));
+  list.innerHTML = '';
+  shown.forEach((it, i) => {
+    const li = document.createElement('li');
+    li.id = `opt-${i}`; li.setAttribute('role', 'option'); li.setAttribute('aria-selected', i === sel);
+    li.textContent = it.label; li.addEventListener('click', () => pick(i));
+    list.append(li);
+  });
+  q.setAttribute('aria-activedescendant', shown.length ? `opt-${sel}` : '');
+}
+function openPal() { lastFocus = document.activeElement; pal.classList.add('open'); q.value = ''; sel = 0; render(); q.focus(); }
+function closePal() { pal.classList.remove('open'); q.blur(); if (lastFocus && lastFocus !== document.body) lastFocus.focus(); }
+function pick(i) { const it = shown[i]; closePal(); it?.el.scrollIntoView({ behavior: still ? 'auto' : 'smooth', block: 'center' }); }
+q.addEventListener('input', () => { sel = 0; render(); });
+q.addEventListener('keydown', e => {
+  if (!shown.length) return;
+  if (e.key === 'ArrowDown') { sel = (sel + 1) % shown.length; render(); e.preventDefault(); }
+  if (e.key === 'ArrowUp') { sel = (sel - 1 + shown.length) % shown.length; render(); e.preventDefault(); }
+  if (e.key === 'Enter') pick(sel);
+});
+pal.addEventListener('click', e => { if (e.target === pal) closePal(); });
+document.querySelector('[data-cmdk]').addEventListener('click', openPal);
+addEventListener('keydown', e => {
+  if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') { e.preventDefault(); pal.classList.contains('open') ? closePal() : openPal(); }
+  if (e.key === 'Escape') { if (pal.classList.contains('open')) closePal(); else closeSheet(); }
+});
+
+// 11: sheet with drag to close
+const sheet = document.querySelector('.sheet');
+let sheetOpener = null;
+function openSheet() { sheetOpener = document.activeElement; document.body.classList.add('sheet-open'); sheet.querySelector('button').focus(); }
+function closeSheet() {
+  if (!document.body.classList.contains('sheet-open')) return;
+  document.body.classList.remove('sheet-open'); sheet.style.transform = ''; sheetOpener?.focus();
+}
+document.querySelector('[data-sheet]').addEventListener('click', openSheet);
+document.querySelectorAll('[data-sheet-close]').forEach(b => b.addEventListener('click', closeSheet));
+let y0 = null;
+sheet.addEventListener('pointerdown', e => { if (e.target.closest('button')) return; y0 = e.clientY; sheet.setPointerCapture(e.pointerId); sheet.style.transition = 'none'; });
+sheet.addEventListener('pointermove', e => { if (y0 !== null) sheet.style.transform = `translateY(${Math.max(0, e.clientY - y0)}px)`; });
+sheet.addEventListener('pointerup', e => {
+  if (y0 === null) return;
+  const dy = e.clientY - y0; y0 = null; sheet.style.transition = '';
+  dy > sheet.offsetHeight * .3 ? closeSheet() : (sheet.style.transform = '');
+});
+
+// Confetti: only for a clearly demo success, never to fake a real result
+document.querySelector('[data-confetti]').addEventListener('click', () => {
+  if (still || !window.confetti) return toast('Confetti skipped (reduced motion or script not loaded).');
+  confetti({ particleCount: 120, spread: 70, origin: { y: .7 } });
+});
+</script>
+</body>
+</html>
