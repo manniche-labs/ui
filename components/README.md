@@ -99,6 +99,20 @@ There is also a hosted MCP server just for this registry, with no key: `https://
 
 Several of the newer components are adapted from [Watermelon UI](https://github.com/WatermelonCorp/watermelon-platform) (MIT). Each such file says so at the top; see [THIRD_PARTY_NOTICES.md](../THIRD_PARTY_NOTICES.md).
 
+## Templates
+
+Whole pages, built from the same tokens. Install one like a component, or download it from the site as one HTML file with all CSS built in, in six colours and light or dark: <https://mikkelmanniche.dk/lab/templates>. Every interaction in them (toggles, filters, menus, validation) is plain HTML and CSS, so the static file behaves like the React version.
+
+| Name | What it is |
+|---|---|
+| `shop-landing` | Landing page for a homeware shop: hero, products, collections, story, reviews, FAQ, newsletter |
+| `pricing-page` | Three plans with a monthly and yearly switch, comparison table, FAQ |
+| `store-dashboard` | Shop admin with sidebar, KPI cards, revenue chart with a period switch, orders |
+| `sign-in-page` | Split-screen sign-in and sign-up with passkey and inline validation |
+| `changelog-page` | Release timeline with a filter, version index and subscribe form |
+
+`npm run lab` writes the HTML files with `scripts/template-html.mjs`; the colours live in `src/template-theme.ts`.
+
 ## Rules every component follows
 
 - Only `opacity`, `transform` and `filter` animate. Responses to an action take 300 ms or less.

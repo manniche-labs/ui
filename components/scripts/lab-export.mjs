@@ -3,7 +3,7 @@
 //
 //   npm run lab -- ../../../mikkelmanniche-dk/mikkelmanniche.dk
 //
-// Writes lab/r/*.json and lab/ui/preview/* (served), and server/lab-ui.json (read by server/lab-sider.mjs, not served).
+// Writes lab/r/*.json, lab/ui/preview/* and lab/t/* (served), and server/lab-ui.json (read by server/lab-sider.mjs, not served).
 import fs from 'node:fs'
 import path from 'node:path'
 import { codeToHtml } from 'shiki'
@@ -23,6 +23,8 @@ function copyDir(from, to) {
 
 copyDir('public/r', path.join(site, 'lab/r'))
 copyDir('dist-lab', path.join(site, 'lab/ui/preview'))
+// The templates as plain HTML files, and the theme block per colour (from scripts/template-html.mjs).
+copyDir('dist-templates', path.join(site, 'lab/t'))
 
 // In an app the components land in components/, so the examples are shown with that import path.
 const forApp = (code) => code.replace(/@\/registry\/manniche\/(?:[\w-]+\/)*([\w-]+)/g, '@/components/$1')
@@ -58,5 +60,8 @@ for (const item of registry.items) {
   })
 }
 
-fs.writeFileSync(path.join(site, 'server/lab-ui.json'), JSON.stringify({ items }, null, 1) + '\n')
+const themes = JSON.parse(fs.readFileSync('dist-templates/themes.json', 'utf8'))
+const colours = Object.entries(themes).map(([id, t]) => ({ id, name: t.name, light: t.light, dark: t.dark }))
+
+fs.writeFileSync(path.join(site, 'server/lab-ui.json'), JSON.stringify({ items, colours }, null, 1) + '\n')
 console.log(`${items.length} items, registry and previews copied to ${site}`)

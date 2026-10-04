@@ -2389,6 +2389,265 @@
       "categories": [
         "widgets"
       ]
+    },
+    {
+      "name": "shop-landing",
+      "type": "registry:block",
+      "title": "Shop landing page",
+      "description": "A landing page for a homeware shop: hero, products, collections, story, reviews, FAQ and newsletter.",
+      "dependencies": [
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "utils"
+      ],
+      "files": [
+        {
+          "path": "registry/manniche/shop-landing/shop-landing.tsx",
+          "type": "registry:component"
+        },
+        {
+          "path": "registry/manniche/shop-landing/product-art.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "cssVars": {
+        "theme": {
+          "color-success": "var(--success)",
+          "ease-out-quint": "cubic-bezier(0.23, 1, 0.32, 1)"
+        },
+        "light": {
+          "success": "oklch(0.55 0.13 155)"
+        },
+        "dark": {
+          "success": "oklch(0.72 0.13 155)"
+        }
+      },
+      "categories": [
+        "templates"
+      ]
+    },
+    {
+      "name": "shop-landing-demo",
+      "type": "registry:example",
+      "title": "Shop landing page demo",
+      "description": "How to use Shop landing page.",
+      "registryDependencies": [
+        "@manniche/shop-landing"
+      ],
+      "files": [
+        {
+          "path": "registry/manniche/examples/shop-landing-demo.tsx",
+          "type": "registry:example"
+        }
+      ],
+      "categories": [
+        "templates"
+      ]
+    },
+    {
+      "name": "pricing-page",
+      "type": "registry:block",
+      "title": "Pricing page",
+      "description": "Three plans with a monthly and yearly switch, a comparison table, FAQ and a closing call to action.",
+      "dependencies": [
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "utils"
+      ],
+      "files": [
+        {
+          "path": "registry/manniche/pricing-page/pricing-page.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "cssVars": {
+        "theme": {
+          "color-success": "var(--success)",
+          "ease-out-quint": "cubic-bezier(0.23, 1, 0.32, 1)"
+        },
+        "light": {
+          "success": "oklch(0.55 0.13 155)"
+        },
+        "dark": {
+          "success": "oklch(0.72 0.13 155)"
+        }
+      },
+      "categories": [
+        "templates"
+      ]
+    },
+    {
+      "name": "pricing-page-demo",
+      "type": "registry:example",
+      "title": "Pricing page demo",
+      "description": "How to use Pricing page.",
+      "registryDependencies": [
+        "@manniche/pricing-page"
+      ],
+      "files": [
+        {
+          "path": "registry/manniche/examples/pricing-page-demo.tsx",
+          "type": "registry:example"
+        }
+      ],
+      "categories": [
+        "templates"
+      ]
+    },
+    {
+      "name": "store-dashboard",
+      "type": "registry:block",
+      "title": "Store dashboard",
+      "description": "Shop admin with a sidebar, KPI cards, a revenue chart with a period switch, top products and recent orders.",
+      "dependencies": [
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "utils"
+      ],
+      "files": [
+        {
+          "path": "registry/manniche/store-dashboard/store-dashboard.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "cssVars": {
+        "theme": {
+          "color-success": "var(--success)",
+          "ease-out-quint": "cubic-bezier(0.23, 1, 0.32, 1)"
+        },
+        "light": {
+          "success": "oklch(0.55 0.13 155)"
+        },
+        "dark": {
+          "success": "oklch(0.72 0.13 155)"
+        }
+      },
+      "categories": [
+        "templates"
+      ]
+    },
+    {
+      "name": "store-dashboard-demo",
+      "type": "registry:example",
+      "title": "Store dashboard demo",
+      "description": "How to use Store dashboard.",
+      "registryDependencies": [
+        "@manniche/store-dashboard"
+      ],
+      "files": [
+        {
+          "path": "registry/manniche/examples/store-dashboard-demo.tsx",
+          "type": "registry:example"
+        }
+      ],
+      "categories": [
+        "templates"
+      ]
+    },
+    {
+      "name": "sign-in-page",
+      "type": "registry:block",
+      "title": "Sign-in page",
+      "description": "Split-screen sign-in and sign-up with passkey, inline validation and a brand panel with a customer quote.",
+      "dependencies": [
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "utils"
+      ],
+      "files": [
+        {
+          "path": "registry/manniche/sign-in-page/sign-in-page.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "cssVars": {
+        "theme": {
+          "color-success": "var(--success)",
+          "ease-out-quint": "cubic-bezier(0.23, 1, 0.32, 1)"
+        },
+        "light": {
+          "success": "oklch(0.55 0.13 155)"
+        },
+        "dark": {
+          "success": "oklch(0.72 0.13 155)"
+        }
+      },
+      "categories": [
+        "templates"
+      ]
+    },
+    {
+      "name": "sign-in-page-demo",
+      "type": "registry:example",
+      "title": "Sign-in page demo",
+      "description": "How to use Sign-in page.",
+      "registryDependencies": [
+        "@manniche/sign-in-page"
+      ],
+      "files": [
+        {
+          "path": "registry/manniche/examples/sign-in-page-demo.tsx",
+          "type": "registry:example"
+        }
+      ],
+      "categories": [
+        "templates"
+      ]
+    },
+    {
+      "name": "changelog-page",
+      "type": "registry:block",
+      "title": "Changelog page",
+      "description": "A timeline of releases with a filter for new, improved and fixed, a version index and a subscribe form.",
+      "dependencies": [
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "utils"
+      ],
+      "files": [
+        {
+          "path": "registry/manniche/changelog-page/changelog-page.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "cssVars": {
+        "theme": {
+          "color-success": "var(--success)",
+          "ease-out-quint": "cubic-bezier(0.23, 1, 0.32, 1)"
+        },
+        "light": {
+          "success": "oklch(0.55 0.13 155)"
+        },
+        "dark": {
+          "success": "oklch(0.72 0.13 155)"
+        }
+      },
+      "categories": [
+        "templates"
+      ]
+    },
+    {
+      "name": "changelog-page-demo",
+      "type": "registry:example",
+      "title": "Changelog page demo",
+      "description": "How to use Changelog page.",
+      "registryDependencies": [
+        "@manniche/changelog-page"
+      ],
+      "files": [
+        {
+          "path": "registry/manniche/examples/changelog-page-demo.tsx",
+          "type": "registry:example"
+        }
+      ],
+      "categories": [
+        "templates"
+      ]
     }
   ]
 }

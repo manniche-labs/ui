@@ -1,0 +1,20 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "sign-in-page-demo",
+  "title": "Sign-in page demo",
+  "description": "How to use Sign-in page.",
+  "registryDependencies": [
+    "@manniche/sign-in-page"
+  ],
+  "files": [
+    {
+      "path": "registry/manniche/examples/sign-in-page-demo.tsx",
+      "content": "import { SignInPage } from '@/registry/manniche/sign-in-page/sign-in-page'\n\nexport default function SignInPageDemo() {\n  return <SignInPage />\n}\n",
+      "type": "registry:example"
+    }
+  ],
+  "categories": [
+    "templates"
+  ],
+  "type": "registry:example"
+}

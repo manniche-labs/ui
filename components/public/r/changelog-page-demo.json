@@ -1,0 +1,20 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "changelog-page-demo",
+  "title": "Changelog page demo",
+  "description": "How to use Changelog page.",
+  "registryDependencies": [
+    "@manniche/changelog-page"
+  ],
+  "files": [
+    {
+      "path": "registry/manniche/examples/changelog-page-demo.tsx",
+      "content": "import { ChangelogPage } from '@/registry/manniche/changelog-page/changelog-page'\n\nexport default function ChangelogPageDemo() {\n  return <ChangelogPage />\n}\n",
+      "type": "registry:example"
+    }
+  ],
+  "categories": [
+    "templates"
+  ],
+  "type": "registry:example"
+}
