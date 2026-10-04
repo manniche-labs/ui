@@ -1,0 +1,20 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "floating-input-demo",
+  "title": "Floating input demo",
+  "description": "How to use Floating input.",
+  "registryDependencies": [
+    "@manniche/floating-input"
+  ],
+  "files": [
+    {
+      "path": "registry/manniche/examples/floating-input-demo.tsx",
+      "content": "import { useState } from 'react'\nimport { FloatingInput } from '@/registry/manniche/floating-input/floating-input'\n\nexport default function FloatingInputDemo() {\n  const [zip, setZip] = useState('')\n  const bad = zip !== '' && !/^\\d{4,5}$/.test(zip)\n\n  return (\n    <form className=\"mx-auto flex w-full max-w-sm flex-col gap-4\" onSubmit={(e) => e.preventDefault()}>\n      <FloatingInput label=\"Full name\" autoComplete=\"name\" />\n      <FloatingInput label=\"Email\" type=\"email\" autoComplete=\"email\" hint=\"We send the receipt here.\" />\n      <FloatingInput\n        label=\"Postcode\"\n        inputMode=\"numeric\"\n        autoComplete=\"postal-code\"\n        value={zip}\n        onChange={(e) => setZip(e.target.value)}\n        error={bad ? 'Use 4 or 5 digits.' : undefined}\n      />\n    </form>\n  )\n}\n",
+      "type": "registry:example"
+    }
+  ],
+  "categories": [
+    "controls"
+  ],
+  "type": "registry:example"
+}

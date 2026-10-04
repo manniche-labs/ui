@@ -1,0 +1,24 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "floating-input",
+  "title": "Floating input",
+  "description": "A text field whose label floats up on focus, with a hint and an error state. CSS only.",
+  "dependencies": [],
+  "registryDependencies": [
+    "utils"
+  ],
+  "files": [
+    {
+      "path": "registry/manniche/floating-input/floating-input.tsx",
+      "content": "// Based on Watermelon UI's “Floating input” (MIT, © 2026 Watermelon Platform Contributors,\n// github.com/WatermelonCorp/watermelon-platform). Rewritten in CSS only, with a linked label, hint and error.\nimport { useId, type InputHTMLAttributes } from 'react'\nimport { cn } from '@/lib/utils'\n\nexport type FloatingInputProps = Omit<InputHTMLAttributes<HTMLInputElement>, 'placeholder'> & {\n  label: string\n  hint?: string\n  /** Shown in red under the field, and marks the field invalid. */\n  error?: string\n}\n\n/** A text field whose label sits inside it and floats up into the border when you type or focus. */\nexport function FloatingInput({ label, hint, error, className, id, ...props }: FloatingInputProps) {\n  const own = useId()\n  const fieldId = id ?? own\n  const note = error ?? hint\n\n  return (\n    <div className={cn('w-full', className)}>\n      <div className=\"relative\">\n        <input\n          id={fieldId}\n          placeholder=\" \"\n          aria-invalid={error ? true : undefined}\n          aria-describedby={note ? `${fieldId}-note` : undefined}\n          className={cn(\n            'peer h-12 w-full rounded-xl border bg-background px-4 pt-1 outline-none transition-[border-color,box-shadow] duration-200',\n            'focus:border-ring focus:ring-3 focus:ring-ring/20',\n            error && 'border-destructive focus:border-destructive focus:ring-destructive/20',\n          )}\n          {...props}\n        />\n        <label\n          htmlFor={fieldId}\n          className={cn(\n            'pointer-events-none absolute top-0 left-3 origin-left -translate-y-1/2 bg-background px-1 text-xs text-muted-foreground transition-all duration-200 ease-out',\n            'peer-placeholder-shown:top-1/2 peer-placeholder-shown:text-base',\n            'peer-focus:top-0 peer-focus:text-xs peer-focus:text-ring',\n            error && 'text-destructive peer-focus:text-destructive',\n            'motion-reduce:transition-none',\n          )}\n        >\n          {label}\n        </label>\n      </div>\n      {note && (\n        <p id={`${fieldId}-note`} className={cn('mt-1.5 px-1 text-xs', error ? 'text-destructive' : 'text-muted-foreground')}>\n          {note}\n        </p>\n      )}\n    </div>\n  )\n}\n",
+      "type": "registry:component"
+    }
+  ],
+  "meta": {
+    "credit": "Adapted from Watermelon UI (MIT)."
+  },
+  "categories": [
+    "controls"
+  ],
+  "type": "registry:component"
+}

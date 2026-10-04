@@ -1,6 +1,6 @@
 # Manniche UI
 
-Components for agent interfaces and calm motion, served as a [shadcn registry](https://ui.shadcn.com/docs/registry).
+Components for AI interfaces, everyday controls and calm motion, served as a [shadcn registry](https://ui.shadcn.com/docs/registry).
 They use the standard shadcn tokens (`bg-card`, `text-muted-foreground`, `bg-primary` …), so they fit any shadcn project.
 
 ## Install a component
@@ -82,6 +82,19 @@ There is also a hosted MCP server just for this registry, with no key: `https://
 | `cloud-drift` | Soft clouds drifting behind content, on a tiny canvas |
 | `liquid-metal` | Flowing chrome surface from a small WebGL shader |
 | `logo-grid` | Logos around a centre heading, for integrations or partners |
+| `split-button` | A button that splits into a row of choices |
+| `dock` | App icons that bounce when picked, with labels and arrow keys |
+| `inline-edit` | Text that turns into a field in place; Enter saves, Escape cancels |
+| `dialog-stack` | Modal with steps that stack behind each other, on the native `<dialog>` |
+| `save-toggle` | Save button that shrinks to a spinner and pops a check |
+| `morphing-button` | Button that grows into an email field |
+| `feedback` | Thumbs up or down, then a short comment form |
+| `step-indicator` | Bars per step with one tooltip that slides between them |
+| `floating-input` | Text field with a floating label, hint and error, CSS only |
+| `list-stack` | Cards in a pile that fan out into a list |
+| `card-swipe` | Cards that turn away like pages as you swipe |
+| `deployment-card` | Build status with an animated bar per step |
+| `integration-card` | Integrations that open into a card with a connect button |
 | `use-reduced-motion` | Hook: true when the visitor asked for less motion |
 
 Several of the newer components are adapted from [Watermelon UI](https://github.com/WatermelonCorp/watermelon-platform) (MIT). Each such file says so at the top; see [THIRD_PARTY_NOTICES.md](../THIRD_PARTY_NOTICES.md).

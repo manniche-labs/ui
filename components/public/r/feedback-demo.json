@@ -1,0 +1,20 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "feedback-demo",
+  "title": "Feedback demo",
+  "description": "How to use Feedback.",
+  "registryDependencies": [
+    "@manniche/feedback"
+  ],
+  "files": [
+    {
+      "path": "registry/manniche/examples/feedback-demo.tsx",
+      "content": "import { Feedback } from '@/registry/manniche/feedback/feedback'\n\nexport default function FeedbackDemo() {\n  return (\n    <div className=\"flex flex-col items-center gap-4\">\n      <p className=\"text-sm font-medium\">Did this size guide help?</p>\n      <Feedback\n        onSubmit={async (data) => {\n          await new Promise((r) => setTimeout(r, 700))\n          console.log('feedback', data)\n        }}\n      />\n    </div>\n  )\n}\n",
+      "type": "registry:example"
+    }
+  ],
+  "categories": [
+    "widgets"
+  ],
+  "type": "registry:example"
+}

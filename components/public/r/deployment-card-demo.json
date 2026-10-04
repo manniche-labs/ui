@@ -1,0 +1,20 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "deployment-card-demo",
+  "title": "Deployment card demo",
+  "description": "How to use Deployment card.",
+  "registryDependencies": [
+    "@manniche/deployment-card"
+  ],
+  "files": [
+    {
+      "path": "registry/manniche/examples/deployment-card-demo.tsx",
+      "content": "import { useEffect, useState } from 'react'\nimport { DeploymentCard, type DeploymentStep } from '@/registry/manniche/deployment-card/deployment-card'\n\nconst plan = [\n  { id: 'install', label: 'Install packages', seconds: 3 },\n  { id: 'build', label: 'Build the shop', seconds: 5 },\n  { id: 'checks', label: 'Run checks', seconds: 3 },\n  { id: 'domains', label: 'Assign domains', seconds: 2 },\n]\n\nexport default function DeploymentCardDemo() {\n  const [tick, setTick] = useState(0)\n  const total = plan.reduce((n, s) => n + s.seconds, 0) * 4\n\n  useEffect(() => {\n    if (tick >= total) return\n    const t = setTimeout(() => setTick((n) => n + 1), 250)\n    return () => clearTimeout(t)\n  }, [tick, total])\n\n  const steps: DeploymentStep[] = plan.map((p, i) => {\n    const start = plan.slice(0, i).reduce((n, s) => n + s.seconds * 4, 0)\n    const len = p.seconds * 4\n    const done = Math.max(0, Math.min(len, tick - start))\n    const status = done === len ? (p.id === 'checks' ? 'warning' : 'success') : done > 0 ? 'running' : 'pending'\n    return {\n      id: p.id,\n      label: p.label,\n      status,\n      progress: done / len,\n      duration: done > 0 ? `${(done / 4).toFixed(done === len ? 0 : 1)}s` : undefined,\n      details:\n        p.id === 'checks' && done === len ? (\n          <ul className=\"space-y-1\">\n            <li>2 images are larger than 500 kB.</li>\n            <li>1 page has no meta description.</li>\n          </ul>\n        ) : p.id === 'build' && done === len ? (\n          '48 pages, 212 assets, 1.8 MB in all.'\n        ) : undefined,\n    }\n  })\n\n  return (\n    <div className=\"flex justify-center\">\n      <DeploymentCard\n        title=\"shop-storefront\"\n        environment=\"Production\"\n        branch=\"main\"\n        commit=\"8f3c2a1\"\n        message=\"Add the spring collection\"\n        state={tick >= total ? 'ready' : 'building'}\n        steps={steps}\n        actions={\n          <button type=\"button\" onClick={() => setTick(0)} className=\"min-h-11 rounded-xl border bg-card px-4 text-sm font-medium\">\n            Redeploy\n          </button>\n        }\n      />\n    </div>\n  )\n}\n",
+      "type": "registry:example"
+    }
+  ],
+  "categories": [
+    "widgets"
+  ],
+  "type": "registry:example"
+}

@@ -1,0 +1,26 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "step-indicator",
+  "title": "Step indicator",
+  "description": "Bars for each step with one tooltip that slides to the step you point at.",
+  "dependencies": [
+    "motion"
+  ],
+  "registryDependencies": [
+    "utils"
+  ],
+  "files": [
+    {
+      "path": "registry/manniche/step-indicator/step-indicator.tsx",
+      "content": "// Based on Watermelon UI's “Step indicator” (MIT, © 2026 Watermelon Platform Contributors,\n// github.com/WatermelonCorp/watermelon-platform). Rewritten with a current step, one moving label and no hidden measuring row.\nimport { AnimatePresence, MotionConfig, motion } from 'motion/react'\nimport { useRef, useState, type ReactNode } from 'react'\nimport { cn } from '@/lib/utils'\n\nexport type StepIndicatorStep = { id: string; label: string; icon?: ReactNode }\n\nexport type StepIndicatorProps = {\n  steps: StepIndicatorStep[]\n  /** Index of the step the person is on. Earlier steps are filled. */\n  current: number\n  onStepChange?: (index: number) => void\n  label?: string\n  className?: string\n}\n\n/** A row of bars for a multi-step flow. Hover or focus a bar and its name slides over to it. */\nexport function StepIndicator({ steps, current, onStepChange, label = 'Progress', className }: StepIndicatorProps) {\n  const [hover, setHover] = useState<number | null>(null)\n  const [x, setX] = useState(0)\n  const row = useRef<HTMLDivElement>(null)\n  const bars = useRef<(HTMLButtonElement | null)[]>([])\n  const [slide, setSlide] = useState(false)\n\n  const show = (i: number) => {\n    const b = bars.current[i]\n    const r = row.current\n    if (!b || !r) return\n    setSlide(hover !== null)\n    setX(b.offsetLeft + b.offsetWidth / 2)\n    setHover(i)\n  }\n\n  const step = hover === null ? null : steps[hover]\n\n  return (\n    <MotionConfig reducedMotion=\"user\">\n      <nav aria-label={label} className={cn('w-full', className)}>\n        <div ref={row} className=\"relative flex h-3 items-center gap-2.5\" onPointerLeave={() => setHover(null)}>\n          <AnimatePresence>\n            {step && (\n              <motion.div\n                key=\"tip\"\n                aria-hidden\n                initial={{ opacity: 0, x, y: 4 }}\n                animate={{ opacity: 1, x, y: 0 }}\n                exit={{ opacity: 0, y: 4 }}\n                transition={{ type: 'spring', bounce: 0, duration: slide ? 0.4 : 0 }}\n                className=\"pointer-events-none absolute bottom-6 left-0\"\n              >\n                <div className=\"-translate-x-1/2 overflow-hidden rounded-full bg-foreground px-4 py-2 text-background\">\n                  <AnimatePresence mode=\"popLayout\" initial={false}>\n                    <motion.span\n                      key={step.id}\n                      initial={{ opacity: 0, filter: 'blur(4px)' }}\n                      animate={{ opacity: 1, filter: 'blur(0px)' }}\n                      exit={{ opacity: 0, filter: 'blur(4px)' }}\n                      transition={{ duration: 0.25 }}\n                      className=\"flex items-center gap-2 text-sm font-medium whitespace-nowrap [&_svg]:size-4\"\n                    >\n                      {step.icon}\n                      {step.label}\n                    </motion.span>\n                  </AnimatePresence>\n                </div>\n              </motion.div>\n            )}\n          </AnimatePresence>\n          {steps.map((s, i) => (\n            <button\n              key={s.id}\n              ref={(el) => {\n                bars.current[i] = el\n              }}\n              type=\"button\"\n              aria-label={`${i + 1}. ${s.label}`}\n              aria-current={i === current ? 'step' : undefined}\n              onPointerEnter={() => show(i)}\n              onFocus={() => show(i)}\n              onBlur={() => setHover(null)}\n              onClick={() => onStepChange?.(i)}\n              className=\"group relative h-3 flex-1 outline-none before:absolute before:-inset-y-3 before:inset-x-0\"\n            >\n              <span\n                className={cn(\n                  'absolute inset-0 rounded-full transition-colors duration-300',\n                  'group-focus-visible:ring-2 group-focus-visible:ring-ring group-focus-visible:ring-offset-2 group-focus-visible:ring-offset-background',\n                  i <= current ? 'bg-foreground' : 'bg-muted',\n                  hover === i && i > current && 'bg-muted-foreground/40',\n                )}\n              />\n            </button>\n          ))}\n        </div>\n      </nav>\n    </MotionConfig>\n  )\n}\n",
+      "type": "registry:component"
+    }
+  ],
+  "meta": {
+    "credit": "Adapted from Watermelon UI (MIT)."
+  },
+  "categories": [
+    "navigation"
+  ],
+  "type": "registry:component"
+}

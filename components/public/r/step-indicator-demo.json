@@ -1,0 +1,20 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "step-indicator-demo",
+  "title": "Step indicator demo",
+  "description": "How to use Step indicator.",
+  "registryDependencies": [
+    "@manniche/step-indicator"
+  ],
+  "files": [
+    {
+      "path": "registry/manniche/examples/step-indicator-demo.tsx",
+      "content": "import { CreditCard, PackageCheck, ShoppingBag, Truck } from 'lucide-react'\nimport { useState } from 'react'\nimport { StepIndicator } from '@/registry/manniche/step-indicator/step-indicator'\n\nconst steps = [\n  { id: 'bag', label: 'Bag', icon: <ShoppingBag /> },\n  { id: 'shipping', label: 'Shipping', icon: <Truck /> },\n  { id: 'payment', label: 'Payment', icon: <CreditCard /> },\n  { id: 'done', label: 'Confirmation', icon: <PackageCheck /> },\n]\n\nexport default function StepIndicatorDemo() {\n  const [current, setCurrent] = useState(1)\n\n  return (\n    <div className=\"mx-auto flex w-full max-w-sm flex-col gap-8 pt-12\">\n      <StepIndicator label=\"Checkout\" steps={steps} current={current} onStepChange={setCurrent} />\n      <div className=\"flex items-center justify-between text-sm\">\n        <span className=\"text-muted-foreground\">\n          Step {current + 1} of {steps.length}: <span className=\"text-foreground\">{steps[current].label}</span>\n        </span>\n        <div className=\"flex gap-2\">\n          <button type=\"button\" disabled={current === 0} onClick={() => setCurrent((c) => c - 1)} className=\"min-h-11 rounded-xl px-3 hover:bg-muted disabled:opacity-40\">\n            Back\n          </button>\n          <button\n            type=\"button\"\n            disabled={current === steps.length - 1}\n            onClick={() => setCurrent((c) => c + 1)}\n            className=\"min-h-11 rounded-xl bg-foreground px-4 text-background disabled:opacity-40\"\n          >\n            Next\n          </button>\n        </div>\n      </div>\n    </div>\n  )\n}\n",
+      "type": "registry:example"
+    }
+  ],
+  "categories": [
+    "navigation"
+  ],
+  "type": "registry:example"
+}
