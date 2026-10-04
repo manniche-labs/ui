@@ -1,0 +1,20 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "shop-landing-demo",
+  "title": "Shop landing page demo",
+  "description": "How to use Shop landing page.",
+  "registryDependencies": [
+    "@manniche/shop-landing"
+  ],
+  "files": [
+    {
+      "path": "registry/manniche/examples/shop-landing-demo.tsx",
+      "content": "import { ShopLanding } from '@/registry/manniche/shop-landing/shop-landing'\n\nexport default function ShopLandingDemo() {\n  return <ShopLanding />\n}\n",
+      "type": "registry:example"
+    }
+  ],
+  "categories": [
+    "templates"
+  ],
+  "type": "registry:example"
+}

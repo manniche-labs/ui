@@ -1,0 +1,20 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "store-dashboard-demo",
+  "title": "Store dashboard demo",
+  "description": "How to use Store dashboard.",
+  "registryDependencies": [
+    "@manniche/store-dashboard"
+  ],
+  "files": [
+    {
+      "path": "registry/manniche/examples/store-dashboard-demo.tsx",
+      "content": "import { StoreDashboard } from '@/registry/manniche/store-dashboard/store-dashboard'\n\nexport default function StoreDashboardDemo() {\n  return <StoreDashboard />\n}\n",
+      "type": "registry:example"
+    }
+  ],
+  "categories": [
+    "templates"
+  ],
+  "type": "registry:example"
+}

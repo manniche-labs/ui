@@ -1,0 +1,20 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "pricing-page-demo",
+  "title": "Pricing page demo",
+  "description": "How to use Pricing page.",
+  "registryDependencies": [
+    "@manniche/pricing-page"
+  ],
+  "files": [
+    {
+      "path": "registry/manniche/examples/pricing-page-demo.tsx",
+      "content": "import { PricingPage } from '@/registry/manniche/pricing-page/pricing-page'\n\nexport default function PricingPageDemo() {\n  return <PricingPage />\n}\n",
+      "type": "registry:example"
+    }
+  ],
+  "categories": [
+    "templates"
+  ],
+  "type": "registry:example"
+}
