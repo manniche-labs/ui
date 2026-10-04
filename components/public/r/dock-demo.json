@@ -1,0 +1,20 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "dock-demo",
+  "title": "Dock demo",
+  "description": "How to use Dock.",
+  "registryDependencies": [
+    "@manniche/dock"
+  ],
+  "files": [
+    {
+      "path": "registry/manniche/examples/dock-demo.tsx",
+      "content": "import { Package, Search, Settings, ShoppingBag, Store } from 'lucide-react'\nimport { useState } from 'react'\nimport { Dock } from '@/registry/manniche/dock/dock'\n\nconst items = [\n  { id: 'shop', label: 'Shop', icon: <Store /> },\n  { id: 'search', label: 'Search', icon: <Search /> },\n  { id: 'bag', label: 'Bag', icon: <ShoppingBag /> },\n  { id: 'orders', label: 'Orders', icon: <Package /> },\n  { id: 'settings', label: 'Settings', icon: <Settings /> },\n]\n\nexport default function DockDemo() {\n  const [open, setOpen] = useState<string | null>('shop')\n\n  return (\n    <div className=\"flex justify-center pt-10\">\n      <Dock label=\"Shop apps\" items={items} value={open} onValueChange={setOpen} />\n    </div>\n  )\n}\n",
+      "type": "registry:example"
+    }
+  ],
+  "categories": [
+    "navigation"
+  ],
+  "type": "registry:example"
+}

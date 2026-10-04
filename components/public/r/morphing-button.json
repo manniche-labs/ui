@@ -1,0 +1,27 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "morphing-button",
+  "title": "Morphing button",
+  "description": "A button that grows into an email field and confirms when the form is sent.",
+  "dependencies": [
+    "motion",
+    "lucide-react"
+  ],
+  "registryDependencies": [
+    "utils"
+  ],
+  "files": [
+    {
+      "path": "registry/manniche/morphing-button/morphing-button.tsx",
+      "content": "// Based on Watermelon UI's “Morphing button” (MIT, © 2026 Watermelon Platform Contributors,\n// github.com/WatermelonCorp/watermelon-platform). Rewritten as a real form with email validation, Esc and a thank-you state.\nimport { Bell, Check } from 'lucide-react'\nimport { AnimatePresence, MotionConfig, motion } from 'motion/react'\nimport { useEffect, useRef, useState } from 'react'\nimport { cn } from '@/lib/utils'\n\nexport type MorphingButtonProps = {\n  label?: string\n  placeholder?: string\n  submitLabel?: string\n  doneLabel?: string\n  onSubmit: (email: string) => void\n  className?: string\n}\n\n/** A “Notify me” button that opens into an email field, then thanks the person and closes again. */\nexport function MorphingButton({\n  label = 'Notify me',\n  placeholder = 'Your email',\n  submitLabel = 'Notify me',\n  doneLabel = 'You are on the list',\n  onSubmit,\n  className,\n}: MorphingButtonProps) {\n  const [state, setState] = useState<'closed' | 'open' | 'done'>('closed')\n  const [email, setEmail] = useState('')\n  const input = useRef<HTMLInputElement>(null)\n  const opener = useRef<HTMLButtonElement>(null)\n  const box = useRef<HTMLFormElement>(null)\n\n  useEffect(() => {\n    if (state === 'open') input.current?.focus()\n    if (state !== 'done') return\n    const t = setTimeout(() => setState('closed'), 2200)\n    return () => clearTimeout(t)\n  }, [state])\n\n  // Clicking anywhere else closes an empty field.\n  useEffect(() => {\n    if (state !== 'open') return\n    const away = (e: PointerEvent) => !box.current?.contains(e.target as Node) && !email && setState('closed')\n    document.addEventListener('pointerdown', away)\n    return () => document.removeEventListener('pointerdown', away)\n  }, [state, email])\n\n  const close = () => {\n    setState('closed')\n    requestAnimationFrame(() => opener.current?.focus())\n  }\n\n  const open = state === 'open'\n\n  return (\n    <MotionConfig reducedMotion=\"user\" transition={{ type: 'spring', stiffness: 240, damping: 20, mass: 1 }}>\n      <motion.form\n        ref={box}\n        layout\n        onSubmit={(e) => {\n          e.preventDefault()\n          if (!open) return setState('open')\n          onSubmit(email.trim())\n          setEmail('')\n          setState('done')\n        }}\n        onKeyDown={(e) => e.key === 'Escape' && open && close()}\n        style={{ borderRadius: 999 }}\n        className={cn('flex items-center overflow-hidden border bg-muted', open ? 'w-full max-w-sm p-1' : 'p-0', className)}\n      >\n        <AnimatePresence mode=\"popLayout\" initial={false}>\n          {open && (\n            <motion.label key=\"field\" initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0 }} className=\"min-w-0 flex-1 px-4\">\n              <span className=\"sr-only\">{placeholder}</span>\n              <input\n                ref={input}\n                type=\"email\"\n                required\n                autoComplete=\"email\"\n                value={email}\n                onChange={(e) => setEmail(e.target.value)}\n                placeholder={placeholder}\n                className=\"w-full bg-transparent font-medium outline-none placeholder:text-muted-foreground\"\n              />\n            </motion.label>\n          )}\n        </AnimatePresence>\n        <motion.button\n          ref={opener}\n          layout\n          type={open ? 'submit' : 'button'}\n          onClick={() => !open && state !== 'done' && setState('open')}\n          aria-expanded={open}\n          className={cn(\n            'flex min-h-11 items-center justify-center gap-2 rounded-full font-medium whitespace-nowrap transition-colors duration-200',\n            open ? 'bg-card px-5 shadow-sm' : 'px-6 hover:bg-foreground/5',\n          )}\n        >\n          <AnimatePresence mode=\"popLayout\" initial={false}>\n            {!open && (\n              <motion.span\n                key={state}\n                layout\n                initial={{ opacity: 0, scale: 0, filter: 'blur(4px)' }}\n                animate={{ opacity: 1, scale: 1, filter: 'blur(0px)' }}\n                exit={{ opacity: 0, scale: 0, filter: 'blur(4px)' }}\n              >\n                {state === 'done' ? <Check className=\"size-5 text-success\" aria-hidden /> : <Bell className=\"size-5\" aria-hidden />}\n              </motion.span>\n            )}\n          </AnimatePresence>\n          <motion.span layout=\"position\" aria-live=\"polite\">\n            {state === 'done' ? doneLabel : open ? submitLabel : label}\n          </motion.span>\n        </motion.button>\n      </motion.form>\n    </MotionConfig>\n  )\n}\n",
+      "type": "registry:component"
+    }
+  ],
+  "meta": {
+    "credit": "Adapted from Watermelon UI (MIT)."
+  },
+  "categories": [
+    "controls"
+  ],
+  "type": "registry:component"
+}

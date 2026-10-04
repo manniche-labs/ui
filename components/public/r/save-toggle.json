@@ -1,0 +1,27 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "save-toggle",
+  "title": "Save toggle",
+  "description": "A save button that shrinks into a spinner, then pops a check when the save is done.",
+  "dependencies": [
+    "motion",
+    "lucide-react"
+  ],
+  "registryDependencies": [
+    "utils"
+  ],
+  "files": [
+    {
+      "path": "registry/manniche/save-toggle/save-toggle.tsx",
+      "content": "// Based on Watermelon UI's “Save toggle” (MIT, © 2026 Watermelon Platform Contributors,\n// github.com/WatermelonCorp/watermelon-platform). Rewritten to wait for a real save and to follow the theme through CSS variables.\nimport { Check, LoaderCircle } from 'lucide-react'\nimport { AnimatePresence, MotionConfig, motion } from 'motion/react'\nimport { useEffect, useRef, useState } from 'react'\nimport { cn } from '@/lib/utils'\n\nexport type SaveToggleProps = {\n  saved: boolean\n  /** Runs the save. The button spins until it settles; a rejection puts it back. */\n  onSave: () => Promise<void> | void\n  onUnsave: () => void\n  label?: string\n  savedLabel?: string\n  className?: string\n}\n\ntype Phase = 'idle' | 'saving' | 'done'\n\n/** A save button that shrinks to a spinner, pops a check, and widens again as “Saved”. Press again to unsave. */\nexport function SaveToggle({ saved, onSave, onUnsave, label = 'Save', savedLabel = 'Saved', className }: SaveToggleProps) {\n  const [phase, setPhase] = useState<Phase>('idle')\n  const alive = useRef(true)\n  useEffect(() => {\n    alive.current = true\n    return () => {\n      alive.current = false\n    }\n  }, [])\n\n  useEffect(() => {\n    if (phase !== 'done') return\n    const t = setTimeout(() => setPhase('idle'), 700)\n    return () => clearTimeout(t)\n  }, [phase])\n\n  const press = async () => {\n    if (phase !== 'idle') return\n    if (saved) return onUnsave()\n    setPhase('saving')\n    try {\n      await onSave()\n      if (alive.current) setPhase('done')\n    } catch {\n      if (alive.current) setPhase('idle')\n    }\n  }\n\n  const round = phase !== 'idle'\n  const shown = phase === 'saving' ? 'spin' : phase === 'done' ? 'check' : saved ? 'saved' : 'save'\n  const swap = { initial: { opacity: 0, y: 12, filter: 'blur(3px)' }, animate: { opacity: 1, y: 0, filter: 'blur(0px)' }, exit: { opacity: 0, y: -12, filter: 'blur(3px)' } }\n\n  return (\n    <MotionConfig reducedMotion=\"user\" transition={{ type: 'spring', stiffness: 260, damping: 22 }}>\n      <motion.button\n        type=\"button\"\n        aria-pressed={saved}\n        aria-busy={phase === 'saving'}\n        onClick={press}\n        initial={false}\n        animate={{ width: round ? 48 : 116 }}\n        className={cn(\n          'relative grid h-12 place-items-center overflow-hidden rounded-full font-medium transition-[background-color,color,box-shadow] duration-200 active:scale-[0.97]',\n          round ? 'bg-foreground text-background' : saved ? 'bg-card text-foreground ring-2 ring-border' : 'bg-muted text-foreground',\n          className,\n        )}\n      >\n        <AnimatePresence mode=\"popLayout\" initial={false}>\n          <motion.span key={shown} {...swap} className=\"col-start-1 row-start-1 flex items-center gap-1.5 whitespace-nowrap\">\n            {shown === 'spin' && <LoaderCircle className=\"size-5 animate-spin motion-reduce:animate-none\" aria-hidden />}\n            {shown === 'check' && (\n              <motion.span initial={{ scale: 0.4 }} animate={{ scale: 1 }} transition={{ type: 'spring', stiffness: 500, damping: 14 }}>\n                <Check className=\"size-5\" strokeWidth={3} aria-hidden />\n              </motion.span>\n            )}\n            {shown === 'saved' && (\n              <>\n                <span className=\"grid size-5 place-items-center rounded-full bg-foreground text-background\">\n                  <Check className=\"size-3\" strokeWidth={3.5} aria-hidden />\n                </span>\n                {savedLabel}\n              </>\n            )}\n            {shown === 'save' && label}\n          </motion.span>\n        </AnimatePresence>\n        <span className=\"sr-only\" aria-live=\"polite\">\n          {phase === 'done' ? savedLabel : ''}\n        </span>\n      </motion.button>\n    </MotionConfig>\n  )\n}\n",
+      "type": "registry:component"
+    }
+  ],
+  "meta": {
+    "credit": "Adapted from Watermelon UI (MIT)."
+  },
+  "categories": [
+    "controls"
+  ],
+  "type": "registry:component"
+}

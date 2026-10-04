@@ -1,0 +1,20 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "inline-edit-demo",
+  "title": "Inline edit demo",
+  "description": "How to use Inline edit.",
+  "registryDependencies": [
+    "@manniche/inline-edit"
+  ],
+  "files": [
+    {
+      "path": "registry/manniche/examples/inline-edit-demo.tsx",
+      "content": "import { CalendarDays, Clock, MapPin, NotebookText, Tag } from 'lucide-react'\nimport { useState } from 'react'\nimport { InlineEdit } from '@/registry/manniche/inline-edit/inline-edit'\n\nexport default function InlineEditDemo() {\n  const [event, setEvent] = useState({\n    name: 'Spring sample sale',\n    date: 'Saturday 14 March',\n    time: '10:00 – 16:00',\n    place: 'Back room, Main Street store',\n    notes: 'Members get in at 9.\\nCards and cash.',\n  })\n  const set = (key: keyof typeof event) => (v: string) => setEvent((e) => ({ ...e, [key]: v }))\n\n  return (\n    <div className=\"mx-auto w-full max-w-md rounded-[28px] border bg-muted/50 p-1.5 shadow-sm\">\n      <div className=\"overflow-hidden rounded-[22px] border bg-card\">\n        <p className=\"border-b bg-muted/40 px-5 py-3 text-xs font-medium tracking-wide text-muted-foreground uppercase\">Event details</p>\n        <div className=\"space-y-2 p-3 sm:space-y-1\">\n          <InlineEdit label=\"Event\" icon={<Tag />} value={event.name} onSave={set('name')} />\n          <InlineEdit label=\"Date\" icon={<CalendarDays />} value={event.date} onSave={set('date')} />\n          <InlineEdit label=\"Time\" icon={<Clock />} value={event.time} onSave={set('time')} />\n          <InlineEdit label=\"Place\" icon={<MapPin />} value={event.place} onSave={set('place')} />\n          <InlineEdit label=\"Notes\" icon={<NotebookText />} value={event.notes} onSave={set('notes')} multiline />\n        </div>\n      </div>\n    </div>\n  )\n}\n",
+      "type": "registry:example"
+    }
+  ],
+  "categories": [
+    "controls"
+  ],
+  "type": "registry:example"
+}

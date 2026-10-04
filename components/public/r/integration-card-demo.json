@@ -1,0 +1,20 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "integration-card-demo",
+  "title": "Integration card demo",
+  "description": "How to use Integration card.",
+  "registryDependencies": [
+    "@manniche/integration-card"
+  ],
+  "files": [
+    {
+      "path": "registry/manniche/examples/integration-card-demo.tsx",
+      "content": "import { CreditCard, Mail, Package, Receipt } from 'lucide-react'\nimport { IntegrationCard } from '@/registry/manniche/integration-card/integration-card'\n\nconst wait = () => new Promise<void>((r) => setTimeout(r, 700))\n\nexport default function IntegrationCardDemo() {\n  return (\n    <div className=\"flex justify-center\">\n      <IntegrationCard\n        title=\"Shop integrations\"\n        onConnectChange={wait}\n        items={[\n          {\n            id: 'payments',\n            name: 'Payments',\n            description: 'Take cards and wallets at checkout.',\n            icon: <CreditCard />,\n            tags: ['Checkout', 'Refunds'],\n            triggers: ['A payment succeeds', 'A refund is issued'],\n            actions: ['Mark the order as paid', 'Send a receipt'],\n            connected: true,\n          },\n          {\n            id: 'shipping',\n            name: 'Shipping',\n            description: 'Print labels and track parcels.',\n            icon: <Package />,\n            tags: ['Labels', 'Tracking'],\n            triggers: ['An order is packed', 'A parcel is delivered'],\n            actions: ['Create a label', 'Email the tracking link'],\n          },\n          {\n            id: 'newsletter',\n            name: 'Newsletter',\n            description: 'Add buyers who opt in to your list.',\n            icon: <Mail />,\n            tags: ['Email'],\n            triggers: ['A buyer ticks the box'],\n            actions: ['Add to the list', 'Tag with the product'],\n          },\n          {\n            id: 'accounting',\n            name: 'Accounting',\n            description: 'Send each sale to your books.',\n            icon: <Receipt />,\n            tags: ['VAT', 'Exports'],\n            triggers: ['An order is paid'],\n            actions: ['Create an invoice', 'Book the VAT'],\n          },\n        ]}\n      />\n    </div>\n  )\n}\n",
+      "type": "registry:example"
+    }
+  ],
+  "categories": [
+    "widgets"
+  ],
+  "type": "registry:example"
+}

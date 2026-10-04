@@ -1,0 +1,27 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "card-swipe",
+  "title": "Card swipe",
+  "description": "Cards that turn away like pages when you swipe, drag or use the arrows.",
+  "dependencies": [
+    "motion",
+    "lucide-react"
+  ],
+  "registryDependencies": [
+    "utils"
+  ],
+  "files": [
+    {
+      "path": "registry/manniche/card-swipe/card-swipe.tsx",
+      "content": "// Based on Watermelon UI's “Card swipe” (MIT, © 2026 Watermelon Platform Contributors,\n// github.com/WatermelonCorp/watermelon-platform). Rewritten with buttons, arrow keys, dots and a width that follows the container.\nimport { ChevronLeft, ChevronRight } from 'lucide-react'\nimport { MotionConfig, motion, useMotionValue, useTransform, type MotionValue, type PanInfo } from 'motion/react'\nimport { useEffect, useRef, useState, type ReactNode } from 'react'\nimport { cn } from '@/lib/utils'\n\nexport type CardSwipeProps = {\n  /** One node per card. */\n  cards: ReactNode[]\n  label?: string\n  previousLabel?: string\n  nextLabel?: string\n  className?: string\n}\n\nconst GAP = 16\n\n/** Cards in a row that turn away like pages as you swipe, drag, click or use the arrow keys. */\nexport function CardSwipe({ cards, label = 'Cards', previousLabel = 'Previous', nextLabel = 'Next', className }: CardSwipeProps) {\n  const [index, setIndex] = useState(0)\n  const [width, setWidth] = useState(320)\n  const frame = useRef<HTMLDivElement>(null)\n  const x = useMotionValue(0)\n  const last = cards.length - 1\n\n  useEffect(() => {\n    const el = frame.current\n    if (!el) return\n    const ro = new ResizeObserver(([e]) => setWidth(e.contentRect.width))\n    ro.observe(el)\n    return () => ro.disconnect()\n  }, [])\n\n  const go = (i: number) => setIndex(Math.max(0, Math.min(last, i)))\n\n  const end = (_: unknown, info: PanInfo) => {\n    if (info.offset.x < -50 || info.velocity.x < -500) go(index + 1)\n    else if (info.offset.x > 50 || info.velocity.x > 500) go(index - 1)\n  }\n\n  const arrow = 'grid size-11 place-items-center rounded-full border bg-card shadow-sm transition-opacity duration-150 disabled:opacity-30'\n\n  return (\n    <MotionConfig reducedMotion=\"user\" transition={{ type: 'spring', stiffness: 330, damping: 30 }}>\n      <section\n        aria-roledescription=\"carousel\"\n        aria-label={label}\n        className={cn('mx-auto flex w-full max-w-xs flex-col items-center gap-4', className)}\n        onKeyDown={(e) => {\n          if (e.key === 'ArrowRight') go(index + 1)\n          if (e.key === 'ArrowLeft') go(index - 1)\n        }}\n      >\n        <div ref={frame} className=\"w-full overflow-hidden\">\n          <motion.div\n            drag=\"x\"\n            dragConstraints={{ left: -(width + GAP) * last, right: 0 }}\n            onDragEnd={end}\n            animate={{ x: -index * (width + GAP) }}\n            style={{ x, gap: GAP, perspective: 1000 }}\n            className=\"flex cursor-grab touch-pan-y active:cursor-grabbing\"\n          >\n            {cards.map((card, i) => (\n              <Card key={i} i={i} x={x} step={width + GAP} width={width} current={i === index} total={cards.length}>\n                {card}\n              </Card>\n            ))}\n          </motion.div>\n        </div>\n        <div className=\"flex items-center gap-4\">\n          <button type=\"button\" aria-label={previousLabel} disabled={index === 0} onClick={() => go(index - 1)} className={arrow}>\n            <ChevronLeft className=\"size-5\" aria-hidden />\n          </button>\n          <div className=\"flex gap-1.5\" aria-hidden>\n            {cards.map((_, i) => (\n              <motion.span key={i} animate={{ width: i === index ? 18 : 6 }} className={cn('h-1.5 rounded-full', i === index ? 'bg-foreground' : 'bg-border')} />\n            ))}\n          </div>\n          <button type=\"button\" aria-label={nextLabel} disabled={index === last} onClick={() => go(index + 1)} className={arrow}>\n            <ChevronRight className=\"size-5\" aria-hidden />\n          </button>\n        </div>\n      </section>\n    </MotionConfig>\n  )\n}\n\ntype CardProps = { i: number; x: MotionValue<number>; step: number; width: number; current: boolean; total: number; children: ReactNode }\n\nfunction Card({ i, x, step, width, current, total, children }: CardProps) {\n  // Turns 90° as it slides one full step away in either direction.\n  const rotateY = useTransform(x, [-(i + 1) * step, -i * step, -(i - 1) * step], [90, 0, -90], { clamp: false })\n  return (\n    <motion.div\n      role=\"group\"\n      aria-roledescription=\"slide\"\n      aria-label={`${i + 1} / ${total}`}\n      aria-hidden={!current}\n      inert={!current}\n      style={{ width, rotateY }}\n      className=\"shrink-0 select-none\"\n    >\n      {children}\n    </motion.div>\n  )\n}\n",
+      "type": "registry:component"
+    }
+  ],
+  "meta": {
+    "credit": "Adapted from Watermelon UI (MIT)."
+  },
+  "categories": [
+    "surfaces"
+  ],
+  "type": "registry:component"
+}
