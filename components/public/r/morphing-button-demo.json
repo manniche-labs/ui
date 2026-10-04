@@ -1,0 +1,20 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "morphing-button-demo",
+  "title": "Morphing button demo",
+  "description": "How to use Morphing button.",
+  "registryDependencies": [
+    "@manniche/morphing-button"
+  ],
+  "files": [
+    {
+      "path": "registry/manniche/examples/morphing-button-demo.tsx",
+      "content": "import { MorphingButton } from '@/registry/manniche/morphing-button/morphing-button'\n\nexport default function MorphingButtonDemo() {\n  return (\n    <div className=\"flex flex-col items-center gap-4 text-center\">\n      <div>\n        <p className=\"font-medium\">Linen shirt, size M</p>\n        <p className=\"text-sm text-muted-foreground\">Back in stock next week.</p>\n      </div>\n      <MorphingButton onSubmit={(email) => console.log('notify', email)} />\n    </div>\n  )\n}\n",
+      "type": "registry:example"
+    }
+  ],
+  "categories": [
+    "controls"
+  ],
+  "type": "registry:example"
+}

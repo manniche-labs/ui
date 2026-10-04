@@ -1,0 +1,20 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "split-button-demo",
+  "title": "Split button demo",
+  "description": "How to use Split button.",
+  "registryDependencies": [
+    "@manniche/split-button"
+  ],
+  "files": [
+    {
+      "path": "registry/manniche/examples/split-button-demo.tsx",
+      "content": "import { useState } from 'react'\nimport { SplitButton } from '@/registry/manniche/split-button/split-button'\n\nconst options = [\n  { id: 'pickup', label: 'Pickup' },\n  { id: 'delivery', label: 'Delivery' },\n  { id: 'locker', label: 'Parcel locker' },\n]\n\nexport default function SplitButtonDemo() {\n  const [chosen, setChosen] = useState<string | null>(null)\n\n  return (\n    <div className=\"flex flex-col items-center gap-3\">\n      <SplitButton label=\"Choose shipping\" options={options} onSelect={setChosen} />\n      <p className=\"min-h-5 text-sm text-muted-foreground\" aria-live=\"polite\">\n        {chosen && `Shipping: ${options.find((o) => o.id === chosen)?.label}`}\n      </p>\n    </div>\n  )\n}\n",
+      "type": "registry:example"
+    }
+  ],
+  "categories": [
+    "controls"
+  ],
+  "type": "registry:example"
+}

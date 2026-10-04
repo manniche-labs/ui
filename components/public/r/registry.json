@@ -1836,6 +1836,559 @@
       "categories": [
         "surfaces"
       ]
+    },
+    {
+      "name": "split-button",
+      "type": "registry:component",
+      "title": "Split button",
+      "description": "A button that splits into a row of choices, with a back arrow and keyboard support.",
+      "dependencies": [
+        "motion",
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "utils"
+      ],
+      "files": [
+        {
+          "path": "registry/manniche/split-button/split-button.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "categories": [
+        "controls"
+      ],
+      "meta": {
+        "credit": "Adapted from Watermelon UI (MIT)."
+      }
+    },
+    {
+      "name": "split-button-demo",
+      "type": "registry:example",
+      "title": "Split button demo",
+      "description": "How to use Split button.",
+      "registryDependencies": [
+        "@manniche/split-button"
+      ],
+      "files": [
+        {
+          "path": "registry/manniche/examples/split-button-demo.tsx",
+          "type": "registry:example"
+        }
+      ],
+      "categories": [
+        "controls"
+      ]
+    },
+    {
+      "name": "dock",
+      "type": "registry:component",
+      "title": "Dock",
+      "description": "A toolbar of app icons that bounce when picked, with labels on hover and arrow-key navigation.",
+      "dependencies": [
+        "motion"
+      ],
+      "registryDependencies": [
+        "utils"
+      ],
+      "files": [
+        {
+          "path": "registry/manniche/dock/dock.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "categories": [
+        "navigation"
+      ],
+      "meta": {
+        "credit": "Adapted from Watermelon UI (MIT)."
+      }
+    },
+    {
+      "name": "dock-demo",
+      "type": "registry:example",
+      "title": "Dock demo",
+      "description": "How to use Dock.",
+      "registryDependencies": [
+        "@manniche/dock"
+      ],
+      "files": [
+        {
+          "path": "registry/manniche/examples/dock-demo.tsx",
+          "type": "registry:example"
+        }
+      ],
+      "categories": [
+        "navigation"
+      ]
+    },
+    {
+      "name": "inline-edit",
+      "type": "registry:component",
+      "title": "Inline edit",
+      "description": "Text that turns into a field in place, saved with Enter and cancelled with Escape.",
+      "dependencies": [
+        "motion",
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "utils"
+      ],
+      "files": [
+        {
+          "path": "registry/manniche/inline-edit/inline-edit.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "categories": [
+        "controls"
+      ],
+      "meta": {
+        "credit": "Adapted from Watermelon UI (MIT)."
+      }
+    },
+    {
+      "name": "inline-edit-demo",
+      "type": "registry:example",
+      "title": "Inline edit demo",
+      "description": "How to use Inline edit.",
+      "registryDependencies": [
+        "@manniche/inline-edit"
+      ],
+      "files": [
+        {
+          "path": "registry/manniche/examples/inline-edit-demo.tsx",
+          "type": "registry:example"
+        }
+      ],
+      "categories": [
+        "controls"
+      ]
+    },
+    {
+      "name": "dialog-stack",
+      "type": "registry:component",
+      "title": "Dialog stack",
+      "description": "A modal with steps that stack behind each other, built on the native dialog element.",
+      "dependencies": [
+        "motion",
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "utils"
+      ],
+      "files": [
+        {
+          "path": "registry/manniche/dialog-stack/dialog-stack.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "categories": [
+        "overlays"
+      ],
+      "meta": {
+        "credit": "Adapted from Watermelon UI (MIT)."
+      }
+    },
+    {
+      "name": "dialog-stack-demo",
+      "type": "registry:example",
+      "title": "Dialog stack demo",
+      "description": "How to use Dialog stack.",
+      "registryDependencies": [
+        "@manniche/dialog-stack"
+      ],
+      "files": [
+        {
+          "path": "registry/manniche/examples/dialog-stack-demo.tsx",
+          "type": "registry:example"
+        }
+      ],
+      "categories": [
+        "overlays"
+      ]
+    },
+    {
+      "name": "save-toggle",
+      "type": "registry:component",
+      "title": "Save toggle",
+      "description": "A save button that shrinks into a spinner, then pops a check when the save is done.",
+      "dependencies": [
+        "motion",
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "utils"
+      ],
+      "files": [
+        {
+          "path": "registry/manniche/save-toggle/save-toggle.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "categories": [
+        "controls"
+      ],
+      "meta": {
+        "credit": "Adapted from Watermelon UI (MIT)."
+      }
+    },
+    {
+      "name": "save-toggle-demo",
+      "type": "registry:example",
+      "title": "Save toggle demo",
+      "description": "How to use Save toggle.",
+      "registryDependencies": [
+        "@manniche/save-toggle"
+      ],
+      "files": [
+        {
+          "path": "registry/manniche/examples/save-toggle-demo.tsx",
+          "type": "registry:example"
+        }
+      ],
+      "categories": [
+        "controls"
+      ]
+    },
+    {
+      "name": "morphing-button",
+      "type": "registry:component",
+      "title": "Morphing button",
+      "description": "A button that grows into an email field and confirms when the form is sent.",
+      "dependencies": [
+        "motion",
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "utils"
+      ],
+      "files": [
+        {
+          "path": "registry/manniche/morphing-button/morphing-button.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "categories": [
+        "controls"
+      ],
+      "meta": {
+        "credit": "Adapted from Watermelon UI (MIT)."
+      }
+    },
+    {
+      "name": "morphing-button-demo",
+      "type": "registry:example",
+      "title": "Morphing button demo",
+      "description": "How to use Morphing button.",
+      "registryDependencies": [
+        "@manniche/morphing-button"
+      ],
+      "files": [
+        {
+          "path": "registry/manniche/examples/morphing-button-demo.tsx",
+          "type": "registry:example"
+        }
+      ],
+      "categories": [
+        "controls"
+      ]
+    },
+    {
+      "name": "feedback",
+      "type": "registry:component",
+      "title": "Feedback",
+      "description": "Thumbs up or down that burst, then open a short form for a comment.",
+      "dependencies": [
+        "motion",
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "utils"
+      ],
+      "files": [
+        {
+          "path": "registry/manniche/feedback/feedback.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "categories": [
+        "widgets"
+      ],
+      "meta": {
+        "credit": "Adapted from Watermelon UI (MIT)."
+      }
+    },
+    {
+      "name": "feedback-demo",
+      "type": "registry:example",
+      "title": "Feedback demo",
+      "description": "How to use Feedback.",
+      "registryDependencies": [
+        "@manniche/feedback"
+      ],
+      "files": [
+        {
+          "path": "registry/manniche/examples/feedback-demo.tsx",
+          "type": "registry:example"
+        }
+      ],
+      "categories": [
+        "widgets"
+      ]
+    },
+    {
+      "name": "step-indicator",
+      "type": "registry:component",
+      "title": "Step indicator",
+      "description": "Bars for each step with one tooltip that slides to the step you point at.",
+      "dependencies": [
+        "motion"
+      ],
+      "registryDependencies": [
+        "utils"
+      ],
+      "files": [
+        {
+          "path": "registry/manniche/step-indicator/step-indicator.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "categories": [
+        "navigation"
+      ],
+      "meta": {
+        "credit": "Adapted from Watermelon UI (MIT)."
+      }
+    },
+    {
+      "name": "step-indicator-demo",
+      "type": "registry:example",
+      "title": "Step indicator demo",
+      "description": "How to use Step indicator.",
+      "registryDependencies": [
+        "@manniche/step-indicator"
+      ],
+      "files": [
+        {
+          "path": "registry/manniche/examples/step-indicator-demo.tsx",
+          "type": "registry:example"
+        }
+      ],
+      "categories": [
+        "navigation"
+      ]
+    },
+    {
+      "name": "floating-input",
+      "type": "registry:component",
+      "title": "Floating input",
+      "description": "A text field whose label floats up on focus, with a hint and an error state. CSS only.",
+      "dependencies": [],
+      "registryDependencies": [
+        "utils"
+      ],
+      "files": [
+        {
+          "path": "registry/manniche/floating-input/floating-input.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "categories": [
+        "controls"
+      ],
+      "meta": {
+        "credit": "Adapted from Watermelon UI (MIT)."
+      }
+    },
+    {
+      "name": "floating-input-demo",
+      "type": "registry:example",
+      "title": "Floating input demo",
+      "description": "How to use Floating input.",
+      "registryDependencies": [
+        "@manniche/floating-input"
+      ],
+      "files": [
+        {
+          "path": "registry/manniche/examples/floating-input-demo.tsx",
+          "type": "registry:example"
+        }
+      ],
+      "categories": [
+        "controls"
+      ]
+    },
+    {
+      "name": "list-stack",
+      "type": "registry:component",
+      "title": "List stack",
+      "description": "Cards stacked in a pile that fan out into a list when opened.",
+      "dependencies": [
+        "motion"
+      ],
+      "registryDependencies": [
+        "utils"
+      ],
+      "files": [
+        {
+          "path": "registry/manniche/list-stack/list-stack.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "categories": [
+        "widgets"
+      ],
+      "meta": {
+        "credit": "Adapted from Watermelon UI (MIT)."
+      }
+    },
+    {
+      "name": "list-stack-demo",
+      "type": "registry:example",
+      "title": "List stack demo",
+      "description": "How to use List stack.",
+      "registryDependencies": [
+        "@manniche/list-stack"
+      ],
+      "files": [
+        {
+          "path": "registry/manniche/examples/list-stack-demo.tsx",
+          "type": "registry:example"
+        }
+      ],
+      "categories": [
+        "widgets"
+      ]
+    },
+    {
+      "name": "card-swipe",
+      "type": "registry:component",
+      "title": "Card swipe",
+      "description": "Cards that turn away like pages when you swipe, drag or use the arrows.",
+      "dependencies": [
+        "motion",
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "utils"
+      ],
+      "files": [
+        {
+          "path": "registry/manniche/card-swipe/card-swipe.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "categories": [
+        "surfaces"
+      ],
+      "meta": {
+        "credit": "Adapted from Watermelon UI (MIT)."
+      }
+    },
+    {
+      "name": "card-swipe-demo",
+      "type": "registry:example",
+      "title": "Card swipe demo",
+      "description": "How to use Card swipe.",
+      "registryDependencies": [
+        "@manniche/card-swipe"
+      ],
+      "files": [
+        {
+          "path": "registry/manniche/examples/card-swipe-demo.tsx",
+          "type": "registry:example"
+        }
+      ],
+      "categories": [
+        "surfaces"
+      ]
+    },
+    {
+      "name": "deployment-card",
+      "type": "registry:component",
+      "title": "Deployment card",
+      "description": "A build status card with an animated bar per step and details that fold out.",
+      "dependencies": [
+        "motion",
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "utils"
+      ],
+      "files": [
+        {
+          "path": "registry/manniche/deployment-card/deployment-card.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "categories": [
+        "widgets"
+      ],
+      "meta": {
+        "credit": "Adapted from Watermelon UI (MIT)."
+      }
+    },
+    {
+      "name": "deployment-card-demo",
+      "type": "registry:example",
+      "title": "Deployment card demo",
+      "description": "How to use Deployment card.",
+      "registryDependencies": [
+        "@manniche/deployment-card"
+      ],
+      "files": [
+        {
+          "path": "registry/manniche/examples/deployment-card-demo.tsx",
+          "type": "registry:example"
+        }
+      ],
+      "categories": [
+        "widgets"
+      ]
+    },
+    {
+      "name": "integration-card",
+      "type": "registry:component",
+      "title": "Integration card",
+      "description": "A list of integrations; each row opens into a card with what it does and a connect button.",
+      "dependencies": [
+        "motion",
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "utils"
+      ],
+      "files": [
+        {
+          "path": "registry/manniche/integration-card/integration-card.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "categories": [
+        "widgets"
+      ],
+      "meta": {
+        "credit": "Adapted from Watermelon UI (MIT)."
+      }
+    },
+    {
+      "name": "integration-card-demo",
+      "type": "registry:example",
+      "title": "Integration card demo",
+      "description": "How to use Integration card.",
+      "registryDependencies": [
+        "@manniche/integration-card"
+      ],
+      "files": [
+        {
+          "path": "registry/manniche/examples/integration-card-demo.tsx",
+          "type": "registry:example"
+        }
+      ],
+      "categories": [
+        "widgets"
+      ]
     }
   ]
 }

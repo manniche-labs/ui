@@ -1,0 +1,20 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "list-stack-demo",
+  "title": "List stack demo",
+  "description": "How to use List stack.",
+  "registryDependencies": [
+    "@manniche/list-stack"
+  ],
+  "files": [
+    {
+      "path": "registry/manniche/examples/list-stack-demo.tsx",
+      "content": "import { PackageCheck, RotateCcw, Truck } from 'lucide-react'\nimport { ListStack } from '@/registry/manniche/list-stack/list-stack'\n\nexport default function ListStackDemo() {\n  return (\n    <ListStack\n      showLabel=\"Show orders\"\n      items={[\n        { id: 'a', title: 'Order #1042', detail: 'Out for delivery', meta: 'Today', icon: <Truck /> },\n        { id: 'b', title: 'Order #1038', detail: 'Delivered to the front door', meta: '2 Aug', icon: <PackageCheck /> },\n        { id: 'c', title: 'Order #1031', detail: 'Return received, refund sent', meta: '28 Jul', icon: <RotateCcw /> },\n      ]}\n    />\n  )\n}\n",
+      "type": "registry:example"
+    }
+  ],
+  "categories": [
+    "widgets"
+  ],
+  "type": "registry:example"
+}

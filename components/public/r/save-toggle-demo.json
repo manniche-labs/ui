@@ -1,0 +1,20 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "save-toggle-demo",
+  "title": "Save toggle demo",
+  "description": "How to use Save toggle.",
+  "registryDependencies": [
+    "@manniche/save-toggle"
+  ],
+  "files": [
+    {
+      "path": "registry/manniche/examples/save-toggle-demo.tsx",
+      "content": "import { useState } from 'react'\nimport { SaveToggle } from '@/registry/manniche/save-toggle/save-toggle'\n\nexport default function SaveToggleDemo() {\n  const [saved, setSaved] = useState(false)\n\n  return (\n    <div className=\"mx-auto flex w-full max-w-sm items-center gap-4 rounded-3xl border bg-card p-4 shadow-sm\">\n      <div className=\"grid size-16 shrink-0 place-items-center rounded-2xl bg-muted text-2xl\" aria-hidden>\n        🧥\n      </div>\n      <div className=\"min-w-0 flex-1\">\n        <p className=\"truncate font-medium\">Waxed field jacket</p>\n        <p className=\"text-sm text-muted-foreground\">Olive · $189</p>\n      </div>\n      <SaveToggle\n        saved={saved}\n        onSave={async () => {\n          await new Promise((r) => setTimeout(r, 900))\n          setSaved(true)\n        }}\n        onUnsave={() => setSaved(false)}\n      />\n    </div>\n  )\n}\n",
+      "type": "registry:example"
+    }
+  ],
+  "categories": [
+    "controls"
+  ],
+  "type": "registry:example"
+}
