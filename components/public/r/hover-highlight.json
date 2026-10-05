@@ -1,0 +1,23 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "hover-highlight",
+  "title": "Hover highlight",
+  "description": "A grid of cards where one highlight glides to the card under the pointer or keyboard focus.",
+  "dependencies": [
+    "motion"
+  ],
+  "registryDependencies": [
+    "utils"
+  ],
+  "files": [
+    {
+      "path": "registry/manniche/hover-highlight/hover-highlight.tsx",
+      "content": "import { AnimatePresence, LayoutGroup, MotionConfig, motion } from 'motion/react'\nimport { useId, useState, type ReactNode } from 'react'\nimport { cn } from '@/lib/utils'\n\nexport type HoverHighlightItem = {\n  title: string\n  text: ReactNode\n  href?: string\n}\n\nexport type HoverHighlightProps = {\n  items: HoverHighlightItem[]\n  className?: string\n}\n\n/**\n * A grid of cards where one soft highlight glides to the card under the pointer or with keyboard focus.\n * Under reduced motion the highlight appears on the card without sliding.\n */\nexport function HoverHighlight({ items, className }: HoverHighlightProps) {\n  const [on, setOn] = useState<number | null>(null)\n  const group = useId()\n\n  return (\n    <MotionConfig reducedMotion=\"user\">\n      <LayoutGroup id={group}>\n        <ul className={cn('grid gap-2 sm:grid-cols-2 lg:grid-cols-3', className)} onPointerLeave={() => setOn(null)}>\n          {items.map((item, i) => {\n            const Tag = item.href ? 'a' : 'div'\n            return (\n              <li key={item.title} className=\"relative\" onPointerEnter={() => setOn(i)}>\n                <AnimatePresence>\n                  {on === i && (\n                    <motion.span\n                      layoutId=\"highlight\"\n                      aria-hidden\n                      initial={{ opacity: 0 }}\n                      animate={{ opacity: 1 }}\n                      exit={{\n                        opacity: 0,\n                        transition: { duration: 0.15, delay: 0.1 },\n                      }}\n                      transition={{\n                        type: 'spring',\n                        stiffness: 420,\n                        damping: 36,\n                      }}\n                      className=\"absolute inset-0 rounded-2xl bg-muted\"\n                    />\n                  )}\n                </AnimatePresence>\n                <Tag\n                  {...(item.href ? { href: item.href } : {})}\n                  onFocus={() => setOn(i)}\n                  onBlur={() => setOn(null)}\n                  className=\"relative grid h-full gap-1 rounded-2xl border bg-card/60 p-5 outline-none focus-visible:ring-2 focus-visible:ring-ring\"\n                >\n                  <span className=\"font-medium\">{item.title}</span>\n                  <span className=\"text-sm text-muted-foreground\">{item.text}</span>\n                </Tag>\n              </li>\n            )\n          })}\n        </ul>\n      </LayoutGroup>\n    </MotionConfig>\n  )\n}\n",
+      "type": "registry:component"
+    }
+  ],
+  "categories": [
+    "surfaces"
+  ],
+  "type": "registry:component"
+}

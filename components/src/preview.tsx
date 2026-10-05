@@ -16,6 +16,8 @@ const load = demos[`../registry/manniche/examples/${name}-demo.tsx`]
 const Demo = load ? lazy(load) : null
 // Templates fill the whole frame, with no Replay button, and take a colour and a mode.
 const FULL = params.get('full') === '1'
+// A still thumbnail on the lab's cards: no Replay button and no room to scroll.
+const MINI = params.get('mini') === '1'
 
 function applyTheme(colour: string | null, mode: string | null) {
   const root = document.documentElement
@@ -49,14 +51,16 @@ function Preview() {
 
   return (
     <main className="relative min-h-dvh">
-      <button
-        type="button"
-        onClick={() => setRun((n) => n + 1)}
-        className="absolute top-2 right-2 z-10 inline-flex min-h-11 items-center rounded-xl px-3 text-sm text-muted-foreground transition-colors duration-150 hover:bg-muted hover:text-foreground"
-      >
-        Replay
-      </button>
-      {SCROLL.has(name) ? (
+      {!MINI && (
+        <button
+          type="button"
+          onClick={() => setRun((n) => n + 1)}
+          className="absolute top-2 right-2 z-10 inline-flex min-h-11 items-center rounded-xl px-3 text-sm text-muted-foreground transition-colors duration-150 hover:bg-muted hover:text-foreground"
+        >
+          Replay
+        </button>
+      )}
+      {SCROLL.has(name) && !MINI ? (
         <div className="px-6">
           <p className="grid h-[70dvh] place-items-center text-sm text-muted-foreground">Scroll down</p>
           <div className="mx-auto max-w-xl">{demo}</div>

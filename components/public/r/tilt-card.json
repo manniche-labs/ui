@@ -1,0 +1,20 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "tilt-card",
+  "title": "Tilt card",
+  "description": "A card that tilts towards the mouse in 3D, with layers that float above it. Flat on touch screens and under reduced motion.",
+  "registryDependencies": [
+    "utils"
+  ],
+  "files": [
+    {
+      "path": "registry/manniche/tilt-card/tilt-card.tsx",
+      "content": "import { useRef, type CSSProperties, type HTMLAttributes, type PointerEvent } from 'react'\nimport { cn } from '@/lib/utils'\n\nexport type TiltCardProps = HTMLAttributes<HTMLDivElement> & {\n  /** The largest tilt in degrees, reached at the card's edges. */\n  max?: number\n  /** A soft glare that follows the pointer. */\n  glare?: boolean\n}\n\n/**\n * A card that tilts towards the mouse in 3D. Children with `data-depth=\"1\"` to `\"3\"` float above the card.\n * The angles are written straight to CSS variables, so React does not re-render on move.\n * On touch screens and under reduced motion it is a flat card.\n */\nexport function TiltCard({ max = 10, glare = true, className, children, onPointerMove, onPointerLeave, style, ...rest }: TiltCardProps) {\n  const el = useRef<HTMLDivElement>(null)\n\n  function move(e: PointerEvent<HTMLDivElement>) {\n    onPointerMove?.(e)\n    if (e.pointerType !== 'mouse' || !el.current) return\n    const r = el.current.getBoundingClientRect()\n    const x = (e.clientX - r.left) / r.width\n    const y = (e.clientY - r.top) / r.height\n    el.current.style.setProperty('--tilt-x', `${(0.5 - y) * 2 * max}deg`)\n    el.current.style.setProperty('--tilt-y', `${(x - 0.5) * 2 * max}deg`)\n    el.current.style.setProperty('--glare-x', `${x * 100}%`)\n    el.current.style.setProperty('--glare-y', `${y * 100}%`)\n  }\n\n  function leave(e: PointerEvent<HTMLDivElement>) {\n    onPointerLeave?.(e)\n    el.current?.style.setProperty('--tilt-x', '0deg')\n    el.current?.style.setProperty('--tilt-y', '0deg')\n  }\n\n  return (\n    <div className=\"[perspective:900px]\">\n      <div\n        ref={el}\n        onPointerMove={move}\n        onPointerLeave={leave}\n        style={style as CSSProperties}\n        className={cn(\n          'group/tilt relative isolate rounded-2xl border bg-card p-6 text-card-foreground shadow-sm [transform-style:preserve-3d]',\n          '[transform:rotateX(var(--tilt-x,0deg))_rotateY(var(--tilt-y,0deg))] transition-transform duration-200 ease-out',\n          // The depth layers lift off the card only while it can tilt.\n          'motion-safe:[&_[data-depth=\"1\"]]:[transform:translateZ(20px)] motion-safe:[&_[data-depth=\"2\"]]:[transform:translateZ(40px)] motion-safe:[&_[data-depth=\"3\"]]:[transform:translateZ(60px)]',\n          'motion-reduce:transform-none motion-reduce:transition-none',\n          className,\n        )}\n        {...rest}\n      >\n        {glare && (\n          <span\n            aria-hidden\n            className={cn(\n              'pointer-events-none absolute inset-0 -z-10 rounded-[inherit] opacity-0 transition-opacity duration-300',\n              'bg-[radial-gradient(circle_at_var(--glare-x,50%)_var(--glare-y,50%),rgb(255_255_255/0.14),transparent_60%)]',\n              'group-hover/tilt:opacity-100 motion-reduce:hidden',\n            )}\n          />\n        )}\n        {children}\n      </div>\n    </div>\n  )\n}\n",
+      "type": "registry:component"
+    }
+  ],
+  "categories": [
+    "surfaces"
+  ],
+  "type": "registry:component"
+}

@@ -66,6 +66,10 @@ There is also a hosted MCP server just for this registry, with no key: `https://
 | `danger-zone` | Red-framed last section of a settings page, one row per action that is hard to undo |
 | `scheduled-deletion` | Banner for something deleted but still recoverable: final date, days left, restore |
 | `glass-navbar` | Sticky top bar on frosted glass: full width, floating pill, or see-through until the page scrolls; solid with reduced transparency or more contrast |
+| `tilt-card` | Card that tilts towards the mouse in 3D, with layers floating above it; flat on touch and under reduced motion |
+| `flip-words` | One word in a sentence swaps for the next, pauses on hover, stops after a few rounds |
+| `moving-border` | Frame with a light running round its border, plain CSS |
+| `hover-highlight` | Grid of cards where one highlight glides to the hovered or focused card |
 | `tag-picker` | Pick tags from a pool; they fly into the box and back |
 | `signature-pad` | Draw or type a signature, get a sharp PNG |
 | `continuous-tabs` | Tab list with a sliding pill and arrow keys |

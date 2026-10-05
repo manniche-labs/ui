@@ -1,0 +1,20 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "moving-border",
+  "title": "Moving border",
+  "description": "A frame with a light running round its border, in plain CSS. The light stands still under reduced motion.",
+  "registryDependencies": [
+    "utils"
+  ],
+  "files": [
+    {
+      "path": "registry/manniche/moving-border/moving-border.tsx",
+      "content": "import type { CSSProperties, HTMLAttributes } from 'react'\nimport { cn } from '@/lib/utils'\n\nexport type MovingBorderProps = HTMLAttributes<HTMLDivElement> & {\n  /** Seconds for one lap of the light. */\n  duration?: number\n  /** Border width in pixels. */\n  width?: number\n}\n\n/**\n * A frame whose border has a light running round it. Wrap a button, a card or a price.\n * Plain CSS: a large conic gradient turns behind the content, and only the border strip shows.\n * Under reduced motion the light stands still in one corner.\n */\nexport function MovingBorder({ duration = 4, width = 1.5, className, children, style, ...rest }: MovingBorderProps) {\n  return (\n    <div\n      style={{ padding: width, ...style } as CSSProperties}\n      className={cn('relative isolate inline-grid overflow-hidden rounded-2xl bg-border', className)}\n      {...rest}\n    >\n      <span\n        aria-hidden\n        style={{ animationDuration: `${duration}s` }}\n        className={cn(\n          'pointer-events-none absolute top-1/2 left-1/2 -z-10 aspect-square w-[200%] -translate-x-1/2 -translate-y-1/2 animate-spin',\n          'bg-[conic-gradient(from_0deg,transparent_0_70%,var(--color-primary)_85%,transparent_100%)]',\n          'motion-reduce:animate-none motion-reduce:rotate-45',\n        )}\n      />\n      <div className=\"rounded-[inherit] bg-card text-card-foreground\">{children}</div>\n    </div>\n  )\n}\n",
+      "type": "registry:component"
+    }
+  ],
+  "categories": [
+    "surfaces"
+  ],
+  "type": "registry:component"
+}

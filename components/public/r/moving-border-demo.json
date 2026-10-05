@@ -1,0 +1,20 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "moving-border-demo",
+  "title": "Moving border demo",
+  "description": "How to use Moving border.",
+  "registryDependencies": [
+    "@manniche/moving-border"
+  ],
+  "files": [
+    {
+      "path": "registry/manniche/examples/moving-border-demo.tsx",
+      "content": "import { MovingBorder } from '@/registry/manniche/moving-border/moving-border'\n\nexport default function MovingBorderDemo() {\n  return (\n    <div className=\"grid justify-items-center gap-6\">\n      <MovingBorder>\n        <div className=\"grid gap-1 px-8 py-6 text-center\">\n          <p className=\"text-sm text-muted-foreground\">Most chosen</p>\n          <p className=\"font-serif text-3xl\">Business</p>\n          <p className=\"text-sm text-muted-foreground\">Website, shop and bookings</p>\n        </div>\n      </MovingBorder>\n      <MovingBorder duration={3} className=\"rounded-xl\">\n        <button type=\"button\" className=\"min-h-11 px-5 text-sm font-medium\">\n          Book a call\n        </button>\n      </MovingBorder>\n    </div>\n  )\n}\n",
+      "type": "registry:example"
+    }
+  ],
+  "categories": [
+    "surfaces"
+  ],
+  "type": "registry:example"
+}

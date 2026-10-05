@@ -1,0 +1,20 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "flip-words-demo",
+  "title": "Flip words demo",
+  "description": "How to use Flip words.",
+  "registryDependencies": [
+    "@manniche/flip-words"
+  ],
+  "files": [
+    {
+      "path": "registry/manniche/examples/flip-words-demo.tsx",
+      "content": "import { FlipWords } from '@/registry/manniche/flip-words/flip-words'\n\nexport default function FlipWordsDemo() {\n  return (\n    <p className=\"text-center font-serif text-3xl leading-tight\">\n      Websites that are <FlipWords words={['fast', 'honest', 'yours', 'found']} className=\"text-primary\" />\n    </p>\n  )\n}\n",
+      "type": "registry:example"
+    }
+  ],
+  "categories": [
+    "motion"
+  ],
+  "type": "registry:example"
+}

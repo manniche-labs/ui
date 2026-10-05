@@ -1,0 +1,20 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "hover-highlight-demo",
+  "title": "Hover highlight demo",
+  "description": "How to use Hover highlight.",
+  "registryDependencies": [
+    "@manniche/hover-highlight"
+  ],
+  "files": [
+    {
+      "path": "registry/manniche/examples/hover-highlight-demo.tsx",
+      "content": "import { HoverHighlight } from '@/registry/manniche/hover-highlight/hover-highlight'\n\nconst items = [\n  {\n    title: 'Websites',\n    text: 'Fast pages that are easy to find on Google.',\n    href: '#websites',\n  },\n  {\n    title: 'Shops',\n    text: 'Sell online with payments and stock in one place.',\n    href: '#shops',\n  },\n  {\n    title: 'Bookings',\n    text: 'Customers book a time without calling.',\n    href: '#bookings',\n  },\n  {\n    title: 'Hosting',\n    text: 'Updates, backups and monitoring included.',\n    href: '#hosting',\n  },\n  {\n    title: 'SEO',\n    text: 'Structured data, speed and local search.',\n    href: '#seo',\n  },\n  {\n    title: 'Support',\n    text: 'A real person who answers the same day.',\n    href: '#support',\n  },\n]\n\nexport default function HoverHighlightDemo() {\n  return <HoverHighlight items={items} className=\"lg:grid-cols-2\" />\n}\n",
+      "type": "registry:example"
+    }
+  ],
+  "categories": [
+    "surfaces"
+  ],
+  "type": "registry:example"
+}
