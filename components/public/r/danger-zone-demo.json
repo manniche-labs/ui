@@ -1,0 +1,22 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "danger-zone-demo",
+  "title": "Danger zone demo",
+  "description": "How to use Danger zone.",
+  "registryDependencies": [
+    "@manniche/danger-zone",
+    "@manniche/confirm-dialog",
+    "@manniche/hold-to-confirm"
+  ],
+  "files": [
+    {
+      "path": "registry/manniche/examples/danger-zone-demo.tsx",
+      "content": "import { useState } from 'react'\nimport { ConfirmDialog } from '@/registry/manniche/confirm-dialog/confirm-dialog'\nimport { DangerZone, dangerButton } from '@/registry/manniche/danger-zone/danger-zone'\nimport { HoldToConfirm } from '@/registry/manniche/hold-to-confirm/hold-to-confirm'\n\nexport default function DangerZoneDemo() {\n  const [open, setOpen] = useState(false)\n  return (\n    <div className=\"mx-auto w-full max-w-xl\">\n      <DangerZone\n        actions={[\n          {\n            id: 'pause',\n            title: 'Pause the shop',\n            description: 'Visitors see a closed sign. Orders already placed still ship.',\n            action: (\n              <HoldToConfirm onConfirm={() => console.log('paused')} doneLabel=\"Paused\" className=\"rounded-xl text-sm\">\n                Hold to pause\n              </HoldToConfirm>\n            ),\n          },\n          {\n            id: 'delete',\n            title: 'Delete the shop',\n            description: 'Products, orders and customers are kept for 14 days, then removed for good.',\n            action: (\n              <button type=\"button\" onClick={() => setOpen(true)} className={dangerButton}>\n                Delete shop\n              </button>\n            ),\n          },\n        ]}\n      />\n      <ConfirmDialog\n        open={open}\n        onOpenChange={setOpen}\n        destructive\n        title=\"Delete Nordlys Home?\"\n        description=\"You can restore the shop for 14 days. After that it is gone.\"\n        typeToConfirm=\"Nordlys Home\"\n        confirmLabel=\"Delete shop\"\n        cancelLabel=\"Keep shop\"\n        onConfirm={() => console.log('shop deleted')}\n      />\n    </div>\n  )\n}\n",
+      "type": "registry:example"
+    }
+  ],
+  "categories": [
+    "controls"
+  ],
+  "type": "registry:example"
+}
