@@ -1,4 +1,4 @@
-import { StrictMode, Suspense, lazy, useState, type ComponentType } from 'react'
+import { StrictMode, Suspense, lazy, useEffect, useState, type ComponentType } from 'react'
 import { createRoot } from 'react-dom/client'
 import './preview.css'
 import { colourById, colourVars, type Mode } from './template-theme'
@@ -16,7 +16,8 @@ const load = demos[`../registry/manniche/examples/${name}-demo.tsx`]
 const Demo = load ? lazy(load) : null
 // Templates fill the whole frame, with no Replay button, and take a colour and a mode.
 const FULL = params.get('full') === '1'
-// A still thumbnail on the lab's cards: no Replay button and no room to scroll.
+// A small live preview on the lab's cards: no Replay button and no room to scroll.
+// The card has its own Replay button, which posts a message to the frame.
 const MINI = params.get('mini') === '1'
 
 function applyTheme(colour: string | null, mode: string | null) {
@@ -38,6 +39,15 @@ if (FULL) {
 
 function Preview() {
   const [run, setRun] = useState(0)
+
+  useEffect(() => {
+    if (!MINI) return
+    const onMessage = (e: MessageEvent) => {
+      if (e.origin === location.origin && e.data?.type === 'manniche-replay') setRun((n) => n + 1)
+    }
+    addEventListener('message', onMessage)
+    return () => removeEventListener('message', onMessage)
+  }, [])
 
   if (!Demo) return <p className="p-6 text-sm text-muted-foreground">No demo called “{name}”.</p>
 
@@ -68,7 +78,8 @@ function Preview() {
         </div>
       ) : (
         <div className="grid min-h-dvh place-items-center px-6 py-14">
-          <div className="w-full min-w-0 max-w-xl">{demo}</div>
+          {/* On a card, a demo narrower than the column sits in the middle, not at the left edge. */}
+          <div className={MINI ? 'grid w-full min-w-0 max-w-xl justify-items-center' : 'w-full min-w-0 max-w-xl'}>{demo}</div>
         </div>
       )}
     </main>
