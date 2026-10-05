@@ -1,0 +1,23 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "scheduled-deletion",
+  "title": "Scheduled deletion",
+  "description": "Banner for something deleted but still recoverable: the final date, days left and a restore button.",
+  "dependencies": [
+    "lucide-react"
+  ],
+  "registryDependencies": [
+    "utils"
+  ],
+  "files": [
+    {
+      "path": "registry/manniche/scheduled-deletion/scheduled-deletion.tsx",
+      "content": "import { Clock, RotateCcw } from 'lucide-react'\nimport { useEffect, useState } from 'react'\nimport { cn } from '@/lib/utils'\n\nexport type ScheduledDeletionProps = {\n  /** What is going away, e.g. “The project Spring sale”. */\n  subject: string\n  /** When it was marked for deletion. */\n  deletedAt: Date\n  /** Days it stays recoverable. */\n  graceDays?: number\n  onRestore: () => void\n  restoreLabel?: string\n  locale?: string\n  className?: string\n}\n\nconst DAY = 86_400_000\n\n/**\n * A banner for something that is deleted but still recoverable: it says the date it goes for good,\n * how many days are left, and offers to restore it. The server does the real deletion when the time is up.\n */\nexport function ScheduledDeletion({\n  subject,\n  deletedAt,\n  graceDays = 14,\n  onRestore,\n  restoreLabel = 'Restore',\n  locale,\n  className,\n}: ScheduledDeletionProps) {\n  const [now, setNow] = useState(() => Date.now())\n  // Once an hour is enough to keep the day count right on a tab left open.\n  useEffect(() => {\n    const t = setInterval(() => setNow(Date.now()), 3_600_000)\n    return () => clearInterval(t)\n  }, [])\n\n  const goneAt = new Date(deletedAt.getTime() + graceDays * DAY)\n  const left = Math.max(0, Math.ceil((goneAt.getTime() - now) / DAY))\n  const used = Math.min(1, Math.max(0, (now - deletedAt.getTime()) / (graceDays * DAY)))\n  const date = goneAt.toLocaleDateString(locale, { day: 'numeric', month: 'long', year: 'numeric' })\n\n  return (\n    <div role=\"status\" className={cn('grid gap-3 rounded-2xl border border-destructive/30 bg-destructive/5 p-4', className)}>\n      <div className=\"flex flex-wrap items-center justify-between gap-x-6 gap-y-3\">\n        <div className=\"flex min-w-0 flex-1 basis-60 gap-3\">\n          <Clock className=\"mt-0.5 size-4 shrink-0 text-destructive\" aria-hidden />\n          <p className=\"text-sm text-pretty\">\n            {subject} is deleted for good on <strong className=\"font-medium\">{date}</strong>.{' '}\n            <span className=\"text-muted-foreground\">\n              {left === 0 ? 'That is today.' : left === 1 ? '1 day left to restore it.' : `${left} days left to restore it.`}\n            </span>\n          </p>\n        </div>\n        <button\n          type=\"button\"\n          onClick={onRestore}\n          className=\"inline-flex min-h-11 shrink-0 items-center gap-2 rounded-xl bg-primary px-4 text-sm font-medium text-primary-foreground transition-[background-color,transform] duration-150 ease-out-quint hover:bg-primary/90 active:scale-[0.97]\"\n        >\n          <RotateCcw className=\"size-4\" aria-hidden />\n          {restoreLabel}\n        </button>\n      </div>\n      <div className=\"h-1 overflow-hidden rounded-full bg-destructive/15\" aria-hidden>\n        <div className=\"h-full origin-left rounded-full bg-destructive/60\" style={{ transform: `scaleX(${used})` }} />\n      </div>\n    </div>\n  )\n}\n",
+      "type": "registry:component"
+    }
+  ],
+  "categories": [
+    "controls"
+  ],
+  "type": "registry:component"
+}

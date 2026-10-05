@@ -62,6 +62,9 @@ There is also a hosted MCP server just for this registry, with no key: `https://
 | `copy-button` | Copies a value; icon and label roll over to say it worked or failed |
 | `timed-undo` | Delete button that counts down and can be undone first |
 | `hold-to-confirm` | Fills while held and fires when full |
+| `confirm-dialog` | Confirmation where both buttons name the action, the safe one has focus, red only for destructive ones, optional type-to-confirm |
+| `danger-zone` | Red-framed last section of a settings page, one row per action that is hard to undo |
+| `scheduled-deletion` | Banner for something deleted but still recoverable: final date, days left, restore |
 | `tag-picker` | Pick tags from a pool; they fly into the box and back |
 | `signature-pad` | Draw or type a signature, get a sharp PNG |
 | `continuous-tabs` | Tab list with a sliding pill and arrow keys |
@@ -120,6 +123,17 @@ Whole pages, built from the same tokens. Install one like a component, or downlo
 - Touch targets are at least 44 px.
 - Under `prefers-reduced-motion` everything is shown in its final state.
 - No gradient text, glow or bounce.
+
+## Dangerous actions
+
+Six rules for anything that deletes or cannot easily be undone, and the component for each:
+
+1. Small, frequent destructive actions are held, not confirmed in a dialog: `hold-to-confirm`.
+2. Buttons name the verb and the thing (“Delete project” / “Keep project”), never “Yes”, “No” or “OK”: `confirm-dialog`.
+3. The destructive button sits apart from where “OK” usually is, and the safe one has focus: `confirm-dialog`.
+4. Red only for actions that destroy something. Everything else uses the primary colour.
+5. Settings that destroy things sit together at the bottom, in a framed section with a heading: `danger-zone`.
+6. Deleting is soft first. Seconds for a single item (`timed-undo`), days for accounts and projects (`scheduled-deletion`, 14 days by default).
 
 ## Work on it
 
