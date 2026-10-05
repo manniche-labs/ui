@@ -2079,6 +2079,156 @@
       ]
     },
     {
+      "name": "tilt-card",
+      "type": "registry:component",
+      "title": "Tilt card",
+      "description": "A card that tilts towards the mouse in 3D, with layers that float above it. Flat on touch screens and under reduced motion.",
+      "registryDependencies": [
+        "utils"
+      ],
+      "files": [
+        {
+          "path": "registry/manniche/tilt-card/tilt-card.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "categories": [
+        "surfaces"
+      ]
+    },
+    {
+      "name": "tilt-card-demo",
+      "type": "registry:example",
+      "title": "Tilt card demo",
+      "description": "How to use Tilt card.",
+      "categories": [
+        "surfaces"
+      ],
+      "registryDependencies": [
+        "@manniche/tilt-card"
+      ],
+      "files": [
+        {
+          "path": "registry/manniche/examples/tilt-card-demo.tsx",
+          "type": "registry:example"
+        }
+      ]
+    },
+    {
+      "name": "flip-words",
+      "type": "registry:component",
+      "title": "Flip words",
+      "description": "One word in a sentence swaps for the next with a soft lift, pauses on hover and stops after a few rounds. Still under reduced motion.",
+      "dependencies": [
+        "motion"
+      ],
+      "registryDependencies": [
+        "utils"
+      ],
+      "files": [
+        {
+          "path": "registry/manniche/flip-words/flip-words.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "categories": [
+        "motion"
+      ]
+    },
+    {
+      "name": "flip-words-demo",
+      "type": "registry:example",
+      "title": "Flip words demo",
+      "description": "How to use Flip words.",
+      "categories": [
+        "motion"
+      ],
+      "registryDependencies": [
+        "@manniche/flip-words"
+      ],
+      "files": [
+        {
+          "path": "registry/manniche/examples/flip-words-demo.tsx",
+          "type": "registry:example"
+        }
+      ]
+    },
+    {
+      "name": "moving-border",
+      "type": "registry:component",
+      "title": "Moving border",
+      "description": "A frame with a light running round its border, in plain CSS. The light stands still under reduced motion.",
+      "registryDependencies": [
+        "utils"
+      ],
+      "files": [
+        {
+          "path": "registry/manniche/moving-border/moving-border.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "categories": [
+        "surfaces"
+      ]
+    },
+    {
+      "name": "moving-border-demo",
+      "type": "registry:example",
+      "title": "Moving border demo",
+      "description": "How to use Moving border.",
+      "categories": [
+        "surfaces"
+      ],
+      "registryDependencies": [
+        "@manniche/moving-border"
+      ],
+      "files": [
+        {
+          "path": "registry/manniche/examples/moving-border-demo.tsx",
+          "type": "registry:example"
+        }
+      ]
+    },
+    {
+      "name": "hover-highlight",
+      "type": "registry:component",
+      "title": "Hover highlight",
+      "description": "A grid of cards where one highlight glides to the card under the pointer or keyboard focus.",
+      "dependencies": [
+        "motion"
+      ],
+      "registryDependencies": [
+        "utils"
+      ],
+      "files": [
+        {
+          "path": "registry/manniche/hover-highlight/hover-highlight.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "categories": [
+        "surfaces"
+      ]
+    },
+    {
+      "name": "hover-highlight-demo",
+      "type": "registry:example",
+      "title": "Hover highlight demo",
+      "description": "How to use Hover highlight.",
+      "categories": [
+        "surfaces"
+      ],
+      "registryDependencies": [
+        "@manniche/hover-highlight"
+      ],
+      "files": [
+        {
+          "path": "registry/manniche/examples/hover-highlight-demo.tsx",
+          "type": "registry:example"
+        }
+      ]
+    },
+    {
       "name": "inline-edit",
       "type": "registry:component",
       "title": "Inline edit",

@@ -1,0 +1,20 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "tilt-card-demo",
+  "title": "Tilt card demo",
+  "description": "How to use Tilt card.",
+  "registryDependencies": [
+    "@manniche/tilt-card"
+  ],
+  "files": [
+    {
+      "path": "registry/manniche/examples/tilt-card-demo.tsx",
+      "content": "import { TiltCard } from '@/registry/manniche/tilt-card/tilt-card'\n\nexport default function TiltCardDemo() {\n  return (\n    <TiltCard className=\"mx-auto max-w-sm\">\n      <div data-depth=\"1\" className=\"h-36 rounded-xl bg-[linear-gradient(135deg,#f97316,#db2777_50%,#4f46e5)]\" />\n      <p data-depth=\"2\" className=\"mt-4 font-medium\">\n        New website in two weeks\n      </p>\n      <p data-depth=\"1\" className=\"mt-1 text-sm text-muted-foreground\">\n        Move the mouse over the card.\n      </p>\n    </TiltCard>\n  )\n}\n",
+      "type": "registry:example"
+    }
+  ],
+  "categories": [
+    "surfaces"
+  ],
+  "type": "registry:example"
+}
