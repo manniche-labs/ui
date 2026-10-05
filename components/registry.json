@@ -2040,6 +2040,45 @@
       ]
     },
     {
+      "name": "glass-navbar",
+      "type": "registry:component",
+      "title": "Glass navbar",
+      "description": "A sticky top bar on frosted glass in three styles, solid when the visitor asks for less transparency or more contrast.",
+      "dependencies": [
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "utils"
+      ],
+      "files": [
+        {
+          "path": "registry/manniche/glass-navbar/glass-navbar.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "categories": [
+        "navigation"
+      ]
+    },
+    {
+      "name": "glass-navbar-demo",
+      "type": "registry:example",
+      "title": "Glass navbar demo",
+      "description": "How to use Glass navbar.",
+      "categories": [
+        "navigation"
+      ],
+      "registryDependencies": [
+        "@manniche/glass-navbar"
+      ],
+      "files": [
+        {
+          "path": "registry/manniche/examples/glass-navbar-demo.tsx",
+          "type": "registry:example"
+        }
+      ]
+    },
+    {
       "name": "inline-edit",
       "type": "registry:component",
       "title": "Inline edit",
