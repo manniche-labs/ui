@@ -65,6 +65,7 @@ There is also a hosted MCP server just for this registry, with no key: `https://
 | `confirm-dialog` | Confirmation where both buttons name the action, the safe one has focus, red only for destructive ones, optional type-to-confirm |
 | `danger-zone` | Red-framed last section of a settings page, one row per action that is hard to undo |
 | `scheduled-deletion` | Banner for something deleted but still recoverable: final date, days left, restore |
+| `glass-navbar` | Sticky top bar on frosted glass: full width, floating pill, or see-through until the page scrolls; solid with reduced transparency or more contrast |
 | `tag-picker` | Pick tags from a pool; they fly into the box and back |
 | `signature-pad` | Draw or type a signature, get a sharp PNG |
 | `continuous-tabs` | Tab list with a sliding pill and arrow keys |

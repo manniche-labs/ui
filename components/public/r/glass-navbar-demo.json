@@ -1,0 +1,20 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "glass-navbar-demo",
+  "title": "Glass navbar demo",
+  "description": "How to use Glass navbar.",
+  "registryDependencies": [
+    "@manniche/glass-navbar"
+  ],
+  "files": [
+    {
+      "path": "registry/manniche/examples/glass-navbar-demo.tsx",
+      "content": "import { useState } from 'react'\nimport { GlassNavbar } from '@/registry/manniche/glass-navbar/glass-navbar'\n\nconst links = [\n  { href: '#work', label: 'Work' },\n  { href: '#prices', label: 'Prices' },\n  { href: '#guides', label: 'Guides' },\n  { href: '#contact', label: 'Contact' },\n]\n\nconst variants = ['frosted', 'floating', 'scroll'] as const\n\nexport default function GlassNavbarDemo() {\n  const [variant, setVariant] = useState<(typeof variants)[number]>('frosted')\n\n  return (\n    <div className=\"grid gap-3\">\n      <div role=\"radiogroup\" aria-label=\"Variant\" className=\"flex gap-1 text-sm\">\n        {variants.map((v) => (\n          <button\n            key={v}\n            type=\"button\"\n            role=\"radio\"\n            aria-checked={v === variant}\n            onClick={() => setVariant(v)}\n            className=\"min-h-11 rounded-lg px-3 capitalize text-muted-foreground aria-checked:bg-muted aria-checked:text-foreground\"\n          >\n            {v}\n          </button>\n        ))}\n      </div>\n      {/* The page scrolls inside this frame, so the glass has something to blur. In scroll mode the hero starts under the bar (56px + 1px border). */}\n      <div className=\"h-[420px] overflow-y-auto rounded-2xl border bg-background\">\n        <GlassNavbar\n          variant={variant}\n          brand=\"Manniche\"\n          links={links}\n          current=\"#prices\"\n          action={\n            <a href=\"#contact\" className=\"inline-flex min-h-11 items-center rounded-xl bg-primary px-4 text-sm font-medium text-primary-foreground\">\n              Book a call\n            </a>\n          }\n        />\n        <div className={variant === 'scroll' ? '-mt-[57px]' : ''}>\n          <div className=\"grid h-64 place-items-end bg-[linear-gradient(135deg,#f97316,#db2777_45%,#4f46e5)] p-5 text-white\">\n            <p className=\"w-full font-serif text-2xl\">Websites for small businesses</p>\n          </div>\n          <div className=\"grid gap-4 p-5\">\n            {['#0ea5e9', '#22c55e', '#eab308', '#111827', '#f8fafc'].map((c) => (\n              <div key={c} className=\"grid gap-2\">\n                <div className=\"h-28 rounded-xl border\" style={{ background: c }} />\n                <p className=\"text-sm text-muted-foreground\">Scroll so this block passes under the bar.</p>\n              </div>\n            ))}\n          </div>\n        </div>\n      </div>\n    </div>\n  )\n}\n",
+      "type": "registry:example"
+    }
+  ],
+  "categories": [
+    "navigation"
+  ],
+  "type": "registry:example"
+}
