@@ -1,0 +1,20 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "scheduled-deletion-demo",
+  "title": "Scheduled deletion demo",
+  "description": "How to use Scheduled deletion.",
+  "registryDependencies": [
+    "@manniche/scheduled-deletion"
+  ],
+  "files": [
+    {
+      "path": "registry/manniche/examples/scheduled-deletion-demo.tsx",
+      "content": "import { useState } from 'react'\nimport { ScheduledDeletion } from '@/registry/manniche/scheduled-deletion/scheduled-deletion'\n\nexport default function ScheduledDeletionDemo() {\n  // Deleted three days ago, so eleven of the fourteen days are left.\n  const [deletedAt] = useState(() => new Date(Date.now() - 3 * 86_400_000))\n  const [restored, setRestored] = useState(false)\n  return (\n    <div className=\"mx-auto w-full max-w-xl\">\n      {restored ? (\n        <p role=\"status\" className=\"rounded-2xl border bg-card p-4 text-sm\">\n          The collection Autumn linen is back.\n        </p>\n      ) : (\n        <ScheduledDeletion subject=\"The collection Autumn linen\" deletedAt={deletedAt} onRestore={() => setRestored(true)} locale=\"en-GB\" />\n      )}\n    </div>\n  )\n}\n",
+      "type": "registry:example"
+    }
+  ],
+  "categories": [
+    "controls"
+  ],
+  "type": "registry:example"
+}

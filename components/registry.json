@@ -999,6 +999,123 @@
       ]
     },
     {
+      "name": "confirm-dialog",
+      "type": "registry:component",
+      "title": "Confirm dialog",
+      "description": "Confirmation on the native dialog: both buttons name the action, the safe one has focus, red only when something is destroyed, optional type-to-confirm.",
+      "categories": [
+        "controls"
+      ],
+      "dependencies": [],
+      "registryDependencies": [
+        "utils"
+      ],
+      "files": [
+        {
+          "path": "registry/manniche/confirm-dialog/confirm-dialog.tsx",
+          "type": "registry:component"
+        }
+      ]
+    },
+    {
+      "name": "confirm-dialog-demo",
+      "type": "registry:example",
+      "title": "Confirm dialog demo",
+      "description": "How to use Confirm dialog.",
+      "categories": [
+        "controls"
+      ],
+      "registryDependencies": [
+        "@manniche/confirm-dialog"
+      ],
+      "files": [
+        {
+          "path": "registry/manniche/examples/confirm-dialog-demo.tsx",
+          "type": "registry:example"
+        }
+      ]
+    },
+    {
+      "name": "danger-zone",
+      "type": "registry:component",
+      "title": "Danger zone",
+      "description": "The red-framed last section of a settings page, one row per action that cannot easily be undone.",
+      "categories": [
+        "controls"
+      ],
+      "dependencies": [
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "utils"
+      ],
+      "files": [
+        {
+          "path": "registry/manniche/danger-zone/danger-zone.tsx",
+          "type": "registry:component"
+        }
+      ]
+    },
+    {
+      "name": "danger-zone-demo",
+      "type": "registry:example",
+      "title": "Danger zone demo",
+      "description": "How to use Danger zone.",
+      "categories": [
+        "controls"
+      ],
+      "registryDependencies": [
+        "@manniche/danger-zone",
+        "@manniche/confirm-dialog",
+        "@manniche/hold-to-confirm"
+      ],
+      "files": [
+        {
+          "path": "registry/manniche/examples/danger-zone-demo.tsx",
+          "type": "registry:example"
+        }
+      ]
+    },
+    {
+      "name": "scheduled-deletion",
+      "type": "registry:component",
+      "title": "Scheduled deletion",
+      "description": "Banner for something deleted but still recoverable: the final date, days left and a restore button.",
+      "categories": [
+        "controls"
+      ],
+      "dependencies": [
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "utils"
+      ],
+      "files": [
+        {
+          "path": "registry/manniche/scheduled-deletion/scheduled-deletion.tsx",
+          "type": "registry:component"
+        }
+      ]
+    },
+    {
+      "name": "scheduled-deletion-demo",
+      "type": "registry:example",
+      "title": "Scheduled deletion demo",
+      "description": "How to use Scheduled deletion.",
+      "categories": [
+        "controls"
+      ],
+      "registryDependencies": [
+        "@manniche/scheduled-deletion"
+      ],
+      "files": [
+        {
+          "path": "registry/manniche/examples/scheduled-deletion-demo.tsx",
+          "type": "registry:example"
+        }
+      ]
+    },
+    {
       "name": "tag-picker",
       "type": "registry:component",
       "title": "Tag picker",
