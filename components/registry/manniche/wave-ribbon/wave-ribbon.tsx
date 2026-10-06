@@ -52,7 +52,7 @@ const LIFT = 0.06 // how far it dips down as it goes back
 const WAVE = 3.9 // one wavelength, crest to crest
 const RECEDE = 0.28 // how far the ribbon falls back towards its ends, per RECEDE_LEN of length
 const RECEDE_LEN = 1.6
-const RADIUS = 6 // px, the corner radius of the picture at the front
+const RADIUS = 14 // px, the corner radius of the picture at the front
 const SEG = 28 // columns per picture, so it bends smoothly
 const PAD = 0.03 // world units of quad around each picture, room for its smoothed edge
 const FOG_START = 1 // distance along the ribbon where the fog begins
@@ -131,7 +131,7 @@ function rigFor(width: number, height: number, aspect: number, amplitude: number
     band: clamp(width * 0.13, 48, 200),
     wave,
   }
-  rig.radius = Math.min(RADIUS / rig.ppu, 0.08)
+  rig.radius = Math.min(RADIUS / rig.ppu, 0.16)
   // Walk out along the ribbon until a picture's outer edge reaches the side of the frame.
   let s = 0.5
   while (s < 9) {
@@ -601,7 +601,7 @@ export function WaveRibbon({
   const atStart = !wraps && current === 0
   const atEnd = !wraps && current === n - 1
   const button =
-    'grid size-11 shrink-0 cursor-pointer place-items-center rounded-[4px] bg-card text-foreground shadow-[inset_0_0_0_1px_var(--border)] [-webkit-tap-highlight-color:transparent] hover:bg-muted ' +
+    'grid size-11 shrink-0 cursor-pointer place-items-center rounded-full bg-muted text-foreground [-webkit-tap-highlight-color:transparent] hover:bg-[color-mix(in_oklab,var(--foreground)_8%,var(--muted))] ' +
     'transition-[opacity,transform] duration-150 ease-out-quint active:scale-[0.96] aria-disabled:cursor-default aria-disabled:opacity-35 aria-disabled:active:scale-100 motion-reduce:transition-none ' +
     'focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring'
 
@@ -622,7 +622,7 @@ export function WaveRibbon({
         tabIndex={0}
         style={{ height: height || 300 }}
         className={cn(
-          'relative isolate w-full touch-pan-y overflow-hidden rounded-[4px] select-none [-webkit-tap-highlight-color:transparent]',
+          'relative isolate w-full touch-pan-y overflow-hidden rounded-[calc(var(--radius)*2+2px)] select-none [-webkit-tap-highlight-color:transparent]',
           'cursor-grab data-dragging:cursor-grabbing',
           'focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-ring',
         )}
@@ -663,7 +663,7 @@ export function WaveRibbon({
                     marginLeft: -rig.half[0] * rig.ppu,
                     marginTop: -rig.half[1] * rig.ppu,
                   }}
-                  className={cn('absolute top-1/2 left-1/2 overflow-hidden rounded-[6px] bg-muted', !on && 'invisible cursor-pointer')}
+                  className={cn('absolute top-1/2 left-1/2 overflow-hidden rounded-[calc(var(--radius)+2px)] bg-muted', !on && 'invisible cursor-pointer')}
                 >
                   <img
                     inert={!on}
@@ -673,7 +673,7 @@ export function WaveRibbon({
                     decoding="async"
                     className="size-full object-cover [-webkit-user-drag:none]"
                   />
-                  <span aria-hidden className="pointer-events-none absolute inset-0 rounded-[inherit] shadow-[inset_0_0_0_1px_color-mix(in_oklab,var(--foreground)_13%,transparent)]" />
+                  <span aria-hidden className="pointer-events-none absolute inset-0 rounded-[inherit] shadow-[inset_0_0_0_1px_color-mix(in_oklab,var(--foreground)_9%,transparent)]" />
                   <span aria-hidden className="pointer-events-none absolute inset-0 bg-background opacity-0" />
                 </div>
               )
@@ -685,12 +685,12 @@ export function WaveRibbon({
         <div className="mx-auto mt-4 flex max-w-sm items-center gap-3">
           {/* aria-disabled, not disabled: a button that has focus keeps it when it reaches the end. */}
           <button type="button" aria-label={t.previous} aria-controls={id} aria-disabled={atStart} onClick={() => atStart || engine.move(-1)} className={button}>
-            <ChevronLeft className="size-[18px]" strokeWidth={1.75} aria-hidden />
+            <ChevronLeft className="size-[18px]" strokeWidth={2} aria-hidden />
           </button>
           <div className="flex min-w-0 flex-1 flex-col gap-2">
             {/* A hairline rule with a primary tick, one picture's share of it long, that follows the position. In a
                 loop a second tick trails one rule-length behind, so the tick slides off one end and on at the other. */}
-            <div aria-hidden className="@container relative h-[3px] overflow-hidden before:absolute before:inset-x-0 before:top-px before:h-px before:bg-border">
+            <div aria-hidden className="@container relative h-1 overflow-hidden rounded-full bg-muted">
               {(wraps ? [0, 1] : [0]).map((k) => (
                 <span
                   key={k}
@@ -698,7 +698,7 @@ export function WaveRibbon({
                     ticks.current[k] = el
                   }}
                   style={{ width: `${100 / n}%` }}
-                  className="absolute inset-y-0 left-0 block bg-primary"
+                  className="absolute inset-y-0 left-0 block rounded-full bg-primary"
                 />
               ))}
             </div>
@@ -708,7 +708,7 @@ export function WaveRibbon({
             </p>
           </div>
           <button type="button" aria-label={t.next} aria-controls={id} aria-disabled={atEnd} onClick={() => atEnd || engine.move(1)} className={button}>
-            <ChevronRight className="size-[18px]" strokeWidth={1.75} aria-hidden />
+            <ChevronRight className="size-[18px]" strokeWidth={2} aria-hidden />
           </button>
         </div>
       ) : null}

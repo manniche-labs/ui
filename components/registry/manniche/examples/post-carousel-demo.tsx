@@ -62,11 +62,11 @@ export default function PostCarouselDemo() {
       slides={studies}
       header={
         <div className="flex items-center gap-2.5">
-          <span aria-hidden className="grid size-8 place-items-center rounded-full bg-muted font-mono text-[11px] font-medium text-muted-foreground shadow-[inset_0_0_0_1px_var(--border)]">
+          <span aria-hidden className="grid size-9 place-items-center rounded-full bg-muted font-mono text-[11px] font-medium text-muted-foreground">
             AL
           </span>
           <div className="min-w-0 leading-tight">
-            <p className="truncate text-[13px] font-medium">Ada Lovelace</p>
+            <p className="truncate text-[13px] font-semibold">Ada Lovelace</p>
             <p className="font-mono text-[11px] text-muted-foreground">Analyst</p>
           </div>
         </div>

@@ -134,13 +134,13 @@ export function PostCarousel({
     'opacity-0 group-hover/post:opacity-100 focus-visible:opacity-100 [@media(hover:none)]:opacity-100 ' +
     'aria-disabled:pointer-events-none aria-disabled:not-focus-visible:opacity-0! aria-disabled:focus-visible:opacity-50 ' +
     'focus-visible:outline-none [&:focus-visible>span]:outline-2 [&:focus-visible>span]:outline-offset-2 [&:focus-visible>span]:outline-ring'
-  const face = 'grid size-8 place-items-center rounded-[4px] bg-card/90 text-foreground shadow-[inset_0_0_0_1px_var(--border),0_2px_8px_-2px_rgb(0_0_0/0.25)]'
+  const face = 'grid size-8 place-items-center rounded-full bg-card text-foreground shadow-[0_1px_2px_rgb(0_0_0/0.14),0_4px_12px_-4px_rgb(0_0_0/0.35)]'
 
   return (
-    <article aria-label={label} className={cn('relative isolate w-full max-w-sm overflow-hidden rounded-[6px] bg-card text-card-foreground', className)} {...rest}>
-      {header ? <div className="px-3 py-2.5">{header}</div> : null}
+    <article aria-label={label} className={cn('relative isolate w-full max-w-sm overflow-hidden rounded-[calc(var(--radius)*2+2px)] bg-card text-card-foreground shadow-[0_0_0_1px_color-mix(in_oklab,var(--foreground)_9%,transparent),0_1px_2px_rgba(0,0,0,0.03)]', className)} {...rest}>
+      {header ? <div className="px-4 py-3">{header}</div> : null}
 
-      <div onKeyDown={keys} className="group/post relative">
+      <div onKeyDown={keys} className={cn('group/post relative mx-2 overflow-hidden rounded-[calc(var(--radius)+2px)]', !header && 'mt-2', n < 2 && !children && 'mb-2')}>
         <div
           {...engine.bind}
           ref={(el) => {
@@ -194,7 +194,7 @@ export function PostCarousel({
           <>
             <p
               aria-hidden
-              className="pointer-events-none absolute top-2.5 right-2.5 z-[200] rounded-[4px] bg-card/90 px-1.5 py-1 font-mono text-[11px] leading-none font-medium text-foreground tabular-nums shadow-[inset_0_0_0_1px_var(--border)]"
+              className="pointer-events-none absolute top-2.5 right-2.5 z-[200] rounded-full bg-card px-2 py-1 font-mono text-[11px] leading-none font-medium text-foreground tabular-nums shadow-[0_1px_2px_rgb(0_0_0/0.14)]"
             >
               {current + 1}
               <span className="text-muted-foreground">/{n}</span>
@@ -202,12 +202,12 @@ export function PostCarousel({
             {/* aria-disabled, not disabled: a button that has focus keeps it when it reaches the end. */}
             <button type="button" aria-label={t.previous} aria-controls={id} aria-disabled={atStart} onClick={() => atStart || engine.move(-1)} className={cn(button, 'left-1')}>
               <span className={face}>
-                <ChevronLeft className="size-4" strokeWidth={1.75} aria-hidden />
+                <ChevronLeft className="size-4" strokeWidth={2} aria-hidden />
               </span>
             </button>
             <button type="button" aria-label={t.next} aria-controls={id} aria-disabled={atEnd} onClick={() => atEnd || engine.move(1)} className={cn(button, 'right-1')}>
               <span className={face}>
-                <ChevronRight className="size-4" strokeWidth={1.75} aria-hidden />
+                <ChevronRight className="size-4" strokeWidth={2} aria-hidden />
               </span>
             </button>
           </>
@@ -218,16 +218,15 @@ export function PostCarousel({
         <div aria-hidden className="flex justify-center py-3">
           <div className="relative flex" style={{ gap: DOT }}>
             {slides.map((_, i) => (
-              <span key={i} className="block rounded-full bg-border" style={{ width: DOT, height: DOT }} />
+              <span key={i} className="block rounded-full bg-[color-mix(in_oklab,var(--foreground)_14%,transparent)]" style={{ width: DOT, height: DOT }} />
             ))}
             <span ref={dot} className="absolute top-0 left-0 block rounded-full bg-primary" style={{ width: DOT, height: DOT }} />
           </div>
         </div>
       ) : null}
 
-      {children ? <div className={cn('px-3 pb-3', n < 2 && 'pt-3')}>{children}</div> : null}
+      {children ? <div className={cn('px-4 pb-4', n < 2 && 'pt-3')}>{children}</div> : null}
 
-      <span aria-hidden className="pointer-events-none absolute inset-0 z-[300] rounded-[inherit] shadow-[inset_0_0_0_1px_var(--border)]" />
       <p aria-live="polite" className="sr-only">
         {`${t.picture} ${current + 1} ${t.of} ${n}`}
       </p>

@@ -32,7 +32,6 @@ export type AccordionGalleryProps = Omit<HTMLAttributes<HTMLDivElement>, 'onChan
 }
 
 const S = 56 // a closed module's strip
-const SCREWS = [20, 75, 130, 45, 100] // each strip's screw sits at its own angle
 
 /**
  * A rack of modules on one axis. One is open as a full card; the others close to 56 px strips with a vertical label.
@@ -85,7 +84,7 @@ export function AccordionGallery({
     >
       <div
         className={cn(
-          'relative h-[372px] w-full overflow-hidden rounded-[4px] bg-card shadow-[inset_0_0_0_1px_var(--border)]',
+          'relative h-[372px] w-full overflow-hidden rounded-[calc(var(--radius)*2+2px)] bg-card shadow-[0_0_0_1px_color-mix(in_oklab,var(--foreground)_9%,transparent),0_1px_2px_rgba(0,0,0,0.03)]',
           '@max-[520px]/ag:h-[calc(300px+(var(--ag-n)-1)*56px)] group-data-[orientation=vertical]/ag:h-[calc(300px+(var(--ag-n)-1)*56px)]',
         )}
       >
@@ -105,13 +104,13 @@ export function AccordionGallery({
                 'group/m absolute top-0 left-0 flex h-full w-[calc(100%-(var(--ag-n)-1)*56px)] bg-card',
                 '[transform:translateX(var(--ag-p))] transition-transform duration-280 ease-out-quint will-change-transform motion-reduce:transition-none',
                 k > 0 &&
-                  'shadow-[-1px_0_0_var(--border),-14px_0_22px_-20px_color-mix(in_oklab,var(--foreground)_45%,transparent)] dark:shadow-[-1px_0_0_var(--border),-14px_0_22px_-20px_color-mix(in_oklab,var(--background)_90%,transparent)]',
+                  'shadow-[-1px_0_0_color-mix(in_oklab,var(--foreground)_9%,transparent),-14px_0_22px_-20px_rgb(0_0_0/0.28)] dark:shadow-[-1px_0_0_color-mix(in_oklab,var(--foreground)_9%,transparent),-14px_0_22px_-20px_rgb(0_0_0/0.7)]',
                 '@max-[520px]/ag:h-[300px] @max-[520px]/ag:w-full @max-[520px]/ag:flex-col @max-[520px]/ag:[transform:translateY(var(--ag-p))]',
                 'group-data-[orientation=vertical]/ag:h-[300px] group-data-[orientation=vertical]/ag:w-full group-data-[orientation=vertical]/ag:flex-col group-data-[orientation=vertical]/ag:[transform:translateY(var(--ag-p))]',
                 k > 0 &&
-                  '@max-[520px]/ag:shadow-[0_-1px_0_var(--border),0_-14px_22px_-20px_color-mix(in_oklab,var(--foreground)_45%,transparent)] @max-[520px]/ag:dark:shadow-[0_-1px_0_var(--border),0_-14px_22px_-20px_color-mix(in_oklab,var(--background)_90%,transparent)]',
+                  '@max-[520px]/ag:shadow-[0_-1px_0_var(--border),0_-14px_22px_-20px_rgb(0_0_0/0.28)] @max-[520px]/ag:dark:shadow-[0_-1px_0_var(--border),0_-14px_22px_-20px_rgb(0_0_0/0.7)]',
                 k > 0 &&
-                  'group-data-[orientation=vertical]/ag:shadow-[0_-1px_0_var(--border),0_-14px_22px_-20px_color-mix(in_oklab,var(--foreground)_45%,transparent)] group-data-[orientation=vertical]/ag:dark:shadow-[0_-1px_0_var(--border),0_-14px_22px_-20px_color-mix(in_oklab,var(--background)_90%,transparent)]',
+                  'group-data-[orientation=vertical]/ag:shadow-[0_-1px_0_var(--border),0_-14px_22px_-20px_rgb(0_0_0/0.28)] group-data-[orientation=vertical]/ag:dark:shadow-[0_-1px_0_var(--border),0_-14px_22px_-20px_rgb(0_0_0/0.7)]',
               )}
             >
               <div
@@ -140,22 +139,20 @@ export function AccordionGallery({
                   onPointerLeave={() => clearTimeout(hover.current)}
                   className={cn(
                     'group/t flex size-full cursor-pointer flex-col items-center justify-between bg-card py-3.5 text-muted-foreground [-webkit-tap-highlight-color:transparent] aria-disabled:cursor-default',
-                    'focus-visible:rounded-[4px] focus-visible:outline-2 focus-visible:-outline-offset-4 focus-visible:outline-ring',
+                    'focus-visible:rounded-[calc(var(--radius)+2px)] focus-visible:outline-2 focus-visible:-outline-offset-4 focus-visible:outline-ring',
                     '@max-[520px]/ag:flex-row @max-[520px]/ag:px-3.5 @max-[520px]/ag:py-0 group-data-[orientation=vertical]/ag:flex-row group-data-[orientation=vertical]/ag:px-3.5 group-data-[orientation=vertical]/ag:py-0',
                   )}
                 >
                   <span
                     aria-hidden
-                    style={{ rotate: `${SCREWS[k % SCREWS.length]}deg` }}
-                    className="relative size-2.5 shrink-0 rounded-full ring-1 ring-foreground/30 ring-inset before:absolute before:inset-x-0.5 before:top-1/2 before:h-px before:-translate-y-1/2 before:bg-foreground/30"
-                  />
-                  <span className="flex flex-1 flex-col items-center gap-3.5 pt-3 pb-4 @max-[520px]/ag:flex-row @max-[520px]/ag:gap-3 @max-[520px]/ag:py-0 @max-[520px]/ag:pl-3.5 group-data-[orientation=vertical]/ag:flex-row group-data-[orientation=vertical]/ag:gap-3 group-data-[orientation=vertical]/ag:py-0 group-data-[orientation=vertical]/ag:pl-3.5">
-                    <span aria-hidden className="font-mono text-[10.5px] leading-none font-medium tabular-nums">
-                      {String(k + 1).padStart(2, '0')}
-                    </span>
+                    className="grid h-7 min-w-7 shrink-0 place-items-center rounded-full bg-muted px-1.5 font-mono text-[11px] leading-none font-medium text-muted-foreground tabular-nums group-hover/t:text-foreground group-data-on/m:bg-foreground group-data-on/m:text-card"
+                  >
+                    {String(k + 1).padStart(2, '0')}
+                  </span>
+                  <span className="flex flex-1 flex-col items-center gap-3.5 pt-3 pb-3 @max-[520px]/ag:flex-row @max-[520px]/ag:gap-3 @max-[520px]/ag:py-0 @max-[520px]/ag:pl-3.5 group-data-[orientation=vertical]/ag:flex-row group-data-[orientation=vertical]/ag:gap-3 group-data-[orientation=vertical]/ag:py-0 group-data-[orientation=vertical]/ag:pl-3.5">
                     <span
                       className={cn(
-                        'mt-auto mb-auto rotate-180 text-sm leading-none tracking-[-0.005em] whitespace-nowrap [writing-mode:vertical-rl] group-hover/t:text-foreground group-data-on/m:text-foreground',
+                        'mt-auto mb-auto rotate-180 text-[15px] leading-none font-medium tracking-[-0.01em] whitespace-nowrap [writing-mode:vertical-rl] group-hover/t:text-foreground group-data-on/m:text-foreground',
                         '@max-[520px]/ag:mt-0 @max-[520px]/ag:mb-0 @max-[520px]/ag:rotate-0 @max-[520px]/ag:[writing-mode:horizontal-tb] group-data-[orientation=vertical]/ag:mt-0 group-data-[orientation=vertical]/ag:mb-0 group-data-[orientation=vertical]/ag:rotate-0 group-data-[orientation=vertical]/ag:[writing-mode:horizontal-tb]',
                       )}
                     >
@@ -164,7 +161,7 @@ export function AccordionGallery({
                   </span>
                   <span
                     aria-hidden
-                    className="relative size-1.5 shrink-0 rounded-full ring-1 ring-foreground/30 ring-inset @max-[520px]/ag:mr-3.5 @max-[520px]/ag:ml-auto group-data-[orientation=vertical]/ag:mr-3.5 group-data-[orientation=vertical]/ag:ml-auto"
+                    className="relative size-2 shrink-0 rounded-full bg-muted @max-[520px]/ag:mr-3.5 @max-[520px]/ag:ml-auto group-data-[orientation=vertical]/ag:mr-3.5 group-data-[orientation=vertical]/ag:ml-auto"
                   >
                     <span className="absolute inset-0 rounded-full bg-primary opacity-0 transition-opacity duration-120 ease-out-quint group-data-on/m:opacity-100 motion-reduce:transition-none" />
                   </span>
@@ -175,13 +172,13 @@ export function AccordionGallery({
                 role="region"
                 aria-labelledby={tab}
                 inert={!on}
-                className="relative min-h-0 min-w-0 flex-1 overflow-hidden bg-muted shadow-[inset_1px_0_0_var(--border)] @max-[520px]/ag:shadow-[inset_0_1px_0_var(--border)] group-data-[orientation=vertical]/ag:shadow-[inset_0_1px_0_var(--border)]"
+                className="relative my-1.5 mr-1.5 min-h-0 min-w-0 flex-1 overflow-hidden rounded-[calc(var(--radius)+2px)] bg-muted @max-[520px]/ag:mt-0 @max-[520px]/ag:ml-1.5 group-data-[orientation=vertical]/ag:mt-0 group-data-[orientation=vertical]/ag:ml-1.5"
               >
                 <div className="absolute inset-0 [&>img]:size-full [&>img]:object-cover [&>svg]:size-full">{item.content}</div>
                 {(item.description || item.eyebrow) && (
                   <div
                     className={cn(
-                      'absolute right-4 bottom-4 left-4 grid max-w-[300px] translate-y-1.5 gap-1 rounded-md bg-card px-3.5 py-3 opacity-0 shadow-[inset_0_0_0_1px_var(--border)]',
+                      'absolute right-3 bottom-3 left-3 grid max-w-[300px] translate-y-1.5 gap-1 rounded-[calc(var(--radius)+2px)] bg-card px-4 py-3.5 opacity-0 shadow-[0_1px_2px_rgba(0,0,0,0.14),0_10px_24px_-10px_rgba(0,0,0,0.4)]',
                       'transition-[opacity,translate] ease-out-quint [transition-duration:180ms,220ms] motion-reduce:transition-none',
                       'group-data-on/m:translate-y-0 group-data-on/m:opacity-100 group-data-on/m:delay-90',
                     )}
@@ -189,7 +186,7 @@ export function AccordionGallery({
                     {item.eyebrow && (
                       <span className="font-mono text-[11px] leading-none font-medium tracking-[0.04em] text-muted-foreground tabular-nums">{item.eyebrow}</span>
                     )}
-                    <b className="text-sm leading-[1.3] font-medium">{item.title}</b>
+                    <b className="text-[15px] leading-[1.3] font-semibold tracking-[-0.01em]">{item.title}</b>
                     {item.description && <span className="text-[12.5px] leading-[1.45] text-muted-foreground">{item.description}</span>}
                   </div>
                 )}

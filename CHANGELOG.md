@@ -11,6 +11,16 @@
   - `bar-chart`, `area-chart`, `sparkline`, `dot-matrix`, `donut`, `dial`, `bubble-chart` and `lollipop` for figures over time, shares, ranks and grids. `bar-chart` groups day points into weeks when bars would get too thin.
   - `card-stack`, `transaction-list` and `week-schedule` for money and time. Week-schedule blocks are at least 44 px tall, so a 15-minute event stays easy to hit; a block too narrow for its title shows only its colour bar, and events outside the visible hours are left out.
 
+### Changed
+
+- Nine free components now share the Tiles look of the data tiles instead of the Instrument look. Surfaces are tiles with 26 px corners and a hairline shadow instead of a border; cards and pictures inside them get 14 px corners; buttons are round, muted and 44 px; and `--primary` is kept as a signal. The effects, the motion and the public API are unchanged.
+  - `notch-card`: 26 px corners and a 56 px notch with a 14 px turn, a round arrow button, and a tabular footer.
+  - `accordion-gallery`: the strips show number pills instead of screws, and the open panel sits inset with 14 px corners.
+  - `prompt-input`: a tile with no border, round attach, send and stop buttons, and pill-shaped file chips. The halo is unchanged. In Windows high contrast (forced colors) the form gets a real border and a Highlight outline on focus, because box-shadow is dropped there.
+  - `moving-border`: 26 px corners on an opaque hairline base. The demo uses the display font and pill buttons.
+  - `curve-carousel` and `post-carousel`: round controls, 14 px cards, a rounded rule, and a pill layout switch in the demo. The post is a tile with an inset picture.
+  - `lens-strip`, `sand-edge` and `wave-ribbon`: the shaders draw 14 px card corners (was 3–6 px), with round buttons and a rounded rule.
+
 ### Removed
 
 - `dot-globe`, `focus-frame`, `pill-to-card`, `keycap`, `glass-button` and `folder-card` have moved to Manniche UI Pro and are no longer in the free registry. Their files, demos and registry entries are gone, and so is the Natural Earth notice, which only `dot-globe` used. Copies you have already installed keep working.

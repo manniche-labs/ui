@@ -4,9 +4,9 @@ export default function MovingBorderDemo() {
   return (
     <div className="grid justify-items-center gap-6">
       <MovingBorder>
-        <div className="grid gap-1 px-8 py-6 text-center">
+        <div className="grid gap-1.5 px-8 py-6 text-center">
           <p className="text-sm text-muted-foreground">Most chosen</p>
-          <p className="font-serif text-3xl">Business</p>
+          <p className="font-[family-name:var(--font-display,inherit)] text-[34px] leading-none font-extrabold tracking-[-0.045em]">Business</p>
           <p className="text-sm text-muted-foreground">Website, shop and bookings</p>
         </div>
       </MovingBorder>
@@ -19,7 +19,7 @@ export default function MovingBorderDemo() {
             <path d="M11.5 14a10 10 0 0 1 6-4.6" />
           </svg>
           <p className="font-mono text-[11px] leading-none font-medium tracking-[0.04em] text-muted-foreground tabular-nums">coated element · demo</p>
-          <h3 className="text-[19px] leading-tight tracking-[-0.015em]">Thin-film ring</h3>
+          <h3 className="text-[19px] leading-tight font-semibold tracking-[-0.02em]">Thin-film ring</h3>
           <p className="text-[13.5px] leading-normal text-pretty text-muted-foreground">
             The ring carries a band of hues around the signal colour, the way coated glass catches light. Only the border is lit.
           </p>
@@ -27,15 +27,15 @@ export default function MovingBorderDemo() {
       </MovingBorder>
 
       <div className="flex flex-wrap justify-center gap-4">
-        <MovingBorder duration={3} className="rounded-xl">
-          <button type="button" className="min-h-11 px-5 text-sm font-medium">
+        <MovingBorder duration={3} className="rounded-full">
+          <button type="button" className="min-h-11 px-6 text-sm font-medium">
             Book a call
           </button>
         </MovingBorder>
-        <MovingBorder variant="iridescent" duration={7}>
+        <MovingBorder variant="iridescent" duration={7} className="rounded-full">
           <button
             type="button"
-            className="min-h-11 px-5 text-sm font-medium transition-transform duration-[120ms] ease-out-quint focus-visible:outline-none active:scale-[0.97]"
+            className="min-h-11 px-6 text-sm font-medium transition-transform duration-[120ms] ease-out-quint focus-visible:outline-none active:scale-[0.97]"
           >
             Continue
           </button>

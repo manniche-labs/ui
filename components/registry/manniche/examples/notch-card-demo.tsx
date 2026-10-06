@@ -80,7 +80,7 @@ export default function NotchCardDemo() {
   return (
     <div className="grid place-items-center py-4">
       <NotchCard
-        className="h-96"
+        className="min-h-96"
         image={<Agate />}
         eyebrow="specimen 05"
         title="Agate, cross-section"
