@@ -318,7 +318,11 @@ export function ShaderBackdrop({
     gl.attachShader(program, shader(gl.VERTEX_SHADER, VERTEX))
     gl.attachShader(program, shader(gl.FRAGMENT_SHADER, HEAD + SHADE[kind] + MAIN))
     gl.linkProgram(program)
-    if (!gl.getProgramParameter(program, gl.LINK_STATUS)) return release
+    // Free the context straight away, so a shader that cannot run does not hold one of the page's few.
+    if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {
+      release()
+      return
+    }
     gl.useProgram(program)
 
     // One triangle that covers the whole canvas.

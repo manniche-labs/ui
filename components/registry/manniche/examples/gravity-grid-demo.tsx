@@ -36,7 +36,7 @@ export default function GravityGridDemo() {
             aria-checked={variant === v}
             tabIndex={variant === v ? 0 : -1}
             onClick={() => setVariant(v)}
-            className="min-h-11 rounded-xl px-3 text-sm font-medium capitalize text-muted-foreground transition-colors duration-150 hover:text-foreground aria-checked:bg-muted aria-checked:text-foreground"
+            className="min-h-11 rounded-xl px-3 text-sm font-medium capitalize text-muted-foreground hover:text-foreground aria-checked:bg-muted aria-checked:text-foreground"
           >
             {v}
           </button>

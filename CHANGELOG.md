@@ -10,7 +10,7 @@
 
 ### Changed
 
-- `liquid-metal` stayed blank in React StrictMode and after a remount: the effect ran twice on the same canvas, and a canvas whose WebGL context was lost cannot get a new one. Each effect run now makes a fresh canvas. If the shader fails to link, the context is now released instead of waiting for garbage collection, since browsers only keep about 16 per page.
+- `liquid-metal` stayed blank in React StrictMode and after a remount: the effect ran twice on the same canvas, and a canvas whose WebGL context was lost cannot get a new one. Each effect run now makes a fresh canvas. If the shader fails to link, the context is now released at once instead of waiting for garbage collection, since browsers only keep about 16 per page.
 - README: the two new components, the component count (61 was out of date; now 68) and a note on the limit of about 16 WebGL contexts per page.
 
 ### Removed

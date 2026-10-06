@@ -60,7 +60,11 @@ export function LiquidMetal({ speed = 1, children, className }: LiquidMetalProps
     gl.attachShader(program, shader(gl.VERTEX_SHADER, VERTEX))
     gl.attachShader(program, shader(gl.FRAGMENT_SHADER, FRAGMENT))
     gl.linkProgram(program)
-    if (!gl.getProgramParameter(program, gl.LINK_STATUS)) return release
+    // Free the context straight away, so a shader that cannot run does not hold one of the page's few.
+    if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {
+      release()
+      return
+    }
     gl.useProgram(program)
 
     // One triangle that covers the whole canvas.
