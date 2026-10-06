@@ -1,9 +1,11 @@
-// A wall of small widgets (WIP: KPI sparkline tiles, profile ring, team, a ranked lollipop and a bar chart). Built from Tiles primitives.
+// A wall of small widgets (KPI sparkline tiles, one inverted highlight, profile ring, team, trades, profit matrix, lollipop, bars). Built from Tiles primitives.
 import { cn } from '@/lib/utils'
 import { BarChart, type BarPoint } from '@/registry/manniche/bar-chart/bar-chart'
 import { BigNumber, DeltaPill } from '@/registry/manniche/chart-kit/chart-kit'
 import type { ValueFormat } from '@/registry/manniche/chart-kit/chart-utils'
 import { DataTile, TileFact } from '@/registry/manniche/data-tile/data-tile'
+import { DotMatrix } from '@/registry/manniche/dot-matrix/dot-matrix'
+import { TransactionList, type Transaction } from '@/registry/manniche/transaction-list/transaction-list'
 import { Donut, type DonutDatum } from '@/registry/manniche/donut/donut'
 import { Lollipop, type LollipopDatum } from '@/registry/manniche/lollipop/lollipop'
 import { Sparkline } from '@/registry/manniche/sparkline/sparkline'
@@ -13,6 +15,9 @@ export type WidgetKpi = { id: string; title: string; value: number; change: numb
 export type WidgetPerson = { id: string; name: string; role: string }
 
 export type WidgetWallData = {
+  highlight: { title: string; value: number; format?: ValueFormat; text: string }
+  trades: { title: string; items: Transaction[]; today?: string; format?: ValueFormat }
+  matrix: { title: string; data: number[][]; rows: string[]; columns: string[] }
   profile: { title: string; items: DonutDatum[]; total?: number; format?: ValueFormat }
   team: { title: string; people: WidgetPerson[] }
   kpis: WidgetKpi[]
@@ -29,6 +34,17 @@ export function WidgetWall({ data, labels, className }: WidgetWallProps) {
   return (
     <div className={cn('@container w-full rounded-2xl bg-background p-3 text-foreground', className)}>
       <div className="grid grid-cols-1 gap-3 @lg:grid-cols-2 @3xl:grid-cols-6">
+        <div className="@3xl:col-span-3">
+          <DataTile title={data.highlight.title} inverted>
+            <BigNumber value={data.highlight.value} format={data.highlight.format} size="xl" />
+            <p className="mt-2 text-sm opacity-80">{data.highlight.text}</p>
+          </DataTile>
+        </div>
+        <div className="@3xl:col-span-3">
+          <DataTile title={data.trades.title} footer={note}>
+            <TransactionList data={data.trades.items} label={data.trades.title} today={data.trades.today} format={data.trades.format} />
+          </DataTile>
+        </div>
         {data.kpis.map((k) => (
           <div key={k.id} className="@3xl:col-span-2">
             <DataTile title={k.title} density="compact">
@@ -39,6 +55,11 @@ export function WidgetWall({ data, labels, className }: WidgetWallProps) {
             </DataTile>
           </div>
         ))}
+        <div className="@lg:col-span-2 @3xl:col-span-6">
+          <DataTile title={data.matrix.title} footer={note}>
+            <DotMatrix data={data.matrix.data} rows={data.matrix.rows} columns={data.matrix.columns} label={data.matrix.title} />
+          </DataTile>
+        </div>
         <div className="@3xl:col-span-3">
           <DataTile title={data.profile.title} footer={note}>
             <Donut data={data.profile.items} label={data.profile.title} total={data.profile.total} format={data.profile.format} />
