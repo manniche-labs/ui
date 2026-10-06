@@ -31,7 +31,7 @@ export function GalleryShop({ data, labels, className }: GalleryShopProps) {
               type="button"
               aria-current={m.id === current ? 'page' : undefined}
               onClick={() => setCurrent(m.id)}
-              className={cn('shrink-0 rounded-xl px-3 py-2 text-left text-sm text-muted-foreground transition-colors hover:bg-muted hover:text-foreground focus-visible:outline-2 focus-visible:outline-ring', m.id === current && 'bg-foreground text-background hover:bg-foreground hover:text-background')}
+              className={cn('shrink-0 rounded-xl px-3 py-2 text-left text-sm text-muted-foreground hover:bg-muted hover:text-foreground focus-visible:outline-2 focus-visible:outline-ring', m.id === current && 'bg-foreground text-background hover:bg-foreground hover:text-background')}
             >
               {m.label}
             </button>

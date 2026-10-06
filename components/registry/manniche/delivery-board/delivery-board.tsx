@@ -73,7 +73,7 @@ export function DeliveryBoard({ data, labels, now, onAssistant, className }: Del
                   aria-pressed={d === day}
                   aria-current={d === today ? 'date' : undefined}
                   onClick={() => setDay(d)}
-                  className={cn('relative flex min-w-11 flex-1 flex-col items-center rounded-full px-1 py-1 text-xs text-muted-foreground transition-colors hover:text-foreground focus-visible:outline-2 focus-visible:outline-ring', d === day && 'bg-foreground text-background hover:text-background')}
+                  className={cn('relative flex min-w-11 flex-1 flex-col items-center rounded-full px-1 py-1 text-xs text-muted-foreground hover:text-foreground focus-visible:outline-2 focus-visible:outline-ring', d === day && 'bg-foreground text-background hover:text-background')}
                 >
                   <span>{date.toLocaleDateString('en-GB', { weekday: 'short', timeZone: 'UTC' })}</span>
                   <span className="text-sm font-medium tabular-nums">{date.getUTCDate()}</span>
