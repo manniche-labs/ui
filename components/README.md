@@ -112,6 +112,8 @@ There is also a hosted MCP server just for this registry, with no key: `https://
 | `card-swipe` | Cards that turn away like pages as you swipe |
 | `deployment-card` | Build status with an animated bar per step |
 | `integration-card` | Integrations that open into a card with a connect button |
+| `data-tile` | The tile a figure or chart sits in: name, control, figure, fine print; `inverted` lifts the one that matters, `compact` for dense dashboards |
+| `chart-kit` | Shared parts of the Tiles charts: number formatting, axis ticks, smooth line, one tooltip, the big display figure, change pill, pill switch, screen-reader table |
 | `use-reduced-motion` | Hook: true when the visitor asked for less motion |
 | `use-carousel-engine` | Hook: drag with momentum, trackpad, snapping and glides for your own carousel; you draw each frame |
 | `use-gl-stage` | Hook: a WebGL canvas that handles its context, size, theme colours and pausing, plus a texture atlas for pictures |
