@@ -8,7 +8,7 @@
   - `chart-kit`: the shared parts: number formatting with a muted unit, nice axis ticks, a monotone smooth line, the tooltip, `BigNumber`, `DeltaPill`, `Pills` and `SrTable`, plus the `--chart-1` to `--chart-5` colours. `DeltaPill` shows the size of a change and lets the arrow carry its direction, so it never prints a sign.
   - `data-tile`: the tile they sit in, with `inverted` to lift the figure that matters most and `compact` for dense dashboards.
   - `bar-chart`, `area-chart`, `sparkline`, `dot-matrix`, `donut`, `dial`, `bubble-chart` and `lollipop` for figures over time, shares, ranks and grids. `bar-chart` groups day points into weeks when bars would get too thin.
-  - `card-stack`, `transaction-list` and `week-schedule` for money and time. Week-schedule blocks are at least 44 px tall, so a 15-minute event stays easy to hit.
+  - `card-stack`, `transaction-list` and `week-schedule` for money and time. Week-schedule blocks are at least 44 px tall, so a 15-minute event stays easy to hit; a block too narrow for its title shows only its colour bar, and events outside the visible hours are left out.
 
 ### Removed
 

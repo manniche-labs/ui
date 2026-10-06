@@ -216,7 +216,7 @@ export function Donut({
 
   const stagger = data.length > 1 ? Math.min(60, 240 / (data.length - 1)) : 0
   const tabStop = Math.min(active ?? cursor, Math.max(0, data.length - 1))
-  const centreValue = active === null ? (total ?? sum) : values[active]
+  const centreValue = active === null ? whole : values[active]
   const centreText = formatValue(centreValue, format)
 
   return (
@@ -246,7 +246,7 @@ export function Donut({
       >
         <div
           role="img"
-          aria-label={`${label}. ${totalWord} ${formatValue(total ?? sum, format)}.`}
+          aria-label={`${label}. ${totalWord} ${formatValue(whole, format)}.`}
           className={cn(
             'relative @container aspect-square w-[min(100%,200px)] justify-self-center',
             'group-data-[density=compact]/tile:w-[min(100%,168px)]',

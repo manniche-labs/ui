@@ -109,6 +109,17 @@ const DEFAULT_LABELS: Required<WeekScheduleLabels> = {
 const RAIL = 46
 const GAP = 6
 const MIN_PX = 44
+/** Below this block width a title cannot be read, so the block keeps only its colour bar; the name is in the tooltip. */
+const MIN_TEXT_PX = 56
+/** Below this block height there is room for the title only, not the time under it. */
+const TIME_PX = 58
+
+/** A word's width in em in the semibold title face, guessed from its letters so server and client agree. */
+function wordEm(word: string) {
+  let em = 0
+  for (const ch of word) em += /[mwMW@]/.test(ch) ? 0.86 : /[A-Z&]/.test(ch) ? 0.68 : /[iljtfr.,'’:;!|]/.test(ch) ? 0.34 : 0.58
+  return em
+}
 
 const toMin = (t: string) => {
   const [h = 0, m = 0] = t.split(':').map(Number)
@@ -197,6 +208,8 @@ export function WeekSchedule({
   const byDay: Placed[][] = Array.from({ length: days }, () => [])
   for (const ev of data) {
     if (ev.day < 0 || ev.day >= days) continue
+    // An event wholly outside the shown hours has no place on the grid; one that overlaps an edge is clamped.
+    if (toMin(ev.end) <= startHour * 60 || toMin(ev.start) >= endHour * 60) continue
     const c = ev.category ? catIndex.get(ev.category) : undefined
     byDay[ev.day].push({
       ...ev,
@@ -323,6 +336,8 @@ export function WeekSchedule({
     ...(nowInGrid ? [{ label: labels.now(clock(nowMin)), color: 'var(--primary)', shape: 'dot' as const }] : []),
   ]
   const gridCols = { gridTemplateColumns: `${RAIL}px repeat(${columns.length}, minmax(0, 1fr))`, columnGap: GAP } as CSSProperties
+  // The width of one day column in px, to decide per block whether its title fits.
+  const dayPx = width ? (width - RAIL - GAP * columns.length) / columns.length : Infinity
   let stagger = 0
 
   return (
@@ -352,7 +367,7 @@ export function WeekSchedule({
           days={days}
           shown={shownDay}
           today={today}
-          label={labels.days}
+          label={`${label}, ${labels.days}`}
           tabId={(d) => `${uid}-tab${d}`}
           panelId={`${uid}-panel`}
           weekday={(d) => weekdayFmt.format(dates[d])}
@@ -376,7 +391,9 @@ export function WeekSchedule({
         onPointerDown={onTouch}
         onPointerMove={onTouch}
         onBlur={(e) => {
-          if (!e.currentTarget.contains(e.relatedTarget)) setTip((t) => (t?.from === 'key' ? null : t))
+          if (e.currentTarget.contains(e.relatedTarget)) return
+          setTip((t) => (t?.from === 'key' ? null : t))
+          setActive(null)
         }}
         className="relative grid touch-pan-y rounded-[14px] outline-offset-4"
         style={gridCols}
@@ -431,26 +448,51 @@ export function WeekSchedule({
                   const k = stagger++
                   const isActive = (tip?.id === p.id && tip.from === 'key') || active === p.id
                   const dur = p.e - p.s
+                  const blockW = dayPx / p.lanes - 6
+                  const blockH = Math.max(MIN_PX, (dur / 60) * rh - 4)
+                  // Too narrow for a readable word: only the colour bar shows; the name is read aloud and in the tooltip.
+                  const short = blockH < TIME_PX
+                  const small = blockW < 92
+                  // The longest word must fit on a line whole, so a title is never cut to "Sta…" or broken as "Desig-n".
+                  const room = blockW - (small ? 21 : 23)
+                  const longest = Math.max(0, ...p.title.split(/\s+/).map((w) => wordEm(w))) * (small ? 11.5 : 12.5)
+                  // The guess is kept a tenth wide, so a near miss drops the text rather than break a word.
+                  const bare = blockW < MIN_TEXT_PX || longest * 1.1 > room
                   const inner = (
                     <>
                       <span className="sr-only">{sentence(p)}</span>
-                      <i aria-hidden className="absolute top-2 bottom-2 left-1.5 w-[3px] rounded-full" style={{ background: p.color }} />
-                      <span aria-hidden className="block truncate text-[12.5px] leading-[1.25] font-semibold">
-                        {p.title}
-                      </span>
-                      <span
+                      <i
                         aria-hidden
-                        className="block truncate font-mono text-[10.5px] leading-[1.3] tabular-nums text-[color-mix(in_oklab,var(--foreground)_70%,transparent)]"
-                      >
-                        <span className="hidden @[92px]:inline">
-                          {clock(p.s)}–{clock(p.e)}
+                        className={cn('absolute left-1.5 w-[3px] rounded-full', short ? 'top-1.5 bottom-1.5' : 'top-2 bottom-2')}
+                        style={{ background: p.color }}
+                      />
+                      {!bare && (
+                        <span
+                          aria-hidden
+                          className={cn(
+                            'line-clamp-2 block text-[12.5px] leading-[1.2] font-semibold [overflow-wrap:break-word]',
+                            small && 'text-[11.5px] leading-[1.15]',
+                          )}
+                        >
+                          {p.title}
                         </span>
-                        <span className="hidden @[52px]:inline @[92px]:hidden">{clock(p.s)}</span>
-                      </span>
+                      )}
+                      {!bare && !short && (
+                        <span
+                          aria-hidden
+                          className="mt-0.5 block truncate font-mono text-[10.5px] leading-[1.3] tabular-nums text-[color-mix(in_oklab,var(--foreground)_70%,transparent)]"
+                        >
+                          <span className="hidden @[92px]:inline">
+                            {clock(p.s)}–{clock(p.e)}
+                          </span>
+                          <span className="hidden @[52px]:inline @[92px]:hidden">{clock(p.s)}</span>
+                        </span>
+                      )}
                     </>
                   )
                   const box = cn(
-                    '@container absolute block overflow-hidden rounded-[11px] py-[7px] pr-2 pl-[15px] text-left text-foreground',
+                    '@container absolute block overflow-hidden rounded-[11px] text-left text-foreground',
+                    bare ? 'p-0' : cn(short ? 'flex flex-col justify-center py-1' : 'py-[7px]', small ? 'pr-1.5 pl-[15px]' : 'pr-2 pl-[15px]'),
                     'shadow-[0_0_0_2px_var(--col)] [transform-origin:top]',
                     isActive && 'outline-2 outline-offset-0 outline-ring',
                   )

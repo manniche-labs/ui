@@ -4,7 +4,8 @@
   "title": "Data tile demo",
   "description": "How to use Data tile.",
   "registryDependencies": [
-    "@manniche/data-tile"
+    "@manniche/data-tile",
+    "@manniche/chart-kit"
   ],
   "files": [
     {
