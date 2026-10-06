@@ -84,6 +84,8 @@ There is also a hosted MCP server just for this registry, with no key: `https://
 | `trade-ticket` | Buy or sell one of two outcomes, with the payout worked out as you type |
 | `receipt-printer` | Checkout terminal; the receipt rolls out of the slot after payment |
 | `cube-carousel` | Carousel on the sides of a cube, a quarter turn per step |
+| `curve-carousel` | Cards on a curve in ten layouts (fan, arc, coverflow, cylinder, curl, helix, double helix, rolodex, shingle, bulge) with drag momentum, keys and trackpad |
+| `post-carousel` | A post whose pictures swing out and tuck in behind each other as you swipe |
 | `wave-loader` | A ball hops along bars and sends a spring wave through them |
 | `jelly-slider` | Slider whose soft thumb stretches with drag speed |
 | `notification-stack` | Notifications in a pile that fans out into a list |
@@ -114,6 +116,7 @@ There is also a hosted MCP server just for this registry, with no key: `https://
 | `deployment-card` | Build status with an animated bar per step |
 | `integration-card` | Integrations that open into a card with a connect button |
 | `use-reduced-motion` | Hook: true when the visitor asked for less motion |
+| `use-carousel-engine` | Hook: drag with momentum, trackpad, snapping and glides for your own carousel; you draw each frame |
 
 Several of the newer components are adapted from [Watermelon UI](https://github.com/WatermelonCorp/watermelon-platform) (MIT). Each such file says so at the top; see [THIRD_PARTY_NOTICES.md](../THIRD_PARTY_NOTICES.md).
 
