@@ -3414,6 +3414,180 @@
       ]
     },
     {
+      "name": "spend-control",
+      "type": "registry:block",
+      "title": "Spend control",
+      "description": "Company spend dashboard in Tiles: an icon rail, an inverted upsell tile, virtual cards with limits, spending bars and a bubble chart of merchants.",
+      "dependencies": [
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "utils",
+        "@manniche/chart-kit",
+        "@manniche/data-tile",
+        "@manniche/bar-chart",
+        "@manniche/bubble-chart"
+      ],
+      "files": [
+        {
+          "path": "registry/manniche/spend-control/spend-control.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "categories": [
+        "templates"
+      ]
+    },
+    {
+      "name": "spend-control-demo",
+      "type": "registry:example",
+      "title": "Spend control demo",
+      "description": "How to use Spend control.",
+      "registryDependencies": [
+        "@manniche/spend-control"
+      ],
+      "files": [
+        {
+          "path": "registry/manniche/examples/spend-control-demo.tsx",
+          "type": "registry:example"
+        }
+      ],
+      "categories": [
+        "templates"
+      ]
+    },
+    {
+      "name": "widget-wall",
+      "type": "registry:block",
+      "title": "Widget wall",
+      "description": "A wall of thirteen Tiles widgets: an inverted highlight, trades, six sparkline KPIs, a profit dot matrix, a profile ring, team, bars and a lollipop ranking.",
+      "registryDependencies": [
+        "utils",
+        "@manniche/chart-kit",
+        "@manniche/data-tile",
+        "@manniche/sparkline",
+        "@manniche/dot-matrix",
+        "@manniche/donut",
+        "@manniche/bar-chart",
+        "@manniche/lollipop",
+        "@manniche/transaction-list"
+      ],
+      "files": [
+        {
+          "path": "registry/manniche/widget-wall/widget-wall.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "categories": [
+        "templates"
+      ]
+    },
+    {
+      "name": "widget-wall-demo",
+      "type": "registry:example",
+      "title": "Widget wall demo",
+      "description": "How to use Widget wall.",
+      "registryDependencies": [
+        "@manniche/widget-wall"
+      ],
+      "files": [
+        {
+          "path": "registry/manniche/examples/widget-wall-demo.tsx",
+          "type": "registry:example"
+        }
+      ],
+      "categories": [
+        "templates"
+      ]
+    },
+    {
+      "name": "workspace-home",
+      "type": "registry:block",
+      "title": "Workspace home",
+      "description": "A workspace start page in Tiles: a pill navbar, a large search, an inverted offer tile, deal bars and the week's schedule.",
+      "dependencies": [
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "utils",
+        "@manniche/chart-kit",
+        "@manniche/data-tile",
+        "@manniche/bar-chart",
+        "@manniche/week-schedule"
+      ],
+      "files": [
+        {
+          "path": "registry/manniche/workspace-home/workspace-home.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "categories": [
+        "templates"
+      ]
+    },
+    {
+      "name": "workspace-home-demo",
+      "type": "registry:example",
+      "title": "Workspace home demo",
+      "description": "How to use Workspace home.",
+      "registryDependencies": [
+        "@manniche/workspace-home"
+      ],
+      "files": [
+        {
+          "path": "registry/manniche/examples/workspace-home-demo.tsx",
+          "type": "registry:example"
+        }
+      ],
+      "categories": [
+        "templates"
+      ]
+    },
+    {
+      "name": "sales-floor",
+      "type": "registry:block",
+      "title": "Sales floor",
+      "description": "A sales team dashboard in Tiles: a segmented target dial, an inverted live call card, performance bars per seller and a revenue donut.",
+      "dependencies": [
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "utils",
+        "@manniche/chart-kit",
+        "@manniche/data-tile",
+        "@manniche/dial",
+        "@manniche/bar-chart",
+        "@manniche/donut"
+      ],
+      "files": [
+        {
+          "path": "registry/manniche/sales-floor/sales-floor.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "categories": [
+        "templates"
+      ]
+    },
+    {
+      "name": "sales-floor-demo",
+      "type": "registry:example",
+      "title": "Sales floor demo",
+      "description": "How to use Sales floor.",
+      "registryDependencies": [
+        "@manniche/sales-floor"
+      ],
+      "files": [
+        {
+          "path": "registry/manniche/examples/sales-floor-demo.tsx",
+          "type": "registry:example"
+        }
+      ],
+      "categories": [
+        "templates"
+      ]
+    },
+    {
       "name": "chart-kit",
       "type": "registry:component",
       "title": "Chart kit",
