@@ -1,0 +1,20 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "footer-statement-demo",
+  "title": "Footer Statement demo",
+  "description": "How to use Footer Statement.",
+  "registryDependencies": [
+    "@manniche/footer-statement"
+  ],
+  "files": [
+    {
+      "path": "registry/manniche/examples/footer-statement-demo.tsx",
+      "content": "import { FooterStatement } from '@/registry/manniche/footer-statement/footer-statement'\n\n// Halden Studio is an invented company. Every link goes to example.com.\nexport default function FooterStatementDemo() {\n  return (\n    <FooterStatement\n      headline=\"Let's make the next one together.\"\n      action={{ label: 'Start a project', href: 'https://example.com/start' }}\n      email=\"hello@example.com\"\n      links={[\n        { label: 'Work', href: 'https://example.com/work' },\n        { label: 'Studio', href: 'https://example.com/about' },\n        { label: 'Journal', href: 'https://example.com/journal' },\n        { label: 'LinkedIn', href: 'https://example.com/linkedin', external: true },\n      ]}\n      owner=\"Halden Studio, Munich and Aalborg\"\n      legalLinks={[\n        { label: 'Privacy', href: 'https://example.com/privacy' },\n        { label: 'Imprint', href: 'https://example.com/imprint' },\n      ]}\n    />\n  )\n}\n",
+      "type": "registry:example"
+    }
+  ],
+  "categories": [
+    "templates"
+  ],
+  "type": "registry:example"
+}
