@@ -54,10 +54,10 @@ function localParts(now: Date, timeZone: string) {
   return { day: DAYS.indexOf(p.weekday), minutes: Number(p.hour) * 60 + Number(p.minute), clock: `${p.hour}:${p.minute}` }
 }
 
-export type OfficeStatus = { open: boolean; clock: string; closesIn?: number; next?: { day: number; time: string } }
+type OfficeStatus = { open: boolean; clock: string; closesIn?: number; next?: { day: number; time: string } }
 
 /** Whether an office is open at `now`, how long until it closes, or when it opens next. */
-export function officeStatus(o: ContactOffice, now: Date): OfficeStatus {
+function officeStatus(o: ContactOffice, now: Date): OfficeStatus {
   const { day, minutes, clock } = localParts(now, o.timeZone)
   const today = o.hours.find((h) => h.day === day && minutes >= toMin(h.open) && minutes < toMin(h.close))
   if (today) return { open: true, clock, closesIn: toMin(today.close) - minutes }
@@ -107,9 +107,12 @@ export function ContactOffices({ heading, intro, offices, now, labels = {}, clas
   const [clock, setClock] = useState<Date | null>(null)
   useEffect(() => {
     if (now) return
-    setClock(new Date())
+    const first = setTimeout(() => setClock(new Date()), 0)
     const id = setInterval(() => setClock(new Date()), 60_000)
-    return () => clearInterval(id)
+    return () => {
+      clearTimeout(first)
+      clearInterval(id)
+    }
   }, [now])
   const at = now ?? clock
   const statuses = at ? offices.map((o) => officeStatus(o, at)) : null
