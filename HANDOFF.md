@@ -28,7 +28,7 @@ Progress on the plan: 5 of 7 parts merged (phases 1–5; phase 6 and the templat
 ## Next steps, in order
 
 1. Run `git fetch` and look at the open PRs and branches, so you do not build over another session. Then read `plans/fase-6-sektioner.md` and `plans/skabeloner.md`, and open `plans/tiles-mockup.html`.
-2. **Phase 6** per `plans/fase-6-sektioner.md`. #28 (footers) and #26 (bento + CTA) have all sections written with oxlint and `tsc` clean, but none has been seen in a browser. Left on each: the browser pass (1440/500/280 px, light/dark, `&mini=1`, keyboard, reduced motion), `registry.json` entries + `npx shadcn build` + `public/r`, README, CHANGELOG, ManiLens. Known fix: `footer-sitemap` link hit areas overlap neighbouring rows by 6 px. Contact (`fase-6-kontakt`, #27) and the dashboard templates (`skabeloner-dashboards`, #25) belong to other sessions.
+2. **Phase 6** per `plans/fase-6-sektioner.md`. #28 (footers) and #26 (bento + CTA) have all sections written with oxlint and `tsc` clean, but none has been seen in a browser. Left on each: the browser pass (1440/500/280 px, light/dark, `&mini=1`, keyboard, reduced motion), `registry.json` entries + `npx shadcn build` + `public/r`, README, CHANGELOG, ManiLens. The `footer-sitemap` hit-area overlap is fixed on #28 (44 px link rows; region pills with a 12 px row gap). Contact (`fase-6-kontakt`, #27) and the dashboard templates (`skabeloner-dashboards`, #25) belong to other sessions.
 3. **Templates** per `plans/skabeloner.md`: three groups (finance, dashboards, the rest) on three branches.
 4. Each PR: local CI, ManiLens (`/manilens-lokal`), CHANGELOG entry, then merge. Deploying to mikkelmanniche.dk/lab needs Mikkel's yes.
 
