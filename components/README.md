@@ -146,6 +146,12 @@ Whole pages, built from the same tokens. Install one like a component, or downlo
 | `widget-wall` | Thirteen Tiles widgets: highlight, trades, sparkline KPIs, dot matrix, profile ring, bars, lollipop |
 | `workspace-home` | Workspace start page in Tiles: pill navbar, large search, offer tile, deal bars, week schedule |
 | `sales-floor` | Sales team dashboard in Tiles: target dial, live call card, bars per seller, revenue donut |
+| `bento-features` | Section: features as a bento grid of Tiles with one inverted lead tile |
+| `bento-metrics` | Section: big figures that roll in on first view, with sparklines and change pills |
+| `bento-product` | Section: a product with a media tile that cross-fades between variants, and its facts |
+| `bento-steps` | Section: numbered steps joined by a line, with done, now and up next |
+| `cta-band` | Section: an inverted call-to-action band with two actions and a fact line |
+| `cta-signup` | Section: email signup card with validation, sending state and confirmation |
 
 `npm run lab` writes the HTML files with `scripts/template-html.mjs`; the colours live in `src/template-theme.ts`.
 

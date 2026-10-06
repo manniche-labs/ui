@@ -1,0 +1,20 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "bento-steps-demo",
+  "title": "Bento steps demo",
+  "description": "How to use Bento steps.",
+  "registryDependencies": [
+    "@manniche/bento-steps"
+  ],
+  "files": [
+    {
+      "path": "registry/manniche/examples/bento-steps-demo.tsx",
+      "content": "import { useState } from 'react'\nimport { BentoSteps, type BentoStep } from '@/registry/manniche/bento-steps/bento-steps'\nimport { Pills } from '@/registry/manniche/chart-kit/chart-kit'\n\nconst STEPS: BentoStep[] = [\n  { id: 'brief', title: 'Brief', description: 'We listen, read what you have and agree what done looks like.', duration: '2 days' },\n  { id: 'sketch', title: 'Sketch', description: 'Three rough directions on one page, so choosing is quick.', duration: '1 week' },\n  { id: 'build', title: 'Build', description: 'The chosen direction becomes a working page you can click through.', duration: '3 weeks' },\n  { id: 'review', title: 'Review', description: 'One round of notes from everyone, gathered in one place.', duration: '1 week' },\n  { id: 'launch', title: 'Launch', description: 'We publish, check it on real devices and hand over the files.', duration: '2 days' },\n]\n\nconst OPTIONS = STEPS.map((_, i) => ({ id: String(i), label: String(i + 1) }))\n\nexport default function BentoStepsDemo() {\n  const [current, setCurrent] = useState('2')\n  return (\n    <div className=\"w-full\">\n      <BentoSteps\n        eyebrow=\"Halden Studio, how a project runs\"\n        heading=\"Five steps, one at a time.\"\n        intro=\"Example process for a demo company.\"\n        steps={STEPS}\n        current={Number(current)}\n      />\n      <div className=\"mx-auto flex max-w-6xl flex-wrap items-center gap-3 px-4 pb-8 sm:px-6\">\n        <span className=\"font-mono text-xs text-muted-foreground\">Current step</span>\n        <Pills label=\"Current step\" options={OPTIONS} value={current} onChange={setCurrent} />\n      </div>\n    </div>\n  )\n}\n",
+      "type": "registry:example"
+    }
+  ],
+  "categories": [
+    "templates"
+  ],
+  "type": "registry:example"
+}
