@@ -225,7 +225,8 @@ export function FocusFrame({
       onKeyDown={keyDown}
       onFocus={(e: FocusEvent<HTMLDivElement>) => {
         onFocus?.(e)
-        setInside(true)
+        // Only keyboard focus holds the frame; a click or tap focuses the group too, and must not pause it for good.
+        if (e.currentTarget.matches(':focus-visible')) setInside(true)
       }}
       onBlur={(e: FocusEvent<HTMLDivElement>) => {
         onBlur?.(e)
@@ -237,7 +238,7 @@ export function FocusFrame({
       }}
       onPointerLeave={(e: PointerEvent<HTMLDivElement>) => {
         onPointerLeave?.(e)
-        if (root.current !== document.activeElement) setInside(false)
+        if (!root.current?.matches(':focus-visible')) setInside(false)
       }}
       data-locked={locked || undefined}
       style={{ '--ff-blur': `${blur}px`, ...style } as CSSProperties}
