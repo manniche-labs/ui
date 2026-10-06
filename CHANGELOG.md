@@ -33,6 +33,9 @@
 
 ### Fixed
 
+- `dot-matrix`: on the top rows the tooltip opens below the cell, so it no longer covers the tile's title and figure.
+- `donut`: long legend names wrap instead of being cut off.
+- `data-tile`: `headingLevel` sets the title's heading level (default 3), so a page without an `h2` above its tiles keeps a sound outline.
 - `curve-carousel` and `post-carousel`: slides that arrive after the first render now show. Before, the carousel stayed empty or unpositioned until the window was resized.
 
 ### Added
