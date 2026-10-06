@@ -157,6 +157,10 @@ Whole pages, built from the same tokens. Install one like a component, or downlo
 | `people-ops` | People dashboard in Tiles: hiring funnel, today's schedule, payroll, attendance matrix |
 | `health-overview` | Health dashboard in Tiles: vitals, patient card, score dial, calorie bars with macros |
 | `gallery-shop` | Gallery and shop page in Tiles: side menu, two-tone headline, counters, events, collections |
+| `wallet-dashboard` | Wallet in Tiles: balance, stack of payment cards, cash flow, spending donut, subscriptions |
+| `account-home` | Account start page in Tiles: payment card, balance, three-state dial, transactions |
+| `currency-wallet` | Multi-currency wallet in Tiles: currency switch, rewards, spending donut, allocation bars |
+| `business-finance` | Business finance in Tiles: income vs payments, growth ring, stock sparkline, activity, checklist |
 
 `npm run lab` writes the HTML files with `scripts/template-html.mjs`; the colours live in `src/template-theme.ts`.
 
