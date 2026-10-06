@@ -131,7 +131,7 @@ function rigFor(width: number, height: number, aspect: number, amplitude: number
     band: clamp(width * 0.13, 48, 200),
     wave,
   }
-  rig.radius = Math.min(RADIUS / rig.ppu, 0.08)
+  rig.radius = Math.min(RADIUS / rig.ppu, 0.16)
   // Walk out along the ribbon until a picture's outer edge reaches the side of the frame.
   let s = 0.5
   while (s < 9) {
