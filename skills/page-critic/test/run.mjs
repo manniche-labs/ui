@@ -493,6 +493,59 @@ const measurementFile = join(out, "measurement.json");
   same("report: a folder without a measurement", exec("report.mjs", "--out", join(out, "does-not-exist")).status, 2);
 }
 
+// 10b. Gather: answers from layer 1, layer 3 (inside a text) and a customer log become a review and a fix list that the report can read.
+{
+  const gout = join(out, "gather");
+  mkdirSync(join(gout, "customer-mobile"), { recursive: true });
+  for (const file of ["measurement.json", "faults-mobile.png", "faults-desk.png"]) copyFileSync(join(out, file), join(gout, file));
+  const example = JSON.parse(readFileSync(join(here, "..", "templates", "review-example.json"), "utf8"));
+  const f = example.pages.faults;
+  const press = "The send button does not respond when pressed";
+  writeFileSync(join(gout, "answer-layer1-a.json"), JSON.stringify({
+    pages: { faults: { title: f.title, job: f.job, layer1: f.layer1, good: f.good } },
+    findings: [{ title: "The field has no label", pages: ["faults"], layer: 1, severity: "Friction", finding: "Only a placeholder.", evidence: ["faults-mobile.png"], change: "Add a label.", effort: "small" }],
+  }));
+  writeFileSync(join(gout, "answer-layer3-a.md"), "Here is my answer:\n\n```json\n" + JSON.stringify({
+    pages: { faults: { type: "tool", layer3: f.layer3, life: f.life.map(({ fix, ...x }) => ({ ...x, finding: press })), dontAnimate: f.dontAnimate } },
+    findings: [{ title: press, pages: "all", layer: 3, severity: "Upgrade", finding: "No pressed state.", evidence: ["faults-desk.png"], change: "scale(.97) over 120 ms." }],
+    aiLook: example.aiLook,
+  }, null, 2) + "\n```\n");
+  writeFileSync(join(gout, "customer-mobile", "customer-log.json"), JSON.stringify(example.customer));
+  let k = exec("gather.mjs", "--out", gout, "--product", "Test pages");
+  same("gather: runs", k.status, 0);
+  check("gather: counts answers, customers, pages and findings", k.out.includes("Gathered 2 answers and 1 customer: 1 page, 2 findings."), k.out);
+  const review = JSON.parse(readFileSync(join(gout, "review.json"), "utf8"));
+  const fixes = JSON.parse(readFileSync(join(gout, "fixes.json"), "utf8")).fixes;
+  check("gather: layer 1 and layer 3 stand on the same page", review.pages.faults.layer1?.length === 10 && review.pages.faults.layer3?.length === 8 && review.pages.faults.type === "tool");
+  same("gather: ids by severity", fixes.map((x) => `${x.id} ${x.severity}`), ["F1 Friction", "F2 Upgrade"]);
+  same("gather: a finding across pages applies to all pages", fixes[1].pages, "all");
+  same("gather: the life card points to its fix", [review.pages.faults.life[0].fix, review.pages.faults.life[0].finding], ["F2", undefined]);
+  same("gather: the customer is included, with its folder", [review.customer?.[0]?.result, review.customer?.[0]?.folder], ["ABANDONED", "customer-mobile"]);
+  check("gather: known pattern names give no warning", !k.out.includes("is not in templates/patterns.md"), k.out);
+  k = exec("fixes.mjs", "check", "--out", gout);
+  same("gather: the fix list is valid", k.status, 0);
+  if (k.status) console.log(k.out);
+  k = exec("report.mjs", "--out", gout, "--no-images");
+  same("gather: the report can be written from what was gathered", k.status, 0);
+  if (k.status) console.log(k.out);
+  same("gather: does not overwrite without --replace", exec("gather.mjs", "--out", gout, "--product", "Test pages").status, 2);
+
+  // Warnings: unknown pattern, Upgrade outside layer 3, a customer without a result and two answers that point to the same lines.
+  writeFileSync(join(gout, "answer-layer3-b.json"), JSON.stringify({ pages: { other: { title: "x", job: "y", life: [{ element: "Button", moment: "Press", pattern: "Bouncing button", values: "x", reduced: "y" }] } } }));
+  const finding = (title, files, layer = 3) => ({ title, pages: ["faults"], layer, severity: "Upgrade", finding: "x", evidence: ["faults-mobile.png"], change: "y", files });
+  writeFileSync(join(gout, "answer-layer3-c.json"), JSON.stringify({ findings: [finding("The foot breaks", ["src/a.css:10-14"]), finding("The foot again, same answer", ["src/a.css:12"])] }));
+  writeFileSync(join(gout, "answer-layer1-d.json"), JSON.stringify({ findings: [finding("The mobile foot breaks", ["src/a.css:12-20", "src/b.tsx:3"], 1), finding("Somewhere else", ["src/a.css:30"])] }));
+  mkdirSync(join(gout, "customer-stopped"));
+  writeFileSync(join(gout, "customer-stopped", "customer-log.json"), JSON.stringify({ task: "x", result: null, steps: [] }));
+  k = exec("gather.mjs", "--out", gout, "--product", "Test pages", "--replace");
+  same("gather: overwrites with --replace", k.status, 0);
+  check("gather: an unknown pattern name gives a warning", k.out.includes('"Bouncing button" is not in templates/patterns.md'), k.out);
+  check("gather: Upgrade in layer 1 gives a warning", k.out.includes("Upgrade is only used in layer 3"), k.out);
+  check("gather: a customer without a result is not included", k.out.includes("customer-stopped: the customer has no result") && JSON.parse(readFileSync(join(gout, "review.json"), "utf8")).customer.length === 1, k.out);
+  same("gather: findings from two answers with overlapping lines give one duplicate warning each", k.out.match(/both point to src\/a\.css:1[02]\./g)?.length, 2);
+  same("gather: a folder without answers", exec("gather.mjs", "--out", join(out, "does-not-exist"), "--product", "x").status, 2);
+}
+
 // 11. The blind customer: a browser steered with words, one command at a time. The test pages must answer meanwhile.
 const folder = join(out, "customer"), other = join(out, "customer-2");
 try {

@@ -110,6 +110,12 @@ Layer 2 needs no agent: the score is in `measurement.json`. `node $PC/scripts/ex
 
 ## Step 4: Gather the review and the fix list
 
+Start by gathering the answers:
+
+    node $PC/scripts/gather.mjs --out $OUT --product "<name>"
+
+`gather.mjs` reads `$OUT/answer-*.json` and the customers' `customer-*/customer-log.json`, and writes a draft of `review.json` and `fixes.json`: the pages from both layers, the findings with ids by severity, life cards that point to their fix, and the customers with their folder. It warns about unknown pattern names, Upgrade outside layer 3, customers without a result, and findings from two answers that point to the same lines (possible duplicates). The draft is not verified. Correct the two files afterwards. `--replace` writes them from scratch.
+
 1. **Verify.** Every finding is checked in the image, the measurement or the code. What does not hold is dropped. Two findings about the same thing are merged, and what recurs on several pages stands once with `"pages": "all"`.
 2. **Write the findings in layer 2 yourself** from the numbers. A number alone is not a finding: point to the element, and say who it hits.
 3. **`$OUT/fixes.json`** following `$PC/templates/fixes-example.json`. Every finding that holds gets an id (F1, F2 …), layer, severity (Blocker, Friction, Polish; Upgrade only in layer 3), finding, evidence, change, files and effort. If it can be measured, it gets `targets`: `{ "page", "metric", "atMost" }`. Choices that apply to the whole product (one button height, one curve) are written as system decisions (S1 …). The project's own rules for whoever does the fixing go in `rules`.
@@ -176,6 +182,7 @@ Only the latest measurement is kept as `measurement-previous.json`. If the first
 | `scripts/slices.mjs` | Cuts the tall screenshots into slices that can be read |
 | `scripts/png.mjs` | Reads and writes PNG without packages; used for the slices |
 | `scripts/browse.mjs` | The blind customer's browser, steered with words |
+| `scripts/gather.mjs` | Merges the agents' answers and the customer logs into a draft of `review.json` and `fixes.json` |
 | `scripts/fixes.mjs` | Checks the fix list, writes the fix prompt and keeps status |
 | `scripts/preview.mjs` | A fix in three variants next to the page as it is |
 | `scripts/report.mjs` | The report as one HTML file |
