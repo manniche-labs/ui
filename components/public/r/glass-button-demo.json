@@ -1,0 +1,20 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "glass-button-demo",
+  "title": "Glass button demo",
+  "description": "How to use Glass button.",
+  "registryDependencies": [
+    "@manniche/glass-button"
+  ],
+  "files": [
+    {
+      "path": "registry/manniche/examples/glass-button-demo.tsx",
+      "content": "import { useEffect, useRef, useState } from 'react'\nimport { GlassButton } from '@/registry/manniche/glass-button/glass-button'\n\n// The ruler is plain SVG in currentColor: a tick every 6 px, longer every 5 and 10, a number every 10.\nconst STEP = 6\nconst BASE = 26\n\nfunction Ruler() {\n  const el = useRef<SVGSVGElement>(null)\n  const [w, setW] = useState(0)\n\n  useEffect(() => {\n    const svg = el.current\n    if (!svg) return\n    const ro = new ResizeObserver(() => setW(svg.parentElement?.offsetWidth ?? 0))\n    if (svg.parentElement) ro.observe(svg.parentElement)\n    return () => ro.disconnect()\n  }, [])\n\n  const n = Math.max(0, Math.floor((w - 24) / STEP))\n  const off = (w - n * STEP) / 2\n  let d = `M${off} ${BASE + 0.5}H${off + n * STEP}`\n  const labels: { x: number; v: number }[] = []\n  for (let k = 0; k <= n; k++) {\n    const x = Math.round(off + k * STEP) + 0.5\n    d += `M${x} ${BASE}V${BASE - (k % 10 === 0 ? 15 : k % 5 === 0 ? 10 : 5)}`\n    if (k % 10 === 0) labels.push({ x, v: k / 10 })\n  }\n\n  return (\n    <svg ref={el} width={w} height={44} viewBox={`0 0 ${w} 44`} className=\"block overflow-visible\">\n      <path d={w ? d : ''} stroke=\"currentColor\" strokeWidth={1} fill=\"none\" shapeRendering=\"crispEdges\" />\n      {labels.map((l) => (\n        <text key={l.x} x={l.x} y={BASE + 13} fill=\"currentColor\" textAnchor=\"middle\" className=\"font-mono text-[9px]\">\n          {l.v}\n        </text>\n      ))}\n    </svg>\n  )\n}\n\nexport default function GlassButtonDemo() {\n  return (\n    <div className=\"grid min-h-[250px] w-full place-items-center\">\n      {/* The ruler's baseline sits 9 px above the bottom of the glass: 1 px border + 4 px bevel + 58 px face - 9 - 26. */}\n      <GlassButton backdrop={<Ruler />} containerClassName=\"flex w-full justify-center\" backdropClassName=\"inset-x-0 top-7 bottom-auto h-11\">\n        <svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" strokeWidth={1.6} aria-hidden>\n          <circle cx=\"12\" cy=\"12\" r=\"8.5\" />\n          <circle cx=\"12\" cy=\"12\" r=\"3.5\" />\n        </svg>\n        Capture\n      </GlassButton>\n    </div>\n  )\n}\n",
+      "type": "registry:example"
+    }
+  ],
+  "categories": [
+    "controls"
+  ],
+  "type": "registry:example"
+}

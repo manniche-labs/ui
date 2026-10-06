@@ -22,7 +22,7 @@
       "name": "prompt-input",
       "type": "registry:component",
       "title": "Prompt input",
-      "description": "A chat input that grows with the text, takes files, and turns into a stop button while the agent writes.",
+      "description": "A chat input that grows with the text, takes files, and turns into a stop button while the agent writes. With `halo`, a band of primary light runs round the border while there is something to send.",
       "dependencies": [
         "lucide-react"
       ],
@@ -1997,6 +1997,320 @@
       ]
     },
     {
+      "name": "focus-frame",
+      "type": "registry:component",
+      "title": "Focus frame",
+      "description": "A rangefinder frame that steps through a sentence, pulls one word into focus and locks with a short detent; follows the pointer and arrow keys. Still on one word under reduced motion.",
+      "registryDependencies": [
+        "utils"
+      ],
+      "files": [
+        {
+          "path": "registry/manniche/focus-frame/focus-frame.tsx",
+          "type": "registry:component"
+        },
+        {
+          "path": "registry/manniche/hooks/use-reduced-motion.ts",
+          "type": "registry:hook"
+        }
+      ],
+      "categories": [
+        "motion"
+      ]
+    },
+    {
+      "name": "pill-to-card",
+      "type": "registry:component",
+      "title": "Pill to card",
+      "description": "An avatar pill that unfolds from its slot into a profile card with a FLIP morph; Escape or a click outside folds it back.",
+      "dependencies": [
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "utils"
+      ],
+      "files": [
+        {
+          "path": "registry/manniche/pill-to-card/pill-to-card.tsx",
+          "type": "registry:component"
+        },
+        {
+          "path": "registry/manniche/hooks/use-reduced-motion.ts",
+          "type": "registry:hook"
+        }
+      ],
+      "categories": [
+        "overlays"
+      ]
+    },
+    {
+      "name": "glass-button",
+      "type": "registry:component",
+      "title": "Glass button",
+      "description": "A glass lens in a bevel that magnifies whatever sits behind it, with a pointer-following highlight and a one-pixel press.",
+      "registryDependencies": [
+        "utils"
+      ],
+      "files": [
+        {
+          "path": "registry/manniche/glass-button/glass-button.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "categories": [
+        "controls"
+      ]
+    },
+    {
+      "name": "keycap",
+      "type": "registry:component",
+      "title": "Keycap",
+      "description": "A mechanical key with 6px of travel that leans towards where it is pressed, with an optional latch and corner light.",
+      "registryDependencies": [
+        "utils"
+      ],
+      "files": [
+        {
+          "path": "registry/manniche/keycap/keycap.tsx",
+          "type": "registry:component"
+        },
+        {
+          "path": "registry/manniche/hooks/use-reduced-motion.ts",
+          "type": "registry:hook"
+        }
+      ],
+      "categories": [
+        "controls"
+      ]
+    },
+    {
+      "name": "folder-card",
+      "type": "registry:component",
+      "title": "Folder card",
+      "description": "A folder whose front slides down while the object inside rises out of it, behind a fixed clip; a link or a press-to-hold button.",
+      "registryDependencies": [
+        "utils"
+      ],
+      "files": [
+        {
+          "path": "registry/manniche/folder-card/folder-card.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "categories": [
+        "surfaces"
+      ]
+    },
+    {
+      "name": "notch-card",
+      "type": "registry:component",
+      "title": "Notch card",
+      "description": "A specimen card with a notch cut from one corner; its image blooms from grey to colour on hover or focus, with one unbroken hairline.",
+      "dependencies": [
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "utils"
+      ],
+      "files": [
+        {
+          "path": "registry/manniche/notch-card/notch-card.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "categories": [
+        "surfaces"
+      ]
+    },
+    {
+      "name": "accordion-gallery",
+      "type": "registry:component",
+      "title": "Accordion gallery",
+      "description": "A rack of modules where one opens to a full card and the rest close to labelled strips; only transforms move, keyboard and touch included.",
+      "registryDependencies": [
+        "utils"
+      ],
+      "files": [
+        {
+          "path": "registry/manniche/accordion-gallery/accordion-gallery.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "categories": [
+        "surfaces"
+      ]
+    },
+    {
+      "name": "dot-globe",
+      "type": "registry:component",
+      "title": "Dot globe",
+      "description": "A plotted globe of dots from an embedded Natural Earth land mask, with drag momentum, a slow spin, arrow keys and an instrument readout. Canvas 2D, pauses off screen, still under reduced motion.",
+      "registryDependencies": [
+        "utils"
+      ],
+      "files": [
+        {
+          "path": "registry/manniche/dot-globe/dot-globe.tsx",
+          "type": "registry:component"
+        },
+        {
+          "path": "registry/manniche/dot-globe/land-mask.ts",
+          "type": "registry:component"
+        },
+        {
+          "path": "registry/manniche/hooks/use-reduced-motion.ts",
+          "type": "registry:hook"
+        }
+      ],
+      "categories": [
+        "widgets"
+      ]
+    },
+    {
+      "name": "focus-frame-demo",
+      "type": "registry:example",
+      "title": "Focus frame demo",
+      "description": "How to use Focus frame.",
+      "registryDependencies": [
+        "@manniche/focus-frame"
+      ],
+      "files": [
+        {
+          "path": "registry/manniche/examples/focus-frame-demo.tsx",
+          "type": "registry:example"
+        }
+      ],
+      "categories": [
+        "motion"
+      ]
+    },
+    {
+      "name": "pill-to-card-demo",
+      "type": "registry:example",
+      "title": "Pill to card demo",
+      "description": "How to use Pill to card.",
+      "registryDependencies": [
+        "@manniche/pill-to-card"
+      ],
+      "files": [
+        {
+          "path": "registry/manniche/examples/pill-to-card-demo.tsx",
+          "type": "registry:example"
+        }
+      ],
+      "categories": [
+        "overlays"
+      ]
+    },
+    {
+      "name": "glass-button-demo",
+      "type": "registry:example",
+      "title": "Glass button demo",
+      "description": "How to use Glass button.",
+      "registryDependencies": [
+        "@manniche/glass-button"
+      ],
+      "files": [
+        {
+          "path": "registry/manniche/examples/glass-button-demo.tsx",
+          "type": "registry:example"
+        }
+      ],
+      "categories": [
+        "controls"
+      ]
+    },
+    {
+      "name": "keycap-demo",
+      "type": "registry:example",
+      "title": "Keycap demo",
+      "description": "How to use Keycap.",
+      "registryDependencies": [
+        "@manniche/keycap"
+      ],
+      "files": [
+        {
+          "path": "registry/manniche/examples/keycap-demo.tsx",
+          "type": "registry:example"
+        }
+      ],
+      "categories": [
+        "controls"
+      ]
+    },
+    {
+      "name": "folder-card-demo",
+      "type": "registry:example",
+      "title": "Folder card demo",
+      "description": "How to use Folder card.",
+      "registryDependencies": [
+        "@manniche/folder-card"
+      ],
+      "files": [
+        {
+          "path": "registry/manniche/examples/folder-card-demo.tsx",
+          "type": "registry:example"
+        }
+      ],
+      "categories": [
+        "surfaces"
+      ]
+    },
+    {
+      "name": "notch-card-demo",
+      "type": "registry:example",
+      "title": "Notch card demo",
+      "description": "How to use Notch card.",
+      "registryDependencies": [
+        "@manniche/notch-card"
+      ],
+      "files": [
+        {
+          "path": "registry/manniche/examples/notch-card-demo.tsx",
+          "type": "registry:example"
+        }
+      ],
+      "categories": [
+        "surfaces"
+      ]
+    },
+    {
+      "name": "accordion-gallery-demo",
+      "type": "registry:example",
+      "title": "Accordion gallery demo",
+      "description": "How to use Accordion gallery.",
+      "registryDependencies": [
+        "@manniche/accordion-gallery"
+      ],
+      "files": [
+        {
+          "path": "registry/manniche/examples/accordion-gallery-demo.tsx",
+          "type": "registry:example"
+        }
+      ],
+      "categories": [
+        "surfaces"
+      ]
+    },
+    {
+      "name": "dot-globe-demo",
+      "type": "registry:example",
+      "title": "Dot globe demo",
+      "description": "How to use Dot globe.",
+      "registryDependencies": [
+        "@manniche/dot-globe"
+      ],
+      "files": [
+        {
+          "path": "registry/manniche/examples/dot-globe-demo.tsx",
+          "type": "registry:example"
+        }
+      ],
+      "categories": [
+        "widgets"
+      ]
+    },
+    {
       "name": "logo-grid",
       "type": "registry:component",
       "title": "Logo grid",
@@ -2239,7 +2553,7 @@
       "name": "moving-border",
       "type": "registry:component",
       "title": "Moving border",
-      "description": "A frame with a light running round its border, in plain CSS. The light stands still under reduced motion.",
+      "description": "A frame with a light running round its border, in plain CSS. The light stands still under reduced motion. `variant=\"iridescent\"` lights the whole ring with a thin-film band of hues around --primary.",
       "registryDependencies": [
         "utils"
       ],

@@ -17,8 +17,15 @@ export type PromptInputProps = {
   /** Optional choices next to the buttons, e.g. a model picker. */
   footer?: ReactNode
   maxRows?: number
+  /** Lights the border while there is something to send: a band of primary light runs round the ring. Off by default. */
+  halo?: boolean
   className?: string
 }
+
+// The halo's light: a short bright head with a fading tail, on a square far larger than the field, so it sweeps the
+// long edges evenly. Only the 1.5 px border strip of it shows.
+const HALO_LIGHT =
+  'bg-[conic-gradient(from_0deg,transparent_0_52%,color-mix(in_oklab,var(--color-primary)_26%,transparent)_74%,var(--color-primary)_95%,color-mix(in_oklab,var(--color-primary)_30%,var(--color-card))_97.5%,transparent_98%)]'
 
 export function PromptInput({
   onSubmit,
@@ -29,6 +36,7 @@ export function PromptInput({
   accept,
   footer,
   maxRows = 8,
+  halo = false,
   className,
 }: PromptInputProps) {
   const [text, setText] = useState('')
@@ -47,6 +55,8 @@ export function PromptInput({
   }, [text, maxRows])
 
   const canSend = !busy && (text.trim().length > 0 || files.length > 0)
+  // With the halo on, the ring comes alive whenever the field is ready to send.
+  const armed = halo && canSend
 
   function send(e?: { preventDefault(): void }) {
     e?.preventDefault()
@@ -68,12 +78,38 @@ export function PromptInput({
   return (
     <form
       onSubmit={send}
+      data-armed={armed ? '' : undefined}
       className={cn(
-        'rounded-2xl border bg-card p-2 shadow-sm transition-[border-color,box-shadow] duration-150',
+        'rounded-2xl border bg-card p-2 shadow-sm',
         'focus-within:border-ring focus-within:shadow-[0_0_0_3px_color-mix(in_oklch,var(--color-ring)_18%,transparent)]',
+        halo && 'relative',
         className,
       )}
     >
+      {halo && (
+        // Sits over the border and is masked to a 1.5 px ring, so the light is in the edge itself and never spills.
+        <span
+          aria-hidden
+          className="pointer-events-none absolute -inset-px overflow-hidden rounded-[inherit] p-[1.5px] [mask:linear-gradient(black,black)_content-box_exclude,linear-gradient(black,black)]"
+        >
+          <span
+            className={cn(
+              'absolute inset-0 bg-[color-mix(in_oklab,var(--color-primary)_42%,var(--color-border))]',
+              'transition-opacity duration-200 ease-out-quint motion-reduce:transition-none',
+              armed ? 'opacity-100' : 'opacity-0',
+            )}
+          />
+          <span
+            style={{ animationDuration: '3.2s' }}
+            className={cn(
+              'absolute top-1/2 left-1/2 aspect-square w-[max(220%,640px)] -translate-x-1/2 -translate-y-1/2 animate-spin',
+              HALO_LIGHT,
+              'transition-opacity duration-200 ease-out-quint motion-reduce:animate-none motion-reduce:rotate-45 motion-reduce:transition-none',
+              armed ? 'opacity-100' : 'opacity-0 [animation-play-state:paused]',
+            )}
+          />
+        </span>
+      )}
       {files.length > 0 && (
         <ul className="flex flex-wrap gap-1.5 px-1 pt-1 pb-2" aria-label="Attached files">
           {files.map((f, i) => (
@@ -127,7 +163,7 @@ export function PromptInput({
             <button
               type="button"
               onClick={() => picker.current?.click()}
-              className="grid size-11 place-items-center rounded-xl text-muted-foreground transition-colors duration-150 hover:bg-muted hover:text-foreground"
+              className="grid size-11 place-items-center rounded-xl text-muted-foreground hover:bg-muted hover:text-foreground"
               aria-label="Attach files"
             >
               <Paperclip className="size-5" aria-hidden />
@@ -136,8 +172,10 @@ export function PromptInput({
         )}
         <div className="flex min-w-0 flex-1 items-center gap-2">{footer}</div>
 
+        {/* Separate keys, so React swaps the element instead of turning Stop into a submit button mid-click. */}
         {busy ? (
           <button
+            key="stop"
             type="button"
             onClick={onStop}
             className="grid size-11 place-items-center rounded-xl bg-foreground text-background transition-transform duration-150 ease-out-quint active:scale-95"
@@ -147,6 +185,7 @@ export function PromptInput({
           </button>
         ) : (
           <button
+            key="send"
             type="submit"
             disabled={!canSend}
             className={cn(
@@ -156,7 +195,14 @@ export function PromptInput({
             )}
             aria-label="Send"
           >
-            <ArrowUp className="size-5" aria-hidden />
+            <ArrowUp
+              className={cn(
+                'size-5',
+                halo && 'transition-transform duration-[180ms] ease-out-quint motion-reduce:transition-none',
+                halo && !canSend && 'translate-y-0.5',
+              )}
+              aria-hidden
+            />
           </button>
         )}
       </div>
