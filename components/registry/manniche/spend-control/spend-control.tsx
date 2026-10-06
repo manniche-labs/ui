@@ -103,7 +103,7 @@ export function SpendControl({ data, labels, now, currency = 'EUR', onUpsell, cl
           <DataTile className="h-full" title={t.cards}>
             <ul className="flex flex-col gap-3">
               {data.cards.map((c) => {
-                const pct = Math.min(100, Math.round((c.spent / c.limit) * 100))
+                const pct = c.limit > 0 ? Math.min(100, Math.round((c.spent / c.limit) * 100)) : 0
                 return (
                   <li key={c.id} className={cn('flex flex-col gap-1.5', c.frozen && 'opacity-60')}>
                     <div className="flex items-baseline justify-between gap-2 text-sm">
