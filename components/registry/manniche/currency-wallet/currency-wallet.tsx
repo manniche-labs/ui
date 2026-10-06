@@ -1,5 +1,6 @@
 // A multi-currency wallet in Tiles: a currency switch, a rewards panel, a spending donut and allocation bars.
 import { useState } from 'react'
+import { cn } from '@/lib/utils'
 import { BigNumber, DeltaPill, Pills } from '@/registry/manniche/chart-kit/chart-kit'
 import { DataTile, TileFact } from '@/registry/manniche/data-tile/data-tile'
 import { Donut, type DonutDatum } from '@/registry/manniche/donut/donut'
@@ -43,7 +44,7 @@ export function CurrencyWallet({ data, defaultCurrency, title = 'Currency wallet
   const fmt = { currency: cur.code, decimals: 2 }
   const progress = Math.min(1, cur.rewards.points / (cur.rewards.points + cur.rewards.next))
   return (
-    <div className={`@container w-full font-sans text-foreground ${className ?? ''}`}>
+    <div className={cn('@container w-full font-sans text-foreground', className)}>
       <div className="grid gap-4 @3xl:grid-cols-6 @6xl:grid-cols-12">
         <div className="flex flex-wrap items-center justify-between gap-3 @3xl:col-span-6 @6xl:col-span-12">
           <h1 className="text-[22px] leading-tight font-semibold tracking-tight">{title}</h1>
@@ -58,8 +59,9 @@ export function CurrencyWallet({ data, defaultCurrency, title = 'Currency wallet
         <DataTile title={l.rewards} inverted className="@3xl:col-span-3 @6xl:col-span-4">
           <BigNumber value={cur.rewards.points} size="lg" />
           <p className="mt-1 text-sm opacity-80">{l.points} · {cur.rewards.tier}</p>
-          <div className="mt-4 h-1.5 overflow-hidden rounded-full bg-current/20" role="img" aria-label={l.toNext(cur.rewards.next, cur.rewards.tier)}>
-            <div className="h-full origin-left rounded-full bg-current transition-transform duration-700" style={{ transform: `scaleX(${progress})` }} />
+          {/* The sentence under the bar says the same, so the bar itself is hidden from screen readers. */}
+          <div aria-hidden className="mt-4 h-1.5 overflow-hidden rounded-full bg-current/20">
+            <div className="h-full origin-left rounded-full bg-current transition-transform duration-700 motion-reduce:transition-none" style={{ transform: `scaleX(${progress})` }} />
           </div>
           <p className="mt-2 text-xs opacity-80">{l.toNext(cur.rewards.next, cur.rewards.tier)}</p>
           <ul className="mt-4 space-y-1 text-sm">
@@ -76,8 +78,8 @@ export function CurrencyWallet({ data, defaultCurrency, title = 'Currency wallet
             {cur.allocation.map((a) => (
               <li key={a.id}>
                 <TileFact label={a.label} aside={<span className="tabular-nums">{Math.round(a.share * 100)}%</span>}>
-                  <span className="mt-2 block h-2 overflow-hidden rounded-full bg-muted" role="img" aria-label={`${a.label}, ${Math.round(a.share * 100)} percent`}>
-                    <span className="block h-full origin-left rounded-full bg-chart-1 transition-transform duration-700" style={{ transform: `scaleX(${a.share})` }} />
+                  <span aria-hidden className="mt-2 block h-2 overflow-hidden rounded-full bg-muted">
+                    <span className="block h-full origin-left rounded-full bg-chart-1 transition-transform duration-700 motion-reduce:transition-none" style={{ transform: `scaleX(${a.share})` }} />
                   </span>
                 </TileFact>
               </li>

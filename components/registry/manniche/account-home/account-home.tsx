@@ -1,4 +1,5 @@
 // An account home screen in Tiles: the payment card, the balance, a three-state spending dial and recent transactions.
+import { cn } from '@/lib/utils'
 import { BigNumber, DeltaPill } from '@/registry/manniche/chart-kit/chart-kit'
 import type { ValueFormat } from '@/registry/manniche/chart-kit/chart-utils'
 import { DataTile, TileFact } from '@/registry/manniche/data-tile/data-tile'
@@ -38,7 +39,7 @@ export function AccountHome({ data, format = DEFAULT_FORMAT, title = 'Account', 
     { label: l.zones[2], to: 1.6, color: 'var(--destructive)' },
   ]
   return (
-    <div className={`@container w-full font-sans text-foreground ${className ?? ''}`}>
+    <div className={cn('@container w-full font-sans text-foreground', className)}>
       <div className="grid gap-4 @3xl:grid-cols-6 @6xl:grid-cols-12">
         <h1 className="text-[22px] leading-tight font-semibold tracking-tight @3xl:col-span-6 @6xl:col-span-12">{title}</h1>
         <DataTile title={l.card} className="@3xl:col-span-3 @6xl:col-span-4">
