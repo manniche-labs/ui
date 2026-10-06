@@ -2,7 +2,7 @@
   "$schema": "https://ui.shadcn.com/schema/registry-item.json",
   "name": "donut",
   "title": "Donut",
-  "description": "A thick ring of rounded segments with gaps, a centre figure and a legend list; point at a segment or a row and it steps out while the centre reads its value and share.",
+  "description": "A thick ring of rounded segments with gaps, a centre figure and a legend list; point at a segment or a row and it steps out while the centre reads its value and share. An optional target puts a mark on the ring and the progress in the centre.",
   "registryDependencies": [
     "utils",
     "@manniche/chart-kit"

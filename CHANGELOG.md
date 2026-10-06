@@ -21,6 +21,7 @@
 
 ### Changed
 
+- `donut` takes a `target` (#39): a mark across the ring where the goal falls, the centre reads the progress ("92% of target") and the ring's name adds the target for screen readers. A target above the sum widens the ring, so the empty part is what is left to go. `centre` replaces the centre content when nothing is active. New labels `target` and `ofTarget`.
 - Nine free components now share the Tiles look of the data tiles instead of the Instrument look. Surfaces are tiles with 26 px corners and a hairline shadow instead of a border; cards and pictures inside them get 14 px corners; buttons are round, muted and 44 px; and `--primary` is kept as a signal. The effects, the motion and the public API are unchanged.
   - `notch-card`: 26 px corners and a 56 px notch with a 14 px turn, a round arrow button, and a tabular footer.
   - `accordion-gallery`: the strips show number pills instead of screws, and the open panel sits inset with 14 px corners.
