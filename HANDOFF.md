@@ -1,6 +1,6 @@
 # Handoff: Manniche UI (manniche-labs/ui)
 
-Updated 2026-10-06 at 16:40 by the Work Mac steering session (end of day). Everything the next session needs is in this repo; nothing depends on files on the Mac.
+Updated 2026-10-06 in the evening by the Windows steering session, for the Work Mac on 7/10. Everything the next session needs is in this repo; nothing depends on files on the Windows machine.
 
 ## The plan
 
@@ -10,38 +10,52 @@ The scrolltide-inspired plan for Manniche UI, built in our own **Tiles** design 
 |---|---|---|
 | 1–4 | Effects, carousel engine, WebGL carousels, late slides | Merged (#12, #15, #16, #17, #18) |
 | Pro move | Six components moved to Manniche UI Pro | Merged (#19) |
-| 5 | Tiles data primitives: chart-kit, data-tile + 11 primitives | Merged (#21). Live on mikkelmanniche.dk/lab with phases 2–4 and the Tiles pass (site PR #109, deployed 6/10) |
-| 6 | 17 page sections (footers, bento, CTA, contact) | All 17 written as code, not merged: footers 7/7 draft #28, bento + CTA 6/6 draft #26 (browser pass started 6/10), contact 4/4 draft #27. Brief: `plans/fase-6-sektioner.md` |
-| Templates | 13 screen templates built from the phase 5 primitives | All 13 written as code, not merged: finance 4/4 draft #32, dashboards 4/4 draft #25, the rest 5/5 draft #31. Brief: `plans/skabeloner.md` |
-| Tiles pass 2–4 | Nine phase 2–4 components restyled to Tiles | Merged (#20, claude-a9, 6/10); live on /lab |
+| 5 | Tiles data primitives: chart-kit, data-tile + 11 primitives | Merged (#21). Live on mikkelmanniche.dk/lab (site PR #109) |
+| Tiles pass 2–4 | Nine phase 2–4 components restyled to Tiles | Merged (#20); live on /lab |
+| Templates | 13 screen templates built from the phase 5 primitives | **All 13 merged 6/10**: dashboards #25, the rest #31, finance #32. Not on /lab yet |
+| 6 | 17 page sections (footers, bento, CTA, contact) | **All 17 merged 6/10**: bento + CTA #26, footers #28, contact #27. Not on /lab yet |
 
-Progress on the plan: 5 of 7 parts merged (phases 1–5), about 71 %. Phase 6 and the templates are fully written in six draft PRs; they count as done when merged. The Tiles pass for phases 2–4 is counted by the session that owns it.
+All seven parts of the plan are merged. Not on /lab yet: #25, #26, #27, #28, #31, #32, #34 and #35. Deploying needs Mikkel's yes.
 
-## Branches and PRs
+## Open PRs
 
-- `main`: phases 1–5 plus the Tiles pass for phases 2–4 (merge commit 0e17f34)
-- `fase-5-data-fliser`, PR #21: merged 2026-10-06. The branch can be deleted
-- `tiles-fase-2-4`, PR #20: merged 2026-10-06. Owned by claude-a9; leave the branch for its owner to delete.
-- `glass-navbar`, `lab-glas-og-effekter`: owned by other sessions. Do not touch.
-- Old merged branches (`fase-2-effekter`, `fase-3-karrusel-motor`, `fase-4-webgl-karruseller`, `karrusel-sene-slides`) can be deleted later.
+None. The primitive fixes are merged too: #34 (bubble-chart closes on Escape after hover, `Pills` at 44 px, week-schedule fits 7 days at 320 px, colour transitions removed) and #35 (dot-matrix tooltip opens below the top rows, donut legend names wrap, `data-tile` `headingLevel`). Both were checked in Chromium at 1440 and 320 px.
 
-## Next steps, in order
+## How the lead merges (one PR at a time)
 
-1. Run `git fetch` and look at the open PRs and branches, so you do not build over another session. Then read `plans/fase-6-sektioner.md` and `plans/skabeloner.md`, and open `plans/tiles-mockup.html`.
-2. **Finish the six draft PRs** (#25, #26, #27, #28, #31, #32). All code is written with oxlint and `tsc` clean, but only #26 has had a (partial) browser pass. Each PR body lists what is left and what the lead must add. Per PR: browser pass (1440/500/280–360 px, light/dark, `&mini=1`, keyboard, reduced motion), fix in the component, then the lead adds `registry.json` items (`registry:block`, categories per PR body), README rows, CHANGELOG, `npx shadcn build` + `public/r`. Merge one PR at a time, rebasing onto `main` and rebuilding before each. Known things to eyeball: `account-home` dial scale and `business-finance` growth ring (#32), `delivery-board` unused `now` prop (#31), gallery-shop uses colour tiles instead of images (#31).
-3. The browser passes run well in parallel: one session per PR family, but only ONE shared Vite server and one browser behind a lock per machine (16 GB Work Mac).
-4. Each PR: local CI, ManiLens (`/manilens-lokal`), CHANGELOG entry, then merge. Deploying to mikkelmanniche.dk/lab needs Mikkel's yes.
+Only the lead edits `registry.json`, `components/README.md`, `CHANGELOG.md` and `public/r/`. Never force-push or rebase a shared branch: merge `origin/main` into it instead.
 
-## What can run in parallel (separate sessions, no shared files)
+1. `git worktree add --detach ../ui-leadN origin/<branch>`, then `git merge --no-edit origin/main`.
+2. Link `components/node_modules` from the main checkout (`ln -s` on the Mac, `mklink /J` on Windows) instead of a fresh install.
+3. Add one `registry:block` item and one `registry:example` demo item per component, in the category the PR body names, and a README row per component.
+4. Add the CHANGELOG bullet at the top of `### Added` (or `### Fixed`) under today's date.
+5. Run local CI (below), commit, `git push origin HEAD:<branch>`, then `gh pr merge <n> --merge`.
+6. Remove the link first, then `git worktree remove`.
 
-| Session | Folders it writes | Branch |
-|---|---|---|
-| Footers (7) | `registry/manniche/footer-*/`, `examples/footer-*-demo.tsx` | `fase-6-footers` |
-| Bento + CTA (6) | `registry/manniche/bento-*/`, `cta-*/` + demos | `fase-6-bento-cta` |
-| Contact (4) | `registry/manniche/contact-*/` + demos | `fase-6-kontakt` |
-| Templates (13, three groups) | `registry/manniche/<screen>/` + demos | one branch per group |
+## Shared QA setup
 
-Shared files (`registry.json`, `components/README.md`, `CHANGELOG.md`, `public/r/`, `chart-kit/`, `data-tile/`, `src/`) are edited by one lead only, at merge time, one PR at a time. Building a PR regenerates `public/r/registry.json`, so rebase onto `main` and rebuild before each merge.
+One Vite server and one browser per machine.
+
+- Run the server from a detached worktree of `main` (`ui-qa`): `npx vite --force --port 5173 --strictPort`. Use `--force`, otherwise the prebundled deps can go missing (504 on `motion_react.js`).
+- Copy the files a check needs into that worktree; do not start a second server.
+- Preview: `/preview.html?c=<name>&full=1` (add `&mode=dark` or `&mini=1`). Use the component name, not `<name>-demo`.
+- Browser lock: `mkdir ../.browser-laas` before you open a browser and `rmdir` it when you close it. Always close the browser in `finally`.
+
+## Remaining primitive issues
+
+Fix these in the primitive itself, each with a CHANGELOG entry under Fixed:
+
+- `lollipop`: the overlay overlaps at 320 px.
+- `bubble-chart`: labels collide at 320 px.
+- `donut`: needs a target or centre prop.
+- WebKit/Safari has not been tested at all. The Mac can do this.
+
+## Next steps on the Mac, in order
+
+1. `git fetch`, `gh pr list`, and read this file. Nothing should be open from 6/10.
+2. Run a Safari pass of the templates and primitives, then fix the primitive issues listed above.
+3. Build the `/lab/ui/pro` page on the site (it gives a 404 today); Stripe is set up in sandbox (79 €, introductory price 49 € until 31/12-2026).
+4. Export to /lab and deploy **only after Mikkel's yes**.
 
 ## How to check
 
@@ -53,22 +67,8 @@ npm run lint && npx tsc -p tsconfig.app.json --noEmit && npm run build && npx sh
 
 `npx shadcn build` writes `public/r/*.json`. Those files are tracked: commit them with every new or changed component, or `shadcn add` gives a 404 after publish.
 
-Preview: `npm run dev`, then `/preview.html?c=<name>` with `&full=1&mode=light|dark` or `&mini=1`.
-
 ## Deploying to /lab
 
 From the site repo (mikkelmanniche.dk), after the site PR is merged: `server/udrul.sh` (dry run), then `server/udrul.sh --live`. Never the old `deploy-side.sh`: it deletes server files and uploads `server/`.
 
-## Known open items
-
-Phase 5 primitives, not yet checked in a browser:
-
-- WebKit/Safari: not tested at all.
-- Hover tooltips on `bubble-chart`, `dot-matrix` and `lollipop`; touch scrub; Escape closing a tooltip.
-- Reduced-motion end state, compact density, and widths below 500 px (280–360 px containers).
-- `dot-matrix`: centring of the active-cell ring, and the top-row tooltip covering the figure.
-- `bubble-chart`: how the focus ring looks, and its scale-from-centre origin.
-
-Check these when a template first uses the primitive, and fix them in the primitive itself.
-
-A QA run on 6/10 could not check them: the shared Vite server lost its prebundled deps (`node_modules/.vite/deps` gone, `motion_react.js` 504). Start the dev server with `npx vite --force` before the next browser check. From code reading, reduced motion should pass for all 11 (no entry animations; donut, dial, lollipop, card-stack, transaction-list and chart-kit's digits check `prefers-reduced-motion`). Use the preview URL with `c=<name>`, not `c=<name>-demo`.
+The 404 on `/assets/fonts/inter-latin.woff2` in local preview is expected: `preview.css` points at the site's self-hosted fonts, which exist on mikkelmanniche.dk.
