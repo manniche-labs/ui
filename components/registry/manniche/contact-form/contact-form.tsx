@@ -3,7 +3,8 @@
 // Signature: the count turns destructive, with the words "12 over", only when over the limit.
 // Screen readers: real labels, aria-invalid + aria-describedby on errors, focus moves to the first invalid field,
 // and sending, sent and error states are announced through a live region. The form never sends anything itself:
-// onSubmit returns a promise the section awaits. Reduced motion: nothing here animates beyond opacity.
+// onSubmit returns a promise the section awaits. On a narrow tile the topic Pills become a native select.
+// Reduced motion: the press feedback on the send button is dropped; nothing else moves.
 import { useEffect, useId, useRef, useState, type FormEvent, type HTMLAttributes, type ReactNode } from 'react'
 import { cn } from '@/lib/utils'
 import { Pills, type PillOption } from '@/registry/manniche/chart-kit/chart-kit'
@@ -64,9 +65,15 @@ export function ContactForm({ heading, intro, topics, maxLength = 800, consent, 
   const [status, setStatus] = useState<Status>('idle')
   const formRef = useRef<HTMLFormElement>(null)
   const sentRef = useRef<HTMLHeadingElement>(null)
-  // The form disappears when sent, so focus moves to the confirmation instead of being lost.
+  const reset = useRef(false)
+  // The form disappears when sent, so focus moves to the confirmation instead of being lost; after "Write another"
+  // it moves back to the first field.
   useEffect(() => {
     if (status === 'sent') sentRef.current?.focus()
+    if (status === 'idle' && reset.current) {
+      reset.current = false
+      formRef.current?.querySelector<HTMLElement>('[name="name"]')?.focus()
+    }
   }, [status])
 
   const validate = (v: ContactFormValues): Errors => {
@@ -119,7 +126,7 @@ export function ContactForm({ heading, intro, topics, maxLength = 800, consent, 
       </header>
 
       <div className="mt-8 grid gap-3 @min-[52rem]:grid-cols-[minmax(0,3fr)_minmax(0,2fr)]">
-        <div className={cn(TILE, 'p-6')}>
+        <div className={cn(TILE, '@container/form p-6')}>
           <div role="status" aria-live="polite" className="sr-only">
             {status === 'sending' ? L.sending : status === 'sent' ? L.sentTitle : status === 'error' ? L.errorText : ''}
           </div>
@@ -132,6 +139,7 @@ export function ContactForm({ heading, intro, topics, maxLength = 800, consent, 
                 type="button"
                 onClick={() => {
                   setValues({ name: '', email: '', topic: topics[0]?.id ?? '', message: '', consent: false })
+                  reset.current = true
                   setStatus('idle')
                 }}
                 className="mt-6 inline-flex min-h-11 items-center rounded-full bg-muted px-4 text-sm font-medium outline-offset-2 focus-visible:outline-2 focus-visible:outline-ring"
@@ -157,8 +165,15 @@ export function ContactForm({ heading, intro, topics, maxLength = 800, consent, 
               </div>
               {topics.length > 1 && (
                 <div>
-                  <p className="mb-1.5 text-sm font-medium">{L.topic}</p>
-                  <Pills label={L.topic} options={topics} value={values.topic} onChange={(t) => set('topic', t)} />
+                  <p id={`${uid}-topic`} className="mb-1.5 text-sm font-medium">{L.topic}</p>
+                  {/* Pills cannot wrap, so a narrow tile gets the same choice as a native select. */}
+                  <div className="hidden @min-[26rem]/form:block">
+                    <Pills label={L.topic} options={topics} value={values.topic} onChange={(t) => set('topic', t)} />
+                  </div>
+                  <select name="topic" aria-labelledby={`${uid}-topic`} value={values.topic} onChange={(e) => set('topic', e.target.value)}
+                    className={cn(FIELD, 'mt-0 @min-[26rem]/form:hidden')}>
+                    {topics.map((t) => <option key={t.id} value={t.id}>{t.label}</option>)}
+                  </select>
                 </div>
               )}
               <div>
@@ -185,8 +200,9 @@ export function ContactForm({ heading, intro, topics, maxLength = 800, consent, 
                 </div>
               )}
               {status === 'error' && <p className="text-sm text-destructive">{L.errorText}</p>}
-              <button type="submit" disabled={status === 'sending'} aria-disabled={status === 'sending'}
-                className="inline-flex min-h-11 w-fit items-center justify-center rounded-full bg-primary px-6 text-sm font-medium text-primary-foreground outline-offset-2 transition-[opacity,transform] duration-200 ease-out-quint focus-visible:outline-2 focus-visible:outline-ring active:scale-[0.98] disabled:opacity-60">
+              {/* aria-disabled only: a disabled button would drop keyboard focus to the body while sending. submit() ignores repeats. */}
+              <button type="submit" aria-disabled={status === 'sending'}
+                className="inline-flex min-h-11 w-fit items-center justify-center rounded-full bg-primary px-6 text-sm font-medium text-primary-foreground outline-offset-2 transition-[opacity,transform] duration-200 ease-out-quint focus-visible:outline-2 focus-visible:outline-ring active:scale-[0.98] aria-disabled:opacity-60 motion-reduce:transition-none motion-reduce:active:scale-100">
                 {status === 'sending' ? L.sending : status === 'error' ? L.retry : L.send}
               </button>
             </form>
