@@ -3412,6 +3412,103 @@
       "categories": [
         "templates"
       ]
+    },
+    {
+      "name": "chart-kit",
+      "type": "registry:component",
+      "title": "Chart kit",
+      "description": "The shared parts of the Tiles charts: number formatting with a muted unit, nice axis ticks, a smooth line, one tooltip, the big display figure, a change pill, a pill switch and a table for screen readers.",
+      "dependencies": [
+        "motion"
+      ],
+      "registryDependencies": [
+        "utils"
+      ],
+      "files": [
+        {
+          "path": "registry/manniche/chart-kit/chart-kit.tsx",
+          "type": "registry:component"
+        },
+        {
+          "path": "registry/manniche/chart-kit/chart-utils.ts",
+          "type": "registry:component"
+        },
+        {
+          "path": "registry/manniche/chart-kit/use-chart.tsx",
+          "type": "registry:component"
+        },
+        {
+          "path": "registry/manniche/hooks/use-reduced-motion.ts",
+          "type": "registry:hook"
+        }
+      ],
+      "cssVars": {
+        "theme": {
+          "color-chart-1": "var(--chart-1)",
+          "color-chart-2": "var(--chart-2)",
+          "color-chart-3": "var(--chart-3)",
+          "color-chart-4": "var(--chart-4)",
+          "color-chart-5": "var(--chart-5)",
+          "color-success": "var(--success)",
+          "ease-out-quint": "cubic-bezier(0.23, 1, 0.32, 1)"
+        },
+        "light": {
+          "chart-1": "oklch(0.53 0.125 215)",
+          "chart-2": "oklch(0.75 0.13 78)",
+          "chart-3": "oklch(0.45 0.125 345)",
+          "chart-4": "oklch(0.7 0.13 145)",
+          "chart-5": "oklch(0.62 0.12 295)",
+          "success": "oklch(0.55 0.13 155)"
+        },
+        "dark": {
+          "chart-1": "oklch(0.64 0.11 210)",
+          "chart-2": "oklch(0.66 0.125 75)",
+          "chart-3": "oklch(0.53 0.125 345)",
+          "chart-4": "oklch(0.62 0.12 145)",
+          "chart-5": "oklch(0.58 0.12 295)",
+          "success": "oklch(0.72 0.13 155)"
+        }
+      },
+      "categories": [
+        "widgets"
+      ]
+    },
+    {
+      "name": "data-tile",
+      "type": "registry:component",
+      "title": "Data tile",
+      "description": "The tile a figure or chart sits in: name, a control on the right, the figure, the fine print under a line; inverted to lift the one that matters most, compact for dense dashboards.",
+      "registryDependencies": [
+        "utils"
+      ],
+      "files": [
+        {
+          "path": "registry/manniche/data-tile/data-tile.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "categories": [
+        "surfaces"
+      ]
+    },
+    {
+      "name": "data-tile-demo",
+      "type": "registry:example",
+      "title": "Data tile demo",
+      "description": "How to use Data tile.",
+      "registryDependencies": [
+        "@manniche/data-tile",
+        "@manniche/chart-kit"
+      ],
+      "files": [
+        {
+          "path": "registry/manniche/examples/data-tile-demo.tsx",
+          "type": "registry:example"
+        }
+      ],
+      "categories": [
+        "surfaces"
+      ]
     }
   ]
 }
