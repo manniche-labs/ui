@@ -4,6 +4,7 @@
 
 ### Added
 
+- Four dashboard templates built from the Tiles data primitives (#25): `spend-control` (company spend with virtual cards and a merchant bubble chart), `widget-wall` (thirteen widgets), `workspace-home` (search, offer, deals and the week's schedule) and `sales-floor` (target dial, live call card, bars per seller). Buttons on an inverted tile stay visible, tiles fill their row, and every demo uses example data.
 - `HANDOFF.md`: phase 6 started; footers (#28) and bento + CTA (#26) are written as draft PRs, with what each still needs.
 - `HANDOFF.md` updated after the lab export: phases 2–5 and the Tiles pass are live on mikkelmanniche.dk/lab (site PR #109), with how to deploy to /lab; the open browser checks for phase 5 are still open.
 - `HANDOFF.md` and `plans/`: where the work stands after phase 5, and the briefs for phase 6 (17 page sections) and the 13 screen templates, with the approved Tiles mockup. Any machine can continue from the repo alone.
