@@ -12,8 +12,10 @@ const BODY: Record<string, string> = { ink: 'var(--foreground)', sage: 'var(--ch
 function Lamp({ variant }: { variant: ProductVariant }) {
   const fill = BODY[variant.id]
   return (
-    <svg viewBox="0 0 400 300" className="size-full" preserveAspectRatio="xMidYMid meet" aria-hidden>
-      <rect x="0" y="244" width="400" height="56" className="fill-muted" />
+    // The floor runs far past the view box, so it fills the tile edge to edge and down to the bottom at any aspect
+    // ratio; the tile's rounded corners clip it.
+    <svg viewBox="0 0 400 300" className="size-full overflow-visible" preserveAspectRatio="xMidYMid meet" aria-hidden>
+      <rect x="-2000" y="244" width="4400" height="2000" className="fill-muted" />
       <ellipse cx="150" cy="248" rx="62" ry="9" className="fill-foreground/10" />
       <rect x="104" y="232" width="92" height="16" rx="8" style={{ fill }} />
       <path d="M150 232 V132 L236 66" fill="none" strokeWidth="9" strokeLinecap="round" strokeLinejoin="round" style={{ stroke: fill }} />

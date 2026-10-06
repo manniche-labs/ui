@@ -86,7 +86,7 @@ export function CtaBand({ headline, description, primary, secondary, fact, label
     <section
       aria-labelledby={headingId}
       {...rest}
-      className={cn('@container mx-auto w-full max-w-6xl px-4 sm:px-6', className)}
+      className={cn('@container mx-auto w-full max-w-6xl px-4 py-12 sm:px-6 @3xl:py-20', className)}
     >
       <div
         className="rounded-[calc(var(--radius)*2+2px)] bg-foreground text-background"
