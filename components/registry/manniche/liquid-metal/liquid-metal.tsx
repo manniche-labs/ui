@@ -45,6 +45,10 @@ export function LiquidMetal({ speed = 1, children, className }: LiquidMetalProps
 
     const gl = el.getContext('webgl', { antialias: false, premultipliedAlpha: false })
     if (!gl) return remove
+    const release = () => {
+      gl.getExtension('WEBGL_lose_context')?.loseContext()
+      remove()
+    }
 
     const shader = (type: number, src: string) => {
       const s = gl.createShader(type)!
@@ -56,7 +60,7 @@ export function LiquidMetal({ speed = 1, children, className }: LiquidMetalProps
     gl.attachShader(program, shader(gl.VERTEX_SHADER, VERTEX))
     gl.attachShader(program, shader(gl.FRAGMENT_SHADER, FRAGMENT))
     gl.linkProgram(program)
-    if (!gl.getProgramParameter(program, gl.LINK_STATUS)) return remove
+    if (!gl.getProgramParameter(program, gl.LINK_STATUS)) return release
     gl.useProgram(program)
 
     // One triangle that covers the whole canvas.
@@ -104,8 +108,7 @@ export function LiquidMetal({ speed = 1, children, className }: LiquidMetalProps
       ro.disconnect()
       io.disconnect()
       cancelAnimationFrame(raf)
-      gl.getExtension('WEBGL_lose_context')?.loseContext()
-      remove()
+      release()
     }
   }, [speed, reduce])
 
