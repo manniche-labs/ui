@@ -33,6 +33,10 @@
 
 ### Fixed
 
+- `bubble-chart`: a tooltip opened by hover now closes on Escape without moving the pointer (WCAG 1.4.13).
+- `Pills` in `chart-kit`: segments are 44 px tall (were 36 px), so they meet the touch target size.
+- `week-schedule`: the day strip fits seven days at 320 px, so Sunday is no longer pushed out of view. Days stay 44 px tall.
+- `spend-control` and `workspace-home`: the last colour transitions are gone; only opacity, transform and filter animate.
 - `curve-carousel` and `post-carousel`: slides that arrive after the first render now show. Before, the carousel stayed empty or unpositioned until the window was resized.
 
 ### Added

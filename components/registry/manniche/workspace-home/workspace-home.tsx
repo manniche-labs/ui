@@ -39,7 +39,7 @@ export function WorkspaceHome({ data, labels, onSearch, onOffer, className }: Wo
             aria-current={n.id === current ? 'page' : undefined}
             onClick={() => setCurrent(n.id)}
             className={cn(
-              'rounded-full px-4 py-1.5 text-sm text-muted-foreground transition-colors hover:text-foreground focus-visible:outline-2 focus-visible:outline-ring',
+              'rounded-full px-4 py-1.5 text-sm text-muted-foreground hover:text-foreground focus-visible:outline-2 focus-visible:outline-ring',
               n.id === current && 'bg-foreground text-background hover:text-background',
             )}
           >
