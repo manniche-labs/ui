@@ -2,6 +2,10 @@
 
 ## 2026-10-06
 
+### Removed
+
+- `dot-globe`, `focus-frame`, `pill-to-card`, `keycap`, `glass-button` and `folder-card` have moved to Manniche UI Pro and are no longer in the free registry. Their files, demos and registry entries are gone, and so is the Natural Earth notice, which only `dot-globe` used. Copies you have already installed keep working.
+
 ### Fixed
 
 - `curve-carousel` and `post-carousel`: slides that arrive after the first render now show. Before, the carousel stayed empty or unpositioned until the window was resized.

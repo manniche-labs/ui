@@ -96,14 +96,8 @@ There is also a hosted MCP server just for this registry, with no key: `https://
 | `liquid-metal` | Flowing chrome surface from a small WebGL shader |
 | `shader-backdrop` | Moving WebGL background in seven families (mesh, swirl, halftone, metal, aurora, flame, cells) and 55 named looks, or your own colours |
 | `gravity-grid` | Dots or grid lines that bend towards the pointer and light up around it |
-| `focus-frame` | Rangefinder frame that pulls one word of a sentence into focus and locks with a detent |
-| `pill-to-card` | Avatar pill that morphs into a profile card (FLIP), as an accessible dialog |
-| `glass-button` | Glass lens button that magnifies what sits behind it, with a pointer highlight |
-| `keycap` | Mechanical key with travel, pointer tilt and an optional latch |
-| `folder-card` | Folder whose front slides down while the drawing inside rises, on hover or focus |
 | `notch-card` | Card with a cut corner whose image blooms from grey into colour |
 | `accordion-gallery` | Rack of modules that slide open with transforms; stacks vertically when narrow |
-| `dot-globe` | Dotted globe with bezel and lon/lat readout; drag with momentum, arrow keys, idle spin |
 | `logo-grid` | Logos around a centre heading, for integrations or partners |
 | `split-button` | A button that splits into a row of choices |
 | `dock` | App icons that bounce when picked, with labels and arrow keys |
