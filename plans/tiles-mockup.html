@@ -1,0 +1,2011 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1"><style>:root{color-scheme:light}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<!doctype html>
+<html lang="en" data-signal="blue">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Data · Tiles</title>
+<meta name="description" content="Manniche UI phase 5, direction 3: chart and card primitives as solid, touchable tiles. One fact per tile, the chart as its calm supporting shape.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,100..900&family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<script>
+  // Theme and signal before first paint. ?theme=dark|light and ?signal=blue|orange|green override.
+  (function () {
+    var q = new URLSearchParams(location.search), d = document.documentElement
+    var t = q.get('theme'), s = q.get('signal')
+    var dark = t ? t === 'dark' : matchMedia('(prefers-color-scheme: dark)').matches
+    if (dark) d.classList.add('dark')
+    d.dataset.signal = s === 'orange' || s === 'green' ? s : 'blue'
+  })()
+</script>
+<style>
+/* ================= tokens (exact shadcn tokens from the brief) ================= */
+:root{--background:oklch(0.985 0.002 90);--foreground:oklch(0.2 0.01 80);--card:oklch(1 0 0);--card-foreground:oklch(0.2 0.01 80);--muted:oklch(0.955 0.004 90);--muted-foreground:oklch(0.48 0.012 80);--primary:oklch(0.52 0.2 262);--primary-foreground:oklch(0.99 0 0);--accent:oklch(0.95 0.03 262);--accent-foreground:oklch(0.32 0.14 262);--destructive:oklch(0.55 0.2 27);--success:oklch(0.55 0.13 155);--border:oklch(0.9 0.006 90);--ring:oklch(0.52 0.2 262);--radius:0.75rem}
+.dark{--background:oklch(0.17 0.006 80);--foreground:oklch(0.95 0.006 90);--card:oklch(0.21 0.006 80);--card-foreground:oklch(0.95 0.006 90);--muted:oklch(0.25 0.006 80);--muted-foreground:oklch(0.72 0.01 85);--primary:oklch(0.72 0.14 262);--primary-foreground:oklch(0.18 0.02 262);--accent:oklch(0.29 0.05 262);--accent-foreground:oklch(0.9 0.05 262);--destructive:oklch(0.68 0.18 27);--success:oklch(0.72 0.13 155);--border:oklch(0.31 0.006 80);--ring:oklch(0.72 0.14 262)}
+/* signal switcher: the two extra primaries from the brief (dark variants lifted, same as Instrument) */
+html[data-signal="orange"]{--primary:oklch(0.62 0.17 45);--ring:oklch(0.62 0.17 45);--primary-foreground:oklch(0.99 0 0);--accent:oklch(0.95 0.03 45);--accent-foreground:oklch(0.4 0.12 45)}
+html.dark[data-signal="orange"]{--primary:oklch(0.74 0.15 50);--ring:oklch(0.74 0.15 50);--primary-foreground:oklch(0.2 0.03 45);--accent:oklch(0.29 0.05 45);--accent-foreground:oklch(0.9 0.05 45)}
+html[data-signal="green"]{--primary:oklch(0.55 0.13 155);--ring:oklch(0.55 0.13 155);--primary-foreground:oklch(0.99 0 0);--accent:oklch(0.95 0.03 155);--accent-foreground:oklch(0.36 0.09 155)}
+html.dark[data-signal="green"]{--primary:oklch(0.72 0.13 155);--ring:oklch(0.72 0.13 155);--primary-foreground:oklch(0.18 0.03 155);--accent:oklch(0.29 0.05 155);--accent-foreground:oklch(0.9 0.05 155)}
+
+/* Series tints. Validated (dataviz six checks): lightness band, chroma floor, adjacent CVD and
+   normal-vision separation pass in both modes. Honey (2) and sage (4) sit under 3:1 on white,
+   so every use carries a direct label or a table. Order is fixed: 1 teal, 2 honey, 3 plum, 4 sage, 5 iris. */
+:root{
+  --cl-1:oklch(0.53 0.125 215);--cl-2:oklch(0.75 0.13 78);--cl-3:oklch(0.45 0.125 345);--cl-4:oklch(0.70 0.13 145);--cl-5:oklch(0.62 0.12 295);
+  --cd-1:oklch(0.64 0.11 210);--cd-2:oklch(0.66 0.125 75);--cd-3:oklch(0.53 0.125 345);--cd-4:oklch(0.62 0.12 145);--cd-5:oklch(0.58 0.12 295);
+  --chart-1:var(--cl-1);--chart-2:var(--cl-2);--chart-3:var(--cl-3);--chart-4:var(--cl-4);--chart-5:var(--cl-5);
+  /* snapshots of the page tokens, so an inverted tile can swap them */
+  --fg0:var(--foreground);--bg0:var(--background);
+  /* the signal as it reads on the opposite surface (used inside inverted tiles) */
+  --primary-inv:oklch(0.72 0.14 262);--primary-fg-inv:oklch(0.18 0.02 262);--success-inv:oklch(0.72 0.13 155);--destructive-inv:oklch(0.68 0.18 27);
+  --ease:cubic-bezier(0.23,1,0.32,1);
+  --sans:'Inter',ui-sans-serif,system-ui,-apple-system,sans-serif;
+  --display:'Archivo','Inter',ui-sans-serif,system-ui,sans-serif;
+  --mono:'IBM Plex Mono',ui-monospace,SFMono-Regular,Menlo,monospace;
+  --r-tile:26px;--r-inner:14px;
+  --on-dark:oklch(0.985 0.002 90);--on-light:oklch(0.2 0.01 80);
+  color-scheme:light;
+}
+.dark{
+  --chart-1:var(--cd-1);--chart-2:var(--cd-2);--chart-3:var(--cd-3);--chart-4:var(--cd-4);--chart-5:var(--cd-5);
+  --primary-inv:oklch(0.52 0.2 262);--primary-fg-inv:oklch(0.99 0 0);--success-inv:oklch(0.55 0.13 155);--destructive-inv:oklch(0.55 0.2 27);
+  color-scheme:dark;
+}
+html[data-signal="orange"]{--primary-inv:oklch(0.74 0.15 50);--primary-fg-inv:oklch(0.2 0.03 45)}
+html.dark[data-signal="orange"]{--primary-inv:oklch(0.62 0.17 45);--primary-fg-inv:oklch(0.99 0 0)}
+html[data-signal="green"]{--primary-inv:oklch(0.72 0.13 155);--primary-fg-inv:oklch(0.18 0.03 155)}
+html.dark[data-signal="green"]{--primary-inv:oklch(0.55 0.13 155);--primary-fg-inv:oklch(0.99 0 0)}
+
+/* An inverted tile swaps foreground and background for everything inside it. */
+.inv{
+  --card:var(--fg0);--card-foreground:var(--bg0);--foreground:var(--bg0);--background:var(--fg0);
+  --muted:color-mix(in oklab,var(--bg0) 10%,var(--fg0));
+  --muted-foreground:color-mix(in oklab,var(--bg0) 64%,var(--fg0));
+  --border:color-mix(in oklab,var(--bg0) 15%,var(--fg0));
+  --primary:var(--primary-inv);--ring:var(--primary-inv);--primary-foreground:var(--primary-fg-inv);
+  --success:var(--success-inv);--destructive:var(--destructive-inv);
+  --chart-1:var(--cd-1);--chart-2:var(--cd-2);--chart-3:var(--cd-3);--chart-4:var(--cd-4);--chart-5:var(--cd-5);
+  color-scheme:dark;
+}
+.dark .inv{--chart-1:var(--cl-1);--chart-2:var(--cl-2);--chart-3:var(--cl-3);--chart-4:var(--cl-4);--chart-5:var(--cl-5);color-scheme:light}
+
+/* Derived per surface, so they follow an inverted tile too. */
+.tile,.frame{
+  --ink:color-mix(in oklab,var(--foreground) 86%,var(--card));
+  --ink-ghost:color-mix(in oklab,var(--foreground) 17%,var(--card));
+  --grid:color-mix(in oklab,var(--foreground) 11%,var(--card));
+  --base:color-mix(in oklab,var(--foreground) 30%,var(--card));
+  --hair:color-mix(in oklab,var(--foreground) 9%,transparent);
+  --well:color-mix(in oklab,var(--foreground) 5%,var(--card));
+}
+
+/* ================= base ================= */
+*,*::before,*::after{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
+body{margin:0;background:var(--background);color:var(--foreground);font:400 15px/1.55 var(--sans);-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;font-feature-settings:'cv11' 1;overflow-x:hidden}
+button{font:inherit;color:inherit}
+h1,h2,h3,p,figure,ul,ol,dl{margin:0}
+ul,ol{padding:0;list-style:none}
+:focus-visible{outline:2px solid var(--ring);outline-offset:2px}
+.sr-only{position:absolute;left:0;top:0;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+.skip{position:absolute;left:16px;top:-60px;z-index:60;display:inline-flex;align-items:center;min-height:44px;padding:0 16px;background:var(--foreground);color:var(--background);border-radius:999px;text-decoration:none;font-size:14px}
+.skip:focus{top:12px}
+.wrap{max-width:1360px;margin:0 auto;padding:0 clamp(16px,4vw,48px)}
+.pn{font:500 11px/1 var(--mono);letter-spacing:.04em;color:var(--muted-foreground);font-variant-numeric:tabular-nums}
+.tnum{font-variant-numeric:tabular-nums}
+.u{color:var(--muted-foreground)}
+.press{transition:transform 160ms var(--ease)}
+.press:active{transform:scale(.98)}
+.icon{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:1.75;stroke-linecap:round;stroke-linejoin:round;flex:none}
+
+/* ================= top bar (shared with Instrument) ================= */
+.top{position:sticky;top:0;z-index:40;background:var(--background);border-bottom:1px solid var(--border)}
+.top-in{display:flex;align-items:center;gap:20px;min-height:64px}
+.mark{display:inline-flex;align-items:center;gap:10px;min-height:44px;color:inherit;text-decoration:none;font:500 15px/1 var(--sans);letter-spacing:-.01em;white-space:nowrap}
+.mark-glyph{position:relative;width:16px;height:16px;border:1.5px solid currentColor;border-radius:4px}
+.mark-glyph::after{content:'';position:absolute;right:2px;top:2px;width:4px;height:4px;border-radius:50%;background:var(--primary)}
+.top-meta{flex:1;min-width:0;font:400 12px/1.3 var(--mono);color:var(--muted-foreground);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.demo-badge{display:inline-flex;align-items:center;gap:7px;height:28px;padding:0 11px;border-radius:999px;background:var(--muted);font:500 12px/1 var(--mono);color:var(--foreground);white-space:nowrap}
+.demo-badge::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--primary)}
+.controls{display:flex;align-items:center;gap:14px;margin-left:auto}
+.ctl{display:flex;align-items:center;gap:2px;font:400 12px/1 var(--mono);color:var(--muted-foreground)}
+.ctl>span{margin-right:4px}
+.switch{display:grid;place-items:center;width:56px;height:44px;padding:0;border:0;background:none;cursor:pointer;border-radius:999px}
+.switch-track{position:relative;width:40px;height:24px;border-radius:999px;background:var(--muted);box-shadow:inset 0 0 0 1px var(--border)}
+.switch-knob{position:absolute;left:3px;top:3px;width:18px;height:18px;border-radius:50%;background:var(--foreground);transition:transform 200ms var(--ease)}
+.switch[aria-checked="true"] .switch-knob{transform:translateX(16px)}
+.swatches{display:flex}
+.swatch{display:grid;place-items:center;width:40px;height:44px;padding:0;border:0;background:none;cursor:pointer;border-radius:999px}
+.swatch i{display:block;width:18px;height:18px;border-radius:50%;background:var(--c)}
+.swatch[aria-checked="true"] i{box-shadow:0 0 0 2px var(--background),0 0 0 3.5px var(--foreground)}
+
+/* ================= intro ================= */
+.intro{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,1fr);gap:clamp(28px,6vw,96px);padding-top:clamp(40px,6vw,88px);padding-bottom:clamp(32px,4vw,56px);align-items:end}
+.intro h1{font:800 clamp(48px,7.4vw,112px)/.88 var(--display);font-stretch:86%;letter-spacing:-.045em;text-wrap:balance}
+.intro-copy{display:grid;gap:24px}
+.intro-copy p{font-size:16px;line-height:1.55;color:var(--muted-foreground);max-width:54ch;text-wrap:pretty}
+.plate{display:grid;grid-template-columns:max-content 1fr;margin:0;border-top:1px solid var(--foreground)}
+.plate dt,.plate dd{margin:0;padding:9px 0;border-bottom:1px solid var(--border);font-size:13px}
+.plate dt{font:400 11.5px/1.6 var(--mono);color:var(--muted-foreground);padding-right:28px}
+.plate dd{font-variant-numeric:tabular-nums}
+.plate code{font:400 12.5px var(--mono)}
+.sw-row{display:inline-flex;gap:4px;vertical-align:-2px;margin-right:6px}
+.sw-row i{width:12px;height:12px;border-radius:4px;background:var(--c)}
+
+/* ================= groups and bento ================= */
+.group{padding-top:clamp(36px,5vw,64px)}
+.g-head{display:flex;align-items:baseline;gap:16px;flex-wrap:wrap;padding:0 4px 16px}
+.g-head h2{font:800 clamp(28px,3vw,40px)/1 var(--display);font-stretch:88%;letter-spacing:-.035em}
+.g-head p{color:var(--muted-foreground);font-size:14.5px}
+.g-head .pn{margin-left:auto}
+.bento{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:12px;grid-auto-flow:row dense}
+.s3{grid-column:span 3}.s4{grid-column:span 4}.s5{grid-column:span 5}.s6{grid-column:span 6}.s7{grid-column:span 7}.s8{grid-column:span 8}.s12{grid-column:span 12}
+
+/* ================= the tile ================= */
+.tile{position:relative;display:flex;flex-direction:column;min-width:0;background:var(--card);color:var(--card-foreground);border-radius:var(--r-tile);box-shadow:0 0 0 1px var(--hair),0 1px 2px rgba(0,0,0,.03);padding:18px 24px 0}
+.tile.inv{box-shadow:none}
+.t-head{display:flex;align-items:center;gap:12px;min-height:44px;flex-wrap:wrap}
+.t-name{font:500 15px/1.2 var(--sans);letter-spacing:-.01em}
+.t-ctl{margin-left:auto;display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.fact{margin-top:14px;display:grid;gap:6px}
+.fact-k{font:500 14px/1.3 var(--sans);color:var(--muted-foreground)}
+.fact-row{display:flex;align-items:flex-end;gap:12px 16px;flex-wrap:wrap}
+.num{display:inline-flex;align-items:baseline;font-family:var(--display);font-weight:800;font-stretch:86%;font-size:clamp(50px,5.2vw,76px);line-height:.95;letter-spacing:-.045em;font-variant-numeric:tabular-nums;white-space:nowrap}
+.num .u,.num .dec{font-size:.46em;font-weight:700;letter-spacing:-.02em;color:var(--muted-foreground)}
+.num .u{margin-right:.12em;align-self:flex-start;margin-top:.12em}
+.num.md{font-size:clamp(36px,3.4vw,48px)}
+.num.sm{font-size:30px;letter-spacing:-.035em}
+.t-body{position:relative;flex:1;margin-top:22px;min-width:0}
+.t-foot{display:flex;align-items:baseline;gap:6px 16px;flex-wrap:wrap;margin-top:22px;padding:14px 0 18px;border-top:1px solid var(--border)}
+.desc{flex:1 1 30ch;font-size:13.5px;line-height:1.5;color:var(--muted-foreground);text-wrap:pretty}
+.spec{font:400 11.5px/1.5 var(--mono);color:var(--muted-foreground)}
+.spec b{font-weight:500;color:var(--foreground)}
+
+/* delta chip */
+.chip{display:inline-flex;align-items:center;gap:4px;height:26px;padding:0 10px 0 8px;border-radius:999px;font:500 12.5px/1 var(--sans);font-variant-numeric:tabular-nums;white-space:nowrap;background:var(--muted);color:var(--foreground)}
+.chip svg{width:12px;height:12px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.chip.good{background:color-mix(in oklab,var(--success) 15%,var(--card));color:color-mix(in oklab,var(--success) 80%,var(--foreground))}
+.chip.bad{background:color-mix(in oklab,var(--destructive) 13%,var(--card));color:color-mix(in oklab,var(--destructive) 85%,var(--foreground))}
+.chip.mute{background:transparent;box-shadow:inset 0 0 0 1px var(--border);color:var(--muted-foreground)}
+.chip.dash{background:transparent;box-shadow:none;outline:1px dashed color-mix(in oklab,var(--foreground) 35%,transparent);outline-offset:-1px;color:var(--muted-foreground)}
+
+/* legend (only where two or more series share a plot) */
+.legend{display:flex;flex-wrap:wrap;gap:6px 16px;font-size:13px;color:var(--muted-foreground)}
+.legend span{display:inline-flex;align-items:center;gap:7px}
+.legend i{display:inline-block;width:14px;height:10px;border-radius:999px;background:var(--c)}
+.legend i.line{height:3px;border-radius:2px}
+.legend i.dashed{height:0;border-radius:0;background:none;border-top:2px dashed var(--c)}
+
+/* ================= pills (segment switch with a sliding pill) ================= */
+.pills{position:relative;display:inline-grid;grid-auto-flow:column;grid-auto-columns:1fr;padding:4px;border-radius:999px;background:var(--muted);isolation:isolate}
+.pills button{position:relative;z-index:1;min-height:36px;padding:0 14px;border:0;background:none;border-radius:999px;font:500 13.5px/1 var(--sans);color:var(--muted-foreground);cursor:pointer;white-space:nowrap;transition:color 200ms var(--ease)}
+.pills button::before{content:'';position:absolute;inset:-4px 0}
+.pills button:hover{color:var(--foreground)}
+.pills button[aria-checked="true"]{color:var(--card)}
+.pills button:focus-visible{outline-offset:0}
+.pill-ind{position:absolute;z-index:0;left:4px;top:4px;bottom:4px;width:calc((100% - 8px) / var(--n));border-radius:999px;background:var(--foreground);transform:translateX(calc(var(--i) * 100%));transition:transform 260ms var(--ease)}
+.toggle{display:inline-flex;align-items:center;gap:8px;min-height:44px;padding:0 14px 0 10px;border:0;border-radius:999px;background:var(--muted);font:500 13.5px/1 var(--sans);color:var(--muted-foreground);cursor:pointer}
+.toggle i{position:relative;width:16px;height:16px;border-radius:6px;box-shadow:inset 0 0 0 1.5px var(--base);transition:background-color 160ms var(--ease)}
+.toggle i::after{content:'';position:absolute;left:5px;top:2px;width:4px;height:8px;border:solid var(--card);border-width:0 2px 2px 0;transform:rotate(45deg) scale(.4);opacity:0;transition:transform 200ms var(--ease),opacity 160ms var(--ease)}
+.toggle[aria-pressed="true"]{color:var(--foreground)}
+.toggle[aria-pressed="true"] i{background:var(--foreground);box-shadow:none}
+.toggle[aria-pressed="true"] i::after{opacity:1;transform:rotate(45deg) scale(1)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:44px;padding:0 18px;border-radius:999px;border:0;background:var(--muted);color:var(--foreground);font:500 14px/1 var(--sans);cursor:pointer;text-decoration:none}
+.btn.solid{background:var(--foreground);color:var(--card)}
+.btn.signal{background:var(--primary);color:var(--primary-foreground)}
+.icon-btn{display:grid;place-items:center;width:44px;height:44px;border-radius:50%;border:0;background:var(--muted);color:var(--foreground);cursor:pointer}
+.icon-btn:disabled{opacity:.35;cursor:default}
+.icon-btn svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+
+/* ================= tooltip (one anatomy for every chart) ================= */
+.tip{position:absolute;left:0;top:0;z-index:30;pointer-events:none;width:max-content;max-width:240px;padding:9px 12px 10px;border-radius:14px;background:var(--foreground);color:var(--card);box-shadow:0 1px 2px rgba(0,0,0,.14),0 10px 24px -10px rgba(0,0,0,.4);opacity:0;transform:translate(var(--tx,0),var(--ty,0)) scale(.96);transform-origin:50% 100%;transition:opacity 140ms var(--ease),transform 160ms var(--ease)}
+.tip.snap{transition:opacity 140ms var(--ease)}
+.tip[data-on]{opacity:1;transform:translate(var(--tx,0),var(--ty,0))}
+.tip-k{display:block;font:500 11px/1.25 var(--mono);letter-spacing:.02em;color:color-mix(in oklab,var(--card) 60%,var(--foreground))}
+.tip-v{display:block;margin-top:4px;font:600 17px/1.1 var(--sans);font-variant-numeric:tabular-nums;letter-spacing:-.015em}
+.tip-v .u{color:color-mix(in oklab,var(--card) 60%,var(--foreground));font-weight:500}
+.tip-r{display:flex;align-items:center;gap:8px;margin-top:5px;font:400 12.5px/1.3 var(--sans);font-variant-numeric:tabular-nums;color:color-mix(in oklab,var(--card) 82%,var(--foreground))}
+.tip-r i{width:10px;height:10px;border-radius:3px;background:var(--c);flex:none}
+.tip-r b{margin-left:auto;padding-left:12px;font-weight:500;color:var(--card)}
+
+/* ================= rolling digits ================= */
+.roll{display:inline-flex}
+.rs{position:relative;display:inline-block;overflow:hidden;padding:.08em 0;margin:-.08em 0}
+.rc{display:inline-block;transition:transform 300ms var(--ease),opacity 300ms var(--ease),filter 300ms var(--ease)}
+.rc.out{position:absolute;left:0;top:.08em}
+
+/* ================= shared axis grammar ================= */
+.axis-t{font:400 11px/1 var(--mono);fill:var(--muted-foreground);color:var(--muted-foreground);font-variant-numeric:tabular-nums}
+.gl{stroke:var(--grid);stroke-width:1;stroke-dasharray:2 4;shape-rendering:crispEdges}
+.bl{stroke:var(--base);stroke-width:1;shape-rendering:crispEdges}
+
+/* ================= BR-01 bar chart ================= */
+.bc{--h:208px;position:relative}
+.bc-plot{position:relative;height:var(--h);margin-right:46px}
+.bc-grid{position:absolute;inset:0 -46px 0 0;pointer-events:none}
+.bc-gl{position:absolute;left:0;right:46px;height:0;border-top:1px dashed var(--grid)}
+.bc-gl.base{border-top:1px solid var(--base)}
+.bc-gl span{position:absolute;left:calc(100% + 8px);top:-6px;font:400 11px/1 var(--mono);color:var(--muted-foreground);font-variant-numeric:tabular-nums;white-space:nowrap}
+.bc-cols{position:absolute;inset:0 calc(var(--gap,8px) / -2);display:flex}
+.bc-col{position:relative;flex:1;min-width:0;display:flex;align-items:flex-end;justify-content:center;gap:3px;padding:0 calc(var(--gap,8px) / 2);border:0;background:none;cursor:pointer;border-radius:12px}
+.bc-col:focus-visible{outline-offset:3px}
+.bc-bar{position:relative;display:block;height:100%;width:64%;max-width:48px;overflow:hidden;border-radius:0 0 3px 3px}
+.bc.cmp .bc-bar{width:44%;max-width:26px}
+.bc-bar i{position:absolute;inset:0;border-radius:999px 999px 3px 3px;background:var(--ink);transform:translateY(calc((1 - var(--v)) * 100%));transition:transform 460ms var(--ease) calc(var(--k) * 26ms),opacity 160ms var(--ease),background-color 160ms var(--ease)}
+.bc-bar.prev i{background:var(--ink-ghost)}
+.bc-now{position:absolute;left:50%;bottom:calc(var(--v) * 100% + 8px);width:10px;height:10px;margin-left:-5px;border-radius:50%;background:var(--primary);box-shadow:0 0 0 3px var(--card);transition:opacity 300ms var(--ease) 420ms,transform 300ms var(--ease) 420ms}
+.bc:not(.in) .bc-now{opacity:0;transform:translateY(6px)}
+.bc.cmp .bc-now{left:calc(50% + 12px)}
+.bc:not(.in) .bc-bar i{transform:translateY(100%)}
+.bc.quick .bc-bar i{transition-duration:300ms,160ms,160ms;transition-delay:calc(var(--k) * 14ms),0s,0s}
+.bc-cols:hover .bc-col:not(:hover) .bc-bar i,.bc-cols.kb .bc-col:not(.on) .bc-bar i{opacity:.42}
+.bc-x{display:flex;gap:var(--gap,8px);margin:9px 46px 0 0;font:400 11px/1 var(--mono);color:var(--muted-foreground);font-variant-numeric:tabular-nums}
+.bc-x span{flex:1;min-width:0;text-align:center;white-space:nowrap}
+.bc-x span[data-now]{color:var(--foreground);font-weight:500}
+
+/* ================= DN-02 donut ================= */
+.t-body:has(> .dn){display:grid;align-items:center}
+.dn{display:grid;grid-template-columns:minmax(150px,210px) minmax(0,1fr);gap:24px;align-items:center}
+.dn-fig{position:relative;aspect-ratio:1}
+.dn-fig svg{display:block;width:100%;height:100%;overflow:visible}
+.dn-seg{fill:none;stroke-width:30;stroke-linecap:round;transform-box:view-box;transform-origin:100px 100px;transition:transform 300ms var(--ease),opacity 200ms var(--ease)}
+.dn:not(.in) .dn-seg{opacity:0;transform:rotate(-28deg)}
+.dn.in .dn-seg{transition:transform 560ms var(--ease) calc(var(--k) * 60ms),opacity 360ms var(--ease) calc(var(--k) * 60ms)}
+.dn.ready .dn-seg{transition:transform 260ms var(--ease),opacity 200ms var(--ease)}
+.dn[data-hot] .dn-seg:not(.hot){opacity:.26}
+.dn-c{position:absolute;inset:0;display:grid;place-content:center;justify-items:center;text-align:center;pointer-events:none}
+.dn-c .k{font:500 12.5px/1.2 var(--sans);color:var(--muted-foreground);max-width:11ch}
+.dn-c .num{font-size:clamp(28px,2.6vw,36px);margin-top:4px}
+.dn-c .p{margin-top:4px;font:500 11px/1 var(--mono);color:var(--muted-foreground);min-height:11px}
+.dn-list{display:grid;gap:2px}
+.dn-row{display:grid;grid-template-columns:12px minmax(0,1fr) auto 40px;gap:10px;align-items:center;min-height:44px;padding:0 10px;border:0;border-radius:12px;background:none;text-align:left;cursor:pointer;font-size:14px;transition:background-color 160ms var(--ease)}
+.dn-row:hover,.dn-row.on{background:var(--muted)}
+.dn-row i{width:12px;height:12px;border-radius:4px;background:var(--c)}
+.dn-row .nm{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.dn-row .v{font-variant-numeric:tabular-nums;font-weight:500}
+.dn-row .pc{font:400 11.5px/1 var(--mono);color:var(--muted-foreground);text-align:right}
+
+/* ================= DL-03 dial ================= */
+.dl{display:grid;justify-items:center}
+.dl-fig{position:relative;width:min(100%,330px);border-radius:24px}
+.dl-fig svg{display:block;width:100%;height:auto;overflow:visible}
+.dl-seg{fill:var(--foreground);opacity:.14;transition:opacity 200ms var(--ease) var(--d,0ms)}
+.dl-seg.lit{opacity:1}
+.dl-ind{transform-box:view-box;transform-origin:110px 112px;transition:transform 300ms var(--ease)}
+.dl-ind path{fill:var(--primary)}
+.dl-c{position:absolute;left:0;right:0;top:44%;display:grid;justify-items:center;text-align:center;pointer-events:none}
+.dl-c .num{font-size:clamp(46px,4.6vw,64px)}
+.dl-c .k{font:500 13px/1.3 var(--sans);color:var(--muted-foreground);margin-top:6px}
+.dl-ends{display:flex;justify-content:space-between;width:min(100%,280px);margin-top:-14px;font:400 11px/1 var(--mono);color:var(--muted-foreground)}
+.dl3{display:grid;grid-template-columns:132px minmax(0,1fr);gap:18px;align-items:center;margin-top:20px;padding-top:18px;border-top:1px solid var(--border);width:100%}
+.dl3 .dl-fig{width:132px;border-radius:16px}
+.dl3-seg{opacity:.24;transition:opacity 200ms var(--ease)}
+.dl3-seg.act{opacity:1}
+.needle{transform-box:view-box;transform-origin:110px 112px;transition:transform 300ms var(--ease)}
+.needle line{stroke:var(--foreground);stroke-width:7;stroke-linecap:round}
+.needle circle{fill:var(--foreground)}
+.zones{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+.zone{display:inline-flex;align-items:center;gap:6px;height:26px;padding:0 10px 0 8px;border-radius:999px;font:500 12.5px/1 var(--sans);color:var(--muted-foreground);box-shadow:inset 0 0 0 1px var(--border);transition:background-color 200ms var(--ease),color 200ms var(--ease)}
+.zone i{width:8px;height:8px;border-radius:50%;background:var(--c)}
+.zone.act{background:var(--foreground);color:var(--card);box-shadow:none}
+.dl3 .lbl{font:500 15px/1.35 var(--sans)}
+.dl3 .sub{font-size:13px;color:var(--muted-foreground);margin-top:2px}
+
+/* ================= AR-04 area ================= */
+.ar{position:relative}
+.ar-svg{display:block;width:100%;overflow:visible;border-radius:10px;touch-action:pan-y}
+.ar-fill{fill:color-mix(in oklab,var(--foreground) 7%,transparent)}
+.ar-a{fill:none;stroke:var(--ink);stroke-width:2.25;stroke-linejoin:round;stroke-linecap:round}
+.ar-b{fill:none;stroke:var(--base);stroke-width:1.75;stroke-dasharray:5 5;stroke-linecap:round}
+.ar-rev{transform-box:fill-box;transform-origin:0 0;transform:scaleX(0);transition:transform 1100ms var(--ease)}
+.ar.in .ar-rev{transform:scaleX(1)}
+.ar-end{fill:var(--primary);stroke:var(--card);stroke-width:3}
+.xh{opacity:0;transition:opacity 140ms var(--ease)}
+.xh.on{opacity:1}
+.xh-g{transition:transform 110ms var(--ease)}
+.xh line{stroke:var(--foreground);stroke-width:1;opacity:.35}
+.xh .da{fill:var(--foreground);stroke:var(--card);stroke-width:3}
+.xh .db{fill:var(--card);stroke:var(--base);stroke-width:2}
+
+/* ================= SP-05 sparkline ================= */
+.spark{display:block;overflow:visible}
+.spark .ln{fill:none;stroke:var(--ink);stroke-width:1.75;stroke-linejoin:round;stroke-linecap:round}
+.spark .dot{fill:var(--primary);stroke:var(--card);stroke-width:2.5}
+.spark .rev{transform-box:fill-box;transform-origin:0 0;transform:scaleX(0);transition:transform 900ms var(--ease) var(--d,0ms)}
+.in .spark .rev,.spark.in .rev{transform:scaleX(1)}
+.sp-kpi{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;flex-wrap:wrap}
+.sp-table{width:100%;border-collapse:collapse;font-size:14px;font-variant-numeric:tabular-nums}
+.sp-table th{font:400 11px/1 var(--mono);color:var(--muted-foreground);text-align:left;padding:0 0 8px;font-weight:400}
+.sp-table th:last-child,.sp-table td:last-child{text-align:right}
+.sp-table td{padding:9px 0;border-top:1px solid var(--border);vertical-align:middle}
+.sp-table td:nth-child(2){width:96px;padding:0 14px}
+.sp-table .nm{font-weight:500}
+.sp-table .sub{display:block;font:400 11px/1.3 var(--mono);color:var(--muted-foreground)}
+
+/* ================= DM-06 dot matrix ================= */
+.dm{position:relative}
+.dm-grid{display:grid;grid-template-columns:34px repeat(var(--cols),minmax(0,1fr));align-items:center;border-radius:14px}
+.dm-day{font:400 11px/1 var(--mono);color:var(--muted-foreground)}
+.dm-cell{position:relative;display:grid;place-items:center;aspect-ratio:1;min-height:14px}
+.dm-cell i{display:block;width:76%;max-width:18px;aspect-ratio:1;border-radius:50%;background:var(--foreground);opacity:var(--o);transform:scale(var(--s));transition:transform 420ms var(--ease) calc(var(--c) * 16ms),opacity 300ms var(--ease) calc(var(--c) * 16ms)}
+.dm:not(.in) .dm-cell i{transform:scale(0);opacity:0}
+.dm.ready .dm-cell i{transition:transform 160ms var(--ease),opacity 160ms var(--ease)}
+.dm-cell[data-now] i{background:var(--primary)}
+.dm-cell.on::after{content:'';position:absolute;inset:-1px;border-radius:50%;box-shadow:0 0 0 2px var(--ring)}
+.dm-hours{display:grid;grid-template-columns:34px repeat(var(--cols),minmax(0,1fr));margin-top:6px;font:400 11px/1 var(--mono);color:var(--muted-foreground)}
+.dm-hours span{text-align:center;white-space:nowrap}
+.dm-key{display:flex;align-items:center;gap:6px;font-size:12.5px;color:var(--muted-foreground)}
+.dm-key i{width:12px;height:12px;border-radius:50%;background:var(--foreground);opacity:var(--o);transform:scale(var(--s))}
+
+/* ================= BU-07 bubbles ================= */
+.bu{position:relative}
+.bu-svg{display:block;width:100%;overflow:visible;border-radius:10px}
+.bub{stroke:var(--card);stroke-width:2.5;transform-box:fill-box;transform-origin:center;transition:transform 520ms var(--ease) calc(var(--k) * 50ms),opacity 200ms var(--ease)}
+.bu:not(.in) .bub{transform:scale(0)}
+.bu.ready .bub{transition:transform 200ms var(--ease),opacity 200ms var(--ease)}
+.bu[data-hot] .bub:not(.hot){opacity:.28}
+.bu[data-hot] .bu-lbl:not(.hot){opacity:.35}
+.bu-lbl{font:500 12px/1 var(--sans);fill:var(--foreground);transition:opacity 200ms var(--ease)}
+.bu-lbl .s{font:400 11px/1 var(--mono);fill:var(--muted-foreground)}
+.bu-ring{fill:none;stroke:var(--ring);stroke-width:2;opacity:0}
+.bu-ring.on{opacity:1}
+
+/* ================= LP-08 lollipop ================= */
+.lp{position:relative;display:grid}
+.lp-row{position:relative;display:grid;grid-template-columns:minmax(0,8.5rem) minmax(0,1fr) 5.2rem;gap:14px;align-items:center;min-height:46px;padding:0 6px;border-radius:12px;cursor:default;transition:transform 300ms var(--ease),background-color 160ms var(--ease)}
+.lp-row:hover,.lp-row:focus-visible{background:var(--muted)}
+.lp-row:focus-visible{outline-offset:0}
+.lp-nm{font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.lp-nm small{font:400 11px/1 var(--mono);color:var(--muted-foreground);margin-right:8px}
+.lp-tr{position:relative;height:20px}
+.lp-stem{position:absolute;left:0;right:0;top:9px;height:2px;border-radius:2px;background:var(--base);transform-origin:left;transform:scaleX(var(--v));transition:transform 560ms var(--ease) calc(var(--k) * 50ms)}
+.lp-slide{position:absolute;inset:0;transform:translateX(calc((var(--v) - 1) * 100%));transition:transform 560ms var(--ease) calc(var(--k) * 50ms);pointer-events:none}
+.lp-head{position:absolute;right:-10px;top:0;width:20px;height:20px;border-radius:50%;background:var(--ink);box-shadow:0 0 0 3px var(--card);transition:background-color 160ms var(--ease)}
+.lp-row:hover .lp-head,.lp-row:focus-visible .lp-head{background:var(--primary)}
+.lp:not(.in) .lp-stem{transform:scaleX(0)}
+.lp:not(.in) .lp-slide{transform:translateX(-100%)}
+.lp-v{text-align:right;font-weight:500;font-variant-numeric:tabular-nums;font-size:14px}
+.lp-v .u{font-weight:400}
+.lp-axis{display:grid;grid-template-columns:minmax(0,8.5rem) minmax(0,1fr) 5.2rem;gap:14px;padding:6px 6px 0;font:400 11px/1 var(--mono);color:var(--muted-foreground)}
+.lp-axis div{display:flex;justify-content:space-between}
+
+/* ================= CS-09 card stack ================= */
+.cs{display:grid;justify-items:center;gap:18px;outline:none}
+#t-cards{overflow:clip}
+.cs-deck{position:relative;width:min(100%,var(--cw,330px));aspect-ratio:1.586;margin:20px 34px 0 0;touch-action:pan-y;border-radius:20px}
+.cs:focus-visible .cs-deck{outline:2px solid var(--ring);outline-offset:6px}
+.card{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:space-between;padding:18px 20px;border-radius:18px;user-select:none;-webkit-user-select:none;transform-origin:22% 120%;
+  transform:translate(calc(var(--o) * 16px),calc(var(--o) * -9px)) rotate(calc(var(--o) * 5.5deg)) scale(calc(1 - var(--o) * .035));
+  transition:transform 320ms var(--ease),opacity 200ms var(--ease);
+  box-shadow:0 1px 1px rgba(0,0,0,.08),0 14px 28px -14px rgba(0,0,0,.45);overflow:hidden;cursor:grab}
+.card.drag{transition:none;cursor:grabbing}
+.card.fly{transition:transform 220ms var(--ease)}
+.card-a{background:var(--foreground);color:var(--card)}
+.card-b{background:var(--chart-1);color:var(--on-dark)}
+.card-c{background:var(--chart-3);color:var(--on-dark)}
+.card-d{background:var(--chart-2);color:var(--on-light)}
+.card-top,.card-bot{position:relative;display:flex;align-items:center;justify-content:space-between;gap:8px}
+.card-name{font:600 15px/1.2 var(--sans);letter-spacing:-.01em}
+.card-kind{font:500 12px/1 var(--sans);opacity:.78}
+.card-num{font:500 14px/1 var(--mono);letter-spacing:.06em}
+.card svg{display:block}
+.card .chip-g{width:38px;height:28px}
+.card .cl-g{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;opacity:.9}
+.card .arc{position:absolute;right:-60px;bottom:-90px;width:240px;height:240px;border-radius:50%;box-shadow:inset 0 0 0 1px currentColor,0 0 0 26px transparent;opacity:.13;pointer-events:none}
+.card .arc::after{content:'';position:absolute;inset:28px;border-radius:50%;box-shadow:inset 0 0 0 1px currentColor}
+.cs-read{display:grid;justify-items:center;text-align:center;gap:4px}
+.cs-read .k{font:500 13.5px/1.3 var(--sans);color:var(--muted-foreground)}
+.cs-ctrl{display:flex;align-items:center;gap:14px}
+.cs-dots{display:flex;gap:6px}
+.cs-dots i{width:7px;height:7px;border-radius:50%;background:var(--foreground);opacity:.22;transition:opacity 200ms var(--ease),transform 200ms var(--ease)}
+.cs-dots i.on{opacity:1;transform:scale(1.15)}
+
+/* ================= TX-10 transactions ================= */
+.tx-day{display:flex;justify-content:space-between;align-items:baseline;padding:16px 8px 6px;font:500 13px/1.2 var(--sans);color:var(--muted-foreground)}
+.tx-day:first-child{padding-top:2px}
+.tx-day span:last-child{font:400 11.5px/1 var(--mono);font-variant-numeric:tabular-nums}
+.tx-row{display:grid;grid-template-columns:44px minmax(0,1fr) auto;gap:14px;align-items:center;width:100%;min-height:62px;padding:8px;border:0;border-radius:16px;background:none;text-align:left;cursor:pointer;transition:transform 160ms var(--ease),background-color 160ms var(--ease),opacity 220ms var(--ease)}
+.tx-row:hover{background:var(--muted)}
+.tx-row:active{transform:scale(.98)}
+.tx-row.enter{opacity:0;transform:translateY(6px)}
+.tx-g{display:grid;place-items:center;width:44px;height:44px;border-radius:14px;background:color-mix(in oklab,var(--c) 18%,var(--card));color:var(--foreground);font:700 14px/1 var(--display);font-stretch:90%;letter-spacing:-.01em}
+.tx-g svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:1.75;stroke-linecap:round;stroke-linejoin:round}
+.tx-main{min-width:0}
+.tx-nm{display:block;font:500 15px/1.25 var(--sans);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tx-meta{display:flex;align-items:center;gap:8px;margin-top:3px;font-size:13px;color:var(--muted-foreground);white-space:nowrap;overflow:hidden}
+.tx-meta .chip{height:22px;font-size:11.5px;padding:0 8px}
+.tx-amt{text-align:right;font:600 15.5px/1.2 var(--sans);font-variant-numeric:tabular-nums;letter-spacing:-.01em;white-space:nowrap}
+.tx-amt.in{color:color-mix(in oklab,var(--success) 85%,var(--foreground))}
+.tx-amt.fail{color:var(--muted-foreground);font-weight:500}
+.tx-amt.fail>span{text-decoration:line-through;text-decoration-thickness:1.5px}
+.tx-amt small{display:block;font:400 11px/1.3 var(--mono);color:var(--muted-foreground);text-decoration:none;margin-top:2px}
+
+/* ================= WS-11 week schedule ================= */
+.ws{--rh:46px;position:relative}
+.ws-head,.ws-body{display:grid;grid-template-columns:46px repeat(7,minmax(0,1fr));gap:0 6px}
+.ws-head div{display:grid;justify-items:center;gap:3px;padding-bottom:10px;font:500 12.5px/1 var(--sans);color:var(--muted-foreground)}
+.ws-head b{font:800 22px/1 var(--display);font-stretch:88%;letter-spacing:-.03em;color:var(--foreground);font-variant-numeric:tabular-nums}
+.ws-head div[data-today]{color:var(--foreground)}
+.ws-head div[data-today] b{display:grid;place-items:center;width:38px;height:38px;border-radius:50%;background:var(--foreground);color:var(--card)}
+.ws-gut{position:relative}
+.ws-gut span{position:absolute;right:8px;transform:translateY(-50%);font:400 11px/1 var(--mono);color:var(--muted-foreground);font-variant-numeric:tabular-nums}
+.ws-col{position:relative;border-radius:14px;background:
+  repeating-linear-gradient(to bottom,var(--grid) 0 1px,transparent 1px var(--rh)),var(--well)}
+.ws-col[data-today]{background:repeating-linear-gradient(to bottom,var(--grid) 0 1px,transparent 1px var(--rh)),color-mix(in oklab,var(--foreground) 8%,var(--card))}
+.ev{position:absolute;display:flex;flex-direction:column;gap:2px;padding:7px 8px;border:0;border-radius:11px;background:color-mix(in oklab,var(--c) 24%,var(--card));color:var(--foreground);text-align:left;overflow:hidden;cursor:pointer;box-shadow:0 0 0 2px var(--well);
+  transform-origin:top;transition:transform 380ms var(--ease) calc(var(--k) * 30ms),opacity 300ms var(--ease) calc(var(--k) * 30ms)}
+.ev::before{content:'';position:absolute;left:6px;top:8px;bottom:8px;width:3px;border-radius:2px;background:var(--c)}
+.ev>*{padding-left:7px}
+.ws:not(.in) .ev{opacity:0;transform:scaleY(.6)}
+.ws.ready .ev{transition:transform 160ms var(--ease)}
+.ev:active{transform:scale(.98)}
+.ev b{font:600 12.5px/1.2 var(--sans);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ev span{font:400 10.5px/1.2 var(--mono);color:color-mix(in oklab,var(--foreground) 70%,var(--card));white-space:nowrap}
+.ev.short span{display:none}
+.ev.tiny{padding:2px 8px;justify-content:center}
+.ev.tiny::before{top:4px;bottom:4px}
+.ev.tiny b{font-size:11.5px;line-height:1.1}
+.now{position:absolute;left:0;right:0;height:0;pointer-events:none;z-index:3}
+.now::before{content:'';position:absolute;left:-1px;right:0;top:-1px;height:2px;border-radius:2px;background:var(--primary)}
+.now::after{content:'';position:absolute;left:-5px;top:-5px;width:10px;height:10px;border-radius:50%;background:var(--primary);box-shadow:0 0 0 2px var(--card)}
+.ws-gut .now-t{position:absolute;right:2px;transform:translateY(-50%);z-index:3;padding:3px 6px;border-radius:999px;background:var(--primary);color:var(--primary-foreground);font:500 10.5px/1 var(--mono);font-variant-numeric:tabular-nums}
+.ws-key{display:flex;flex-wrap:wrap;gap:6px 16px;margin-top:14px;font-size:13px;color:var(--muted-foreground)}
+.ws-key span{display:inline-flex;align-items:center;gap:7px}
+.ws-key i{width:10px;height:10px;border-radius:3px;background:var(--c)}
+
+/* ================= states ================= */
+.empty-plot{position:relative;height:188px;margin-right:46px}
+.empty-msg{position:absolute;inset:0;display:grid;place-content:center;justify-items:center;gap:6px;text-align:center;padding:0 16px}
+.empty-msg b{font:600 16px/1.3 var(--sans)}
+.empty-msg span{font-size:13.5px;color:var(--muted-foreground);max-width:34ch;text-wrap:pretty}
+.empty-msg .btn{margin-top:10px}
+.sk{display:block;border-radius:10px;background:var(--muted)}
+.sk-pulse{animation:pulse 1.4s var(--ease) infinite alternate}
+@keyframes pulse{from{opacity:1}to{opacity:.45}}
+.sk-bars{display:flex;align-items:flex-end;gap:8px;height:188px;margin-right:46px;border-bottom:1px solid var(--grid)}
+.sk-bars span{flex:1;display:flex;justify-content:center;height:100%;align-items:flex-end}
+.sk-bars i{display:block;width:64%;max-width:48px;border-radius:999px 999px 3px 3px;background:var(--muted)}
+
+/* ================= composed: wallet overview ================= */
+.frame{border-radius:36px;background:color-mix(in oklab,var(--foreground) 4%,var(--background));padding:clamp(12px,1.6vw,20px);box-shadow:inset 0 0 0 1px var(--border)}
+.app-bar{display:flex;align-items:center;gap:12px 18px;flex-wrap:wrap;padding:10px 10px 22px}
+.app-bar h3{font:800 clamp(32px,3.4vw,46px)/1 var(--display);font-stretch:86%;letter-spacing:-.04em}
+.app-bar .when{font-size:14px;color:var(--muted-foreground)}
+.app-bar .sp{margin-left:auto;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.avatar{display:grid;place-items:center;width:44px;height:44px;border-radius:50%;background:var(--accent);color:var(--accent-foreground);font:600 13px/1 var(--sans)}
+.frame .tile{padding-bottom:22px}
+.mini-h{display:flex;align-items:center;justify-content:space-between;gap:12px;min-height:36px}
+.mini-h h4{margin:0;font:500 15px/1.2 var(--sans);letter-spacing:-.01em}
+.mini-h a{font-size:13.5px;color:var(--muted-foreground);text-decoration:none;min-height:44px;display:inline-flex;align-items:center;border-radius:8px}
+.mini-h a:hover{color:var(--foreground)}
+.bal-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:auto;padding-top:22px}
+.stack-col{display:grid;gap:12px;align-content:start}
+.foot{padding:56px 0 64px;color:var(--muted-foreground);font-size:13.5px}
+.foot p{max-width:70ch}
+
+/* ================= responsive ================= */
+@media (max-width:1100px){
+  .s3,.s4,.s5,.s6{grid-column:span 6}
+  .s7,.s8,.s12,.md12{grid-column:span 12}
+  .intro{grid-template-columns:1fr}
+  .dn{grid-template-columns:minmax(140px,180px) minmax(0,1fr)}
+}
+@media (max-width:760px){
+  .s3,.s4,.s5,.s6,.s7,.s8,.s12{grid-column:span 12}
+  .tile{padding:16px 18px 0;border-radius:22px}
+  .top-meta{display:none}
+  .ctl>span{display:none}
+  .controls{gap:4px}
+  .bc{--h:170px}
+  .bc-cols,.bc-x{--gap:5px}
+  .dn{grid-template-columns:1fr;justify-items:center}
+  .dn-fig{width:200px}
+  .dn-list{width:100%}
+  .lp-row,.lp-axis{grid-template-columns:minmax(0,8.4rem) minmax(0,1fr) 4.4rem;gap:10px}
+  .lp-nm,.lp-v{font-size:13.5px}
+  .ws{--rh:46px}
+  .ws-scroll{overflow-x:auto;overscroll-behavior-x:contain;margin:0 -18px;padding:0 18px 6px;scroll-padding:0 18px}
+  .ws-in{min-width:780px}
+  .ws-gut,.ws-head>div:first-child{position:sticky;left:0;z-index:4;background:var(--card)}
+  .frame{border-radius:28px}
+  .top-in{gap:10px}
+  .swatch{width:36px}
+}
+@media (max-width:560px){
+  .dm-grid,.dm-hours{grid-template-columns:28px repeat(var(--cols),minmax(0,1fr))}
+  .app-bar .sp{margin-left:0}
+  .dl3{grid-template-columns:104px minmax(0,1fr)}
+  .dl3 .dl-fig{width:104px}
+}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{transition:none!important;animation:none!important}
+}
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to the tiles</a>
+<div id="live" class="sr-only" aria-live="polite"></div>
+
+<header class="top">
+  <div class="wrap top-in">
+    <a class="mark" href="#main"><span class="mark-glyph" aria-hidden="true"></span>manniche ui</a>
+    <p class="top-meta">phase 5 · data primitives · direction 3, tiles</p>
+    <span class="demo-badge">Demo data</span>
+    <div class="controls">
+      <div class="ctl"><span id="lbl-dark">dark</span>
+        <button class="switch" type="button" role="switch" aria-checked="false" aria-labelledby="lbl-dark" id="theme"><span class="switch-track"><span class="switch-knob"></span></span></button>
+      </div>
+      <div class="ctl"><span id="lbl-signal">signal</span>
+        <div class="swatches" role="radiogroup" aria-labelledby="lbl-signal">
+          <button class="swatch" type="button" role="radio" aria-checked="true" aria-label="Blue" data-signal-radio="blue" style="--c:oklch(0.52 0.2 262)"><i></i></button>
+          <button class="swatch" type="button" role="radio" aria-checked="false" aria-label="Orange" data-signal-radio="orange" style="--c:oklch(0.62 0.17 45)"><i></i></button>
+          <button class="swatch" type="button" role="radio" aria-checked="false" aria-label="Green" data-signal-radio="green" style="--c:oklch(0.55 0.13 155)"><i></i></button>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<main id="main">
+  <section class="wrap intro" aria-labelledby="h1">
+    <h1 id="h1">One fact per tile.</h1>
+    <div class="intro-copy">
+      <p>Phase 5 adds the chart and card primitives that Manniche UI dashboards are built from. Each tile states one thing in a big number, and the chart under it is the shape that backs it up. Press, drag or use the arrow keys on any of them. Every value on this page is demo data.</p>
+      <dl class="plate">
+        <dt>series</dt><dd><span class="sw-row" aria-hidden="true"><i style="--c:var(--ink,var(--foreground))"></i></span>ink for one series, five tints for categories <span class="sw-row" aria-hidden="true"><i style="--c:var(--chart-1)"></i><i style="--c:var(--chart-2)"></i><i style="--c:var(--chart-3)"></i><i style="--c:var(--chart-4)"></i><i style="--c:var(--chart-5)"></i></span></dd>
+        <dt>signal</dt><dd>primary marks now, today and the selected value, never a fill</dd>
+        <dt>motion</dt><dd>bars rise, digits roll, the pill slides, tiles press to <code>0.98</code></dd>
+        <dt>animates</dt><dd><code>transform</code>, <code>opacity</code>, <code>filter</code> · <code>cubic-bezier(0.23, 1, 0.32, 1)</code></dd>
+        <dt>reduced motion</dt><dd>final state, nothing enters</dd>
+      </dl>
+    </div>
+  </section>
+
+  <!-- ============ group 1: amounts ============ -->
+  <section class="wrap group" aria-labelledby="g1">
+    <div class="g-head"><h2 id="g1">Amounts</h2><p>How much, and how it compares.</p><span class="pn">01–04</span></div>
+    <div class="bento">
+
+      <article class="tile s7" id="t-bar" aria-labelledby="n-bar">
+        <div class="t-head"><span class="pn">BR-01</span><h3 class="t-name" id="n-bar">bar-chart</h3>
+          <div class="t-ctl"><button class="toggle press" type="button" aria-pressed="false" id="bar-cmp"><i aria-hidden="true"></i>Compare</button><div class="pills" data-pills="bar-period"></div></div>
+        </div>
+        <div class="fact">
+          <span class="fact-k" id="bar-k">Spent in the last 7 days</span>
+          <div class="fact-row"><span class="num" id="bar-num"></span><span class="chip" id="bar-delta"></span></div>
+        </div>
+        <div class="t-body"><div class="bc" id="bar"></div><div class="legend" id="bar-legend" hidden style="margin-top:12px"><span><i style="--c:var(--ink)"></i>This period</span><span><i style="--c:var(--ink-ghost)"></i>Period before</span><span><i style="--c:var(--primary);width:10px;border-radius:50%"></i>Today</span></div></div>
+        <div class="t-foot"><p class="desc">Chunky bars with round caps rise from the baseline. Hover, tap or step with the arrow keys; Compare adds the period before.</p><p class="spec"><b>props</b> data · compare · period · current</p></div>
+      </article>
+
+      <article class="tile s5" id="t-donut" aria-labelledby="n-donut">
+        <div class="t-head"><span class="pn">DN-02</span><h3 class="t-name" id="n-donut">donut</h3></div>
+        <div class="fact"><span class="fact-k">Where the money went, last 30 days</span></div>
+        <div class="t-body"><div class="dn" id="donut"></div></div>
+        <div class="t-foot"><p class="desc">A thick ring with gaps between segments. Point at a slice or a row and it steps out while the centre reads its value.</p><p class="spec"><b>props</b> data · total · format</p></div>
+      </article>
+
+      <article class="tile inv s4" id="t-dial" aria-labelledby="n-dial">
+        <div class="t-head"><span class="pn">DL-03</span><h3 class="t-name" id="n-dial">dial</h3></div>
+        <div class="t-body" style="margin-top:8px"><div class="dl" id="dial"></div></div>
+        <div class="t-foot"><p class="desc">A fat arc of segments. Focus it and use the arrow keys; the marker glides and segments light in order.</p><p class="spec"><b>props</b> value · max · segments · zones</p></div>
+      </article>
+
+      <article class="tile s8" id="t-area" aria-labelledby="n-area">
+        <div class="t-head"><span class="pn">AR-04</span><h3 class="t-name" id="n-area">area-chart</h3>
+          <div class="t-ctl legend"><span><i class="line" style="--c:var(--ink)"></i>Last 30 days</span><span><i class="dashed" style="--c:var(--base)"></i>30 days before</span></div>
+        </div>
+        <div class="fact">
+          <span class="fact-k">Everyday account balance</span>
+          <div class="fact-row"><span class="num" id="area-num"></span><span class="chip good" id="area-delta"></span></div>
+        </div>
+        <div class="t-body"><div class="ar" id="area"></div></div>
+        <div class="t-foot"><p class="desc">A smooth line over a flat tint. The crosshair follows the pointer, a finger or the arrow keys, and reads both series.</p><p class="spec"><b>props</b> series · compare · curve = "monotone"</p></div>
+      </article>
+    </div>
+  </section>
+
+  <!-- ============ group 2: patterns ============ -->
+  <section class="wrap group" aria-labelledby="g2">
+    <div class="g-head"><h2 id="g2">Patterns</h2><p>Trends, rhythms and rankings.</p><span class="pn">05–08</span></div>
+    <div class="bento">
+
+      <article class="tile s4" id="t-spark" aria-labelledby="n-spark">
+        <div class="t-head"><span class="pn">SP-05</span><h3 class="t-name" id="n-spark">sparkline</h3></div>
+        <div class="fact">
+          <span class="fact-k">Savings pot</span>
+          <div class="sp-kpi"><span class="num md" id="spark-num"></span><span id="spark-kpi"></span></div>
+        </div>
+        <div class="t-body"><table class="sp-table" id="spark-table"><caption class="sr-only">Accounts with a 30-day trend</caption><thead><tr><th scope="col">Account</th><th scope="col">30 days</th><th scope="col">Balance</th></tr></thead><tbody></tbody></table></div>
+        <div class="t-foot"><p class="desc">A tiny trend with the last point marked. It sits beside a number or inside a table cell.</p><p class="spec"><b>props</b> data · width · height</p></div>
+      </article>
+
+      <article class="tile inv s8" id="t-dots" aria-labelledby="n-dots">
+        <div class="t-head"><span class="pn">DM-06</span><h3 class="t-name" id="n-dots">dot-matrix</h3>
+          <div class="t-ctl dm-key" aria-hidden="true">Fewer <i style="--s:.3;--o:.4"></i><i style="--s:.5;--o:.6"></i><i style="--s:.7;--o:.8"></i><i style="--s:.85;--o:.92"></i><i style="--s:1;--o:1"></i> More</div>
+        </div>
+        <div class="fact">
+          <span class="fact-k">Busiest hour for card payments</span>
+          <div class="fact-row"><span class="num" id="dots-num"></span><span class="chip" id="dots-chip"></span></div>
+        </div>
+        <div class="t-body"><div class="dm" id="dots"></div></div>
+        <div class="t-foot"><p class="desc">Dots grow with intensity, so the pattern reads without colour. Arrow keys walk the grid; the signal dot is now.</p><p class="spec"><b>props</b> rows · columns · levels · now</p></div>
+      </article>
+
+      <article class="tile s7" id="t-bub" aria-labelledby="n-bub">
+        <div class="t-head"><span class="pn">BU-07</span><h3 class="t-name" id="n-bub">bubble-chart</h3>
+          <div class="t-ctl legend" aria-hidden="true"><span><i style="--c:var(--chart-1)"></i>Groceries</span><span><i style="--c:var(--chart-2)"></i>Transport</span><span><i style="--c:var(--chart-3)"></i>Eating out</span><span><i style="--c:var(--chart-4)"></i>Shopping</span><span><i style="--c:var(--chart-5)"></i>Bills</span></div>
+        </div>
+        <div class="fact"><span class="fact-k">How often you go, what you spend each time</span></div>
+        <div class="t-body"><div class="bu" id="bub"></div></div>
+        <div class="t-foot"><p class="desc">Position by visits and average spend, size by the month's total. Labels sit beside each bubble.</p><p class="spec"><b>props</b> data · x · y · size · label</p></div>
+      </article>
+
+      <article class="tile s5" id="t-lol" aria-labelledby="n-lol">
+        <div class="t-head"><span class="pn">LP-08</span><h3 class="t-name" id="n-lol">lollipop</h3><div class="t-ctl"><div class="pills" data-pills="lol-sort"></div></div></div>
+        <div class="fact"><span class="fact-k">Top merchants, last 30 days</span></div>
+        <div class="t-body"><div class="lp" id="lol"></div></div>
+        <div class="t-foot"><p class="desc">A ranked list with stems and big heads. Sorting slides each row to its new place.</p><p class="spec"><b>props</b> data · sort · format</p></div>
+      </article>
+    </div>
+  </section>
+
+  <!-- ============ group 3: money ============ -->
+  <section class="wrap group" aria-labelledby="g3">
+    <div class="g-head"><h2 id="g3">Money and time</h2><p>Cards, payments and a week.</p><span class="pn">09–11</span></div>
+    <div class="bento">
+
+      <article class="tile inv s5 md12" id="t-cards" aria-labelledby="n-cards">
+        <div class="t-head"><span class="pn">CS-09</span><h3 class="t-name" id="n-cards">card-stack</h3></div>
+        <div class="t-body" style="margin-top:6px"><div id="cards"></div></div>
+        <div class="t-foot"><p class="desc">A fan you flick. Drag the front card away, tap it, or use the arrow keys; the next one comes forward.</p><p class="spec"><b>props</b> cards · index · onChange</p></div>
+      </article>
+
+      <article class="tile s7" id="t-tx" aria-labelledby="n-tx">
+        <div class="t-head"><span class="pn">TX-10</span><h3 class="t-name" id="n-tx">transaction-list</h3><div class="t-ctl"><div class="pills" data-pills="tx-filter"></div></div></div>
+        <div class="t-body" style="margin-top:12px"><div id="tx"></div></div>
+        <div class="t-foot"><p class="desc">Rows grouped by day, with a glyph, a signed amount and chips for pending and failed payments.</p><p class="spec"><b>props</b> items · groupBy = "day" · filter</p></div>
+      </article>
+
+      <article class="tile s12" id="t-ws" aria-labelledby="n-ws">
+        <div class="t-head"><span class="pn">WS-11</span><h3 class="t-name" id="n-ws">week-schedule</h3></div>
+        <div class="fact">
+          <span class="fact-k">Booked this week</span>
+          <div class="fact-row"><span class="num" id="ws-num"></span><span class="chip" id="ws-chip"></span></div>
+        </div>
+        <div class="t-body"><div class="ws" id="ws"></div></div>
+        <div class="t-foot"><p class="desc">Seven days by the hour. Events that overlap sit side by side, and the signal line is now.</p><p class="spec"><b>props</b> days · events · start · end · now</p></div>
+      </article>
+    </div>
+  </section>
+
+  <!-- ============ states ============ -->
+  <section class="wrap group" aria-labelledby="g4">
+    <div class="g-head"><h2 id="g4">Empty and loading</h2><p>The same frame, before there is data.</p><span class="pn">states</span></div>
+    <div class="bento">
+      <article class="tile s6" aria-labelledby="n-empty">
+        <div class="t-head"><span class="pn">BR-01</span><h3 class="t-name" id="n-empty">bar-chart, empty</h3></div>
+        <div class="fact"><span class="fact-k">Spent in the last 7 days</span><div class="fact-row"><span class="num" style="color:var(--muted-foreground)"><span class="u">€</span>0<span class="dec">.00</span></span></div></div>
+        <div class="t-body">
+          <div class="empty-plot" role="img" aria-label="No spending in the last 7 days">
+            <div class="bc-grid" style="inset:0 -46px 0 0" aria-hidden="true"><div class="bc-gl" style="bottom:100%"></div><div class="bc-gl" style="bottom:50%"></div><div class="bc-gl base" style="bottom:0"></div></div>
+            <div class="empty-msg"><b>No spending yet</b><span>Payments show up here as soon as one of your cards is used.</span><a class="btn solid press" href="#t-cards">Add a card</a></div>
+          </div>
+          <div class="bc-x" aria-hidden="true"><span>Fri</span><span>Sat</span><span>Sun</span><span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span></div>
+        </div>
+        <div class="t-foot"><p class="desc">Axes and gridlines stay, so the tile keeps its shape. The message says what fills it and offers the next step.</p></div>
+      </article>
+      <article class="tile s6" aria-labelledby="n-load" aria-busy="true">
+        <div class="t-head"><span class="pn">BR-01</span><h3 class="t-name" id="n-load">bar-chart, loading</h3></div>
+        <div class="fact"><span class="fact-k">Spent in the last 7 days</span><div class="fact-row"><span class="sk sk-pulse" style="width:210px;height:60px;border-radius:16px"></span><span class="sk sk-pulse" style="width:70px;height:26px;border-radius:999px"></span></div></div>
+        <div class="t-body">
+          <span class="sr-only">Loading spending for the last 7 days</span>
+          <div class="sk-bars sk-pulse" aria-hidden="true"><span><i style="height:46%"></i></span><span><i style="height:78%"></i></span><span><i style="height:58%"></i></span><span><i style="height:30%"></i></span><span><i style="height:50%"></i></span><span><i style="height:24%"></i></span><span><i style="height:66%"></i></span></div>
+          <div class="bc-x" aria-hidden="true"><span><i class="sk" style="display:inline-block;width:24px;height:9px"></i></span><span><i class="sk" style="display:inline-block;width:24px;height:9px"></i></span><span><i class="sk" style="display:inline-block;width:24px;height:9px"></i></span><span><i class="sk" style="display:inline-block;width:24px;height:9px"></i></span><span><i class="sk" style="display:inline-block;width:24px;height:9px"></i></span><span><i class="sk" style="display:inline-block;width:24px;height:9px"></i></span><span><i class="sk" style="display:inline-block;width:24px;height:9px"></i></span></div>
+        </div>
+        <div class="t-foot"><p class="desc">Skeleton bars in the real layout breathe with opacity only. Under reduced motion they hold still.</p></div>
+      </article>
+    </div>
+  </section>
+
+  <!-- ============ composed screen ============ -->
+  <section class="wrap group" aria-labelledby="g5">
+    <div class="g-head"><h2 id="g5">Wallet overview</h2><p>One screen built only from the primitives above.</p><span class="pn">composed</span></div>
+    <div class="frame" id="wallet">
+      <div class="app-bar">
+        <h3>Wallet</h3><span class="when">Thursday 8 October</span>
+        <div class="sp"><span class="demo-badge" style="display:inline-flex">Demo data</span><div class="pills" data-pills="w-period"></div><span class="avatar" aria-label="Signed in as Alex K.">AK</span></div>
+      </div>
+      <div class="bento">
+        <article class="tile inv s5" aria-labelledby="w-bal-h">
+          <div class="mini-h"><h4 id="w-bal-h">Total balance</h4><a href="#w-cards">4 cards</a></div>
+          <div class="fact" style="margin-top:6px"><div class="fact-row"><span class="num" id="w-bal"></span></div><div class="fact-row"><span class="chip good" id="w-bal-d"></span><span class="fact-k" style="font-size:13px">in the last 30 days</span></div></div>
+          <div id="w-bal-spark" style="margin-top:18px"></div>
+          <div class="bal-actions"><button class="btn signal press" type="button">Add money</button><button class="btn press" type="button">Move between cards</button></div>
+        </article>
+        <article class="tile s4" id="w-cards" aria-labelledby="w-cards-h">
+          <div class="mini-h"><h4 id="w-cards-h">Cards</h4></div>
+          <div id="w-stack"></div>
+        </article>
+        <article class="tile s3" aria-labelledby="w-bud-h">
+          <div class="mini-h"><h4 id="w-bud-h">Monthly budget</h4></div>
+          <div id="w-dial" style="margin-top:4px"></div>
+        </article>
+
+        <article class="tile s8" aria-labelledby="w-sp-h">
+          <div class="mini-h"><h4 id="w-sp-h">Spending</h4><span class="chip" id="w-sp-d"></span></div>
+          <div class="fact" style="margin-top:4px"><span class="num" id="w-sp"></span></div>
+          <div class="t-body"><div class="bc" id="w-bars" style="--h:184px"></div></div>
+        </article>
+        <article class="tile s4" aria-labelledby="w-cat-h">
+          <div class="mini-h"><h4 id="w-cat-h">Categories</h4></div>
+          <div class="t-body" style="margin-top:12px"><div class="dn" id="w-donut" style="grid-template-columns:1fr;justify-items:center"></div></div>
+        </article>
+
+        <article class="tile s7" aria-labelledby="w-tx-h">
+          <div class="mini-h"><h4 id="w-tx-h">Recent payments</h4><a href="#t-tx">See all</a></div>
+          <div class="t-body" style="margin-top:8px"><div id="w-tx"></div></div>
+        </article>
+        <div class="s5 stack-col">
+          <article class="tile" aria-labelledby="w-top-h">
+            <div class="mini-h"><h4 id="w-top-h">Top merchants</h4></div>
+            <div class="t-body" style="margin-top:8px"><div class="lp" id="w-lol"></div></div>
+          </article>
+          <article class="tile" aria-labelledby="w-when-h">
+            <div class="mini-h"><h4 id="w-when-h">When you pay</h4><span class="chip mute" id="w-when-c"></span></div>
+            <div class="t-body" style="margin-top:10px"><div class="dm" id="w-dots"></div></div>
+          </article>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer class="wrap foot">
+    <p>Demo data: every merchant, card, amount and booking on this page is invented for the showcase. No chart library; scales, paths and layout are small functions in the page, ready to port to React 19 and Tailwind 4.</p>
+  </footer>
+</main>
+
+<script>
+(() => {
+'use strict'
+const RM = matchMedia('(prefers-reduced-motion: reduce)').matches
+const NS = 'http://www.w3.org/2000/svg'
+const TS = ' '
+const MINUS = '−'
+const $ = (s, r = document) => r.querySelector(s)
+const $$ = (s, r = document) => [...r.querySelectorAll(s)]
+const live = $('#live')
+const say = (t) => { live.textContent = ''; requestAnimationFrame(() => { live.textContent = t }) }
+let uid = 0
+const nid = (p) => `${p}-${++uid}`
+
+function el(tag, attrs = {}, parent) {
+  const n = document.createElement(tag)
+  for (const [k, v] of Object.entries(attrs)) {
+    if (k === 'text') n.textContent = v
+    else if (k === 'html') n.innerHTML = v
+    else if (k === 'style') n.style.cssText = v
+    else n.setAttribute(k, v)
+  }
+  if (parent) parent.append(n)
+  return n
+}
+function sv(tag, attrs = {}, parent) {
+  const n = document.createElementNS(NS, tag)
+  for (const [k, v] of Object.entries(attrs)) {
+    if (k === 'text') n.textContent = v
+    else n.setAttribute(k, v)
+  }
+  if (parent) parent.append(n)
+  return n
+}
+const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]))
+
+/* ---------- number formatting: thin-space groups, € and decimals muted ---------- */
+function parts(v, d = 2) {
+  const s = Math.abs(v).toFixed(d)
+  const [i, f] = s.split('.')
+  return { i: i.replace(/\B(?=(\d{3})+(?!\d))/g, TS), f: f ? '.' + f : '' }
+}
+const eur = (v, d = 2, sign = false) => { const p = parts(v, d); return `${v < 0 ? MINUS : sign && v > 0 ? '+' : ''}€${p.i}${p.f}` }
+const eurHTML = (v, d = 2, sign = false) => { const p = parts(v, d); return `${v < 0 ? MINUS : sign && v > 0 ? '+' : ''}<span class="u">€</span>${p.i}${p.f}` }
+const pct = (v, d = 0) => `${v < 0 ? MINUS : ''}${Math.abs(v).toFixed(d)}%`
+function niceStep(max, n = 3) {
+  const raw = max / n, mag = 10 ** Math.floor(Math.log10(raw)), r = raw / mag
+  return (r <= 1 ? 1 : r <= 2 ? 2 : r <= 2.5 ? 2.5 : r <= 5 ? 5 : 10) * mag
+}
+const shortEur = (v) => v >= 1000 ? `€${(v / 1000).toFixed(v % 1000 ? 1 : 0)}k` : `€${Math.round(v)}`
+
+/* ---------- seeded random for demo data ---------- */
+function rng(seed) { return () => { seed |= 0; seed = seed + 0x6D2B79F5 | 0; let t = Math.imul(seed ^ seed >>> 15, 1 | seed); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296 } }
+function scaleTo(arr, total) {
+  const s = arr.reduce((a, b) => a + b, 0)
+  const out = arr.map((v) => Math.round(v / s * total * 100) / 100)
+  const diff = Math.round((total - out.reduce((a, b) => a + b, 0)) * 100) / 100
+  out[out.length - 1] = Math.round((out[out.length - 1] + diff) * 100) / 100
+  return out
+}
+const sum = (a) => Math.round(a.reduce((x, y) => x + y, 0) * 100) / 100
+
+/* ---------- entrance: tiles enter once when they reach the viewport ---------- */
+const io = 'IntersectionObserver' in window ? new IntersectionObserver((es) => {
+  for (const e of es) if (e.isIntersecting) { io.unobserve(e.target); e.target._enter && e.target._enter() }
+}, { rootMargin: '0px 0px -8% 0px' }) : null
+function onEnter(node, fn) {
+  if (RM || !io) { fn(); return }
+  const prev = node._enter
+  node._enter = prev ? () => { prev(); fn() } : fn
+  io.observe(node)
+}
+
+/* ================= Roll: digits that roll up or down (port of rolling-number) ================= */
+function Roll(host) {
+  host.classList.add('roll')
+  host.setAttribute('aria-hidden', 'true')
+  let slots = [], last = null
+  return {
+    set(text, value, stagger = false) {
+      const dir = last == null || value == null ? 1 : value >= last ? 1 : -1
+      last = value
+      const chars = [...text]
+      const next = []
+      for (let p = 1; p <= chars.length; p++) {
+        const ch = chars[chars.length - p]
+        let slot = slots[slots.length - p]
+        if (!slot) { slot = el('span', { class: 'rs' }); slot._ch = null }
+        next.unshift(slot)
+        if (slot._ch !== ch) swap(slot, ch, dir, stagger ? (chars.length - p) * 26 : 0)
+      }
+      for (let p = chars.length + 1; p <= slots.length; p++) slots[slots.length - p].remove()
+      host.replaceChildren(...next)
+      slots = next
+    },
+  }
+  function swap(slot, ch, dir, delay) {
+    slot._ch = ch
+    const old = [...slot.children].filter((c) => !c.classList.contains('out'))
+    const n = el('span', { class: 'rc', text: ch })
+    if (RM) { slot.replaceChildren(n); return }
+    for (const o of old) {
+      o.classList.add('out')
+      o.style.transform = `translateY(${-dir * 70}%)`; o.style.opacity = '0'; o.style.filter = 'blur(2px)'
+      setTimeout(() => o.remove(), 320)
+    }
+    n.style.transform = `translateY(${dir * 70}%)`; n.style.opacity = '0'; n.style.filter = 'blur(2px)'
+    if (delay) n.style.transitionDelay = delay + 'ms'
+    slot.append(n)
+    requestAnimationFrame(() => requestAnimationFrame(() => { n.style.transform = ''; n.style.opacity = ''; n.style.filter = '' }))
+  }
+}
+/* A money figure: sr-only full text, rolling integer, muted € and decimals. */
+function Money(host, { d = 2, sign = false } = {}) {
+  host.replaceChildren()
+  const sr = el('span', { class: 'sr-only' }, host)
+  const vis = el('span', { 'aria-hidden': 'true', style: 'display:inline-flex;align-items:baseline' }, host)
+  const pre = el('span', { class: 'sg' }, vis)
+  el('span', { class: 'u', text: '€' }, vis)
+  const int = Roll(el('span', {}, vis))
+  const dec = d ? Roll(el('span', { class: 'dec' }, vis)) : null
+  return {
+    set(v, stagger) {
+      const p = parts(v, d)
+      sr.textContent = eur(v, d, sign)
+      pre.textContent = v < 0 ? MINUS : sign && v > 0 ? '+' : ''
+      int.set(p.i, v, stagger)
+      if (dec) dec.set(p.f, v, stagger)
+    },
+  }
+}
+function Plain(host, suffix = '') {
+  host.replaceChildren()
+  const sr = el('span', { class: 'sr-only' }, host)
+  const r = Roll(el('span', {}, host))
+  const sfx = suffix ? el('span', { class: 'dec', 'aria-hidden': 'true', text: suffix }, host) : null
+  return { set(text, v, stagger) { sr.textContent = text + suffix; r.set(text, v, stagger) } }
+}
+
+/* ================= Tip: one tooltip anatomy for every chart ================= */
+function Tip(wrap) {
+  const t = el('div', { class: 'tip snap', 'aria-hidden': 'true' }, wrap)
+  let on = false
+  return {
+    show(x, y, html, below = false) {
+      t.innerHTML = html
+      const W = wrap.clientWidth, w = t.offsetWidth, h = t.offsetHeight
+      const tx = Math.max(-6, Math.min(W - w + 6, x - w / 2))
+      const ty = below ? y + 12 : y - h - 12
+      if (!on) t.classList.add('snap')
+      t.style.setProperty('--tx', tx + 'px'); t.style.setProperty('--ty', ty + 'px')
+      t.style.transformOrigin = `${Math.max(10, Math.min(w - 10, x - tx))}px ${below ? '0%' : '100%'}`
+      if (!on) { t.offsetWidth; t.dataset.on = ''; requestAnimationFrame(() => t.classList.remove('snap')) }
+      on = true
+    },
+    hide() { on = false; delete t.dataset.on; t.classList.add('snap') },
+  }
+}
+const tipHTML = (k, v, rows = []) => `<span class="tip-k">${esc(k)}</span><span class="tip-v">${v}</span>${rows.map((r) => `<span class="tip-r">${r.c ? `<i style="--c:${r.c}"></i>` : ''}${esc(r.l)}<b>${r.v}</b></span>`).join('')}`
+
+/* ================= Pills: segment switch with a sliding pill (port of continuous-tabs) ================= */
+function Pills(host, { label, options, value, onChange }) {
+  host.setAttribute('role', 'radiogroup'); host.setAttribute('aria-label', label)
+  host.style.setProperty('--n', options.length)
+  const ind = el('span', { class: 'pill-ind', 'aria-hidden': 'true' }, host)
+  const btns = options.map((o) => el('button', { type: 'button', role: 'radio', class: 'press', text: o.label, 'data-v': o.id }, host))
+  const set = (id, fire, focus) => {
+    const i = options.findIndex((o) => o.id === id)
+    btns.forEach((b, j) => { b.setAttribute('aria-checked', j === i); b.tabIndex = j === i ? 0 : -1 })
+    ind.style.setProperty('--i', i)
+    if (focus) btns[i].focus()
+    if (fire) onChange(id)
+  }
+  btns.forEach((b, i) => {
+    b.addEventListener('click', () => set(options[i].id, true))
+    b.addEventListener('keydown', (e) => {
+      const n = options.length
+      const to = { ArrowRight: (i + 1) % n, ArrowDown: (i + 1) % n, ArrowLeft: (i - 1 + n) % n, ArrowUp: (i - 1 + n) % n, Home: 0, End: n - 1 }[e.key]
+      if (to === undefined) return
+      e.preventDefault(); set(options[to].id, true, true)
+    })
+  })
+  set(value, false)
+  return { set: (id) => set(id, true) }
+}
+
+/* Roving focus across a list of focusable items (one tab stop, arrows move). */
+function rove(items, onMove, { wrap = false, keys = ['ArrowLeft', 'ArrowRight'] } = {}) {
+  items.forEach((it, i) => {
+    it.tabIndex = i === 0 ? 0 : -1
+    it.addEventListener('keydown', (e) => {
+      const n = items.length
+      let to
+      if (e.key === keys[1]) to = wrap ? (i + 1) % n : Math.min(n - 1, i + 1)
+      else if (e.key === keys[0]) to = wrap ? (i - 1 + n) % n : Math.max(0, i - 1)
+      else if (e.key === 'Home') to = 0
+      else if (e.key === 'End') to = n - 1
+      if (to === undefined) return
+      e.preventDefault()
+      items.forEach((x, j) => (x.tabIndex = j === to ? 0 : -1))
+      items[to].focus()
+      onMove && onMove(to)
+    })
+    it.addEventListener('focus', () => items.forEach((x, j) => (x.tabIndex = j === i ? 0 : -1)))
+  })
+}
+
+/* Visually hidden data table, shared by every chart. */
+function srTable(parent, caption, head, rows) {
+  const box = el('div', { class: 'sr-only' }, parent)
+  const t = el('table', {}, box)
+  el('caption', { text: caption }, t)
+  const hr = el('tr', {}, el('thead', {}, t))
+  head.forEach((h) => el('th', { scope: 'col', text: h }, hr))
+  const tb = el('tbody', {}, t)
+  rows.forEach((r) => { const tr = el('tr', {}, tb); r.forEach((c, i) => el(i ? 'td' : 'th', i ? { text: c } : { scope: 'row', text: c }, tr)) })
+  return box
+}
+
+const ARROW_UP = '<svg viewBox="0 0 12 12" aria-hidden="true"><path d="M6 10V2M2.5 5.5 6 2l3.5 3.5"/></svg>'
+const ARROW_DN = '<svg viewBox="0 0 12 12" aria-hidden="true"><path d="M6 2v8M2.5 6.5 6 10l3.5-3.5"/></svg>'
+
+/* =====================================================================
+   DEMO DATA (invented)
+   ===================================================================== */
+const CATS = [
+  { id: 'groceries', name: 'Groceries', c: 'var(--chart-1)' },
+  { id: 'transport', name: 'Transport', c: 'var(--chart-2)' },
+  { id: 'eating', name: 'Eating out', c: 'var(--chart-3)' },
+  { id: 'shopping', name: 'Shopping', c: 'var(--chart-4)' },
+  { id: 'bills', name: 'Bills', c: 'var(--chart-5)' },
+]
+const MON = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+const WD = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+// "Today" in the demo is Thursday 8 October.
+function dayLabel(offset) { // offset 0 = today, negative = days back
+  const d = new Date(2026, 9, 8 + offset)
+  return { short: WD[(d.getDay() + 6) % 7], long: `${WD[(d.getDay() + 6) % 7]} ${d.getDate()} ${MON[d.getMonth()]}`, date: d.getDate(), mon: MON[d.getMonth()] }
+}
+const PERIODS = (() => {
+  const r = rng(7)
+  const weekCur = [38.40, 96.10, 54.75, 22.30, 42.10, 18.60, 64.20]
+  const weekPrev = [44.00, 71.20, 88.50, 30.10, 25.90, 40.30, 52.00]
+  const shape = (n, seed, wkend) => { const q = rng(seed); return Array.from({ length: n }, (_, i) => { const d = (new Date(2026, 9, 8 - (n - 1 - i)).getDay() + 6) % 7; return 18 + q() * 46 + (d >= 4 && wkend ? 26 + q() * 30 : 0) }) }
+  const monthCur = scaleTo(shape(30, 11, true), 1383.20)
+  const monthPrev = scaleTo(shape(30, 23, true), 1452.80)
+  const yq = rng(5)
+  const yearCur = Array.from({ length: 12 }, (_, i) => i === 11 ? 412.65 : Math.round((1180 + yq() * 420 + (i === 1 ? 260 : 0)) * 100) / 100)
+  const yearPrev = Array.from({ length: 12 }, () => Math.round((1100 + yq() * 380) * 100) / 100)
+  const days = (n) => Array.from({ length: n }, (_, i) => dayLabel(i - (n - 1)))
+  const w = days(7), m = days(30)
+  const months = Array.from({ length: 12 }, (_, i) => { const mi = (9 - 11 + i + 12) % 12; return { short: MON[mi].slice(0, 1) + (MON[mi] === 'Jun' || MON[mi] === 'Jul' ? MON[mi].slice(1, 2) : ''), long: `${MON[mi]} ${mi > 9 ? 2025 : 2026}${i === 11 ? ', to date' : ''}` } })
+  months.forEach((x, i) => { x.short = MON[(9 - 11 + i + 12) % 12] })
+  return {
+    week: { id: 'week', label: 'Week', k: 'Spent in the last 7 days', prevName: 'Previous 7 days', cur: weekCur, prev: weekPrev,
+      x: w.map((d) => d.short), long: w.map((d) => d.long), tickEvery: 1, gap: 10 },
+    month: { id: 'month', label: 'Month', k: 'Spent in the last 30 days', prevName: 'Previous 30 days', cur: monthCur, prev: monthPrev,
+      x: m.map((d) => `${d.date}`), long: m.map((d) => d.long), tickEvery: 7, gap: 3 },
+    year: { id: 'year', label: 'Year', k: 'Spent in the last 12 months', prevName: 'Previous 12 months', cur: yearCur, prev: yearPrev,
+      x: months.map((x) => x.short), long: months.map((x) => x.long), tickEvery: 1, gap: 8 },
+  }
+})()
+const SHARES = { week: [0.27, 0.14, 0.22, 0.12, 0.25], month: [0.30, 0.13, 0.17, 0.11, 0.29], year: [0.31, 0.12, 0.16, 0.14, 0.27] }
+const catValues = (pid) => scaleTo(SHARES[pid], sum(PERIODS[pid].cur))
+
+// Balance of the Everyday account over the last 30 days (payday on 30 Sep) and the 30 days before.
+const BAL = (() => {
+  const spend = PERIODS.month.cur
+  let b = 812.40
+  const a = spend.map((s, i) => { b = b - s + (i === 21 ? 2450 : 0) + (i === 26 ? 200 : 0) + (i === 28 ? 12 : 0); return Math.round(b * 100) / 100 })
+  const q = rng(31); let c = 905.10
+  const prev = PERIODS.month.prev.map((s, i) => { c = c - s + (i === 21 ? 2450 : 0) + (q() < .1 ? 40 : 0); return Math.round(c * 100) / 100 })
+  return { a, prev, x: Array.from({ length: 30 }, (_, i) => dayLabel(i - 29)) }
+})()
+
+const CARDS = [
+  { id: 'a', name: 'Everyday', kind: 'Debit', last: '4821', bal: BAL.a[29] },
+  { id: 'b', name: 'Travel', kind: 'Multi-currency', last: '0937', bal: 612.08 },
+  { id: 'c', name: 'Online', kind: 'Virtual', last: '5530', bal: 145.20 },
+  { id: 'd', name: 'Savings', kind: 'Pot', last: '1162', bal: 5470.58 },
+]
+const TOTAL = sum(CARDS.map((c) => c.bal))
+const SAVINGS = (() => { const q = rng(3); let v = 4920; return Array.from({ length: 30 }, (_, i) => { v += 8 + q() * 22 + (i === 22 ? 200 : 0); return v }).map((v, i, arr) => i === 29 ? 5470.58 : Math.round(v * (5470.58 / arr[29]) * 100) / 100) })()
+const TRAVEL = (() => { const q = rng(9); let v = 760; return Array.from({ length: 30 }, (_, i) => (v -= q() < .25 ? q() * 30 : 0, i === 29 ? 612.08 : v)) })()
+const ONLINE = (() => { const q = rng(13); let v = 120; return Array.from({ length: 30 }, (_, i) => (v += q() < .2 ? 40 : -q() * 6, i === 29 ? 145.20 : v)) })()
+const TOTAL_SERIES = BAL.a.map((v, i) => v + SAVINGS[i] + TRAVEL[i] + ONLINE[i])
+
+const MERCHANTS = [
+  { name: 'Harbour Market', cat: 0, visits: 6, avg: 48.20 },
+  { name: 'City Transit', cat: 1, visits: 18, avg: 3.10 },
+  { name: 'Corner Bakery', cat: 2, visits: 12, avg: 6.40 },
+  { name: 'Green Leaf Café', cat: 2, visits: 9, avg: 9.80 },
+  { name: 'Northwind Books', cat: 3, visits: 2, avg: 31.50 },
+  { name: 'Pixel & Plug', cat: 3, visits: 1, avg: 58.90 },
+  { name: 'Lumen Energy', cat: 4, visits: 1, avg: 74.00 },
+  { name: 'Fresh Fields', cat: 0, visits: 4, avg: 27.35 },
+].map((m) => ({ ...m, total: Math.round(m.visits * m.avg * 100) / 100 }))
+
+const TXS = [
+  { day: 0, name: 'Harbour Market', cat: 0, time: '12:58', amt: -48.20, state: 'pending' },
+  { day: 0, name: 'City Transit', cat: 1, time: '08:31', amt: -3.10 },
+  { day: 0, name: 'Corner Bakery', cat: 2, time: '08:12', amt: -6.40 },
+  { day: -1, name: 'Pixel & Plug', cat: 3, time: '19:40', amt: -129.00, state: 'failed', note: 'Card limit reached' },
+  { day: -1, name: 'Northwind Books', cat: 3, time: '16:05', amt: -31.50 },
+  { day: -1, name: 'From Savings', cat: -1, time: '09:00', amt: 200.00, glyph: 'in' },
+  { day: -2, name: 'Lumen Energy', cat: 4, time: '07:00', amt: -74.00 },
+  { day: -2, name: 'Refund, Northwind Books', cat: 3, time: '11:20', amt: 12.00, glyph: 'in' },
+  { day: -2, name: 'Green Leaf Café', cat: 2, time: '12:41', amt: -9.80 },
+]
+
+// Card payments per hour over 4 weeks: Mon–Sun × 07–22.
+const HOURS = Array.from({ length: 16 }, (_, i) => 7 + i)
+const DOTS = (() => {
+  const prof = [1, 3, 2, 1, 1, 5, 4, 1, 1, 1, 3, 6, 4, 2, 1, 0]
+  const q = rng(41)
+  return WD.map((_, d) => HOURS.map((h, j) => {
+    let v = prof[j] * (d < 5 ? 1 : 0.55) + (d >= 5 && h >= 10 && h <= 16 ? 3 : 0) + (d === 4 && h >= 19 ? 2 : 0)
+    v = Math.max(0, Math.round(v * (0.6 + q() * 0.8) - (q() < .25 ? 1 : 0)))
+    return v
+  }))
+})()
+const lvl = (v) => v === 0 ? 0 : v <= 1 ? 1 : v <= 3 ? 2 : v <= 5 ? 3 : 4
+const NOW = { day: 3, hour: 14, min: 20 } // Thursday 14:20
+
+const EVENTS = [
+  { d: 0, s: 9, e: 9.5, t: 'Standup', c: 0 }, { d: 0, s: 13, e: 14.5, t: 'Design review', c: 0 }, { d: 0, s: 18, e: 19, t: 'Climbing', c: 1 },
+  { d: 1, s: 8.5, e: 9.5, t: 'Physio', c: 1 }, { d: 1, s: 12, e: 13, t: 'Lunch with Sam', c: 2 }, { d: 1, s: 15, e: 16, t: 'Card review', c: 3 },
+  { d: 2, s: 10, e: 12.5, t: 'Workshop', c: 0 }, { d: 2, s: 11, e: 11.75, t: 'Dentist', c: 1 }, { d: 2, s: 17.5, e: 18.5, t: 'Market run', c: 2 },
+  { d: 3, s: 8, e: 9, t: 'Yoga', c: 1 }, { d: 3, s: 14.5, e: 15.5, t: 'Team sync', c: 0 }, { d: 3, s: 14.5, e: 15, t: 'Rent transfer', c: 3 }, { d: 3, s: 18, e: 19, t: 'Spin class', c: 1 },
+  { d: 4, s: 9, e: 10, t: 'Standup', c: 0 }, { d: 4, s: 16, e: 17, t: 'Budget check-in', c: 3 }, { d: 4, s: 19, e: 21, t: 'Dinner, Harbour', c: 2 },
+  { d: 5, s: 10, e: 11, t: 'Swim', c: 1 }, { d: 5, s: 13, e: 15, t: 'Flea market', c: 2 },
+  { d: 6, s: 9, e: 10.5, t: 'Long run', c: 1 }, { d: 6, s: 17, e: 18, t: 'Plan the week', c: 3 },
+]
+const EV_CATS = [{ n: 'Work', c: 'var(--chart-1)' }, { n: 'Health', c: 'var(--chart-4)' }, { n: 'Social', c: 'var(--chart-2)' }, { n: 'Money', c: 'var(--chart-5)' }]
+
+/* =====================================================================
+   BR-01  BarChart
+   ===================================================================== */
+function BarChart(root, { period, compare = false, label, onPick }) {
+  let P = period, cmp = compare, first = true
+  const tip = Tip(root)
+  root.setAttribute('role', 'group')
+  function render(quick) {
+    root.querySelectorAll(':scope > :not(.tip)').forEach((n) => n.remove())
+    root.classList.toggle('cmp', cmp)
+    const vals = P.cur, prev = P.prev
+    const max = Math.max(...vals, ...(cmp ? prev : [0]))
+    const step = niceStep(max, 2), top = Math.ceil(max / step) * step
+    const plot = el('div', { class: 'bc-plot' })
+    const grid = el('div', { class: 'bc-grid', 'aria-hidden': 'true' }, plot)
+    for (let v = 0; v <= top + 1e-6; v += step) {
+      const g = el('div', { class: 'bc-gl' + (v === 0 ? ' base' : ''), style: `bottom:${v / top * 100}%` }, grid)
+      el('span', { text: shortEur(v) }, g)
+    }
+    const cols = el('div', { class: 'bc-cols', role: 'group', 'aria-label': `${label}, ${P.k.toLowerCase()}` }, plot)
+    cols.style.setProperty('--gap', P.gap + 'px')
+    const n = vals.length
+    const btns = vals.map((v, i) => {
+      const now = i === n - 1
+      const b = el('button', { type: 'button', class: 'bc-col', 'aria-label': `${P.long[i]}${now ? ' (today)' : ''}: ${eur(v)}${cmp ? `, ${P.prevName.toLowerCase()} ${eur(prev[i])}` : ''}` }, cols)
+      if (now) b.dataset.now = ''
+      if (cmp) el('span', { class: 'bc-bar prev', style: `--v:${prev[i] / top};--k:${i}`, html: '<i></i>' }, b)
+      el('span', { class: 'bc-bar cur', style: `--v:${v / top};--k:${i}`, html: '<i></i>' }, b)
+      if (now) el('span', { class: 'bc-now', style: `--v:${v / top}`, 'aria-hidden': 'true' }, b)
+      return b
+    })
+    const xs = el('div', { class: 'bc-x', 'aria-hidden': 'true' })
+    xs.style.setProperty('--gap', P.gap + 'px')
+    P.x.forEach((x, i) => { const s = el('span', { text: (n - 1 - i) % P.tickEvery === 0 ? x : '' }, xs); if (i === n - 1) s.dataset.now = '' })
+    root.prepend(plot, xs)
+    srTable(root, `${label}, ${P.k.toLowerCase()}`, cmp ? ['Period', 'Amount', P.prevName] : ['Period', 'Amount'], vals.map((v, i) => cmp ? [P.long[i], eur(v), eur(prev[i])] : [P.long[i], eur(v)]))
+
+    const show = (i) => {
+      const b = btns[i], bar = b.querySelector('.cur')
+      const r = root.getBoundingClientRect(), br = b.getBoundingClientRect()
+      const v = vals[i]
+      const y = br.bottom - r.top - (Math.max(v, cmp ? prev[i] : 0) / top) * br.height
+      const rows = cmp ? [{ l: P.prevName, v: eur(prev[i]), c: 'var(--ink-ghost)' }, { l: 'Change', v: pct((v - prev[i]) / prev[i] * 100) }] : []
+      tip.show(br.left - r.left + br.width / 2, y, tipHTML(P.long[i] + (i === n - 1 ? ' · today' : ''), eurHTML(v), rows))
+      btns.forEach((x, j) => x.classList.toggle('on', j === i))
+      onPick && onPick(i)
+    }
+    btns.forEach((b, i) => {
+      b.addEventListener('pointerenter', () => show(i))
+      b.addEventListener('focus', () => { cols.classList.add('kb'); show(i) })
+      b.addEventListener('blur', () => { cols.classList.remove('kb'); btns.forEach((x) => x.classList.remove('on')); tip.hide() })
+    })
+    cols.addEventListener('pointerleave', () => { if (!cols.contains(document.activeElement)) { tip.hide(); btns.forEach((x) => x.classList.remove('on')) } })
+    rove(btns, null)
+    btns.forEach((b) => (b.tabIndex = -1)); btns[n - 1].tabIndex = 0
+
+    root.classList.remove('in')
+    root.classList.toggle('quick', !!quick)
+    if (first) { first = false; onEnter(root, () => root.classList.add('in')) }
+    else { root.offsetWidth; root.classList.add('in') }
+  }
+  render()
+  return {
+    period(p) { P = p; render(true) },
+    compare(on) { cmp = on; render(true) },
+  }
+}
+
+/* =====================================================================
+   DN-02  Donut
+   ===================================================================== */
+function Donut(root, { values, cats, label, centreK, compact = false }) {
+  const R = 74, SW = 30, C = 100
+  const cap = (SW / 2) / R * 180 / Math.PI, gapDeg = 5
+  let vals = values, hot = -1
+  root.replaceChildren()
+  const fig = el('div', { class: 'dn-fig', role: 'img' }, root)
+  const s = sv('svg', { viewBox: '0 0 200 200', 'aria-hidden': 'true' }, fig)
+  const segs = cats.map((c, k) => { const p = sv('path', { class: 'dn-seg', style: `stroke:${c.c};--k:${k}` }, s); return p })
+  const centre = el('div', { class: 'dn-c', 'aria-hidden': 'true' }, fig)
+  const ck = el('span', { class: 'k', text: centreK }, centre)
+  const cn = el('span', { class: 'num' }, centre)
+  const cp = el('span', { class: 'p' }, centre)
+  const money = Money(cn, { d: 0 })
+  const list = el('div', { class: 'dn-list', role: 'group', 'aria-label': `${label}, categories` }, root)
+  if (compact) { list.style.width = '100%'; fig.style.width = 'min(100%, 210px)' }
+  const rows = cats.map((c) => {
+    const b = el('button', { type: 'button', class: 'dn-row press' }, list)
+    el('i', { style: `--c:${c.c}`, 'aria-hidden': 'true' }, b)
+    el('span', { class: 'nm', text: c.name }, b)
+    el('span', { class: 'v' }, b)
+    el('span', { class: 'pc' }, b)
+    return b
+  })
+  let table = null
+  function geometry() {
+    const total = vals.reduce((a, b) => a + b, 0)
+    let a0 = -90
+    vals.forEach((v, k) => {
+      const span = v / total * 360
+      const s0 = a0 + cap + gapDeg / 2, s1 = a0 + span - cap - gapDeg / 2
+      const mid = (s0 + s1) / 2
+      const e = Math.max(s1, s0 + 0.5)
+      const pt = (a) => [C + R * Math.cos(a * Math.PI / 180), C + R * Math.sin(a * Math.PI / 180)]
+      const [x0, y0] = pt(s0), [x1, y1] = pt(e)
+      segs[k].setAttribute('d', `M${x0.toFixed(2)} ${y0.toFixed(2)} A${R} ${R} 0 ${e - s0 > 180 ? 1 : 0} 1 ${x1.toFixed(2)} ${y1.toFixed(2)}`)
+      segs[k]._mid = mid
+      a0 += span
+    })
+    rows.forEach((r, k) => {
+      r.querySelector('.v').innerHTML = eurHTML(vals[k], 0)
+      r.querySelector('.pc').textContent = Math.round(vals[k] / total * 100) + '%'
+      r.setAttribute('aria-label', `${cats[k].name}: ${eur(vals[k])}, ${Math.round(vals[k] / total * 100)} percent`)
+    })
+    fig.setAttribute('aria-label', `${label}. Total ${eur(total)}. ` + cats.map((c, k) => `${c.name} ${Math.round(vals[k] / total * 100)}%`).join(', '))
+    table && table.remove()
+    table = srTable(root, label, ['Category', 'Amount', 'Share'], cats.map((c, k) => [c.name, eur(vals[k]), Math.round(vals[k] / total * 100) + '%']))
+    return total
+  }
+  function centreTo(k) {
+    const total = vals.reduce((a, b) => a + b, 0)
+    if (k < 0) { ck.textContent = centreK; money.set(total); cp.textContent = '' }
+    else { ck.textContent = cats[k].name; money.set(vals[k]); cp.textContent = Math.round(vals[k] / total * 100) + '% of total' }
+  }
+  function heat(k) {
+    hot = k
+    if (k < 0) delete root.dataset.hot; else root.dataset.hot = ''
+    segs.forEach((p, j) => {
+      p.classList.toggle('hot', j === k)
+      const m = p._mid * Math.PI / 180
+      p.style.transform = j === k ? `translate(${(Math.cos(m) * 6).toFixed(2)}px,${(Math.sin(m) * 6).toFixed(2)}px)` : ''
+    })
+    rows.forEach((r, j) => r.classList.toggle('on', j === k))
+    centreTo(k)
+  }
+  segs.forEach((p, k) => { p.style.pointerEvents = 'stroke'; p.addEventListener('pointerenter', () => heat(k)) })
+  s.addEventListener('pointerleave', () => { if (!list.contains(document.activeElement)) heat(-1) })
+  rows.forEach((r, k) => {
+    r.addEventListener('pointerenter', () => heat(k))
+    r.addEventListener('focus', () => heat(k))
+    r.addEventListener('blur', () => heat(-1))
+  })
+  list.addEventListener('pointerleave', () => { if (!list.contains(document.activeElement)) heat(-1) })
+  rove(rows, null, { keys: ['ArrowUp', 'ArrowDown'] })
+  rows.forEach((r) => r.addEventListener('keydown', (e) => { if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') { const i = rows.indexOf(r); const to = e.key === 'ArrowRight' ? Math.min(rows.length - 1, i + 1) : Math.max(0, i - 1); rows[to].focus() } }))
+  const total = geometry()
+  ck.textContent = centreK
+  onEnter(root, () => { root.classList.add('in'); money.set(total, true); setTimeout(() => root.classList.add('ready'), 900) })
+  if (RM) money.set(total)
+  return {
+    update(v) { vals = v; geometry(); centreTo(hot) },
+  }
+}
+
+/* =====================================================================
+   DL-03  Dial (segmented arc) + three-state variant
+   ===================================================================== */
+const DIAL_A0 = -120, DIAL_A1 = 120
+function arcSegments(g, n, { r0 = 70, len = 26, w = 11, cls = 'dl-seg', style } = {}) {
+  const out = []
+  for (let k = 0; k < n; k++) {
+    const a = DIAL_A0 + (DIAL_A1 - DIAL_A0) * (k + 0.5) / n
+    const rect = sv('rect', { x: 110 - w / 2, y: 112 - r0 - len, width: w, height: len, rx: w / 2, class: cls, transform: `rotate(${a.toFixed(2)} 110 112)` }, g)
+    if (style) rect.setAttribute('style', style(k))
+    out.push(rect)
+  }
+  return out
+}
+function Dial(root, { value, max = 100, n = 24, label, centreK, fmt, step = 1, sub }) {
+  root.replaceChildren()
+  let v = value
+  const fig = el('div', { class: 'dl-fig', role: 'slider', tabindex: '0', 'aria-label': label, 'aria-valuemin': '0', 'aria-valuemax': String(max) }, root)
+  const s = sv('svg', { viewBox: '0 0 220 186', 'aria-hidden': 'true' }, fig)
+  const segs = arcSegments(sv('g', {}, s), n, { r0: 70, len: 30, w: 12 })
+  const ind = sv('g', { class: 'dl-ind' }, s)
+  sv('path', { d: 'M110 4 l7 -0.5 -7 9 -7 -9z', transform: 'translate(0 -2)' }, ind)
+  const c = el('div', { class: 'dl-c', 'aria-hidden': 'true' }, fig)
+  const num = el('span', { class: 'num' }, c)
+  const P = Plain(num, '%')
+  el('span', { class: 'k', text: centreK }, c)
+  const ends = el('div', { class: 'dl-ends', 'aria-hidden': 'true' }, root)
+  el('span', { text: '0%' }, ends); el('span', { text: '100%' }, ends)
+  if (sub) el('p', { class: 'fact-k', style: 'margin-top:12px;font-size:13.5px;text-align:center', html: sub }, root)
+  let litN = 0, entered = false
+  function set(nv, roll = true) {
+    const old = litN
+    v = Math.max(0, Math.min(max, nv))
+    const lit = Math.round(v / max * n)
+    segs.forEach((sg, k) => {
+      const d = lit > old ? (k - old) : (old - 1 - k)
+      sg.style.setProperty('--d', Math.max(0, d) * 14 + 'ms')
+      sg.classList.toggle('lit', k < lit)
+    })
+    litN = lit
+    const a = DIAL_A0 + (DIAL_A1 - DIAL_A0) * v / max
+    ind.style.transform = `rotate(${a}deg)`
+    fig.setAttribute('aria-valuenow', String(Math.round(v)))
+    fig.setAttribute('aria-valuetext', fmt(v))
+    if (roll) P.set(String(Math.round(v / max * 100)), v, !entered)
+  }
+  fig.addEventListener('keydown', (e) => {
+    const d = { ArrowRight: step, ArrowUp: step, ArrowLeft: -step, ArrowDown: -step, PageUp: step * 10, PageDown: -step * 10 }[e.key]
+    if (e.key === 'Home') { e.preventDefault(); set(0); return }
+    if (e.key === 'End') { e.preventDefault(); set(max); return }
+    if (d === undefined) return
+    e.preventDefault(); set(v + d)
+  })
+  ind.style.transform = `rotate(${DIAL_A0}deg)`
+  onEnter(root, () => { set(v); entered = true })
+  return { set }
+}
+function Dial3(root, { value, zones, label }) {
+  // zones: [{name, to, c}] with "to" as the upper bound (ratio), last zone ends at max
+  const max = zones[zones.length - 1].to, n = 24
+  const wrap = el('div', { class: 'dl3' }, root)
+  const fig = el('div', { class: 'dl-fig', role: 'slider', tabindex: '0', 'aria-label': label, 'aria-valuemin': '0', 'aria-valuemax': String(max) }, wrap)
+  const s = sv('svg', { viewBox: '0 0 220 150', 'aria-hidden': 'true' }, fig)
+  const zoneOf = (x) => zones.findIndex((z) => x <= z.to + 1e-9)
+  const segs = arcSegments(sv('g', {}, s), n, { r0: 66, len: 30, w: 13, cls: 'dl3-seg', style: (k) => `fill:${zones[zoneOf((k + 0.5) / n * max)].c}` })
+  const nd = sv('g', { class: 'needle' }, s)
+  sv('line', { x1: 110, y1: 112, x2: 110, y2: 54 }, nd)
+  sv('circle', { cx: 110, cy: 112, r: 11 }, nd)
+  const txt = el('div', {}, wrap)
+  const lbl = el('p', { class: 'lbl' }, txt)
+  const sub = el('p', { class: 'sub' }, txt)
+  const chips = el('div', { class: 'zones', 'aria-hidden': 'true' }, txt)
+  const zc = zones.map((z) => el('span', { class: 'zone', html: `<i style="--c:${z.c}"></i>${z.name}` }, chips))
+  let v = value
+  function set(nv) {
+    v = Math.max(0, Math.min(max, Math.round(nv * 100) / 100))
+    const zi = zoneOf(v)
+    segs.forEach((sg, k) => sg.classList.toggle('act', zoneOf((k + 0.5) / n * max) === zi))
+    zc.forEach((c, i) => c.classList.toggle('act', i === zi))
+    nd.style.transform = `rotate(${DIAL_A0 + (DIAL_A1 - DIAL_A0) * v / max}deg)`
+    lbl.textContent = `Spending pace: ${zones[zi].name.toLowerCase()}`
+    sub.textContent = `${v.toFixed(2)}× your daily budget so far`
+    fig.setAttribute('aria-valuenow', v.toFixed(2))
+    fig.setAttribute('aria-valuetext', `${v.toFixed(2)} times the daily budget, ${zones[zi].name}`)
+  }
+  fig.addEventListener('keydown', (e) => {
+    const d = { ArrowRight: .05, ArrowUp: .05, ArrowLeft: -.05, ArrowDown: -.05 }[e.key]
+    if (d === undefined) return
+    e.preventDefault(); set(v + d)
+  })
+  nd.style.transform = `rotate(${DIAL_A0}deg)`
+  onEnter(root, () => set(v))
+  if (RM) set(v)
+  return { set }
+}
+
+/* =====================================================================
+   AR-04  Area chart (two series, crosshair)
+   ===================================================================== */
+function smooth(pts) { // monotone cubic (Fritsch–Carlson)
+  const n = pts.length
+  if (n < 2) return ''
+  const dx = [], dy = [], m = [], t = []
+  for (let i = 0; i < n - 1; i++) { dx[i] = pts[i + 1][0] - pts[i][0]; dy[i] = pts[i + 1][1] - pts[i][1]; m[i] = dy[i] / dx[i] }
+  t[0] = m[0]; t[n - 1] = m[n - 2]
+  for (let i = 1; i < n - 1; i++) t[i] = m[i - 1] * m[i] <= 0 ? 0 : 3 * (dx[i - 1] + dx[i]) / ((2 * dx[i] + dx[i - 1]) / m[i - 1] + (dx[i] + 2 * dx[i - 1]) / m[i])
+  let d = `M${pts[0][0].toFixed(1)},${pts[0][1].toFixed(1)}`
+  for (let i = 0; i < n - 1; i++) {
+    const h = dx[i] / 3
+    d += `C${(pts[i][0] + h).toFixed(1)},${(pts[i][1] + h * t[i]).toFixed(1)} ${(pts[i + 1][0] - h).toFixed(1)},${(pts[i + 1][1] - h * t[i + 1]).toFixed(1)} ${pts[i + 1][0].toFixed(1)},${pts[i + 1][1].toFixed(1)}`
+  }
+  return d
+}
+function AreaChart(root, { a, b, x, label, nameA, nameB }) {
+  const tip = Tip(root)
+  const svg = sv('svg', { class: 'ar-svg', tabindex: '0', role: 'img', 'aria-label': `${label}. Use the left and right arrow keys to read each day.` })
+  root.prepend(svg)
+  srTable(root, label, ['Day', nameA, nameB], a.map((v, i) => [x[i].long, eur(v), eur(b[i])]))
+  let idx = -1, geo = null
+  const cid = nid('arc')
+  function render() {
+    const W = Math.max(280, root.clientWidth), H = W < 560 ? 200 : 300, GR = 52, PT = 10, PB = 24
+    const pw = W - GR
+    const all = [...a, ...b]
+    const step = niceStep(Math.max(...all), 3), top = Math.ceil(Math.max(...all) / step) * step
+    const X = (i) => i / (a.length - 1) * pw, Y = (v) => PT + (1 - v / top) * (H - PT - PB)
+    svg.setAttribute('viewBox', `0 0 ${W} ${H}`); svg.setAttribute('height', H)
+    svg.replaceChildren()
+    const defs = sv('defs', {}, svg)
+    const cp = sv('clipPath', { id: cid }, defs)
+    sv('rect', { class: 'ar-rev', x: -4, y: 0, width: pw + 8, height: H }, cp)
+    const ga = sv('g', { 'aria-hidden': 'true' }, svg)
+    for (let v = 0; v <= top + 1e-6; v += step) {
+      sv('line', { class: v === 0 ? 'bl' : 'gl', x1: 0, x2: pw, y1: Math.round(Y(v)) + .5, y2: Math.round(Y(v)) + .5 }, ga)
+      sv('text', { class: 'axis-t', x: pw + 10, y: Y(v) + 4, text: shortEur(v) }, ga)
+    }
+    a.forEach((_, i) => { if ((a.length - 1 - i) % 7 === 0) sv('text', { class: 'axis-t', x: X(i), y: H - 6, 'text-anchor': i === a.length - 1 ? 'end' : 'middle', text: i === a.length - 1 ? 'Today' : `${x[i].date} ${x[i].mon}` }, ga) })
+    const pa = a.map((v, i) => [X(i), Y(v)]), pb = b.map((v, i) => [X(i), Y(v)])
+    const g = sv('g', { 'clip-path': `url(#${cid})`, 'aria-hidden': 'true' }, svg)
+    const la = smooth(pa)
+    sv('path', { class: 'ar-fill', d: `${la}L${pw},${Y(0)}L0,${Y(0)}Z` }, g)
+    sv('path', { class: 'ar-b', d: smooth(pb) }, g)
+    sv('path', { class: 'ar-a', d: la }, g)
+    sv('circle', { class: 'ar-end', cx: pa[pa.length - 1][0], cy: pa[pa.length - 1][1], r: 5.5 }, g)
+    const xh = sv('g', { class: 'xh', 'aria-hidden': 'true' }, svg)
+    const xg = sv('g', { class: 'xh-g' }, xh)
+    sv('line', { x1: 0, x2: 0, y1: PT, y2: H - PB }, xg)
+    const db = sv('circle', { class: 'db', cx: 0, r: 4.5 }, xg)
+    const da = sv('circle', { class: 'da', cx: 0, r: 6 }, xg)
+    geo = { X, Y, pw, H, xh, xg, da, db, W }
+    if (idx >= 0) point(idx, false)
+  }
+  function point(i, announce) {
+    idx = i
+    const { X, Y, xh, xg, da, db } = geo
+    xg.style.transform = `translateX(${X(i)}px)`
+    da.setAttribute('cy', Y(a[i])); db.setAttribute('cy', Y(b[i]))
+    xh.classList.add('on')
+    const r = svg.getBoundingClientRect(), rr = root.getBoundingClientRect()
+    const sc = r.width / geo.W
+    const d = a[i] - b[i]
+    tip.show(r.left - rr.left + X(i) * sc, r.top - rr.top + Math.min(Y(a[i]), Y(b[i])) * sc, tipHTML(x[i].long + (i === a.length - 1 ? ' · today' : ''), eurHTML(a[i]), [{ l: nameB, v: eur(b[i]), c: 'var(--base)' }, { l: 'Difference', v: eur(d, 2, true) }]))
+    if (announce) say(`${x[i].long}: ${eur(a[i])}. ${nameB}: ${eur(b[i])}.`)
+  }
+  function clear() { idx = -1; geo && geo.xh.classList.remove('on'); tip.hide() }
+  svg.addEventListener('pointermove', (e) => {
+    const r = svg.getBoundingClientRect(), sc = r.width / geo.W
+    const px = (e.clientX - r.left) / sc
+    const i = Math.max(0, Math.min(a.length - 1, Math.round(px / geo.pw * (a.length - 1))))
+    if (i !== idx) point(i)
+  })
+  svg.addEventListener('pointerleave', () => { if (document.activeElement !== svg) clear() })
+  svg.addEventListener('focus', () => point(idx < 0 ? a.length - 1 : idx, true))
+  svg.addEventListener('blur', clear)
+  svg.addEventListener('keydown', (e) => {
+    const to = { ArrowRight: idx + 1, ArrowLeft: idx - 1, Home: 0, End: a.length - 1, PageUp: idx - 7, PageDown: idx + 7 }[e.key]
+    if (to === undefined) return
+    e.preventDefault(); point(Math.max(0, Math.min(a.length - 1, to)), true)
+  })
+  render()
+  let w0 = root.clientWidth
+  new ResizeObserver(() => { if (Math.abs(root.clientWidth - w0) > 2) { w0 = root.clientWidth; render() } }).observe(root)
+  onEnter(root, () => root.classList.add('in'))
+}
+
+/* =====================================================================
+   SP-05  Sparkline
+   ===================================================================== */
+function sparkline(data, { w = 96, h = 30, label, delay = 0 } = {}) {
+  const min = Math.min(...data), max = Math.max(...data)
+  const pad = 4
+  const pts = data.map((v, i) => [pad / 2 + i / (data.length - 1) * (w - pad - 4), pad + (1 - (v - min) / (max - min || 1)) * (h - pad * 2)])
+  const s = sv('svg', { class: 'spark', viewBox: `0 0 ${w} ${h}`, width: w, height: h, role: 'img', 'aria-label': label })
+  const id = nid('sp')
+  const cp = sv('clipPath', { id }, sv('defs', {}, s))
+  sv('rect', { class: 'rev', x: 0, y: -4, width: w, height: h + 8, style: `--d:${delay}ms` }, cp)
+  const g = sv('g', { 'clip-path': `url(#${id})` }, s)
+  sv('path', { class: 'ln', d: smooth(pts) }, g)
+  const l = pts[pts.length - 1]
+  sv('circle', { class: 'dot', cx: l[0], cy: l[1], r: 3.5 }, g)
+  return s
+}
+const trendWord = (d) => { const ch = (d[d.length - 1] - d[0]) / d[0] * 100; return `${ch >= 0 ? 'up' : 'down'} ${Math.abs(ch).toFixed(1)} percent over 30 days` }
+
+/* =====================================================================
+   DM-06  Dot matrix
+   ===================================================================== */
+function DotMatrix(root, { data, rows, cols, label, now, hourLabels = 4, onPeak }) {
+  const tip = Tip(root)
+  root.style.setProperty('--cols', cols.length)
+  const grid = el('div', { class: 'dm-grid', tabindex: '0', role: 'img', 'aria-label': `${label}. Use the arrow keys to read each hour.` })
+  root.prepend(grid)
+  const cells = []
+  rows.forEach((r, ri) => {
+    el('span', { class: 'dm-day', text: r, 'aria-hidden': 'true' }, grid)
+    cols.forEach((c, ci) => {
+      const v = data[ri][ci], L = lvl(v)
+      const s = [0.22, 0.42, 0.6, 0.8, 1][L], o = [0.3, 0.5, 0.7, 0.88, 1][L]
+      const cell = el('span', { class: 'dm-cell', 'aria-hidden': 'true', style: `--s:${s};--o:${o};--c:${ci}` }, grid)
+      el('i', {}, cell)
+      if (now && now.day === ri && now.hour === c) cell.dataset.now = ''
+      cells.push({ cell, ri, ci, v })
+    })
+  })
+  const hl = el('div', { class: 'dm-hours', 'aria-hidden': 'true' })
+  el('span', {}, hl)
+  cols.forEach((c, i) => el('span', { text: i % hourLabels === 0 ? String(c).padStart(2, '0') : '' }, hl))
+  grid.after(hl)
+  srTable(root, label, ['Day', ...cols.map((c) => `${String(c).padStart(2, '0')}:00`)], rows.map((r, ri) => [r, ...data[ri].map(String)]))
+  let at = null
+  const read = (c) => `${WD[c.ri]} ${String(cols[c.ci]).padStart(2, '0')}:00–${String(cols[c.ci] + 1).padStart(2, '0')}:00`
+  function focusCell(ri, ci, announce) {
+    at && at.cell.classList.remove('on')
+    at = cells[ri * cols.length + ci]
+    at.cell.classList.add('on')
+    const r = root.getBoundingClientRect(), cr = at.cell.getBoundingClientRect()
+    const word = at.v === 1 ? 'payment' : 'payments'
+    tip.show(cr.left - r.left + cr.width / 2, cr.top - r.top, tipHTML(read(at) + (at.cell.dataset.now !== undefined ? ' · now' : ''), `${at.v} <span class="u">${word}</span>`, [{ l: 'Over 4 weeks', v: '' }]).replace('<b></b>', ''))
+    if (announce) say(`${read(at)}: ${at.v} ${word}`)
+  }
+  function clear() { at && at.cell.classList.remove('on'); at = null; tip.hide() }
+  cells.forEach((c) => c.cell.addEventListener('pointerenter', () => focusCell(c.ri, c.ci)))
+  grid.addEventListener('pointerleave', () => { if (document.activeElement !== grid) clear() })
+  grid.addEventListener('focus', () => { const nc = now ? cols.indexOf(now.hour) : 0; focusCell(at ? at.ri : (now ? now.day : 0), at ? at.ci : Math.max(0, nc), true) })
+  grid.addEventListener('blur', clear)
+  grid.addEventListener('keydown', (e) => {
+    if (!at) return
+    let { ri, ci } = at
+    if (e.key === 'ArrowRight') ci = Math.min(cols.length - 1, ci + 1)
+    else if (e.key === 'ArrowLeft') ci = Math.max(0, ci - 1)
+    else if (e.key === 'ArrowDown') ri = Math.min(rows.length - 1, ri + 1)
+    else if (e.key === 'ArrowUp') ri = Math.max(0, ri - 1)
+    else if (e.key === 'Home') ci = 0
+    else if (e.key === 'End') ci = cols.length - 1
+    else return
+    e.preventDefault(); focusCell(ri, ci, true)
+  })
+  onEnter(root, () => { root.classList.add('in'); setTimeout(() => root.classList.add('ready'), 900) })
+}
+
+/* =====================================================================
+   BU-07  Bubble chart
+   ===================================================================== */
+function Bubbles(root, { data, label }) {
+  const tip = Tip(root)
+  const svg = sv('svg', { class: 'bu-svg', tabindex: '0', role: 'img', 'aria-label': `${label}. Use the arrow keys to step through merchants.` })
+  root.prepend(svg)
+  srTable(root, label, ['Merchant', 'Visits', 'Average spend', 'Total'], data.map((d) => [d.name, String(d.visits), eur(d.avg), eur(d.total)]))
+  const order = data.map((d, i) => i).sort((p, q) => data[p].visits - data[q].visits)
+  let at = -1, geo
+  function render() {
+    const W = Math.max(280, root.clientWidth), H = W < 560 ? 280 : 320, GR = 46, PB = 30, PT = 14
+    const pw = W - GR
+    const xmax = 20, ymax = 80
+    const maxT = Math.max(...data.map((d) => d.total))
+    const rmax = W < 560 ? 30 : 40
+    const X = (v) => 16 + v / xmax * (pw - 32), Y = (v) => PT + (1 - v / ymax) * (H - PT - PB), Rr = (t) => 6 + Math.sqrt(t / maxT) * (rmax - 6)
+    svg.setAttribute('viewBox', `0 0 ${W} ${H}`); svg.setAttribute('height', H)
+    svg.replaceChildren()
+    const ga = sv('g', { 'aria-hidden': 'true' }, svg)
+    for (let v = 0; v <= ymax; v += 20) {
+      sv('line', { class: v === 0 ? 'bl' : 'gl', x1: 0, x2: pw, y1: Math.round(Y(v)) + .5, y2: Math.round(Y(v)) + .5 }, ga)
+      sv('text', { class: 'axis-t', x: pw + 10, y: Y(v) + 4, text: `€${v}` }, ga)
+    }
+    for (let v = 0; v <= xmax; v += 5) sv('text', { class: 'axis-t', x: X(v), y: H - 8, 'text-anchor': 'middle', text: v === xmax ? `${v} visits` : String(v) }, ga)
+    const gb = sv('g', {}, svg)
+    const gl = sv('g', { 'aria-hidden': 'true' }, svg)
+    const circles = data.map((d, k) => {
+      const cx = X(d.visits), cy = Y(d.avg), r = Rr(d.total)
+      const c = sv('circle', { class: 'bub', cx, cy, r, style: `fill:${CATS[d.cat].c};--k:${k}` }, gb)
+      c.addEventListener('pointerenter', () => hot(k))
+      const t = sv('text', { class: 'bu-lbl', x: cx, y: cy, text: d.name }, gl)
+      return { c, t, cx, cy, r }
+    })
+    // Direct labels: try right, left, above, below; keep the first spot that hits no bubble, label or edge.
+    const placed = []
+    const hitsCircle = (b, o) => { const nx = Math.max(b.x, Math.min(o.cx, b.x + b.w)), ny = Math.max(b.y, Math.min(o.cy, b.y + b.h)); return (nx - o.cx) ** 2 + (ny - o.cy) ** 2 < (o.r + 2) ** 2 }
+    const hitsBox = (a, b) => a.x < b.x + b.w + 4 && b.x < a.x + a.w + 4 && a.y < b.y + b.h + 2 && b.y < a.y + a.h + 2
+    ;[...circles].sort((p, q) => q.r - p.r).forEach((o) => {
+      const w = o.t.getComputedTextLength(), h = 14
+      const cand = [
+        { x: o.cx + o.r + 7, y: o.cy - h / 2, a: 'start' },
+        { x: o.cx - o.r - 7 - w, y: o.cy - h / 2, a: 'end' },
+        { x: o.cx - w / 2, y: o.cy - o.r - 6 - h, a: 'middle' },
+        { x: o.cx - w / 2, y: o.cy + o.r + 6, a: 'middle' },
+        { x: o.cx + o.r * .7 + 3, y: o.cy - o.r * .7 - h, a: 'start' },
+        { x: o.cx - o.r * .7 - 3 - w, y: o.cy - o.r * .7 - h, a: 'end' },
+        { x: o.cx + o.r * .7 + 3, y: o.cy + o.r * .7, a: 'start' },
+        { x: o.cx - o.r * .7 - 3 - w, y: o.cy + o.r * .7, a: 'end' },
+      ].map((c) => ({ ...c, w, h }))
+      const cost = (b) => (b.x < 0 || b.x + b.w > pw || b.y < 0 || b.y + b.h > H - PB ? 10 : 0) + circles.filter((q) => q !== o && hitsCircle(b, q)).length * 3 + placed.filter((q) => hitsBox(b, q)).length * 4
+      let best = cand[0], bc = Infinity
+      for (const c of cand) { const k = cost(c); if (k < bc) { bc = k; best = c } if (!k) break }
+      placed.push(best)
+      const ax = best.a === 'start' ? best.x : best.a === 'end' ? best.x + w : best.x + w / 2
+      o.t.setAttribute('x', ax.toFixed(1)); o.t.setAttribute('y', (best.y + 11).toFixed(1)); o.t.setAttribute('text-anchor', best.a)
+    })
+    const ring = sv('circle', { class: 'bu-ring', r: 0 }, svg)
+    geo = { circles, ring, W }
+    if (at >= 0) hot(at)
+  }
+  function hot(k, announce) {
+    at = k
+    root.dataset.hot = ''
+    geo.circles.forEach((o, j) => { o.c.classList.toggle('hot', j === k); o.t.classList.toggle('hot', j === k) })
+    const o = geo.circles[k], d = data[k]
+    const focused = document.activeElement === svg
+    geo.ring.setAttribute('cx', o.cx); geo.ring.setAttribute('cy', o.cy); geo.ring.setAttribute('r', o.r + 4)
+    geo.ring.classList.toggle('on', focused)
+    const r = svg.getBoundingClientRect(), rr = root.getBoundingClientRect(), sc = r.width / geo.W
+    tip.show(r.left - rr.left + o.cx * sc, r.top - rr.top + (o.cy - o.r) * sc, tipHTML(`${d.name} · ${CATS[d.cat].name}`, eurHTML(d.total) + ' <span class="u">this month</span>', [{ l: 'Visits', v: String(d.visits) }, { l: 'Average', v: eur(d.avg) }]))
+    if (announce) say(`${d.name}: ${d.visits} visits, average ${eur(d.avg)}, total ${eur(d.total)}`)
+  }
+  function clear() { at = -1; delete root.dataset.hot; geo.circles.forEach((o) => { o.c.classList.remove('hot'); o.t.classList.remove('hot') }); geo.ring.classList.remove('on'); tip.hide() }
+  svg.addEventListener('pointerleave', () => { if (document.activeElement !== svg) clear() })
+  svg.addEventListener('focus', () => hot(at < 0 ? order[0] : at, true))
+  svg.addEventListener('blur', clear)
+  svg.addEventListener('keydown', (e) => {
+    const p = order.indexOf(at)
+    const to = { ArrowRight: p + 1, ArrowDown: p + 1, ArrowLeft: p - 1, ArrowUp: p - 1, Home: 0, End: order.length - 1 }[e.key]
+    if (to === undefined) return
+    e.preventDefault(); hot(order[Math.max(0, Math.min(order.length - 1, to))], true)
+  })
+  render()
+  document.fonts && document.fonts.ready.then(render) // label widths depend on the loaded face
+  let w0 = root.clientWidth
+  new ResizeObserver(() => { if (Math.abs(root.clientWidth - w0) > 2) { w0 = root.clientWidth; render() } }).observe(root)
+  onEnter(root, () => { root.classList.add('in'); setTimeout(() => root.classList.add('ready'), 1000) })
+}
+
+/* =====================================================================
+   LP-08  Lollipop (ranked, sortable with FLIP)
+   ===================================================================== */
+function Lollipop(root, { data, label, ticks = true, limit }) {
+  const tip = Tip(root)
+  root.setAttribute('role', 'list'); root.setAttribute('aria-label', label)
+  const items = (limit ? [...data].sort((p, q) => q.total - p.total).slice(0, limit) : data)
+  const max = Math.max(...items.map((d) => d.total))
+  const step = niceStep(max, 3), top = Math.ceil(max / step) * step
+  const byAmt = [...items].sort((p, q) => q.total - p.total)
+  const rows = items.map((d) => {
+    const rank = byAmt.indexOf(d) + 1
+    const r = el('div', { class: 'lp-row', role: 'listitem', 'aria-label': `${rank}. ${d.name}: ${eur(d.total)}` })
+    r._d = d
+    el('span', { class: 'lp-nm', html: `<small>${String(rank).padStart(2, '0')}</small>${esc(d.name)}` }, r)
+    const tr = el('span', { class: 'lp-tr', 'aria-hidden': 'true' }, r)
+    el('span', { class: 'lp-stem', style: `--v:${d.total / top}` }, tr)
+    el('span', { class: 'lp-slide', style: `--v:${d.total / top}`, html: '<span class="lp-head"></span>' }, tr)
+    el('span', { class: 'lp-v', html: eurHTML(d.total) }, r)
+    const show = () => {
+      const rr = root.getBoundingClientRect(), hr = r.querySelector('.lp-head').getBoundingClientRect()
+      tip.show(hr.left - rr.left + hr.width / 2, hr.top - rr.top, tipHTML(`${d.name} · rank ${rank} of ${items.length}`, eurHTML(d.total), [{ l: 'Visits', v: String(d.visits) }, { l: 'Category', v: CATS[d.cat].name }]))
+    }
+    r.addEventListener('pointerenter', show)
+    r.addEventListener('pointerleave', () => { if (document.activeElement !== r) tip.hide() })
+    r.addEventListener('focus', show)
+    r.addEventListener('blur', () => tip.hide())
+    return r
+  })
+  function order(mode, animate) {
+    const sorted = [...rows].sort((p, q) => mode === 'az' ? p._d.name.localeCompare(q._d.name) : q._d.total - p._d.total)
+    const before = new Map(rows.map((r) => [r, r.getBoundingClientRect().top]))
+    sorted.forEach((r, k) => { r.style.setProperty('--k', k); root.insertBefore(r, axis.parentNode === root ? axis : null) })
+    rove(sorted, null, { keys: ['ArrowUp', 'ArrowDown'] })
+    if (!animate || RM) return
+    sorted.forEach((r) => {
+      const dy = before.get(r) - r.getBoundingClientRect().top
+      if (!dy) return
+      r.style.transition = 'none'; r.style.transform = `translateY(${dy}px)`
+      r.offsetWidth
+      r.style.transition = ''; r.style.transform = ''
+    })
+  }
+  const axis = el('div', { class: 'lp-axis', 'aria-hidden': 'true' }, root)
+  el('span', {}, axis)
+  const ax = el('div', {}, axis)
+  for (let v = 0; v <= top + 1e-6; v += step) el('span', { text: shortEur(v) }, ax)
+  el('span', {}, axis)
+  if (!ticks) axis.remove()
+  rows.forEach((r) => root.insertBefore(r, ticks ? axis : null))
+  order('amount', false)
+  onEnter(root, () => root.classList.add('in'))
+  return { sort: (m) => order(m, true) }
+}
+
+/* =====================================================================
+   CS-09  Card stack
+   ===================================================================== */
+const CHIP_SVG = '<svg class="chip-g" viewBox="0 0 38 28" aria-hidden="true"><rect x=".75" y=".75" width="36.5" height="26.5" rx="6" fill="currentColor" fill-opacity=".16" stroke="currentColor" stroke-opacity=".45" stroke-width="1.2"/><path d="M1 10h11M1 18h11M26 10h11M26 18h11M12 1v26M26 1v26M12 14h14" stroke="currentColor" stroke-opacity=".45" stroke-width="1.2" fill="none"/></svg>'
+const CL_SVG = '<svg class="cl-g" viewBox="0 0 20 20" aria-hidden="true"><path d="M6 6.5a5 5 0 0 1 0 7M9.5 4.5a8 8 0 0 1 0 11M13 2.5a11 11 0 0 1 0 15"/></svg>'
+function CardStack(root, { cards, width = 330, label, onChange }) {
+  root.replaceChildren()
+  const cs = el('section', { class: 'cs', tabindex: '0', 'aria-roledescription': 'carousel', 'aria-label': `${label}. Arrow keys switch cards.` }, root)
+  const deck = el('div', { class: 'cs-deck', style: `--cw:${width}px` }, cs)
+  const nodes = cards.map((c, i) => {
+    const n = el('div', { class: `card card-${c.id}`, role: 'group', 'aria-roledescription': 'slide', 'aria-label': `${i + 1} of ${cards.length}: ${c.name} card ending ${c.last}` }, deck)
+    n.innerHTML = `<span class="arc" aria-hidden="true"></span><div class="card-top"><span class="card-name">${esc(c.name)}</span>${CL_SVG}</div>${CHIP_SVG}<div class="card-bot"><span class="card-num">•••• ${c.last}</span><span class="card-kind">${esc(c.kind)}</span></div>`
+    return n
+  })
+  const read = el('div', { class: 'cs-read', 'aria-hidden': 'true' }, cs)
+  const rk = el('span', { class: 'k' }, read)
+  const rn = el('span', { class: 'num md' }, read)
+  const money = Money(rn)
+  const ctrl = el('div', { class: 'cs-ctrl' }, cs)
+  const prev = el('button', { type: 'button', class: 'icon-btn press', 'aria-label': 'Previous card', html: '<svg viewBox="0 0 24 24"><path d="m15 18-6-6 6-6"/></svg>' }, ctrl)
+  const dots = el('div', { class: 'cs-dots', 'aria-hidden': 'true' }, ctrl)
+  const dn = cards.map(() => el('i', {}, dots))
+  const next = el('button', { type: 'button', class: 'icon-btn press', 'aria-label': 'Next card', html: '<svg viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></svg>' }, ctrl)
+  let order = cards.map((_, i) => i) // order[0] is the front card
+  let busy = false
+  function lay() {
+    order.forEach((ci, k) => {
+      const n = nodes[ci]
+      n.style.setProperty('--o', k)
+      n.style.zIndex = String(10 - k)
+      n.setAttribute('aria-hidden', k ? 'true' : 'false')
+      if (k) n.setAttribute('inert', ''); else n.removeAttribute('inert')
+    })
+    const f = order[0]
+    dn.forEach((d, i) => d.classList.toggle('on', i === f))
+    rk.textContent = `${cards[f].name} · ${cards[f].kind}`
+    money.set(cards[f].bal)
+    onChange && onChange(f)
+  }
+  function go(dir, flyDir = dir) {
+    if (busy) return
+    if (RM) { order = dir > 0 ? [...order.slice(1), order[0]] : [order[order.length - 1], ...order.slice(0, -1)]; lay(); announce(); return }
+    busy = true
+    if (dir > 0) {
+      const n = nodes[order[0]]
+      n.classList.add('fly'); n.classList.remove('drag')
+      n.style.transform = `translate(${flyDir * 115}%, -4%) rotate(${flyDir * 16}deg)`
+      setTimeout(() => {
+        order = [...order.slice(1), order[0]]
+        n.classList.remove('fly'); n.style.transform = ''
+        lay(); busy = false; announce()
+      }, 200)
+    } else {
+      const ci = order[order.length - 1], n = nodes[ci]
+      n.style.transition = 'none'; n.style.zIndex = '20'
+      n.style.transform = `translate(${-115}%, -4%) rotate(-16deg)`
+      n.offsetWidth
+      n.style.transition = ''
+      order = [ci, ...order.slice(0, -1)]
+      requestAnimationFrame(() => { n.style.transform = ''; lay(); busy = false; announce() })
+    }
+  }
+  const announce = () => { const c = cards[order[0]]; say(`${c.name} card ending ${c.last}, balance ${eur(c.bal)}`) }
+  prev.addEventListener('click', () => go(-1))
+  next.addEventListener('click', () => go(1))
+  cs.addEventListener('keydown', (e) => {
+    if (e.target !== cs) return
+    if (e.key === 'ArrowRight' || e.key === 'ArrowDown') { e.preventDefault(); go(1) }
+    if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') { e.preventDefault(); go(-1) }
+  })
+  // drag / flick the front card
+  let drag = null
+  deck.addEventListener('pointerdown', (e) => {
+    const n = nodes[order[0]]
+    if (!n.contains(e.target) || busy) return
+    drag = { n, x0: e.clientX, t0: performance.now(), dx: 0 }
+    n.setPointerCapture(e.pointerId)
+    n.classList.add('drag')
+  })
+  deck.addEventListener('pointermove', (e) => {
+    if (!drag) return
+    drag.dx = e.clientX - drag.x0
+    drag.n.style.transform = `translateX(${drag.dx}px) rotate(${drag.dx * 0.05}deg)`
+  })
+  const end = () => {
+    if (!drag) return
+    const { n, dx, t0 } = drag
+    drag = null
+    const v = Math.abs(dx) / Math.max(1, performance.now() - t0)
+    n.classList.remove('drag')
+    if (Math.abs(dx) > 60 || (Math.abs(dx) > 16 && v > 0.5)) go(1, Math.sign(dx))
+    else if (Math.abs(dx) < 4) go(1, 1) // a tap brings the next card forward
+    else n.style.transform = ''
+  }
+  deck.addEventListener('pointerup', end)
+  deck.addEventListener('pointercancel', () => { if (drag) { drag.n.classList.remove('drag'); drag.n.style.transform = ''; drag = null } })
+  lay()
+  return { go }
+}
+
+/* =====================================================================
+   TX-10  Transaction list
+   ===================================================================== */
+const IN_SVG = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12l7 7 7-7"/></svg>'
+function TxList(root, { items, limit }) {
+  let filter = 'all'
+  function render(animate) {
+    root.replaceChildren()
+    const list = items.filter((t) => filter === 'all' || (filter === 'in' ? t.amt > 0 : t.amt < 0)).slice(0, limit || 99)
+    const days = [...new Set(list.map((t) => t.day))].sort((a, b) => b - a)
+    let k = 0
+    days.forEach((d) => {
+      const rows = list.filter((t) => t.day === d)
+      const net = sum(rows.filter((t) => t.state !== 'failed').map((t) => t.amt))
+      const name = d === 0 ? 'Today' : d === -1 ? 'Yesterday' : dayLabel(d).long
+      const h = el('h5', { class: 'tx-day', style: 'margin:0' }, root)
+      el('span', { text: name }, h); el('span', { text: eur(net, 2, true), 'aria-label': `Net ${eur(net, 2, true)}` }, h)
+      const ul = el('ul', { 'aria-label': name }, root)
+      rows.forEach((t) => {
+        const li = el('li', {}, ul)
+        const c = t.cat >= 0 ? CATS[t.cat] : null
+        const b = el('button', { type: 'button', class: 'tx-row' + (animate && !RM ? ' enter' : ''), style: `transition-delay:${animate ? k * 30 : 0}ms` }, li)
+        const initials = t.name.replace(/^Refund, /, '').split(/\s+/).filter((w) => /^[A-Za-z]/.test(w)).map((w) => w[0]).join('').slice(0, 2)
+        el('span', { class: 'tx-g', style: `--c:${c ? c.c : 'var(--success)'}`, 'aria-hidden': 'true', html: t.glyph === 'in' ? IN_SVG : esc(initials) }, b)
+        const m = el('span', { class: 'tx-main' }, b)
+        el('span', { class: 'tx-nm', text: t.name }, m)
+        const meta = el('span', { class: 'tx-meta' }, m)
+        el('span', { text: `${c ? c.name : 'Transfer'} · ${t.time}` }, meta)
+        if (t.state === 'pending') el('span', { class: 'chip dash', text: 'Pending' }, meta)
+        if (t.state === 'failed') el('span', { class: 'chip bad', text: 'Failed' }, meta)
+        const amt = el('span', { class: 'tx-amt' + (t.amt > 0 ? ' in' : '') + (t.state === 'failed' ? ' fail' : '') }, b)
+        amt.innerHTML = `<span aria-hidden="true">${eurHTML(t.amt, 2, true)}</span>${t.note ? `<small>${esc(t.note)}</small>` : ''}`
+        b.setAttribute('aria-label', `${t.name}, ${c ? c.name : 'Transfer'}, ${name} ${t.time}, ${eur(t.amt, 2, true)}${t.state ? ', ' + t.state : ''}${t.note ? ', ' + t.note : ''}`)
+        k++
+      })
+    })
+    if (animate && !RM) requestAnimationFrame(() => requestAnimationFrame(() => $$('.tx-row.enter', root).forEach((r) => r.classList.remove('enter'))))
+    setTimeout(() => $$('.tx-row', root).forEach((r) => (r.style.transitionDelay = '')), 600)
+  }
+  render(false)
+  return { filter(f) { filter = f; render(true) } }
+}
+
+/* =====================================================================
+   WS-11  Week schedule
+   ===================================================================== */
+function WeekSchedule(root, { events, start = 8, end = 21, now, days }) {
+  const tip = Tip(root)
+  const inner = el('div', { class: 'ws-in' }, el('div', { class: 'ws-scroll' }, root))
+  const head = el('div', { class: 'ws-head', 'aria-hidden': 'true' }, inner)
+  el('div', {}, head)
+  days.forEach((d, i) => { const h = el('div', { html: `${d.short}<b>${d.date}</b>` }, head); if (i === now.day) h.dataset.today = '' })
+  const body = el('div', { class: 'ws-body' }, inner)
+  const H = end - start
+  body.style.height = `calc(var(--rh) * ${H})`
+  const gut = el('div', { class: 'ws-gut', 'aria-hidden': 'true' }, body)
+  for (let h = start + 1; h < end; h++) el('span', { text: `${String(h).padStart(2, '0')}:00`, style: `top:${(h - start) / H * 100}%` }, gut)
+  const fmtT = (t) => `${String(Math.floor(t)).padStart(2, '0')}:${String(Math.round((t % 1) * 60)).padStart(2, '0')}`
+  let k = 0
+  const all = []
+  days.forEach((d, di) => {
+    const col = el('div', { class: 'ws-col', role: 'group', 'aria-label': `${d.long}` }, body)
+    if (di === now.day) col.dataset.today = ''
+    const evs = events.filter((e) => e.d === di).sort((a, b) => a.s - b.s || b.e - a.e)
+    // side-by-side lanes for overlaps
+    let cluster = [], cEnd = -1
+    const flush = () => { const lanes = []; cluster.forEach((e) => { let l = lanes.findIndex((x) => x <= e.s); if (l < 0) { l = lanes.length; lanes.push(0) } lanes[l] = e.e; e._l = l }); cluster.forEach((e) => (e._n = lanes.length)); cluster = [] }
+    evs.forEach((e) => { if (e.s >= cEnd) { flush(); cEnd = -1 } cluster.push(e); cEnd = Math.max(cEnd, e.e) }); flush()
+    evs.forEach((e) => {
+      const cat = EV_CATS[e.c]
+      const b = el('button', { type: 'button', class: 'ev' + (e.e - e.s < 0.75 ? ' short tiny' : e.e - e.s < 1 ? ' short' : ''), style: `--c:${cat.c};--k:${k++};top:calc(${(e.s - start) / H * 100}% + 2px);height:calc(${(e.e - e.s) / H * 100}% - 4px);left:calc(${e._l / e._n * 100}% + 3px);width:calc(${100 / e._n}% - 6px)`, 'aria-label': `${e.t}, ${d.long}, ${fmtT(e.s)} to ${fmtT(e.e)}, ${cat.n}` }, col)
+      el('b', { text: e.t }, b); el('span', { text: `${fmtT(e.s)}–${fmtT(e.e)}` }, b)
+      const show = () => {
+        const r = root.getBoundingClientRect(), br = b.getBoundingClientRect()
+        tip.show(br.left - r.left + br.width / 2, br.top - r.top, tipHTML(`${d.long} · ${cat.n}`, esc(e.t), [{ l: `${fmtT(e.s)}–${fmtT(e.e)}`, v: `${Math.round((e.e - e.s) * 60)} min`, c: cat.c }]))
+      }
+      b.addEventListener('pointerenter', show); b.addEventListener('focus', show)
+      b.addEventListener('pointerleave', () => { if (document.activeElement !== b) tip.hide() })
+      b.addEventListener('blur', () => tip.hide())
+      all.push(b)
+    })
+    if (di === now.day) {
+      const t = now.hour + now.min / 60
+      el('div', { class: 'now', style: `top:${(t - start) / H * 100}%`, 'aria-hidden': 'true' }, col)
+    }
+  })
+  const t = now.hour + now.min / 60
+  el('span', { class: 'now-t', style: `top:${(t - start) / H * 100}%`, text: fmtT(t), 'aria-hidden': 'true' }, gut)
+  const key = el('div', { class: 'ws-key', 'aria-hidden': 'true' }, root)
+  EV_CATS.forEach((c) => el('span', { html: `<i style="--c:${c.c}"></i>${c.n}` }, key))
+  el('span', { html: `<i style="--c:var(--primary);border-radius:50%"></i>Now, ${fmtT(t)}` }, key)
+  onEnter(root, () => { root.classList.add('in'); setTimeout(() => root.classList.add('ready'), 1200) })
+}
+
+/* =====================================================================
+   Wire up the showcase
+   ===================================================================== */
+const periodOpts = [{ id: 'week', label: 'Week' }, { id: 'month', label: 'Month' }, { id: 'year', label: 'Year' }]
+
+// BR-01
+;(() => {
+  const num = Money($('#bar-num'))
+  const delta = $('#bar-delta')
+  let pid = 'week'
+  const setFact = (stagger) => {
+    const P = PERIODS[pid], t = sum(P.cur), p = sum(P.prev), ch = (t - p) / p * 100
+    $('#bar-k').textContent = P.k
+    num.set(t, stagger)
+    delta.className = 'chip ' + (ch <= 0 ? 'good' : 'bad')
+    delta.innerHTML = `${ch <= 0 ? ARROW_DN : ARROW_UP}${pct(ch, 1)} <span class="sr-only">compared with the ${P.prevName.toLowerCase()}</span>`
+  }
+  const chart = BarChart($('#bar'), { period: PERIODS.week, label: 'Spending' })
+  Pills($('[data-pills="bar-period"]'), { label: 'Period', options: periodOpts, value: 'week', onChange: (id) => { pid = id; chart.period(PERIODS[id]); setFact(false) } })
+  const cmp = $('#bar-cmp')
+  cmp.addEventListener('click', () => { const on = cmp.getAttribute('aria-pressed') !== 'true'; cmp.setAttribute('aria-pressed', on); chart.compare(on); $('#bar-legend').hidden = !on })
+  onEnter($('#t-bar'), () => setFact(true))
+})()
+
+// DN-02
+Donut($('#donut'), { values: catValues('month'), cats: CATS, label: 'Spending by category, last 30 days', centreK: 'Spent' })
+
+// DL-03
+Dial($('#dial'), { value: Math.round(sum(PERIODS.month.cur) / 1800 * 100), max: 100, n: 24, label: 'Monthly budget used', centreK: 'of €1 800 budget', fmt: (v) => `${Math.round(v)} percent of the monthly budget` })
+Dial3($('#dial'), { value: 0.92, label: 'Spending pace', zones: [{ name: 'Under', to: 0.85, c: 'var(--chart-1)' }, { name: 'On track', to: 1.1, c: 'var(--success)' }, { name: 'Over', to: 1.6, c: 'var(--destructive)' }] })
+
+// AR-04
+;(() => {
+  const m = Money($('#area-num'))
+  const end = BAL.a[29], before = BAL.prev[29]
+  $('#area-delta').innerHTML = `${ARROW_UP}${eur(end - before, 2, true)} <span class="sr-only">compared with 30 days before</span>`
+  AreaChart($('#area'), { a: BAL.a, b: BAL.prev, x: BAL.x, label: 'Everyday account balance, last 30 days compared with the 30 days before', nameA: 'Last 30 days', nameB: '30 days before' })
+  onEnter($('#t-area'), () => m.set(end, true))
+})()
+
+// SP-05
+;(() => {
+  const m = Money($('#spark-num'))
+  const kpi = $('#spark-kpi')
+  kpi.append(sparkline(SAVINGS, { w: 132, h: 44, label: `Savings pot, ${trendWord(SAVINGS)}` }))
+  const tb = $('#spark-table tbody')
+  const rows = [['Everyday', 'Debit •••• 4821', BAL.a], ['Travel', 'Multi-currency', TRAVEL], ['Online', 'Virtual', ONLINE]]
+  rows.forEach(([n, s, d], i) => {
+    const tr = el('tr', {}, tb)
+    el('td', { html: `<span class="nm">${n}</span><span class="sub">${s}</span>` }, tr)
+    const td = el('td', {}, tr); td.append(sparkline(d, { w: 96, h: 28, label: `${n}, ${trendWord(d)}`, delay: 120 + i * 80 }))
+    el('td', { html: eurHTML(d[d.length - 1]) }, tr)
+  })
+  onEnter($('#t-spark'), () => { $('#t-spark').classList.add('in'); m.set(5470.58, true) })
+})()
+
+// DM-06
+;(() => {
+  let best = { v: -1 }
+  DOTS.forEach((r, ri) => r.forEach((v, ci) => { if (v > best.v) best = { v, ri, ci } }))
+  const P = Plain($('#dots-num'), ':00')
+  $('#dots-chip').textContent = `${WD[best.ri]}, ${best.v} payments in 4 weeks`
+  DotMatrix($('#dots'), { data: DOTS, rows: WD, cols: HOURS, label: 'Card payments per hour over the last 4 weeks', now: NOW, hourLabels: 3 })
+  onEnter($('#t-dots'), () => P.set(String(HOURS[best.ci]).padStart(2, '0'), HOURS[best.ci], true))
+})()
+
+// BU-07
+Bubbles($('#bub'), { data: MERCHANTS, label: 'Merchants by visits and average spend, sized by total this month' })
+
+// LP-08
+;(() => {
+  const lp = Lollipop($('#lol'), { data: MERCHANTS, label: 'Top merchants by spend, last 30 days', limit: 6 })
+  Pills($('[data-pills="lol-sort"]'), { label: 'Sort', options: [{ id: 'amount', label: 'Amount' }, { id: 'az', label: 'A–Z' }], value: 'amount', onChange: (id) => lp.sort(id) })
+})()
+
+// CS-09
+CardStack($('#cards'), { cards: CARDS, label: 'Your cards' })
+
+// TX-10
+;(() => {
+  const tx = TxList($('#tx'), { items: TXS })
+  Pills($('[data-pills="tx-filter"]'), { label: 'Show', options: [{ id: 'all', label: 'All' }, { id: 'in', label: 'In' }, { id: 'out', label: 'Out' }], value: 'all', onChange: (id) => tx.filter(id) })
+})()
+
+// WS-11
+;(() => {
+  const days = Array.from({ length: 7 }, (_, i) => dayLabel(i - 3))
+  const hrs = sum(EVENTS.map((e) => e.e - e.s))
+  const P = Plain($('#ws-num'), ' h')
+  const left = EVENTS.filter((e) => e.d > NOW.day || (e.d === NOW.day && e.s > NOW.hour + NOW.min / 60)).length
+  $('#ws-chip').textContent = `${left} of ${EVENTS.length} still to come`
+  WeekSchedule($('#ws'), { events: EVENTS, start: 8, end: 21, now: NOW, days })
+  onEnter($('#t-ws'), () => P.set(String(hrs).replace('.', '.'), hrs, true))
+})()
+
+/* ---------- composed: wallet overview ---------- */
+;(() => {
+  const bal = Money($('#w-bal'))
+  const d30 = TOTAL - TOTAL_SERIES[0]
+  $('#w-bal-d').innerHTML = `${ARROW_UP}${eur(d30, 2, true)}`
+  const spWrap = $('#w-bal-spark')
+  const sp = sparkline(TOTAL_SERIES, { w: 420, h: 64, label: `Total balance, ${trendWord(TOTAL_SERIES)}` })
+  sp.setAttribute('preserveAspectRatio', 'none'); sp.style.width = '100%'; sp.querySelector('.ln').setAttribute('vector-effect', 'non-scaling-stroke')
+  sp.querySelector('.dot').remove()
+  spWrap.append(sp)
+  onEnter(spWrap, () => { spWrap.classList.add('in'); bal.set(TOTAL, true) })
+
+  CardStack($('#w-stack'), { cards: CARDS, width: 268, label: 'Wallet cards' })
+  const spent = sum(PERIODS.month.cur)
+  Dial($('#w-dial'), { value: Math.round(spent / 1800 * 100), max: 100, n: 20, label: 'Monthly budget used', centreK: 'used', fmt: (v) => `${Math.round(v)} percent of the monthly budget`, sub: `${eurHTML(spent, 0)} of <span class="u">€</span>1${TS}800` })
+
+  const spNum = Money($('#w-sp'))
+  const spD = $('#w-sp-d')
+  const bars = BarChart($('#w-bars'), { period: PERIODS.month, label: 'Wallet spending' })
+  const donut = Donut($('#w-donut'), { values: catValues('month'), cats: CATS, label: 'Wallet spending by category', centreK: 'Spent', compact: true })
+  const setP = (id, stagger) => {
+    const P = PERIODS[id], t = sum(P.cur), p = sum(P.prev), ch = (t - p) / p * 100
+    spNum.set(t, stagger)
+    spD.className = 'chip ' + (ch <= 0 ? 'good' : 'bad')
+    spD.innerHTML = `${ch <= 0 ? ARROW_DN : ARROW_UP}${pct(ch, 1)} <span class="sr-only">versus the ${P.prevName.toLowerCase()}</span>`
+  }
+  Pills($('[data-pills="w-period"]'), { label: 'Wallet period', options: periodOpts, value: 'month', onChange: (id) => { bars.period(PERIODS[id]); donut.update(catValues(id)); setP(id) } })
+  onEnter($('#w-sp'), () => setP('month', true))
+
+  TxList($('#w-tx'), { items: TXS, limit: 7 })
+  Lollipop($('#w-lol'), { data: MERCHANTS, label: 'Top merchants, last 30 days', limit: 4, ticks: false })
+  let best = { v: -1 }
+  DOTS.forEach((r, ri) => r.forEach((v, ci) => { if (v > best.v) best = { v, ri, ci } }))
+  $('#w-when-c').textContent = `Busiest ${WD[best.ri]} ${HOURS[best.ci]}:00`
+  DotMatrix($('#w-dots'), { data: DOTS, rows: WD.map((d) => d.slice(0, 1)), cols: HOURS, label: 'Card payments per hour over the last 4 weeks', now: NOW, hourLabels: 5 })
+})()
+
+/* ---------- theme + signal ---------- */
+const themeBtn = $('#theme')
+const syncTheme = () => themeBtn.setAttribute('aria-checked', document.documentElement.classList.contains('dark'))
+themeBtn.addEventListener('click', () => { document.documentElement.classList.toggle('dark'); syncTheme() })
+syncTheme()
+const sws = $$('[data-signal-radio]')
+const setSignal = (s, focus) => { document.documentElement.dataset.signal = s; sws.forEach((b) => { const on = b.dataset.signalRadio === s; b.setAttribute('aria-checked', on); b.tabIndex = on ? 0 : -1; if (on && focus) b.focus() }) }
+sws.forEach((b, i) => {
+  b.addEventListener('click', () => setSignal(b.dataset.signalRadio))
+  b.addEventListener('keydown', (e) => {
+    const to = { ArrowRight: i + 1, ArrowDown: i + 1, ArrowLeft: i - 1, ArrowUp: i - 1 }[e.key]
+    if (to === undefined) return
+    e.preventDefault(); setSignal(sws[(to + sws.length) % sws.length].dataset.signalRadio, true)
+  })
+})
+setSignal(document.documentElement.dataset.signal)
+})()
+</script>
+</body>
+</html>
+
+</body></html>
