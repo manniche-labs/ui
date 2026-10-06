@@ -7,6 +7,8 @@ import { cn } from '@/lib/utils'
 export type DataTileProps = {
   /** The question the tile answers, as a short name: "Revenue", "Sleep". */
   title?: ReactNode
+  /** The heading level of the title, to fit the page outline. Default 3. */
+  headingLevel?: 2 | 3 | 4 | 5 | 6
   /** A control set at the right of the title row, such as a period switch. */
   action?: ReactNode
   /** The fine print under a line: what is counted, from when, by whom. */
@@ -59,9 +61,10 @@ const DENSITY = {
   compact: { tile: 'px-[18px] pt-3', body: 'mt-3.5', foot: 'mt-3.5 pt-2.5 pb-3.5', end: 'pb-[18px]' },
 }
 
-export function DataTile({ title, action, footer, inverted = false, density = 'comfortable', className, children }: DataTileProps) {
+export function DataTile({ title, headingLevel = 3, action, footer, inverted = false, density = 'comfortable', className, children }: DataTileProps) {
   const titleId = useId()
   const d = DENSITY[density]
+  const Heading = `h${headingLevel}` as const
   return (
     <section
       aria-labelledby={title ? titleId : undefined}
@@ -83,9 +86,9 @@ export function DataTile({ title, action, footer, inverted = false, density = 'c
         {(title || action) && (
           <div className="flex min-h-11 flex-wrap items-center gap-3">
             {title && (
-              <h3 id={titleId} className="text-[15px] leading-[1.2] font-medium tracking-[-0.01em]">
+              <Heading id={titleId} className="text-[15px] leading-[1.2] font-medium tracking-[-0.01em]">
                 {title}
-              </h3>
+              </Heading>
             )}
             {action && <div className="ml-auto flex flex-wrap items-center gap-2">{action}</div>}
           </div>

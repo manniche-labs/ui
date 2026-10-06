@@ -68,7 +68,7 @@ export function SpendControl({ data, labels, now, currency = 'EUR', onUpsell, cl
               title={item.label}
               aria-current={item.current ? 'page' : undefined}
               className={cn(
-                'grid size-10 place-items-center rounded-lg text-muted-foreground transition-colors hover:bg-muted hover:text-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring',
+                'grid size-10 place-items-center rounded-lg text-muted-foreground hover:bg-muted hover:text-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring',
                 item.current && 'bg-foreground text-background hover:bg-foreground hover:text-background',
               )}
             >

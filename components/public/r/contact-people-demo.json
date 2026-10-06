@@ -1,0 +1,20 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "contact-people-demo",
+  "title": "Contact People demo",
+  "description": "How to use Contact People.",
+  "registryDependencies": [
+    "@manniche/contact-people"
+  ],
+  "files": [
+    {
+      "path": "registry/manniche/examples/contact-people-demo.tsx",
+      "content": "import { ContactPeople } from '@/registry/manniche/contact-people/contact-people'\n\nexport default function ContactPeopleDemo() {\n  return (\n    <ContactPeople\n      heading=\"Talk to a person\"\n      intro=\"Invented people at an invented studio.\"\n      people={[\n        { id: 'a', name: 'Anna Beispiel', role: 'Studio lead', team: 'Munich', languages: ['English', 'Deutsch'], email: 'anna@example.com', bookHref: 'https://example.com/book/anna' },\n        { id: 'b', name: 'Jonas Eksempel', role: 'Design engineer', team: 'Aalborg', languages: ['English', 'Dansk'], email: 'jonas@example.com' },\n        { id: 'c', name: 'Mira Muster', role: 'Producer', team: 'Munich', languages: ['English', 'Deutsch'], email: 'mira@example.com', bookHref: 'https://example.com/book/mira' },\n        { id: 'd', name: 'Sofie Test', role: 'Support', team: 'Aalborg', languages: ['English', 'Dansk'], email: 'sofie@example.com' },\n      ]}\n    />\n  )\n}\n",
+      "type": "registry:example"
+    }
+  ],
+  "categories": [
+    "templates"
+  ],
+  "type": "registry:example"
+}

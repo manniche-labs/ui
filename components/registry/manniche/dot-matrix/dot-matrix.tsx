@@ -386,7 +386,9 @@ export function DotMatrix({
           <ChartTooltip
             open={tipAt >= 0}
             x={tipAt >= 0 ? gut + (tipC + 0.5) * cellW : 0}
-            y={tipAt >= 0 ? tipR * cellH + cellH * 0.14 : 0}
+            // Near the top the tooltip opens below the cell, so it does not cover the title and figure above the grid.
+            y={tipAt >= 0 ? (tipR * cellH < 70 ? (tipR + 0.86) * cellH : tipR * cellH + cellH * 0.14) : 0}
+            below={tipAt >= 0 && tipR * cellH < 70}
             bounds={width}
             title={tipAt >= 0 ? (tipAt === now ? `${name(tipAt)} · ${labels.current}` : name(tipAt)) : ''}
             value={

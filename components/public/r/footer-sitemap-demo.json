@@ -1,0 +1,20 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "footer-sitemap-demo",
+  "title": "Footer Sitemap demo",
+  "description": "How to use Footer Sitemap.",
+  "registryDependencies": [
+    "@manniche/footer-sitemap"
+  ],
+  "files": [
+    {
+      "path": "registry/manniche/examples/footer-sitemap-demo.tsx",
+      "content": "import { useState } from 'react'\nimport { Pills } from '@/registry/manniche/chart-kit/chart-kit'\nimport { FooterSitemap, type SitemapGroup } from '@/registry/manniche/footer-sitemap/footer-sitemap'\n\nconst link = (label: string, external = false) => ({ label, href: `https://example.com/${label.toLowerCase().replace(/[^a-z]+/g, '-')}`, external })\n\nconst groups: SitemapGroup[] = [\n  { title: 'Studio', links: ['About', 'Team', 'Careers', 'Press', 'Contact'].map((l) => link(l)) },\n  { title: 'Work', links: ['Case studies', 'Product design', 'Prototyping', 'Research'].map((l) => link(l)) },\n  { title: 'Services', links: ['Discovery sprint', 'Design systems', 'Front-end builds', 'Workshops', 'Retainers'].map((l) => link(l)) },\n  { title: 'Journal', links: ['Latest', 'Essays', 'Field notes', 'Newsletter', 'RSS'].map((l) => link(l)) },\n  { title: 'Resources', links: [link('Guides'), link('Templates'), link('Open source', true), link('Brand kit')] },\n  { title: 'Offices', links: ['Munich', 'Aalborg', 'Visit us', 'Directions'].map((l) => link(l)) },\n  { title: 'Legal', links: ['Privacy', 'Terms', 'Imprint', 'Cookies'].map((l) => link(l)) },\n]\n\nconst regions = [\n  { label: 'English', href: 'https://example.com/en', lang: 'en', current: true },\n  { label: 'Deutsch', href: 'https://example.com/de', lang: 'de' },\n  { label: 'Dansk', href: 'https://example.com/da', lang: 'da' },\n]\n\nexport default function FooterSitemapDemo() {\n  // The fold follows the footer's own box, so a narrow wrapper shows it without resizing the window.\n  const [box, setBox] = useState('wide')\n  return (\n    <div className=\"grid gap-8 py-8\">\n      <div className=\"mx-auto flex w-full max-w-6xl flex-wrap items-center gap-3 px-4 sm:px-6\">\n        <span className=\"font-mono text-[11px] tracking-[0.08em] text-muted-foreground uppercase\">Box</span>\n        <Pills\n          label=\"Footer width\"\n          value={box}\n          onChange={setBox}\n          options={[\n            { id: 'wide', label: 'Wide' },\n            { id: 'narrow', label: 'Narrow' },\n          ]}\n        />\n      </div>\n      <div className={box === 'narrow' ? 'mx-auto w-full max-w-sm' : 'w-full'}>\n        <FooterSitemap\n          brand=\"Halden Studio\"\n          description=\"A small product studio in Munich and Aalborg.\"\n          groups={groups}\n          regions={regions}\n          defaultOpen={['Studio']}\n          legal={<span>© 2026 Halden Studio</span>}\n        />\n      </div>\n    </div>\n  )\n}\n",
+      "type": "registry:example"
+    }
+  ],
+  "categories": [
+    "templates"
+  ],
+  "type": "registry:example"
+}
