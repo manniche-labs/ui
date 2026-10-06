@@ -89,6 +89,8 @@ There is also a hosted MCP server just for this registry, with no key: `https://
 | `notification-stack` | Notifications in a pile that fans out into a list |
 | `cloud-drift` | Soft clouds drifting behind content, on a tiny canvas |
 | `liquid-metal` | Flowing chrome surface from a small WebGL shader |
+| `shader-backdrop` | Moving WebGL background in seven families (mesh, swirl, halftone, metal, aurora, flame, cells) and 55 named looks, or your own colours |
+| `gravity-grid` | Dots or grid lines that bend towards the pointer and light up around it |
 | `logo-grid` | Logos around a centre heading, for integrations or partners |
 | `split-button` | A button that splits into a row of choices |
 | `dock` | App icons that bounce when picked, with labels and arrow keys |
@@ -128,6 +130,8 @@ Whole pages, built from the same tokens. Install one like a component, or downlo
 - Touch targets are at least 44 px.
 - Under `prefers-reduced-motion` everything is shown in its final state.
 - No gradient text, glow or bounce.
+
+Browsers keep about 16 WebGL contexts per page and drop the oldest beyond that. `liquid-metal` and `shader-backdrop` each use one and pause when off screen, so a page can hold a handful but not a grid of dozens.
 
 ## Dangerous actions
 
