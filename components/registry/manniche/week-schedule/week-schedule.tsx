@@ -627,7 +627,7 @@ function DayTabs({
           tabIndex={d === shown ? 0 : -1}
           onClick={() => onPick(d)}
           onKeyDown={(e) => onKeyDown(e, d)}
-          className="relative grid min-h-11 min-w-11 flex-1 cursor-pointer justify-items-center gap-0.5 rounded-[14px] py-1 focus-visible:outline-offset-0"
+          className="relative grid min-h-11 min-w-9 flex-1 cursor-pointer justify-items-center gap-0.5 rounded-[14px] py-1 focus-visible:outline-offset-0"
         >
           <span aria-hidden className="text-[12px] leading-[1.3] font-medium text-muted-foreground">
             {weekday(d)}

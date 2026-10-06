@@ -349,6 +349,17 @@ export function BubbleChart({
   }, [active, n, setActive])
 
   const at = active !== null && active >= 0 && active < n ? active : -1
+
+  // A tooltip opened by hover closes on Escape too, without moving the pointer (WCAG 1.4.13).
+  useEffect(() => {
+    if (at < 0 || keyboard) return
+    const onKey = (e: globalThis.KeyboardEvent) => {
+      if (e.key === 'Escape') setActive(null)
+    }
+    window.addEventListener('keydown', onKey)
+    return () => window.removeEventListener('keydown', onKey)
+  }, [at, keyboard, setActive])
+
   const order = useMemo(() => layout?.order ?? [], [layout])
 
   const texts = (d: BubbleDatum) => ({
