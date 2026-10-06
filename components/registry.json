@@ -4016,6 +4016,169 @@
       ]
     },
     {
+      "name": "wallet-dashboard",
+      "type": "registry:block",
+      "title": "Wallet dashboard",
+      "description": "A wallet dashboard in Tiles: balance, a fanned stack of three payment cards, cash flow bars, a spending donut and subscriptions.",
+      "registryDependencies": [
+        "utils",
+        "@manniche/chart-kit",
+        "@manniche/data-tile",
+        "@manniche/bar-chart",
+        "@manniche/card-stack",
+        "@manniche/donut"
+      ],
+      "files": [
+        {
+          "path": "registry/manniche/wallet-dashboard/wallet-dashboard.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "categories": [
+        "templates"
+      ]
+    },
+    {
+      "name": "wallet-dashboard-demo",
+      "type": "registry:example",
+      "title": "Wallet dashboard demo",
+      "description": "How to use Wallet dashboard.",
+      "registryDependencies": [
+        "@manniche/wallet-dashboard"
+      ],
+      "files": [
+        {
+          "path": "registry/manniche/examples/wallet-dashboard-demo.tsx",
+          "type": "registry:example"
+        }
+      ],
+      "categories": [
+        "templates"
+      ]
+    },
+    {
+      "name": "account-home",
+      "type": "registry:block",
+      "title": "Account home",
+      "description": "A bank account start page in Tiles: a payment card, the balance, a three-state dial and recent transactions.",
+      "registryDependencies": [
+        "utils",
+        "@manniche/chart-kit",
+        "@manniche/data-tile",
+        "@manniche/card-stack",
+        "@manniche/dial",
+        "@manniche/transaction-list"
+      ],
+      "files": [
+        {
+          "path": "registry/manniche/account-home/account-home.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "categories": [
+        "templates"
+      ]
+    },
+    {
+      "name": "account-home-demo",
+      "type": "registry:example",
+      "title": "Account home demo",
+      "description": "How to use Account home.",
+      "registryDependencies": [
+        "@manniche/account-home"
+      ],
+      "files": [
+        {
+          "path": "registry/manniche/examples/account-home-demo.tsx",
+          "type": "registry:example"
+        }
+      ],
+      "categories": [
+        "templates"
+      ]
+    },
+    {
+      "name": "currency-wallet",
+      "type": "registry:block",
+      "title": "Currency wallet",
+      "description": "A multi-currency wallet in Tiles: a currency switch, a rewards panel that names the next tier, a spending donut and allocation bars.",
+      "registryDependencies": [
+        "utils",
+        "@manniche/chart-kit",
+        "@manniche/data-tile",
+        "@manniche/donut"
+      ],
+      "files": [
+        {
+          "path": "registry/manniche/currency-wallet/currency-wallet.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "categories": [
+        "templates"
+      ]
+    },
+    {
+      "name": "currency-wallet-demo",
+      "type": "registry:example",
+      "title": "Currency wallet demo",
+      "description": "How to use Currency wallet.",
+      "registryDependencies": [
+        "@manniche/currency-wallet"
+      ],
+      "files": [
+        {
+          "path": "registry/manniche/examples/currency-wallet-demo.tsx",
+          "type": "registry:example"
+        }
+      ],
+      "categories": [
+        "templates"
+      ]
+    },
+    {
+      "name": "business-finance",
+      "type": "registry:block",
+      "title": "Business finance",
+      "description": "A business finance dashboard in Tiles: income against payments, a growth ring against target, a stock sparkline, activity and a verification checklist.",
+      "registryDependencies": [
+        "utils",
+        "@manniche/chart-kit",
+        "@manniche/data-tile",
+        "@manniche/area-chart",
+        "@manniche/donut",
+        "@manniche/sparkline",
+        "@manniche/transaction-list"
+      ],
+      "files": [
+        {
+          "path": "registry/manniche/business-finance/business-finance.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "categories": [
+        "templates"
+      ]
+    },
+    {
+      "name": "business-finance-demo",
+      "type": "registry:example",
+      "title": "Business finance demo",
+      "description": "How to use Business finance.",
+      "registryDependencies": [
+        "@manniche/business-finance"
+      ],
+      "files": [
+        {
+          "path": "registry/manniche/examples/business-finance-demo.tsx",
+          "type": "registry:example"
+        }
+      ],
+      "categories": [
+        "templates"
+      ]
+    },
+    {
       "name": "chart-kit",
       "type": "registry:component",
       "title": "Chart kit",
