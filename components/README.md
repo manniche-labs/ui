@@ -86,6 +86,9 @@ There is also a hosted MCP server just for this registry, with no key: `https://
 | `cube-carousel` | Carousel on the sides of a cube, a quarter turn per step |
 | `curve-carousel` | Cards on a curve in ten layouts (fan, arc, coverflow, cylinder, curl, helix, double helix, rolodex, shingle, bulge) with drag momentum, keys and trackpad |
 | `post-carousel` | A post whose pictures swing out and tuck in behind each other as you swipe |
+| `lens-strip` | Pictures sliding behind a fixed glass lens that magnifies the one in it and bends it at the rim with faint colour fringes (WebGL) |
+| `sand-edge` | Carousel whose side pictures erode into sand that blows off with the strip's speed and settles to a weathered edge (WebGL) |
+| `wave-ribbon` | Pictures on a ribbon that undulates in depth, neighbours fading into fog in the theme's background (WebGL, CSS 3D fallback) |
 | `wave-loader` | A ball hops along bars and sends a spring wave through them |
 | `jelly-slider` | Slider whose soft thumb stretches with drag speed |
 | `notification-stack` | Notifications in a pile that fans out into a list |
@@ -117,6 +120,7 @@ There is also a hosted MCP server just for this registry, with no key: `https://
 | `integration-card` | Integrations that open into a card with a connect button |
 | `use-reduced-motion` | Hook: true when the visitor asked for less motion |
 | `use-carousel-engine` | Hook: drag with momentum, trackpad, snapping and glides for your own carousel; you draw each frame |
+| `use-gl-stage` | Hook: a WebGL canvas that handles its context, size, theme colours and pausing, plus a texture atlas for pictures |
 
 Several of the newer components are adapted from [Watermelon UI](https://github.com/WatermelonCorp/watermelon-platform) (MIT). Each such file says so at the top; see [THIRD_PARTY_NOTICES.md](../THIRD_PARTY_NOTICES.md).
 
@@ -142,7 +146,7 @@ Whole pages, built from the same tokens. Install one like a component, or downlo
 - Under `prefers-reduced-motion` everything is shown in its final state.
 - No gradient text, glow or bounce.
 
-Browsers keep about 16 WebGL contexts per page and drop the oldest beyond that. `liquid-metal` and `shader-backdrop` each use one and pause when off screen, so a page can hold a handful but not a grid of dozens.
+Browsers keep about 16 WebGL contexts per page and drop the oldest beyond that. `liquid-metal`, `shader-backdrop`, `lens-strip`, `sand-edge` and `wave-ribbon` each use one and pause when off screen, so a page can hold a handful but not a grid of dozens.
 
 ## Dangerous actions
 
