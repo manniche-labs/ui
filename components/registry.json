@@ -38,6 +38,25 @@
       ]
     },
     {
+      "name": "use-gl-stage",
+      "type": "registry:hook",
+      "title": "useGlStage",
+      "description": "Runs a WebGL scene in a canvas: context lifecycle, pixel cap, live theme colours, a frame loop only on screen, and a texture atlas for pictures.",
+      "files": [
+        {
+          "path": "registry/manniche/hooks/use-gl-stage.ts",
+          "type": "registry:hook"
+        },
+        {
+          "path": "registry/manniche/hooks/use-reduced-motion.ts",
+          "type": "registry:hook"
+        }
+      ],
+      "categories": [
+        "hooks"
+      ]
+    },
+    {
       "name": "prompt-input",
       "type": "registry:component",
       "title": "Prompt input",
@@ -1790,6 +1809,105 @@
       ]
     },
     {
+      "name": "lens-strip",
+      "type": "registry:component",
+      "title": "Lens strip",
+      "description": "A strip of pictures sliding behind a fixed lens of thick glass that magnifies the one in it, bends it at the bevelled rim with faint colour fringes, and smears it a little while moving. WebGL, with a DOM fallback.",
+      "dependencies": [
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "utils"
+      ],
+      "files": [
+        {
+          "path": "registry/manniche/lens-strip/lens-strip.tsx",
+          "type": "registry:component"
+        },
+        {
+          "path": "registry/manniche/hooks/use-carousel-engine.ts",
+          "type": "registry:hook"
+        },
+        {
+          "path": "registry/manniche/hooks/use-gl-stage.ts",
+          "type": "registry:hook"
+        },
+        {
+          "path": "registry/manniche/hooks/use-reduced-motion.ts",
+          "type": "registry:hook"
+        }
+      ],
+      "categories": [
+        "widgets"
+      ]
+    },
+    {
+      "name": "sand-edge",
+      "type": "registry:component",
+      "title": "Sand edge",
+      "description": "A carousel whose side pictures erode into fine sand in their own colours: the grains blow off with the strip's speed and settle to a weathered edge at rest. WebGL, with a DOM fallback.",
+      "dependencies": [
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "utils"
+      ],
+      "files": [
+        {
+          "path": "registry/manniche/sand-edge/sand-edge.tsx",
+          "type": "registry:component"
+        },
+        {
+          "path": "registry/manniche/hooks/use-carousel-engine.ts",
+          "type": "registry:hook"
+        },
+        {
+          "path": "registry/manniche/hooks/use-gl-stage.ts",
+          "type": "registry:hook"
+        },
+        {
+          "path": "registry/manniche/hooks/use-reduced-motion.ts",
+          "type": "registry:hook"
+        }
+      ],
+      "categories": [
+        "widgets"
+      ]
+    },
+    {
+      "name": "wave-ribbon",
+      "type": "registry:component",
+      "title": "Wave ribbon",
+      "description": "Pictures on a long ribbon that undulates gently in depth; neighbours recede into fog in the theme's background, and a fast drag deepens the wave a little. WebGL, with a CSS 3D fallback.",
+      "dependencies": [
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "utils"
+      ],
+      "files": [
+        {
+          "path": "registry/manniche/wave-ribbon/wave-ribbon.tsx",
+          "type": "registry:component"
+        },
+        {
+          "path": "registry/manniche/hooks/use-carousel-engine.ts",
+          "type": "registry:hook"
+        },
+        {
+          "path": "registry/manniche/hooks/use-gl-stage.ts",
+          "type": "registry:hook"
+        },
+        {
+          "path": "registry/manniche/hooks/use-reduced-motion.ts",
+          "type": "registry:hook"
+        }
+      ],
+      "categories": [
+        "widgets"
+      ]
+    },
+    {
       "name": "curve-carousel-demo",
       "type": "registry:example",
       "title": "Curve carousel demo",
@@ -1818,6 +1936,72 @@
       "files": [
         {
           "path": "registry/manniche/examples/post-carousel-demo.tsx",
+          "type": "registry:example"
+        }
+      ],
+      "categories": [
+        "widgets"
+      ]
+    },
+    {
+      "name": "lens-strip-demo",
+      "type": "registry:example",
+      "title": "Lens strip demo",
+      "description": "How to use Lens strip.",
+      "registryDependencies": [
+        "@manniche/lens-strip"
+      ],
+      "files": [
+        {
+          "path": "registry/manniche/examples/lens-strip-demo.tsx",
+          "type": "registry:example"
+        },
+        {
+          "path": "registry/manniche/examples/gl-pictures.ts",
+          "type": "registry:example"
+        }
+      ],
+      "categories": [
+        "widgets"
+      ]
+    },
+    {
+      "name": "sand-edge-demo",
+      "type": "registry:example",
+      "title": "Sand edge demo",
+      "description": "How to use Sand edge.",
+      "registryDependencies": [
+        "@manniche/sand-edge"
+      ],
+      "files": [
+        {
+          "path": "registry/manniche/examples/sand-edge-demo.tsx",
+          "type": "registry:example"
+        },
+        {
+          "path": "registry/manniche/examples/gl-pictures.ts",
+          "type": "registry:example"
+        }
+      ],
+      "categories": [
+        "widgets"
+      ]
+    },
+    {
+      "name": "wave-ribbon-demo",
+      "type": "registry:example",
+      "title": "Wave ribbon demo",
+      "description": "How to use Wave ribbon.",
+      "registryDependencies": [
+        "@manniche/wave-ribbon"
+      ],
+      "files": [
+        {
+          "path": "registry/manniche/examples/wave-ribbon-demo.tsx",
+          "type": "registry:example"
+        },
+        {
+          "path": "registry/manniche/examples/gl-pictures.ts",
           "type": "registry:example"
         }
       ],
