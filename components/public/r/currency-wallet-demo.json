@@ -1,0 +1,20 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "currency-wallet-demo",
+  "title": "Currency wallet demo",
+  "description": "How to use Currency wallet.",
+  "registryDependencies": [
+    "@manniche/currency-wallet"
+  ],
+  "files": [
+    {
+      "path": "registry/manniche/examples/currency-wallet-demo.tsx",
+      "content": "import { CurrencyWallet, type WalletCurrency } from '@/registry/manniche/currency-wallet/currency-wallet'\n\n// Example data for the demo, not real accounts or rates.\nconst data: WalletCurrency[] = [\n  {\n    code: 'EUR',\n    balance: 4210.5,\n    change: 2.4,\n    spending: [\n      { label: 'Groceries', value: 310.2 },\n      { label: 'Travel', value: 420 },\n      { label: 'Eating out', value: 180.4 },\n      { label: 'Bills', value: 255 },\n    ],\n    allocation: [\n      { id: 'spend', label: 'Spending', share: 0.4 },\n      { id: 'save', label: 'Savings', share: 0.45 },\n      { id: 'trip', label: 'Trip pot', share: 0.15 },\n    ],\n    rewards: { points: 3820, next: 1180, tier: 'Silver', nextTier: 'Gold', perks: ['Free ATM withdrawals', 'Travel insurance'] },\n  },\n  {\n    code: 'USD',\n    balance: 1380,\n    change: -0.8,\n    spending: [\n      { label: 'Travel', value: 540 },\n      { label: 'Shopping', value: 210.5 },\n      { label: 'Eating out', value: 96 },\n    ],\n    allocation: [\n      { id: 'spend', label: 'Spending', share: 0.7 },\n      { id: 'save', label: 'Savings', share: 0.3 },\n    ],\n    rewards: { points: 640, next: 360, tier: 'Silver', nextTier: 'Gold', perks: ['No fee on card payments abroad'] },\n  },\n  {\n    code: 'DKK',\n    balance: 18240,\n    change: 1.1,\n    spending: [\n      { label: 'Groceries', value: 2410 },\n      { label: 'Transport', value: 980 },\n      { label: 'Bills', value: 3120 },\n    ],\n    allocation: [\n      { id: 'spend', label: 'Spending', share: 0.55 },\n      { id: 'save', label: 'Savings', share: 0.45 },\n    ],\n    rewards: { points: 1210, next: 790, tier: 'Silver', nextTier: 'Gold', perks: ['Free transfers between pots'] },\n  },\n]\n\nexport default function CurrencyWalletDemo() {\n  return <CurrencyWallet data={data} />\n}\n",
+      "type": "registry:example"
+    }
+  ],
+  "categories": [
+    "templates"
+  ],
+  "type": "registry:example"
+}
