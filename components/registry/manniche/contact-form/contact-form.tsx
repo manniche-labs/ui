@@ -4,7 +4,7 @@
 // Screen readers: real labels, aria-invalid + aria-describedby on errors, focus moves to the first invalid field,
 // and sending, sent and error states are announced through a live region. The form never sends anything itself:
 // onSubmit returns a promise the section awaits. Reduced motion: nothing here animates beyond opacity.
-import { useId, useRef, useState, type FormEvent, type HTMLAttributes, type ReactNode } from 'react'
+import { useEffect, useId, useRef, useState, type FormEvent, type HTMLAttributes, type ReactNode } from 'react'
 import { cn } from '@/lib/utils'
 import { Pills, type PillOption } from '@/registry/manniche/chart-kit/chart-kit'
 
@@ -63,6 +63,11 @@ export function ContactForm({ heading, intro, topics, maxLength = 800, consent, 
   const [errors, setErrors] = useState<Errors>({})
   const [status, setStatus] = useState<Status>('idle')
   const formRef = useRef<HTMLFormElement>(null)
+  const sentRef = useRef<HTMLHeadingElement>(null)
+  // The form disappears when sent, so focus moves to the confirmation instead of being lost.
+  useEffect(() => {
+    if (status === 'sent') sentRef.current?.focus()
+  }, [status])
 
   const validate = (v: ContactFormValues): Errors => {
     const e: Errors = {}
@@ -120,7 +125,7 @@ export function ContactForm({ heading, intro, topics, maxLength = 800, consent, 
           </div>
           {status === 'sent' ? (
             <div>
-              <h3 className="text-xl font-semibold">{L.sentTitle}</h3>
+              <h3 ref={sentRef} tabIndex={-1} className="text-xl font-semibold outline-offset-2 focus-visible:outline-2 focus-visible:outline-ring">{L.sentTitle}</h3>
               <p className="mt-2 text-muted-foreground">{L.sentText}</p>
               <p className="mt-4 font-mono text-xs tabular-nums text-muted-foreground">{values.email}</p>
               <button
@@ -193,11 +198,11 @@ export function ContactForm({ heading, intro, topics, maxLength = 800, consent, 
           <dl className="mt-4 grid gap-4 text-sm">
             {info.email && (
               <div><dt className="font-mono text-[11px] uppercase tracking-wide text-muted-foreground">{L.emailLabel}</dt>
-                <dd className="mt-1 break-words"><a className="underline underline-offset-4 outline-offset-2 focus-visible:outline-2 focus-visible:outline-ring" href={`mailto:${info.email}`}>{info.email}</a></dd></div>
+                <dd className="break-words"><a className="inline-flex min-h-11 items-center underline underline-offset-4 outline-offset-2 focus-visible:outline-2 focus-visible:outline-ring" href={`mailto:${info.email}`}>{info.email}</a></dd></div>
             )}
             {info.phone && (
               <div><dt className="font-mono text-[11px] uppercase tracking-wide text-muted-foreground">{L.phoneLabel}</dt>
-                <dd className="mt-1 tabular-nums"><a className="underline underline-offset-4 outline-offset-2 focus-visible:outline-2 focus-visible:outline-ring" href={`tel:${info.phone.replace(/[^\d+]/g, '')}`}>{info.phone}</a></dd></div>
+                <dd className="tabular-nums"><a className="inline-flex min-h-11 items-center underline underline-offset-4 outline-offset-2 focus-visible:outline-2 focus-visible:outline-ring" href={`tel:${info.phone.replace(/[^\d+]/g, '')}`}>{info.phone}</a></dd></div>
             )}
             {info.address && (
               <div><dt className="font-mono text-[11px] uppercase tracking-wide text-muted-foreground">{L.addressLabel}</dt>

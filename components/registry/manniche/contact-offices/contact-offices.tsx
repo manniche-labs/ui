@@ -150,7 +150,7 @@ export function ContactOffices({ heading, intro, offices, now, labels = {}, clas
                 )}
                 <address className="mt-3 text-sm not-italic">
                   {o.address}
-                  {o.phone && (<><br /><a className="underline underline-offset-4 outline-offset-2 focus-visible:outline-2 focus-visible:outline-ring tabular-nums" href={`tel:${o.phone.replace(/[^\d+]/g, '')}`}>{o.phone}</a></>)}
+                  {o.phone && (<><br /><a className="inline-flex min-h-11 items-center underline underline-offset-4 outline-offset-2 focus-visible:outline-2 focus-visible:outline-ring tabular-nums" href={`tel:${o.phone.replace(/[^\d+]/g, '')}`}>{o.phone}</a></>)}
                 </address>
                 <table className="mt-4 w-full text-left font-mono text-xs tabular-nums text-muted-foreground">
                   <caption className="sr-only">{L.hours}</caption>
