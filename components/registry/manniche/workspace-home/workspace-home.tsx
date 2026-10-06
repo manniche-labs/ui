@@ -1,14 +1,16 @@
-// A workspace home screen (WIP: pill navbar, large search, offer tile, deals bars; the week schedule is still missing).
+// A workspace home screen (pill navbar, large search, offer tile, deals bars, week schedule).
 import { Search } from 'lucide-react'
 import { useState } from 'react'
 import { cn } from '@/lib/utils'
 import { BarChart, type BarPoint } from '@/registry/manniche/bar-chart/bar-chart'
 import { BigNumber } from '@/registry/manniche/chart-kit/chart-kit'
 import { DataTile, TileFact } from '@/registry/manniche/data-tile/data-tile'
+import { WeekSchedule, type ScheduleCategory, type ScheduleEvent } from '@/registry/manniche/week-schedule/week-schedule'
 
 export type WorkspaceHomeData = {
   nav: { id: string; label: string }[]
   offer: { title: string; text: string; action: string }
+  schedule: { title: string; weekStart: string; now?: string; events: ScheduleEvent[]; categories?: ScheduleCategory[] }
   deals: { title: string; total: number; points: BarPoint[]; currency?: string }
 }
 
@@ -82,6 +84,17 @@ export function WorkspaceHome({ data, labels, onSearch, onOffer, className }: Wo
               <BigNumber value={data.deals.total} format={money} size="lg" />
             </TileFact>
             <BarChart data={data.deals.points} label={data.deals.title} format={money} />
+          </DataTile>
+        </div>
+        <div className="@2xl:col-span-5">
+          <DataTile title={data.schedule.title} footer={t.note}>
+            <WeekSchedule
+              data={data.schedule.events}
+              label={data.schedule.title}
+              weekStart={data.schedule.weekStart}
+              now={data.schedule.now}
+              categories={data.schedule.categories}
+            />
           </DataTile>
         </div>
       </div>
