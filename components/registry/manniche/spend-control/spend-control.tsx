@@ -43,7 +43,7 @@ export type SpendControlProps = {
 const L: Required<SpendControlLabels> = {
   title: 'Spend control',
   cards: 'Virtual cards',
-  spending: 'Spending this week',
+  spending: 'Spending, last 7 days',
   merchants: 'Merchants by visits and average spend',
   limit: 'of',
   frozen: 'Frozen',
@@ -56,8 +56,8 @@ export function SpendControl({ data, labels, now, currency = 'EUR', onUpsell, cl
   const money = { currency, decimals: 0 }
   const date = now?.toLocaleDateString('en-GB', { weekday: 'long', day: 'numeric', month: 'long' })
   return (
-    <div className={cn('@container flex w-full gap-3 rounded-2xl bg-background p-3 text-foreground', className)}>
-      <nav aria-label={t.navLabel} className="hidden shrink-0 flex-col items-center gap-1 rounded-xl border border-border bg-card p-1.5 @sm:flex">
+    <div className={cn('@container flex w-full flex-col gap-3 @sm:flex-row rounded-2xl bg-background p-3 text-foreground', className)}>
+      <nav aria-label={t.navLabel} className="flex shrink-0 items-center gap-1 self-start overflow-x-auto rounded-xl border border-border bg-card p-1.5 @sm:flex-col @sm:self-stretch">
         {data.rail.map((item) => (
           <a
             key={item.id}
@@ -80,7 +80,7 @@ export function SpendControl({ data, labels, now, currency = 'EUR', onUpsell, cl
           <h2 className="text-lg font-semibold tracking-tight">{t.title}</h2>
         </header>
         <div className="@2xl:col-span-4">
-          <DataTile title={t.spending} footer={t.note}>
+          <DataTile className="h-full" title={t.spending} footer={t.note}>
             <TileFact aside={<DeltaPill value={data.spendingChange} goodWhen="down" />}>
               <BigNumber value={data.spendingTotal} format={money} size="xl" />
             </TileFact>
@@ -88,19 +88,19 @@ export function SpendControl({ data, labels, now, currency = 'EUR', onUpsell, cl
           </DataTile>
         </div>
         <div className="@2xl:col-span-2">
-          <DataTile title={data.upsell.title} inverted>
+          <DataTile className="h-full" title={data.upsell.title} inverted>
             <p className="text-sm opacity-80">{data.upsell.text}</p>
             <button
               type="button"
               onClick={onUpsell}
-              className="mt-4 rounded-full bg-background px-4 py-2 text-sm font-medium text-foreground transition-transform active:scale-[0.97] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
+              className="mt-4 rounded-full bg-foreground px-4 py-2 text-sm font-medium text-background transition-transform active:scale-[0.97] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
             >
               {data.upsell.action}
             </button>
           </DataTile>
         </div>
         <div className="@2xl:col-span-2">
-          <DataTile title={t.cards}>
+          <DataTile className="h-full" title={t.cards}>
             <ul className="flex flex-col gap-3">
               {data.cards.map((c) => {
                 const pct = Math.min(100, Math.round((c.spent / c.limit) * 100))
@@ -133,7 +133,7 @@ export function SpendControl({ data, labels, now, currency = 'EUR', onUpsell, cl
           </DataTile>
         </div>
         <div className="@2xl:col-span-4">
-          <DataTile title={t.merchants}>
+          <DataTile className="h-full" title={t.merchants}>
             <BubbleChart data={data.merchants} label={t.merchants} format={money} yFormat={money} />
           </DataTile>
         </div>
