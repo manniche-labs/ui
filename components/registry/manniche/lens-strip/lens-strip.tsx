@@ -43,10 +43,10 @@ export type LensStripProps = Omit<HTMLAttributes<HTMLDivElement>, 'onChange'> & 
   magnify?: number
   /** How strongly the glass splits light into colour at its rim, from 0 (none) to 1. */
   dispersion?: number
-  labels?: Partial<Record<'previous' | 'next' | 'picture' | 'of' | 'pictures', string>>
+  labels?: Partial<Record<'previous' | 'next' | 'picture' | 'of', string>>
 }
 
-const EN = { previous: 'Previous picture', next: 'Next picture', picture: 'Picture', of: 'of', pictures: 'Pictures' }
+const EN = { previous: 'Previous picture', next: 'Next picture', picture: 'Picture', of: 'of' }
 const TYPING = 'input, textarea, select, [contenteditable=""], [contenteditable="true"]'
 const COLORS = ['var(--background)', 'var(--foreground)']
 const CANVAS = 'pointer-events-none absolute inset-0 size-full opacity-0 transition-opacity duration-300 ease-out-quint data-ready:opacity-100 motion-reduce:transition-none'
@@ -282,7 +282,8 @@ export function LensStrip({
         el.style.transform = `translate3d(${x.toFixed(2)}px, 0, 0) scale(${(1 + (raise - 1) * lift).toFixed(4)})`
         el.style.zIndex = String(Math.round(lift * 100) + 1)
       }
-      const r = mod(Math.round(p), Math.max(s.n, 1))
+      // Without wrapping, the strip can be pulled past an end; the caption stays on the end picture.
+      const r = s.wraps ? mod(Math.round(p), Math.max(s.n, 1)) : clamp(Math.round(p), 0, Math.max(s.n - 1, 0))
       if (r !== nearRef.current) {
         nearRef.current = r
         setNear(r)
@@ -295,13 +296,15 @@ export function LensStrip({
   const current = engine.index
   const shown = near ?? current
 
+  // The stage only exists while there are pictures, so watch it again when the first ones arrive.
+  const empty = !n
   useLayoutEffect(() => {
     const el = stage.current
     if (!el) return
     const ro = new ResizeObserver(([e]) => setWidth(Math.round(e.contentRect.width)))
     ro.observe(el)
     return () => ro.disconnect()
-  }, [])
+  }, [empty])
 
   // A new size or set of pictures: draw the current frame again.
   const { draw } = engine
