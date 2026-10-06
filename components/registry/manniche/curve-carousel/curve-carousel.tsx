@@ -19,7 +19,7 @@ export type CurveCarouselProps = Omit<HTMLAttributes<HTMLElement>, 'onChange'> &
   index?: number
   /** The card in focus at first, when uncontrolled. */
   defaultIndex?: number
-  /** Called when the carousel settles on a new card. */
+  /** Called when the carousel heads for a new card: on release, a key, a button or a click. */
   onIndexChange?: (index: number) => void
   /** Card width over height. Each layout has its own default. */
   aspect?: number
@@ -162,7 +162,7 @@ export function CurveCarousel({
   const atEnd = !wraps && current === n - 1
   const button =
     'grid size-11 shrink-0 cursor-pointer place-items-center rounded-[4px] bg-card text-foreground shadow-[inset_0_0_0_1px_var(--border)] [-webkit-tap-highlight-color:transparent] hover:bg-muted ' +
-    'transition-[opacity,transform] duration-150 ease-out-quint active:scale-[0.96] disabled:cursor-default disabled:opacity-35 disabled:active:scale-100 motion-reduce:transition-none ' +
+    'transition-[opacity,transform] duration-150 ease-out-quint active:scale-[0.96] aria-disabled:cursor-default aria-disabled:opacity-35 aria-disabled:active:scale-100 motion-reduce:transition-none ' +
     'focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring'
 
   return (
@@ -223,7 +223,8 @@ export function CurveCarousel({
 
       {controls && n > 1 ? (
         <div className="mx-auto mt-4 flex max-w-sm items-center gap-3">
-          <button type="button" aria-label={t.previous} aria-controls={id} disabled={atStart} onClick={() => engine.move(-1)} className={button}>
+          {/* aria-disabled, not disabled: a button that has focus keeps it when it reaches the end. */}
+          <button type="button" aria-label={t.previous} aria-controls={id} aria-disabled={atStart} onClick={() => atStart || engine.move(-1)} className={button}>
             <ChevronLeft className="size-[18px]" strokeWidth={1.75} aria-hidden />
           </button>
           <div className="flex min-w-0 flex-1 flex-col gap-2">
@@ -246,7 +247,7 @@ export function CurveCarousel({
               <span aria-hidden>{String(n).padStart(2, '0')}</span>
             </p>
           </div>
-          <button type="button" aria-label={t.next} aria-controls={id} disabled={atEnd} onClick={() => engine.move(1)} className={button}>
+          <button type="button" aria-label={t.next} aria-controls={id} aria-disabled={atEnd} onClick={() => atEnd || engine.move(1)} className={button}>
             <ChevronRight className="size-[18px]" strokeWidth={1.75} aria-hidden />
           </button>
         </div>

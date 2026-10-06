@@ -6,11 +6,11 @@ export type CarouselEngineOptions = {
   count: number
   /** Wrap around from the last slide to the first. */
   loop?: boolean
-  /** Controlled: the current slide. */
+  /** Controlled: the current slide. The carousel shows it, and goes back to it if `onIndexChange` does not update it. */
   index?: number
   /** The slide shown first, when uncontrolled. */
   defaultIndex?: number
-  /** Called when the carousel settles on a new slide. */
+  /** Called when the carousel heads for a new slide: on release, a key or a button, not when the glide ends. */
   onIndexChange?: (index: number) => void
   /** The drag direction. `x` also takes sideways wheel and trackpad swipes. */
   axis?: 'x' | 'y'
@@ -74,18 +74,20 @@ export function useCarouselEngine(options: CarouselEngineOptions): CarouselEngin
     m.configure({ n, loop, axis, snap, step, onFrame, onIndexChange, reduce })
   })
 
-  // A controlled index that changes from outside moves the carousel there; a count that shrinks pulls it back in.
+  // A new count, or a loop turned on or off, puts the carousel back on a slide it has.
+  useEffect(() => m.reseat(), [n, loop, m])
+  // Controlled: follow the index from outside, and go back to it when a move was not taken up. Neither calls
+  // onIndexChange, as the parent already knows.
+  const controlled = index !== undefined
+  const target = clamp(index ?? 0, 0, n - 1)
   useEffect(() => {
-    if (index !== undefined) m.go(index)
-  }, [index, m])
-  useEffect(() => {
-    if (!loop && m.committed > n - 1) m.go(n - 1)
-  }, [n, loop, m])
+    if (controlled && target !== m.committed) m.go(target, false)
+  })
 
   useEffect(() => (surface && axis === 'x' ? m.listenWheel(surface) : undefined), [surface, axis, m])
   useEffect(() => m.stop, [m])
 
-  return { index: current, go: m.go, move: m.move, draw: m.draw, bind: { ref: setSurface, ...m.handlers } }
+  return { index: controlled ? target : current, go: m.go, move: m.move, draw: m.draw, bind: { ref: setSurface, ...m.handlers } }
 }
 
 type Tween = { from: number; to: number; start: number; dur: number }
@@ -111,6 +113,7 @@ function machine(start: number, setCurrent: (i: number) => void) {
     },
     go,
     move,
+    reseat,
     draw,
     stop,
     listenWheel,
@@ -154,14 +157,14 @@ function machine(start: number, setCurrent: (i: number) => void) {
     raf = requestAnimationFrame(tick)
   }
 
-  function commit(to: number) {
+  function commit(to: number, notify = true) {
     const o = m.set
     if (!o) return
     const i = mod(Math.round(to), o.n)
     if (i === m.committed) return
     m.committed = i
     setCurrent(i)
-    o.onIndexChange?.(i)
+    if (notify) o.onIndexChange?.(i)
   }
 
   // Glide to a position. With a release speed (slides/s) in the same direction, the glide starts at that speed.
@@ -176,7 +179,7 @@ function machine(start: number, setCurrent: (i: number) => void) {
     run()
   }
 
-  function go(i: number) {
+  function go(i: number, notify = true) {
     const o = m.set
     if (!o || mod(i, o.n) === m.committed) return
     let to: number
@@ -187,7 +190,21 @@ function machine(start: number, setCurrent: (i: number) => void) {
       if (to < at && mod(i - at, o.n) === o.n / 2) to = at + o.n / 2
     } else to = clamp(i, 0, o.n - 1)
     glide(to)
-    commit(to)
+    commit(to, notify)
+  }
+
+  // After the count or the loop changes: jump to the current slide, or the last one if it is gone. A position
+  // wound past the ends of a loop means nothing in the new count, so it is unwound too.
+  function reseat() {
+    const o = m.set
+    if (!o) return
+    const i = clamp(m.committed, 0, o.n - 1)
+    if (want === i && drawn === i && !tween) return
+    tween = null
+    velocity = 0
+    want = drawn = i
+    commit(i)
+    draw()
   }
 
   function move(by: number) {
@@ -234,6 +251,8 @@ function machine(start: number, setCurrent: (i: number) => void) {
 
   function onPointerDown(e: PointerEvent<HTMLElement>) {
     swallowClick = false
+    // A press that left the carousel before it became a drag never got its pointerup.
+    if (drag && !drag.active) drop(drag)
     if (!e.isPrimary || e.button !== 0 || drag || !m.set || m.set.n < 2) return
     const resume = tween ? tween.to : null
     // Catch a moving carousel where it is.
@@ -248,18 +267,16 @@ function machine(start: number, setCurrent: (i: number) => void) {
     const d = drag
     const o = m.set
     if (!d || !o || e.pointerId !== d.id) return
+    // The mouse came back with its button up, so it was let go outside the carousel.
+    if (!d.active && !(e.buttons & 1)) return drop(d)
     const dx = e.clientX - d.x
     const dy = e.clientY - d.y
     const along = o.axis === 'x' ? dx : dy
     const across = o.axis === 'x' ? dy : dx
     if (!d.active) {
       if (Math.abs(along) < SLOP && Math.abs(across) < SLOP) return
-      if (Math.abs(across) >= Math.abs(along)) {
-        // Moving across the carousel: leave it to the page, and finish any glide that was caught.
-        drag = null
-        if (d.resume !== null) glide(d.resume)
-        return
-      }
+      // Moving across the carousel: leave it to the page.
+      if (Math.abs(across) >= Math.abs(along)) return drop(d)
       d.active = true
       // Count from here, so the slop does not make the slides jump.
       if (o.axis === 'x') d.x += Math.sign(dx) * SLOP
@@ -277,12 +294,9 @@ function machine(start: number, setCurrent: (i: number) => void) {
   function release(e: PointerEvent<HTMLElement>, cancelled: boolean) {
     const d = drag
     if (!d || e.pointerId !== d.id) return
-    drag = null
     delete e.currentTarget.dataset.dragging
-    if (!d.active) {
-      if (d.resume !== null) glide(d.resume)
-      return
-    }
+    if (!d.active) return drop(d)
+    drag = null
     swallowClick = true
     let speed = 0
     const [t0, p0] = d.samples[0]
@@ -290,6 +304,12 @@ function machine(start: number, setCurrent: (i: number) => void) {
     // A finger that stopped before letting go throws nothing.
     if (!cancelled && t1 > t0 && e.timeStamp - t1 < 60) speed = ((p1 - p0) / (t1 - t0)) * 1000
     settle(speed, d.p0)
+  }
+
+  // Let go of a press that never became a drag, and finish any glide it caught.
+  function drop(d: Drag) {
+    drag = null
+    if (d.resume !== null) glide(d.resume)
   }
 
   // A drag ends with a click on whatever was under the pointer; that click is not meant.

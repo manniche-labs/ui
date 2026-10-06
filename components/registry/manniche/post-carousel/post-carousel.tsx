@@ -18,7 +18,7 @@ export type PostCarouselProps = Omit<HTMLAttributes<HTMLElement>, 'onChange'> & 
   index?: number
   /** The picture in view at first, when uncontrolled. */
   defaultIndex?: number
-  /** Called when the post settles on a new picture. */
+  /** Called when the post heads for a new picture: on release, a key or a button. */
   onIndexChange?: (index: number) => void
   labels?: Partial<Record<'previous' | 'next' | 'picture' | 'of' | 'pictures', string>>
 }
@@ -123,15 +123,19 @@ export function PostCarousel({
 
   if (!n) return null
 
+  const atStart = current === 0
+  const atEnd = current === n - 1
   const button =
     'absolute top-1/2 z-[200] grid size-11 -translate-y-1/2 cursor-pointer place-items-center [-webkit-tap-highlight-color:transparent] ' +
     'transition-[opacity,transform] duration-150 ease-out-quint active:scale-[0.96] motion-reduce:transition-none ' +
-    'opacity-0 group-hover/post:opacity-100 focus-visible:opacity-100 disabled:pointer-events-none disabled:opacity-0! [@media(hover:none)]:hidden ' +
+    // Shown on hover or focus, always on touch screens; at an end the button stays focusable but fades out unless it has focus.
+    'opacity-0 group-hover/post:opacity-100 focus-visible:opacity-100 [@media(hover:none)]:opacity-100 ' +
+    'aria-disabled:pointer-events-none aria-disabled:not-focus-visible:opacity-0! aria-disabled:focus-visible:opacity-50 ' +
     'focus-visible:outline-none [&:focus-visible>span]:outline-2 [&:focus-visible>span]:outline-offset-2 [&:focus-visible>span]:outline-ring'
   const face = 'grid size-8 place-items-center rounded-[4px] bg-card/90 text-foreground shadow-[inset_0_0_0_1px_var(--border),0_2px_8px_-2px_rgb(0_0_0/0.25)]'
 
   return (
-    <article aria-label={label} className={cn('relative w-full max-w-sm overflow-hidden rounded-[6px] bg-card text-card-foreground', className)} {...rest}>
+    <article aria-label={label} className={cn('relative isolate w-full max-w-sm overflow-hidden rounded-[6px] bg-card text-card-foreground', className)} {...rest}>
       {header ? <div className="px-3 py-2.5">{header}</div> : null}
 
       <div onKeyDown={keys} className="group/post relative">
@@ -193,12 +197,13 @@ export function PostCarousel({
               {current + 1}
               <span className="text-muted-foreground">/{n}</span>
             </p>
-            <button type="button" aria-label={t.previous} aria-controls={id} disabled={current === 0} onClick={() => engine.move(-1)} className={cn(button, 'left-1')}>
+            {/* aria-disabled, not disabled: a button that has focus keeps it when it reaches the end. */}
+            <button type="button" aria-label={t.previous} aria-controls={id} aria-disabled={atStart} onClick={() => atStart || engine.move(-1)} className={cn(button, 'left-1')}>
               <span className={face}>
                 <ChevronLeft className="size-4" strokeWidth={1.75} aria-hidden />
               </span>
             </button>
-            <button type="button" aria-label={t.next} aria-controls={id} disabled={current === n - 1} onClick={() => engine.move(1)} className={cn(button, 'right-1')}>
+            <button type="button" aria-label={t.next} aria-controls={id} aria-disabled={atEnd} onClick={() => atEnd || engine.move(1)} className={cn(button, 'right-1')}>
               <span className={face}>
                 <ChevronRight className="size-4" strokeWidth={1.75} aria-hidden />
               </span>
