@@ -161,6 +161,13 @@ Whole pages, built from the same tokens. Install one like a component, or downlo
 | `account-home` | Account start page in Tiles: payment card, balance, three-state dial, transactions |
 | `currency-wallet` | Multi-currency wallet in Tiles: currency switch, rewards, spending donut, allocation bars |
 | `business-finance` | Business finance in Tiles: income vs payments, growth ring, stock sparkline, activity, checklist |
+| `footer-columns` | Section: classic footer with link columns, a newsletter tile and a legal row |
+| `footer-desk` | Section: inverted front-desk footer with a contact person and office clocks |
+| `footer-sitemap` | Section: dense sitemap footer whose groups fold on narrow boxes |
+| `footer-slim` | Section: one-row app footer with a theme switch and 44 px targets |
+| `footer-statement` | Section: closing statement in an inverted tile with fluid type |
+| `footer-status` | Section: product footer with a status chip, version and back to top |
+| `footer-tiles` | Section: bento footer with address, opening hours and links |
 
 `npm run lab` writes the HTML files with `scripts/template-html.mjs`; the colours live in `src/template-theme.ts`.
 
