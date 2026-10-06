@@ -121,13 +121,15 @@ export function CurveCarousel({
   })
   const current = engine.index
 
+  // The stage only exists while there are cards, so watch it again when the first ones arrive.
+  const empty = !n
   useLayoutEffect(() => {
     const el = stage.current
     if (!el) return
     const ro = new ResizeObserver(([e]) => setWidth(Math.round(e.contentRect.width)))
     ro.observe(el)
     return () => ro.disconnect()
-  }, [])
+  }, [empty])
 
   // A new size, layout or set of cards: draw the current frame again.
   const { draw } = engine

@@ -2,6 +2,10 @@
 
 ## 2026-10-06
 
+### Fixed
+
+- `curve-carousel` and `post-carousel`: slides that arrive after the first render now show. Before, the carousel stayed empty or unpositioned until the window was resized.
+
 ### Added
 
 - Three WebGL carousels on the carousel engine, each with a demo of twelve landscape prints drawn as SVG (`gl-pictures.ts`, no files to fetch). Each uses one WebGL context, draws only while something moves, shows one still frame under reduced motion, and falls back to a DOM carousel driven by the same engine without WebGL or when the GPU drops the context. The DOM slides are always there for screen readers, and pictures that arrive after the first render are picked up.
