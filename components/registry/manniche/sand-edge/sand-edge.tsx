@@ -28,10 +28,10 @@ export type SandEdgeProps = Omit<HTMLAttributes<HTMLDivElement>, 'onChange'> & {
   wind?: number
   /** Loose grains at the edges shimmer slightly while on screen. Off under reduced motion. */
   shimmer?: boolean
-  labels?: Partial<Record<'previous' | 'next' | 'picture' | 'of' | 'pictures', string>>
+  labels?: Partial<Record<'previous' | 'next' | 'picture' | 'of', string>>
 }
 
-const EN = { previous: 'Previous picture', next: 'Next picture', picture: 'Picture', of: 'of', pictures: 'Pictures' }
+const EN = { previous: 'Previous picture', next: 'Next picture', picture: 'Picture', of: 'of' }
 const TYPING = 'input, textarea, select, [contenteditable=""], [contenteditable="true"]'
 
 // How the erosion reads, in parts of the stage's half width and of the card width.
@@ -442,7 +442,7 @@ export function SandEdge({
       maxPixels: PIXELS,
       animate: shimmer,
       colors: ['var(--border)', 'var(--background)'],
-      className: 'pointer-events-none absolute inset-0 size-full opacity-0 transition-opacity duration-300 ease-out-quint data-ready:opacity-100',
+      className: 'pointer-events-none absolute inset-0 size-full opacity-0 transition-opacity duration-300 ease-out-quint data-ready:opacity-100 motion-reduce:transition-none',
     },
   )
   const glReady = gl.status === 'ready'
@@ -514,20 +514,22 @@ export function SandEdge({
   const engine = useCarouselEngine({ count: n, loop: wraps, index, defaultIndex, onIndexChange, step: L?.step ?? 300, onFrame })
   const current = engine.index
 
+  // The stage only exists while there are pictures, so watch it again when the first ones arrive.
+  const empty = !n
   useLayoutEffect(() => {
     const el = stage.current
     if (!el) return
     const ro = new ResizeObserver(([e]) => setWidth(Math.round(e.contentRect.width)))
     ro.observe(el)
     return () => ro.disconnect()
-  }, [])
+  }, [empty])
 
   // A new size or set of pictures: draw the current frame again.
   const { draw } = engine
   useLayoutEffect(() => {
     layout.current = width ? measure(width, aspect) : null
     draw()
-  }, [draw, width, aspect, grain, wind, glReady])
+  }, [draw, width, aspect, grain, wind, glReady, n, wraps])
 
   // If focus sat in a picture that just left the middle, keep it in the carousel.
   useEffect(() => {
@@ -582,7 +584,7 @@ export function SandEdge({
       >
         <div
           style={{ maskImage: mask, WebkitMaskImage: mask }}
-          className={cn('absolute inset-0 transition-opacity duration-300 ease-out-quint', glReady && 'opacity-0')}
+          className={cn('absolute inset-0 transition-opacity duration-300 ease-out-quint motion-reduce:transition-none', glReady && 'opacity-0')}
         >
           {L &&
             images.map((im, i) => {

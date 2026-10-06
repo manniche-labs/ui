@@ -454,7 +454,7 @@ export function WaveRibbon({
     animate,
     maxDpr: 2,
     colors: ['var(--background)', 'var(--foreground)', 'var(--muted)'],
-    className: 'pointer-events-none absolute inset-0 size-full opacity-0 transition-opacity duration-300 ease-out-quint data-ready:opacity-100',
+    className: 'pointer-events-none absolute inset-0 size-full opacity-0 transition-opacity duration-300 ease-out-quint data-ready:opacity-100 motion-reduce:transition-none',
   })
   const ready = gl.status === 'ready'
 
@@ -517,13 +517,15 @@ export function WaveRibbon({
   })
   const current = engine.index
 
+  // The stage only exists while there are pictures, so watch it again when the first ones arrive.
+  const empty = !n
   useLayoutEffect(() => {
     const el = stage.current
     if (!el) return
     const ro = new ResizeObserver(([e]) => setWidth(Math.round(e.contentRect.width)))
     ro.observe(el)
     return () => ro.disconnect()
-  }, [])
+  }, [empty])
 
   // A new size, shape or set of pictures, or WebGL taking over or dropping out: draw the current frame again.
   const { draw } = engine
