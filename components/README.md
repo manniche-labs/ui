@@ -142,6 +142,10 @@ Whole pages, built from the same tokens. Install one like a component, or downlo
 | `store-dashboard` | Shop admin with sidebar, KPI cards, revenue chart with a period switch, orders |
 | `sign-in-page` | Split-screen sign-in and sign-up with passkey and inline validation |
 | `changelog-page` | Release timeline with a filter, version index and subscribe form |
+| `spend-control` | Company spend in Tiles: icon rail, virtual cards with limits, spending bars, merchant bubble chart |
+| `widget-wall` | Thirteen Tiles widgets: highlight, trades, sparkline KPIs, dot matrix, profile ring, bars, lollipop |
+| `workspace-home` | Workspace start page in Tiles: pill navbar, large search, offer tile, deal bars, week schedule |
+| `sales-floor` | Sales team dashboard in Tiles: target dial, live call card, bars per seller, revenue donut |
 
 `npm run lab` writes the HTML files with `scripts/template-html.mjs`; the colours live in `src/template-theme.ts`.
 
