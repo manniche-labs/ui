@@ -35,19 +35,19 @@ export function WidgetWall({ data, labels, className }: WidgetWallProps) {
     <div className={cn('@container w-full rounded-2xl bg-background p-3 text-foreground', className)}>
       <div className="grid grid-cols-1 gap-3 @lg:grid-cols-2 @3xl:grid-cols-6">
         <div className="@3xl:col-span-3">
-          <DataTile title={data.highlight.title} inverted>
+          <DataTile className="h-full" title={data.highlight.title} inverted>
             <BigNumber value={data.highlight.value} format={data.highlight.format} size="xl" />
             <p className="mt-2 text-sm opacity-80">{data.highlight.text}</p>
           </DataTile>
         </div>
         <div className="@3xl:col-span-3">
-          <DataTile title={data.trades.title} footer={note}>
+          <DataTile className="h-full" title={data.trades.title} footer={note}>
             <TransactionList data={data.trades.items} label={data.trades.title} today={data.trades.today} format={data.trades.format} />
           </DataTile>
         </div>
         {data.kpis.map((k) => (
           <div key={k.id} className="@3xl:col-span-2">
-            <DataTile title={k.title} density="compact">
+            <DataTile className="h-full" title={k.title} density="compact">
               <TileFact aside={<DeltaPill value={k.change} goodWhen={k.lowerIsBetter ? 'down' : 'up'} />}>
                 <BigNumber value={k.value} format={k.format} size="md" />
               </TileFact>
@@ -56,17 +56,17 @@ export function WidgetWall({ data, labels, className }: WidgetWallProps) {
           </div>
         ))}
         <div className="@lg:col-span-2 @3xl:col-span-6">
-          <DataTile title={data.matrix.title} footer={note}>
+          <DataTile className="h-full" title={data.matrix.title} footer={note}>
             <DotMatrix data={data.matrix.data} rows={data.matrix.rows} columns={data.matrix.columns} label={data.matrix.title} />
           </DataTile>
         </div>
         <div className="@3xl:col-span-3">
-          <DataTile title={data.profile.title} footer={note}>
+          <DataTile className="h-full" title={data.profile.title} footer={note}>
             <Donut data={data.profile.items} label={data.profile.title} total={data.profile.total} format={data.profile.format} />
           </DataTile>
         </div>
         <div className="@3xl:col-span-3">
-          <DataTile title={data.team.title} footer={note}>
+          <DataTile className="h-full" title={data.team.title} footer={note}>
             <ul className="flex flex-col gap-3">
               {data.team.people.map((p) => (
                 <li key={p.id} className="flex items-center gap-3">
@@ -83,12 +83,12 @@ export function WidgetWall({ data, labels, className }: WidgetWallProps) {
           </DataTile>
         </div>
         <div className="@lg:col-span-2 @3xl:col-span-3">
-          <DataTile title={data.weekly.title} footer={note}>
+          <DataTile className="h-full" title={data.weekly.title} footer={note}>
             <BarChart data={data.weekly.points} label={data.weekly.title} format={data.weekly.format} />
           </DataTile>
         </div>
         <div className="@lg:col-span-2 @3xl:col-span-3">
-          <DataTile title={data.ranking.title} footer={note}>
+          <DataTile className="h-full" title={data.ranking.title} footer={note}>
             <Lollipop data={data.ranking.items} label={data.ranking.title} format={data.ranking.format} />
           </DataTile>
         </div>

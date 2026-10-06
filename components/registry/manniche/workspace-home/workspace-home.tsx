@@ -67,19 +67,19 @@ export function WorkspaceHome({ data, labels, onSearch, onOffer, className }: Wo
       </form>
       <div className="grid grid-cols-1 gap-3 @2xl:grid-cols-5">
         <div className="@2xl:col-span-2">
-          <DataTile title={data.offer.title} inverted>
+          <DataTile className="h-full" title={data.offer.title} inverted>
             <p className="text-sm opacity-80">{data.offer.text}</p>
             <button
               type="button"
               onClick={onOffer}
-              className="mt-4 rounded-full bg-background px-4 py-2 text-sm font-medium text-foreground transition-transform active:scale-[0.97] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
+              className="mt-4 rounded-full bg-foreground px-4 py-2 text-sm font-medium text-background transition-transform active:scale-[0.97] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
             >
               {data.offer.action}
             </button>
           </DataTile>
         </div>
         <div className="@2xl:col-span-3">
-          <DataTile title={data.deals.title} footer={t.note}>
+          <DataTile className="h-full" title={data.deals.title} footer={t.note}>
             <TileFact>
               <BigNumber value={data.deals.total} format={money} size="lg" />
             </TileFact>
@@ -87,7 +87,7 @@ export function WorkspaceHome({ data, labels, onSearch, onOffer, className }: Wo
           </DataTile>
         </div>
         <div className="@2xl:col-span-5">
-          <DataTile title={data.schedule.title} footer={t.note}>
+          <DataTile className="h-full" title={data.schedule.title} footer={t.note}>
             <WeekSchedule
               data={data.schedule.events}
               label={data.schedule.title}

@@ -20,14 +20,13 @@ const data: WidgetWallData = {
     data: [[1, 3, 2, 5, 4, 6], [2, 2, 3, 4, 5, 5], [0, 1, 2, 3, 3, 4], [3, 4, 5, 6, 6, 7], [1, 2, 2, 3, 4, 4]],
   },
   profile: {
-    title: 'Profile completeness',
+    title: 'Profile steps done',
     items: [
-      { label: 'Basics', value: 40 },
-      { label: 'Billing', value: 25 },
-      { label: 'Team', value: 15 },
+      { label: 'Basics', value: 4 },
+      { label: 'Billing', value: 3 },
+      { label: 'Team', value: 2 },
     ],
-    total: 100,
-    format: { suffix: '%' },
+    total: 12,
   },
   team: {
     title: 'Sample team',
@@ -46,8 +45,8 @@ const data: WidgetWallData = {
     { id: 'f', title: 'Open tickets', value: 23, change: -8, lowerIsBetter: true, series: [9, 8, 9, 7, 6, 6, 5] },
   ],
   weekly: {
-    title: 'Orders per day',
-    points: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'].map((label, i) => ({ label, value: [42, 55, 48, 71, 66, 39, 28][i] })),
+    title: 'Orders, last 7 days',
+    points: ['Wed', 'Thu', 'Fri', 'Sat', 'Sun', 'Mon', 'Tue'].map((label, i) => ({ label, value: [48, 71, 66, 39, 28, 42, 55][i] })),
   },
   ranking: {
     title: 'Top sample products',
