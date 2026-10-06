@@ -46,7 +46,7 @@ The design agents use these if they are installed:
 
 - [frontend-design](https://github.com/anthropics/skills/tree/main/skills/frontend-design) from Anthropic's skills repo
 - [frontend-design-direction](https://github.com/affaan-m/ECC/tree/main/skills/frontend-design-direction) and [make-interfaces-feel-better](https://github.com/affaan-m/ECC/tree/main/skills/make-interfaces-feel-better) from ECC
-- [make-interfaces-feel-better](https://github.com/jakubkrehel/make-interfaces-feel-better) at its upstream repository (MIT), with the most recent version, for the last detail pass
+- [make-interfaces-feel-better](https://github.com/jakubkrehel/make-interfaces-feel-better) upstream (MIT), the newest version, for the last detail pass
 - [transitions-dev](https://github.com/Jakubantalik/transitions.dev): ready-made CSS transitions with motion tokens (free to use in a site, not to redistribute)
 
 Also useful as inspiration or tools, not installed: [Refero Styles](https://styles.refero.design/) (real sites as `DESIGN.md`, the frame for each direction), [React Bits Background Studio](https://reactbits.dev/tools/background-studio) and [Texture Lab](https://reactbits.dev/tools/texture-lab), and [Aceternity UI](https://ui.aceternity.com/components) (inspiration only). `SKILL.md` lists what each licence allows.
