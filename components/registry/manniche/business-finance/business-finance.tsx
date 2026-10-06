@@ -30,7 +30,7 @@ export type BusinessFinanceProps = {
   note?: string
   today?: string
   now?: Date
-  labels?: { income?: string; payments?: string; growth?: string; stock?: string; activity?: string; verification?: string; stepsDone?: (done: number, total: number) => string; done?: string; todo?: string }
+  labels?: { income?: string; payments?: string; growth?: string; /** Under the share in the growth ring. Default "of target". */ ofTarget?: string; stock?: string; activity?: string; verification?: string; stepsDone?: (done: number, total: number) => string; done?: string; todo?: string }
   className?: string
 }
 
@@ -42,6 +42,7 @@ export function BusinessFinance({ data, format = DEFAULT_FORMAT, title = 'Busine
     income: 'Income',
     payments: 'Payments',
     growth: 'Growth',
+    ofTarget: 'of target',
     stock: 'Stock',
     activity: 'Activity',
     verification: 'Verification',
@@ -77,7 +78,7 @@ export function BusinessFinance({ data, format = DEFAULT_FORMAT, title = 'Busine
             activeIndex={0}
             label={`${l.growth}, ${pct} percent of ${data.growthTarget}`}
             format={{ suffix: '%' }}
-            labels={{ ofTotal: `of ${data.growthTarget}` }}
+            labels={{ ofTotal: l.ofTarget }}
           />
         </DataTile>
         <DataTile title={l.stock} className="@3xl:col-span-3 @6xl:col-span-4">
