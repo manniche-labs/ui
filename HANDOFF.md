@@ -41,20 +41,18 @@ One Vite server and one browser per machine.
 - Preview: `/preview.html?c=<name>&full=1` (add `&mode=dark` or `&mini=1`). Use the component name, not `<name>-demo`.
 - Browser lock: `mkdir ../.browser-laas` before you open a browser and `rmdir` it when you close it. Always close the browser in `finally`.
 
-## Remaining primitive issues
+## Status after 6/10 evening
 
-Fix these in the primitive itself, each with a CHANGELOG entry under Fixed:
+- WebKit (the Safari engine, via Playwright) has been run on all 35 templates and 26 widgets at 1440 and 320 px. Only `changelog-page` failed, and it is fixed (#41). `lollipop` and `bubble-chart` look right inside the templates at 320 px; there was nothing to fix.
+- `donut` takes `target` and `centre` (#39, #40).
+- /lab is deployed from 7733f59 (site PR #113), including /lab/ui/pro, which has noindex and a closed buy button until `PRO_KOEB_URL` holds the live payment link.
 
-- `lollipop` overlay and `bubble-chart` labels at 320 px: reported from a template pass, but not reproduced in Chromium on the demos at 320 px on 6/10. Recheck them inside the templates and in Safari before changing anything.
-- `donut`: needs a target or centre prop.
-- WebKit/Safari has not been tested at all. The Mac can do this.
+## Next steps
 
-## Next steps on the Mac, in order
-
-1. `git fetch`, `gh pr list`, and read this file. Nothing should be open from 6/10.
-2. Run a Safari pass of the templates and primitives, then fix the primitive issues listed above.
-3. Build the `/lab/ui/pro` page on the site (it gives a 404 today); Stripe is set up in sandbox (79 €, introductory price 49 € until 31/12-2026).
-4. Export to /lab and deploy **only after Mikkel's yes**.
+1. `git fetch`, `gh pr list`, and read this file. Nothing should be open.
+2. Optional: check the templates in real Safari on the Mac (WebKit in Playwright is close to it, but not the same browser).
+3. Figma: later, when Mikkel says so.
+4. Pro at launch: put the live payment link in `PRO_KOEB_URL` (site `server/lab-pro-tekster.mjs`), run `node server/lab-sider.mjs .` and deploy.
 
 ## How to check
 
