@@ -11,7 +11,7 @@ The scrolltide-inspired plan for Manniche UI, built in our own **Tiles** design 
 | 1–4 | Effects, carousel engine, WebGL carousels, late slides | Merged (#12, #15, #16, #17, #18) |
 | Pro move | Six components moved to Manniche UI Pro | Merged (#19) |
 | 5 | Tiles data primitives: chart-kit, data-tile + 11 primitives | Merged (#21). Live on mikkelmanniche.dk/lab with phases 2–4 and the Tiles pass (site PR #109, deployed 6/10) |
-| 6 | 17 page sections (footers, bento, CTA, contact) | Not started. Brief: `plans/fase-6-sektioner.md` |
+| 6 | 17 page sections (footers, bento, CTA, contact) | In progress (6/10). Footers 7/7 written: draft PR #28. Bento + CTA 6/6 written: draft PR #26. Contact (4): another session, PR #27. Brief: `plans/fase-6-sektioner.md` |
 | Templates | 13 screen templates built from the phase 5 primitives | Not started. Brief: `plans/skabeloner.md` |
 | Tiles pass 2–4 | Nine phase 2–4 components restyled to Tiles | Merged (#20, claude-a9, 6/10); live on /lab |
 
@@ -28,7 +28,7 @@ Progress on the plan: 5 of 7 parts merged (phases 1–5; phase 6 and the templat
 ## Next steps, in order
 
 1. Run `git fetch` and look at the open PRs and branches, so you do not build over another session. Then read `plans/fase-6-sektioner.md` and `plans/skabeloner.md`, and open `plans/tiles-mockup.html`.
-2. **Phase 6** per `plans/fase-6-sektioner.md`: three families on three branches from `main` (`fase-6-footers`, `fase-6-bento-cta`, `fase-6-kontakt`).
+2. **Phase 6** per `plans/fase-6-sektioner.md`. #28 (footers) and #26 (bento + CTA) have all sections written with oxlint and `tsc` clean, but none has been seen in a browser. Left on each: the browser pass (1440/500/280 px, light/dark, `&mini=1`, keyboard, reduced motion), `registry.json` entries + `npx shadcn build` + `public/r`, README, CHANGELOG, ManiLens. Known fix: `footer-sitemap` link hit areas overlap neighbouring rows by 6 px. Contact (`fase-6-kontakt`, #27) and the dashboard templates (`skabeloner-dashboards`, #25) belong to other sessions.
 3. **Templates** per `plans/skabeloner.md`: three groups (finance, dashboards, the rest) on three branches.
 4. Each PR: local CI, ManiLens (`/manilens-lokal`), CHANGELOG entry, then merge. Deploying to mikkelmanniche.dk/lab needs Mikkel's yes.
 
