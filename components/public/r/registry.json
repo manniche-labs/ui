@@ -19,6 +19,25 @@
       ]
     },
     {
+      "name": "use-carousel-engine",
+      "type": "registry:hook",
+      "title": "useCarouselEngine",
+      "description": "Drag with momentum, trackpad scrolling, snapping and eased glides for a carousel; hands you each frame to draw.",
+      "files": [
+        {
+          "path": "registry/manniche/hooks/use-carousel-engine.ts",
+          "type": "registry:hook"
+        },
+        {
+          "path": "registry/manniche/hooks/use-reduced-motion.ts",
+          "type": "registry:hook"
+        }
+      ],
+      "categories": [
+        "hooks"
+      ]
+    },
+    {
       "name": "prompt-input",
       "type": "registry:component",
       "title": "Prompt input",
@@ -1701,6 +1720,104 @@
       "files": [
         {
           "path": "registry/manniche/examples/cube-carousel-demo.tsx",
+          "type": "registry:example"
+        }
+      ],
+      "categories": [
+        "widgets"
+      ]
+    },
+    {
+      "name": "curve-carousel",
+      "type": "registry:component",
+      "title": "Curve carousel",
+      "description": "Cards on a curve in ten layouts, from a fan and a coverflow to a helix, a rolodex and a row that bulges when flung; drag momentum, keys and trackpad.",
+      "dependencies": [
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "utils"
+      ],
+      "files": [
+        {
+          "path": "registry/manniche/curve-carousel/curve-carousel.tsx",
+          "type": "registry:component"
+        },
+        {
+          "path": "registry/manniche/curve-carousel/layouts.ts",
+          "type": "registry:component"
+        },
+        {
+          "path": "registry/manniche/hooks/use-carousel-engine.ts",
+          "type": "registry:hook"
+        },
+        {
+          "path": "registry/manniche/hooks/use-reduced-motion.ts",
+          "type": "registry:hook"
+        }
+      ],
+      "categories": [
+        "widgets"
+      ]
+    },
+    {
+      "name": "post-carousel",
+      "type": "registry:component",
+      "title": "Post carousel",
+      "description": "A post with pictures to swipe through: the one in view swings out and tucks in behind while the next comes forward.",
+      "dependencies": [
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "utils"
+      ],
+      "files": [
+        {
+          "path": "registry/manniche/post-carousel/post-carousel.tsx",
+          "type": "registry:component"
+        },
+        {
+          "path": "registry/manniche/hooks/use-carousel-engine.ts",
+          "type": "registry:hook"
+        },
+        {
+          "path": "registry/manniche/hooks/use-reduced-motion.ts",
+          "type": "registry:hook"
+        }
+      ],
+      "categories": [
+        "widgets"
+      ]
+    },
+    {
+      "name": "curve-carousel-demo",
+      "type": "registry:example",
+      "title": "Curve carousel demo",
+      "description": "How to use Curve carousel.",
+      "registryDependencies": [
+        "@manniche/curve-carousel"
+      ],
+      "files": [
+        {
+          "path": "registry/manniche/examples/curve-carousel-demo.tsx",
+          "type": "registry:example"
+        }
+      ],
+      "categories": [
+        "widgets"
+      ]
+    },
+    {
+      "name": "post-carousel-demo",
+      "type": "registry:example",
+      "title": "Post carousel demo",
+      "description": "How to use Post carousel.",
+      "registryDependencies": [
+        "@manniche/post-carousel"
+      ],
+      "files": [
+        {
+          "path": "registry/manniche/examples/post-carousel-demo.tsx",
           "type": "registry:example"
         }
       ],

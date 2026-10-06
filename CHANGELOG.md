@@ -4,6 +4,9 @@
 
 ### Added
 
+- `curve-carousel`: cards on a curve in ten layouts: `fan`, `arc`, `coverflow`, `cylinder`, `curl`, `helix`, `double-helix`, `rolodex`, `shingle` and `bulge` (a row that bulges towards you while it moves fast). Each layout is a pure function from a card's distance to a pose, so you can pass your own. Drag or swipe with momentum, sideways trackpad scroll, arrow keys, Home and End, buttons, or click a card. Frames are written straight to transform, opacity and filter, so React renders only when the card changes. Under reduced motion each move jumps.
+- `post-carousel`: a post with pictures to swipe through; the one in view swings out and tucks in behind while its neighbour comes forward. Buttons on hover and on focus, always shown on touch screens, a dot that follows the position, and a counter.
+- `use-carousel-engine`: the hook under both. Drag with momentum and rubber-band ends, trackpad, snapping, controlled or uncontrolled index, and ease-out-quint glides that start at the finger's speed. You draw each frame.
 - Eight components in a shared "Instrument" style (hairlines, small radii, short mechanical motion with a hard stop), each with a demo:
   - `focus-frame`: a rangefinder frame that steps through a sentence and pulls one word into focus; follows the pointer and the arrow keys.
   - `pill-to-card`: an avatar pill that morphs into a profile card (FLIP) as a dialog; Escape or a click outside folds it back.
@@ -23,7 +26,7 @@
 
 - `prompt-input`: Stop and Send now have separate keys, so React swaps the element instead of turning Stop into a submit button mid-click (a click on Stop could send the prompt again). The colour transitions on the form and the attach button are gone; only opacity, transform and filter animate.
 - `liquid-metal` stayed blank in React StrictMode and after a remount: the effect ran twice on the same canvas, and a canvas whose WebGL context was lost cannot get a new one. Each effect run now makes a fresh canvas. If the shader fails to link, the context is now released at once instead of waiting for garbage collection, since browsers only keep about 16 per page.
-- README: the ten new components, the component count (61 was out of date; now 76) and a note on the limit of about 16 WebGL contexts per page.
+- README: the ten new components, the component count (61 was out of date; now 78 with the carousels) and a note on the limit of about 16 WebGL contexts per page.
 
 ### Removed
 
