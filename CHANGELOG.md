@@ -35,6 +35,7 @@
 
 ### Fixed
 
+- `npm run lab`: templates that need data are exported to HTML through their demos, so the export no longer stops at the Tiles templates.
 - `dot-matrix`: on the top rows the tooltip opens below the cell, so it no longer covers the tile's title and figure.
 - `donut`: long legend names wrap instead of being cut off.
 - `data-tile`: `headingLevel` sets the title's heading level (default 3), so a page without an `h2` above its tiles keeps a sound outline.
