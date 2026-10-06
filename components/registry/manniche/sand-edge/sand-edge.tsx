@@ -38,7 +38,7 @@ const TYPING = 'input, textarea, select, [contenteditable=""], [contenteditable=
 const FADE = 0.32 // how far past its threshold a grain is still seen, at rest
 const GUST = 1.1 // how much longer the trail of sand gets in a full wind
 const REACH = 0.36 // card widths a grain drifts per unit of erosion, at rest
-const RADIUS = 6 // css px, the corners of a card
+const RADIUS = 14 // css px, the corners of a card
 const MAX_GRAINS = 90_000 // per card; past this the grains get coarser
 const PIXELS = 4_200_000 // device pixels the canvas may use; the scene draws only cards, so this can be above the stage's own cap
 
@@ -555,7 +555,7 @@ export function SandEdge({
   const atEnd = !wraps && current === n - 1
   const title = images[current]?.title
   const button =
-    'grid size-11 shrink-0 cursor-pointer place-items-center rounded-[4px] bg-card text-foreground shadow-[inset_0_0_0_1px_var(--border)] [-webkit-tap-highlight-color:transparent] hover:bg-muted ' +
+    'grid size-11 shrink-0 cursor-pointer place-items-center rounded-full bg-muted text-foreground [-webkit-tap-highlight-color:transparent] hover:bg-[color-mix(in_oklab,var(--foreground)_8%,var(--muted))] ' +
     'transition-[opacity,transform] duration-150 ease-out-quint active:scale-[0.96] aria-disabled:cursor-default aria-disabled:opacity-35 aria-disabled:active:scale-100 motion-reduce:transition-none ' +
     'focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring'
   // The fallback fades its cards out towards the stage's edges, where the sand would be.
@@ -577,7 +577,7 @@ export function SandEdge({
         tabIndex={0}
         style={{ height: L?.height ?? 480 }}
         className={cn(
-          'relative w-full touch-pan-y overflow-hidden rounded-[4px] select-none [-webkit-tap-highlight-color:transparent]',
+          'relative w-full touch-pan-y overflow-hidden rounded-[calc(var(--radius)*2+2px)] select-none [-webkit-tap-highlight-color:transparent]',
           'cursor-grab data-dragging:cursor-grabbing',
           'focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring',
         )}
@@ -602,7 +602,7 @@ export function SandEdge({
                   onClick={on ? undefined : () => engine.go(i)}
                   style={{ width: L.cw, height: L.ch, top: L.pad, marginLeft: -L.cw / 2 }}
                   className={cn(
-                    'absolute left-1/2 overflow-hidden rounded-[6px] bg-muted will-change-transform',
+                    'absolute left-1/2 overflow-hidden rounded-[calc(var(--radius)+2px)] bg-muted will-change-transform',
                     !on && 'invisible cursor-pointer',
                   )}
                 >
@@ -613,7 +613,7 @@ export function SandEdge({
                     draggable={false}
                     className="size-full object-cover [-webkit-user-drag:none]"
                   />
-                  <span aria-hidden className="pointer-events-none absolute inset-0 rounded-[inherit] shadow-[inset_0_0_0_1px_var(--border)]" />
+                  <span aria-hidden className="pointer-events-none absolute inset-0 rounded-[inherit] shadow-[inset_0_0_0_1px_color-mix(in_oklab,var(--foreground)_9%,transparent)]" />
                 </div>
               )
             })}
@@ -624,7 +624,7 @@ export function SandEdge({
         <div className="mx-auto mt-3 flex max-w-sm items-center gap-3">
           {/* aria-disabled, not disabled: a button that has focus keeps it when it reaches the end. */}
           <button type="button" aria-label={t.previous} aria-controls={id} aria-disabled={atStart} onClick={() => atStart || engine.move(-1)} className={button}>
-            <ChevronLeft className="size-[18px]" strokeWidth={1.75} aria-hidden />
+            <ChevronLeft className="size-[18px]" strokeWidth={2} aria-hidden />
           </button>
           <div className="flex min-w-0 flex-1 flex-col gap-2">
             <p className="flex items-baseline justify-between gap-3 text-[11px] leading-none">
@@ -636,12 +636,12 @@ export function SandEdge({
               </span>
             </p>
             {/* A hairline rule with a primary tick, one picture's share of it long, that follows the position. */}
-            <div aria-hidden className="relative h-[3px] overflow-hidden before:absolute before:inset-x-0 before:top-px before:h-px before:bg-border">
-              <span ref={tick} style={{ width: `${100 / n}%` }} className="absolute inset-y-0 left-0 block bg-primary" />
+            <div aria-hidden className="relative h-1 overflow-hidden rounded-full bg-muted">
+              <span ref={tick} style={{ width: `${100 / n}%` }} className="absolute inset-y-0 left-0 block rounded-full bg-primary" />
             </div>
           </div>
           <button type="button" aria-label={t.next} aria-controls={id} aria-disabled={atEnd} onClick={() => atEnd || engine.move(1)} className={button}>
-            <ChevronRight className="size-[18px]" strokeWidth={1.75} aria-hidden />
+            <ChevronRight className="size-[18px]" strokeWidth={2} aria-hidden />
           </button>
         </div>
       ) : null}
