@@ -22,3 +22,10 @@
 .dark {
   --background: #141416;
 }
+
+/* On a card, a demo wider than the column, like a marquee, is cut to it. In the base layer, so a demo's own max-width wins. */
+@layer base {
+  :where(.mini-fit > *) {
+    max-width: 100%;
+  }
+}
