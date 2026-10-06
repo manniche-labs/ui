@@ -1,0 +1,20 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "delivery-board-demo",
+  "title": "Delivery board demo",
+  "description": "How to use Delivery board.",
+  "registryDependencies": [
+    "@manniche/delivery-board"
+  ],
+  "files": [
+    {
+      "path": "registry/manniche/examples/delivery-board-demo.tsx",
+      "content": "import { DeliveryBoard, type DeliveryBoardData } from '@/registry/manniche/delivery-board/delivery-board'\n\n// Example data only. All names are invented.\nconst data: DeliveryBoardData = {\n  clients: {\n    title: 'Client progress',\n    items: [\n      { id: 'a', name: 'Sample Studio', progress: 72 },\n      { id: 'b', name: 'Demo Works', progress: 45 },\n      { id: 'c', name: 'Example Labs', progress: 18 },\n    ],\n  },\n  days: ['2026-10-05', '2026-10-06', '2026-10-07', '2026-10-08', '2026-10-09', '2026-10-12'],\n  roadmap: {\n    title: 'Roadmap',\n    lanes: [\n      { id: 'next', title: 'Next', items: [{ id: 'i1', title: 'Sample brief', owners: ['Alex Example'] }, { id: 'i2', title: 'Demo kickoff', owners: ['Sam Sample', 'Robin Demo'] }] },\n      { id: 'doing', title: 'In progress', items: [{ id: 'i3', title: 'Example prototype', owners: ['Robin Demo'] }] },\n      { id: 'done', title: 'Delivered', items: [{ id: 'i4', title: 'Test handover', owners: ['Alex Example', 'Sam Sample'] }] },\n    ],\n  },\n  assistant: { title: 'Assistant', text: 'Example tile: ask for a status summary.', action: 'Summarise' },\n}\n\nexport default function DeliveryBoardDemo() {\n  return <DeliveryBoard data={data} now={new Date('2026-10-06T10:00:00')} />\n}\n",
+      "type": "registry:example"
+    }
+  ],
+  "categories": [
+    "templates"
+  ],
+  "type": "registry:example"
+}
