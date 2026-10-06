@@ -23,5 +23,5 @@ const data: DeliveryBoardData = {
 }
 
 export default function DeliveryBoardDemo() {
-  return <DeliveryBoard data={data} />
+  return <DeliveryBoard data={data} now={new Date('2026-10-06T10:00:00')} />
 }

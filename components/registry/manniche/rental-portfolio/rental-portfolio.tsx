@@ -25,7 +25,7 @@ export function RentalPortfolio({ data, labels, className }: RentalPortfolioProp
       <div className="grid grid-cols-1 gap-3 @lg:grid-cols-3 @3xl:grid-cols-6">
         {data.figures.map((f, i) => (
           <div key={f.id} className={cn('@3xl:col-span-2', i === 0 && '@lg:col-span-3 @3xl:col-span-2')}>
-            <DataTile title={f.title} inverted={i === 0} density="compact">
+            <DataTile className="h-full" title={f.title} inverted={i === 0} density="compact">
               <TileFact>
                 <BigNumber value={f.value} format={f.format} size="lg" />
               </TileFact>
@@ -33,17 +33,17 @@ export function RentalPortfolio({ data, labels, className }: RentalPortfolioProp
           </div>
         ))}
         <div className="@lg:col-span-3 @3xl:col-span-4">
-          <DataTile title={data.income.title} footer={note}>
+          <DataTile className="h-full" title={data.income.title} footer={note}>
             <AreaChart data={data.income.points} label={data.income.title} format={data.income.format} compare />
           </DataTile>
         </div>
         <div className="@lg:col-span-3 @3xl:col-span-2">
-          <DataTile title={data.collection.title} footer={note}>
+          <DataTile className="h-full" title={data.collection.title} footer={note}>
             <Dial value={data.collection.value} min={0} max={100} zones={data.collection.zones} label={data.collection.title} caption={data.collection.caption} format={{ suffix: '%' }} />
           </DataTile>
         </div>
         <div className="@lg:col-span-3 @3xl:col-span-6">
-          <DataTile title={data.transfers.title} footer={note}>
+          <DataTile className="h-full" title={data.transfers.title} footer={note}>
             <TransactionList data={data.transfers.items} label={data.transfers.title} today={data.transfers.today} format={data.transfers.format} />
           </DataTile>
         </div>
