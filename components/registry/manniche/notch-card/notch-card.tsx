@@ -25,9 +25,9 @@ export type NotchCardProps = Omit<HTMLAttributes<HTMLDivElement>, 'title'> & {
   bloom?: boolean
 }
 
-const R = 10 // corner radius
-const N = 52 // notch size
-const r = 9 // radius where the notch turns
+const R = 26 // corner radius, the tile radius
+const N = 56 // notch size
+const r = 14 // radius where the notch turns, the inner radius
 
 // The card's outline with the notch cut from a top corner, in pixels. The left one is the right one mirrored.
 function outline(W: number, H: number, left: boolean) {
@@ -84,9 +84,9 @@ export function NotchCard({
   }, [left])
 
   const arrow = (
-    <span aria-hidden className="grid size-11 place-items-center rounded-lg bg-card text-foreground ring-1 ring-border ring-inset">
+    <span aria-hidden className="grid size-11 place-items-center rounded-full bg-muted text-foreground">
       <ArrowUpRight
-        strokeWidth={1.6}
+        strokeWidth={2}
         className={cn(
           'size-4 transition-transform duration-200 ease-out-quint motion-reduce:transition-none',
           'group-hover/nc:translate-x-0.5 group-hover/nc:-translate-y-0.5 group-has-focus-visible/nc:translate-x-0.5 group-has-focus-visible/nc:-translate-y-0.5',
@@ -118,9 +118,9 @@ export function NotchCard({
             {image}
           </div>
         </div>
-        <div className="grid gap-2 px-[18px] pt-[18px] pb-3.5">
+        <div className="grid gap-2 px-6 pt-5 pb-4">
           {eyebrow && <p className="font-mono text-[11px] leading-none font-medium tracking-[0.04em] text-muted-foreground tabular-nums">{eyebrow}</p>}
-          <h3 className="text-[19px] leading-[1.2] tracking-[-0.015em] text-pretty">
+          <h3 className="text-[19px] leading-[1.2] font-semibold tracking-[-0.02em] text-pretty">
             {href ? (
               <a
                 href={href}
@@ -139,17 +139,17 @@ export function NotchCard({
           {children && <div className="text-[13.5px] leading-normal text-pretty text-muted-foreground">{children}</div>}
         </div>
         {footer && (
-          <div className="mx-[18px] mt-auto mb-4 flex justify-between gap-3 border-t pt-2.5 font-mono text-[11px] leading-none text-muted-foreground">
+          <div className="mx-6 mt-auto mb-[18px] flex justify-between gap-3 border-t border-[color:color-mix(in_oklab,var(--foreground)_9%,transparent)] pt-3.5 font-mono text-[11.5px] leading-none text-muted-foreground tabular-nums">
             {footer}
           </div>
         )}
       </div>
       <svg ref={frame} aria-hidden className="pointer-events-none absolute inset-0 z-20 size-full overflow-visible">
-        <path className="fill-none stroke-border [stroke-width:1] [vector-effect:non-scaling-stroke]" />
+        <path className="fill-none stroke-[color:color-mix(in_oklab,var(--foreground)_9%,transparent)] [stroke-width:1] [vector-effect:non-scaling-stroke]" />
         <path className="fill-none stroke-ring opacity-0 [stroke-width:2] [vector-effect:non-scaling-stroke] group-has-focus-visible/nc:opacity-100" />
       </svg>
       {inNotch && (
-        <div className={cn('absolute top-0 z-30 grid size-[52px] place-items-center', left ? 'left-0' : 'right-0', !action && 'pointer-events-none')}>
+        <div className={cn('absolute top-0 z-30 grid size-14 place-items-center', left ? 'left-0' : 'right-0', !action && 'pointer-events-none')}>
           {inNotch}
         </div>
       )}
