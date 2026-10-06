@@ -88,9 +88,8 @@ function LinkList({ links, newTab }: { links: SitemapLink[]; newTab: string }) {
             href={l.href}
             {...(l.external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
             className={cn(
-              'relative inline-flex h-8 items-center rounded-sm text-[14.5px] text-muted-foreground underline-offset-4 hover:text-foreground hover:underline',
-              // 32 px of visible rhythm, 44 px of target.
-              'before:absolute before:-inset-y-1.5 before:inset-x-0 before:content-[""]',
+              // The row is the 44 px target, so neighbouring targets never overlap.
+              'inline-flex h-11 items-center rounded-sm text-[14.5px] text-muted-foreground underline-offset-4 hover:text-foreground hover:underline',
               focus,
             )}
           >
@@ -189,7 +188,8 @@ export function FooterSitemap({ brand, description, groups, regions, legal, coll
               <div className="mt-8 flex flex-col gap-4 border-t pt-5 @min-[48rem]:flex-row @min-[48rem]:items-center @min-[48rem]:justify-between">
                 {regions && regions.length > 0 && (
                   <nav aria-label={t.regions}>
-                    <ul className="flex flex-wrap gap-x-1.5">
+                    {/* 32 px pills + 12 px row gap: the 44 px hit areas of wrapped rows meet without overlapping. */}
+                    <ul className="flex flex-wrap gap-x-1.5 gap-y-3">
                       {regions.map((r) => (
                         <li key={r.href + r.label}>
                           <a
@@ -198,7 +198,7 @@ export function FooterSitemap({ brand, description, groups, regions, legal, coll
                             lang={r.lang}
                             aria-current={r.current ? 'true' : undefined}
                             className={cn(
-                              'relative inline-flex h-8 items-center rounded-full px-3 text-[13.5px] underline-offset-4',
+                              'relative inline-flex h-8 min-w-11 items-center justify-center rounded-full px-3 text-[13.5px] underline-offset-4',
                               'before:absolute before:-inset-y-1.5 before:inset-x-0 before:content-[""]',
                               r.current ? 'bg-foreground text-background' : 'bg-muted text-muted-foreground hover:text-foreground',
                               focus,
