@@ -101,7 +101,7 @@ function measure(width: number, aspect: number, magnify: number): Geometry {
     height,
     cardW,
     cardH,
-    cardR: clamp(cardW * 0.028, 3, 6),
+    cardR: clamp(cardW * 0.07, 8, 14),
     pitch: cardW + Math.max(8, cardW * 0.075),
     lensW,
     lensH,
@@ -338,7 +338,7 @@ export function LensStrip({
   const atEnd = !wraps && current === n - 1
   const caption = images[shown]?.title
   const button =
-    'grid size-11 shrink-0 cursor-pointer place-items-center rounded-[4px] bg-card text-foreground shadow-[inset_0_0_0_1px_var(--border)] [-webkit-tap-highlight-color:transparent] hover:bg-muted ' +
+    'grid size-11 shrink-0 cursor-pointer place-items-center rounded-full bg-muted text-foreground [-webkit-tap-highlight-color:transparent] hover:bg-[color-mix(in_oklab,var(--foreground)_8%,var(--muted))] ' +
     'transition-[opacity,transform] duration-150 ease-out-quint active:scale-[0.96] aria-disabled:cursor-default aria-disabled:opacity-35 aria-disabled:active:scale-100 motion-reduce:transition-none ' +
     'focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring'
 
@@ -361,7 +361,7 @@ export function LensStrip({
         id={id}
         style={{ height: geo?.height ?? 320 }}
         className={cn(
-          'relative w-full touch-pan-y overflow-x-clip rounded-[4px] select-none [-webkit-tap-highlight-color:transparent]',
+          'relative w-full touch-pan-y overflow-x-clip rounded-[calc(var(--radius)*2+2px)] select-none [-webkit-tap-highlight-color:transparent]',
           n > 1 && 'cursor-grab data-dragging:cursor-grabbing',
           'group-focus-visible/lens:outline-2 group-focus-visible/lens:outline-offset-4 group-focus-visible/lens:outline-ring',
         )}
@@ -397,7 +397,7 @@ export function LensStrip({
                   <div inert={!on} className="absolute inset-0">
                     <img src={im.src} alt={im.alt} draggable={false} decoding="async" className="size-full object-cover [-webkit-user-drag:none]" />
                   </div>
-                  <span aria-hidden className="pointer-events-none absolute inset-0 rounded-[inherit] shadow-[inset_0_0_0_1px_var(--border)]" />
+                  <span aria-hidden className="pointer-events-none absolute inset-0 rounded-[inherit] shadow-[inset_0_0_0_1px_color-mix(in_oklab,var(--foreground)_9%,transparent)]" />
                 </div>
               )
             })}
@@ -408,7 +408,7 @@ export function LensStrip({
         {n > 1 ? (
           // aria-disabled, not disabled: a button that has focus keeps it when it reaches the end.
           <button type="button" aria-label={t.previous} aria-controls={id} aria-disabled={atStart} onClick={() => atStart || engine.move(-1)} className={button}>
-            <ChevronLeft className="size-[18px]" strokeWidth={1.75} aria-hidden />
+            <ChevronLeft className="size-[18px]" strokeWidth={2} aria-hidden />
           </button>
         ) : null}
         <p aria-hidden className="flex min-w-0 flex-1 flex-col items-center gap-1.5 text-center">
@@ -423,7 +423,7 @@ export function LensStrip({
         </p>
         {n > 1 ? (
           <button type="button" aria-label={t.next} aria-controls={id} aria-disabled={atEnd} onClick={() => atEnd || engine.move(1)} className={button}>
-            <ChevronRight className="size-[18px]" strokeWidth={1.75} aria-hidden />
+            <ChevronRight className="size-[18px]" strokeWidth={2} aria-hidden />
           </button>
         ) : null}
       </div>
