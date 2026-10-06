@@ -1,0 +1,20 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "workspace-home-demo",
+  "title": "Workspace home demo",
+  "description": "How to use Workspace home.",
+  "registryDependencies": [
+    "@manniche/workspace-home"
+  ],
+  "files": [
+    {
+      "path": "registry/manniche/examples/workspace-home-demo.tsx",
+      "content": "import { WorkspaceHome, type WorkspaceHomeData } from '@/registry/manniche/workspace-home/workspace-home'\n\n// Example data only. All names and figures are invented.\nconst data: WorkspaceHomeData = {\n  nav: [\n    { id: 'home', label: 'Home' },\n    { id: 'deals', label: 'Deals' },\n    { id: 'people', label: 'People' },\n    { id: 'files', label: 'Files' },\n  ],\n  offer: { title: 'Sample offer', text: 'Example tile: a short offer with one clear action.', action: 'See the offer' },\n  schedule: {\n    title: 'This week',\n    weekStart: '2026-10-05',\n    now: '2026-10-06T10:00',\n    categories: [\n      { id: 'call', label: 'Calls' },\n      { id: 'focus', label: 'Focus' },\n    ],\n    events: [\n      { id: 'e1', title: 'Sample kickoff', day: 0, start: '09:00', end: '10:00', category: 'call' },\n      { id: 'e2', title: 'Demo review', day: 1, start: '11:00', end: '12:00', category: 'call' },\n      { id: 'e3', title: 'Example focus block', day: 2, start: '13:00', end: '15:00', category: 'focus' },\n      { id: 'e4', title: 'Test planning', day: 3, start: '10:00', end: '11:30', category: 'focus' },\n    ],\n  },\n  deals: {\n    title: 'Deals closed per week',\n    total: 84500,\n    points: ['W1', 'W2', 'W3', 'W4', 'W5', 'W6'].map((label, i) => ({ label, value: [9800, 14200, 12100, 17600, 15300, 15500][i] })),\n  },\n}\n\nexport default function WorkspaceHomeDemo() {\n  return <WorkspaceHome data={data} />\n}\n",
+      "type": "registry:example"
+    }
+  ],
+  "categories": [
+    "templates"
+  ],
+  "type": "registry:example"
+}

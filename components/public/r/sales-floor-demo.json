@@ -1,0 +1,20 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "sales-floor-demo",
+  "title": "Sales floor demo",
+  "description": "How to use Sales floor.",
+  "registryDependencies": [
+    "@manniche/sales-floor"
+  ],
+  "files": [
+    {
+      "path": "registry/manniche/examples/sales-floor-demo.tsx",
+      "content": "import { SalesFloor, type SalesFloorData } from '@/registry/manniche/sales-floor/sales-floor'\n\n// Example data only. All names and figures are invented.\nconst money = { currency: 'EUR', decimals: 0 }\n\nconst data: SalesFloorData = {\n  call: { title: 'Live call', contact: 'Alex Example', company: 'Sample Co', status: 'Connected', duration: '04:12', action: 'End call' },\n  target: {\n    title: 'Monthly target',\n    value: 62000,\n    max: 100000,\n    format: money,\n    caption: 'of an example target',\n    zones: [\n      { label: 'Behind', to: 40000 },\n      { label: 'On track', to: 80000 },\n      { label: 'Ahead', to: 100000 },\n    ],\n  },\n  performance: {\n    title: 'Calls booked per rep',\n    points: ['Ana', 'Ben', 'Cy', 'Di', 'Eli'].map((label, i) => ({ label, title: `${label} (example)`, value: [34, 28, 41, 22, 30][i] })),\n  },\n  sources: {\n    title: 'Revenue by source',\n    format: money,\n    items: [\n      { label: 'Outbound', value: 28000 },\n      { label: 'Referral', value: 21000 },\n      { label: 'Inbound', value: 13000 },\n    ],\n  },\n}\n\nexport default function SalesFloorDemo() {\n  return <SalesFloor data={data} />\n}\n",
+      "type": "registry:example"
+    }
+  ],
+  "categories": [
+    "templates"
+  ],
+  "type": "registry:example"
+}
