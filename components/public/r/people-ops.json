@@ -1,0 +1,25 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "people-ops",
+  "title": "People ops",
+  "description": "A people dashboard in Tiles: a hiring funnel, today's schedule, a payroll list and an attendance dot matrix.",
+  "registryDependencies": [
+    "utils",
+    "@manniche/data-tile",
+    "@manniche/chart-kit",
+    "@manniche/bar-chart",
+    "@manniche/dot-matrix",
+    "@manniche/transaction-list"
+  ],
+  "files": [
+    {
+      "path": "registry/manniche/people-ops/people-ops.tsx",
+      "content": "// A people-ops screen: hiring funnel, today's schedule, payroll list and an attendance dot matrix.\nimport { cn } from '@/lib/utils'\nimport { BarChart, type BarPoint } from '@/registry/manniche/bar-chart/bar-chart'\nimport { DataTile } from '@/registry/manniche/data-tile/data-tile'\nimport { DotMatrix } from '@/registry/manniche/dot-matrix/dot-matrix'\nimport { TransactionList, type Transaction } from '@/registry/manniche/transaction-list/transaction-list'\nimport type { ValueFormat } from '@/registry/manniche/chart-kit/chart-utils'\n\nexport type PeopleOpsData = {\n  funnel: { title: string; stages: BarPoint[] }\n  today: { title: string; items: { id: string; time: string; title: string; who: string }[] }\n  payroll: { title: string; items: Transaction[]; today?: string; format?: ValueFormat }\n  attendance: { title: string; data: number[][]; rows: string[]; columns: string[] }\n}\n\nexport type PeopleOpsLabels = { note?: string }\n\nexport type PeopleOpsProps = { data: PeopleOpsData; labels?: PeopleOpsLabels; className?: string }\n\nexport function PeopleOps({ data, labels, className }: PeopleOpsProps) {\n  const note = labels?.note ?? 'Example data.'\n  return (\n    <div className={cn('@container w-full rounded-2xl bg-background p-3 text-foreground', className)}>\n      <div className=\"grid grid-cols-1 gap-3 @2xl:grid-cols-6\">\n        <div className=\"@2xl:col-span-3\">\n          <DataTile className=\"h-full\" title={data.today.title} inverted>\n            <ol className=\"flex flex-col gap-3\">\n              {data.today.items.map((it) => (\n                <li key={it.id} className=\"flex items-baseline gap-3 text-sm\">\n                  <time className=\"w-12 shrink-0 tabular-nums opacity-70\">{it.time}</time>\n                  <span className=\"min-w-0 flex-1 truncate font-medium\">{it.title}</span>\n                  <span className=\"opacity-70\">{it.who}</span>\n                </li>\n              ))}\n            </ol>\n          </DataTile>\n        </div>\n        <div className=\"@2xl:col-span-3\">\n          <DataTile className=\"h-full\" title={data.funnel.title} footer={note}>\n            <BarChart data={data.funnel.stages} label={data.funnel.title} current={null} />\n          </DataTile>\n        </div>\n        <div className=\"@2xl:col-span-3\">\n          <DataTile className=\"h-full\" title={data.payroll.title} footer={note}>\n            <TransactionList data={data.payroll.items} label={data.payroll.title} today={data.payroll.today} format={data.payroll.format} />\n          </DataTile>\n        </div>\n        <div className=\"@2xl:col-span-3\">\n          <DataTile className=\"h-full\" title={data.attendance.title} footer={note}>\n            <DotMatrix data={data.attendance.data} rows={data.attendance.rows} columns={data.attendance.columns} label={data.attendance.title} />\n          </DataTile>\n        </div>\n      </div>\n    </div>\n  )\n}\n",
+      "type": "registry:component"
+    }
+  ],
+  "categories": [
+    "templates"
+  ],
+  "type": "registry:block"
+}
