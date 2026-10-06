@@ -19,8 +19,8 @@ export default function PromptInputDemo() {
       footer={
         <>
           {/* The form carries data-armed while the halo is lit, so the footer can follow it. */}
-          <span className="inline-flex min-h-8 shrink-0 items-center gap-2 rounded-lg px-2.5 font-mono text-xs text-muted-foreground shadow-[inset_0_0_0_1px_var(--color-border)]">
-            <span className="relative size-1.5 rounded-full shadow-[inset_0_0_0_1px_color-mix(in_oklab,var(--color-foreground)_30%,transparent)]">
+          <span className="inline-flex min-h-8 shrink-0 items-center gap-2 rounded-full bg-muted px-3 font-mono text-xs text-muted-foreground tabular-nums">
+            <span className="relative size-1.5 rounded-full bg-[color-mix(in_oklab,var(--color-foreground)_22%,transparent)]">
               <span className="absolute inset-0 rounded-full bg-primary opacity-0 transition-opacity duration-100 ease-out-quint in-data-armed:opacity-100 motion-reduce:transition-none" />
             </span>
             demo model
