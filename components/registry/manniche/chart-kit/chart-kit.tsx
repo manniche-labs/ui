@@ -284,7 +284,7 @@ export function Pills({
           onClick={() => onChange(o.id)}
           onKeyDown={(e) => onKey(e, i)}
           className={cn(
-            'relative min-h-9 cursor-pointer rounded-full px-3.5 text-[13.5px] font-medium whitespace-nowrap focus-visible:outline-offset-0',
+            'relative min-h-11 cursor-pointer rounded-full px-3.5 text-[13.5px] font-medium whitespace-nowrap focus-visible:outline-offset-0',
             // The visible pill is 36 px; the hit area reaches the 44 px of the track.
             'before:absolute before:inset-x-0 before:-inset-y-1 before:content-[""]',
             i === index ? 'text-card' : 'text-muted-foreground hover:text-foreground',
