@@ -8,6 +8,8 @@ You are designing a bold, genuinely beautiful landing page mockup (one self-cont
 WORK DIR: <SCRATCH>/landing
 READ FIRST:
 - BRIEF.md (brand, data, required sections, copy rules). Follow it strictly.
+- <STYLE FOR THIS DIRECTION: path to the saved DESIGN.md from styles.refero.design; delete this line if the brief names none>. Use it as the frame for type scale, spacing and component feel. Do not copy its colours, logos or text.
+- Manniche UI: <MANNICHE_UI>/registry/manniche/*/*.tsx (the `components/` folder of the manniche-labs/ui clone). Prefer these components over anything else, recreated in plain JS/CSS. Any delete or other destructive action follows "Dangerous actions" in <MANNICHE_UI>/README.md.
 - <PREVIOUS ROUND'S FILES AND SCREENSHOTS, if any>
 - <DB>/resources/effects.html: UI-library effects (blur fade, text reveal, highlighter, number ticker, spotlight cards, marquee, dot pattern, shimmer button, toast, command palette, bottom sheet) in plain JS/CSS. Reuse its techniques.
 - <IF CLONED> Magic UI source: <MAGICUI>/apps/www/registry/magicui/*.tsx (<RELEVANT COMPONENTS>). Port what you use to plain JS/CSS.

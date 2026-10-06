@@ -5,7 +5,7 @@ A [Claude Code](https://claude.com/claude-code) skill that runs a design bake-of
 ## How a round works
 
 1. **Brief.** Claude writes a short brief: brand, tone, sections, the real data the page may show, and what is forbidden.
-2. **Three directions.** Three agents work in parallel. Each builds one self-contained HTML page around its own metaphor, screenshots it at desktop and mobile width, and improves it at least twice.
+2. **Three directions.** Three agents work in parallel, each framed by a style from [Refero Styles](https://styles.refero.design/) and preferring the components in this repo. Each builds one self-contained HTML page around its own metaphor, screenshots it at desktop and mobile width, and improves it at least twice.
 3. **You choose.** You see the three pages side by side and pick one. Nothing touches your app before that.
 4. **Port.** One agent ports the winner into your app on a branch: same look and motion, real data, your CSP, works without JS and with reduced motion.
 
@@ -46,6 +46,10 @@ The design agents use these if they are installed:
 
 - [frontend-design](https://github.com/anthropics/skills/tree/main/skills/frontend-design) from Anthropic's skills repo
 - [frontend-design-direction](https://github.com/affaan-m/ECC/tree/main/skills/frontend-design-direction) and [make-interfaces-feel-better](https://github.com/affaan-m/ECC/tree/main/skills/make-interfaces-feel-better) from ECC
+- [make-interfaces-feel-better](https://github.com/jakubkrehel/make-interfaces-feel-better) upstream (MIT), the newest version, for the last detail pass
+- [transitions-dev](https://github.com/Jakubantalik/transitions.dev): ready-made CSS transitions with motion tokens (free to use in a site, not to redistribute)
+
+Also useful as inspiration or tools, not installed: [Refero Styles](https://styles.refero.design/) (real sites as `DESIGN.md`, the frame for each direction), [React Bits Background Studio](https://reactbits.dev/tools/background-studio) and [Texture Lab](https://reactbits.dev/tools/texture-lab), and [Aceternity UI](https://ui.aceternity.com/components) (inspiration only). `SKILL.md` lists what each licence allows.
 
 ## License
 
