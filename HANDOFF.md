@@ -10,27 +10,28 @@ The scrolltide-inspired plan for Manniche UI, built in our own **Tiles** design 
 |---|---|---|
 | 1–4 | Effects, carousel engine, WebGL carousels, late slides | Merged (#12, #15, #16, #17, #18) |
 | Pro move | Six components moved to Manniche UI Pro | Merged (#19) |
-| 5 | Tiles data primitives: chart-kit, data-tile + 11 primitives | Merged (#21). Not yet on mikkelmanniche.dk/lab: deploying needs Mikkel's yes |
+| 5 | Tiles data primitives: chart-kit, data-tile + 11 primitives | Merged (#21). Lab export with phases 2–5 merged in mikkelmanniche.dk PR #109 (6/10); the live upload is pending (see Next steps) |
 | 6 | 17 page sections (footers, bento, CTA, contact) | Not started. Brief: `plans/fase-6-sektioner.md` |
 | Templates | 13 screen templates built from the phase 5 primitives | Not started. Brief: `plans/skabeloner.md` |
-| Tiles pass 2–4 | Phases 2–4 adapted to Tiles | Another session (claude-a9), branch `tiles-fase-2-4`, draft PR. Not ours: no merge or lab deploy without Mikkel's ok |
+| Tiles pass 2–4 | Nine phase 2–4 components restyled to Tiles | Merged (#20, claude-a9, 6/10); included in the lab export |
 
 Progress on the plan: 5 of 7 parts merged (phases 1–5; phase 6 and the templates are left), about 71 %. The Tiles pass for phases 2–4 is counted by the session that owns it.
 
 ## Branches and PRs
 
-- `main`: everything up to and including phase 5 (merge commit 4e2efdd)
+- `main`: phases 1–5 plus the Tiles pass for phases 2–4 (merge commit 0e17f34)
 - `fase-5-data-fliser`, PR #21: merged 2026-10-06. The branch can be deleted
-- `tiles-fase-2-4`: owned by another session (claude-a9), being rebased onto `main` with a draft PR. Do not touch; merging it needs Mikkel's ok.
+- `tiles-fase-2-4`, PR #20: merged 2026-10-06. Owned by claude-a9; leave the branch for its owner to delete.
 - `glass-navbar`, `lab-glas-og-effekter`: owned by other sessions. Do not touch.
 - Old merged branches (`fase-2-effekter`, `fase-3-karrusel-motor`, `fase-4-webgl-karruseller`, `karrusel-sene-slides`) can be deleted later.
 
 ## Next steps, in order
 
-1. Run `git fetch` and look at the open PRs and branches, so you do not build over another session. Then read `plans/fase-6-sektioner.md` and `plans/skabeloner.md`, and open `plans/tiles-mockup.html`.
-2. **Phase 6** per `plans/fase-6-sektioner.md`: three families on three branches from `main` (`fase-6-footers`, `fase-6-bento-cta`, `fase-6-kontakt`).
-3. **Templates** per `plans/skabeloner.md`: three groups (finance, dashboards, the rest) on three branches.
-4. Each PR: local CI, ManiLens (`/manilens-lokal`), CHANGELOG entry, then merge. Deploying to mikkelmanniche.dk/lab needs Mikkel's yes.
+1. **Lab live upload.** The site repo's main (mikkelmanniche.dk PR #109) holds the lab export, but it is not on the server yet: auto mode blocked the deploy. Mikkel runs it, or switches to manual mode so Claude can: from the site repo, `server/udrul.sh` (dry run), then `server/udrul.sh --live`. Use `server/udrul.sh`, not the old `deploy-side.sh`: the old script deletes server files and uploads `server/`.
+2. Run `git fetch` and look at the open PRs and branches, so you do not build over another session. Then read `plans/fase-6-sektioner.md` and `plans/skabeloner.md`, and open `plans/tiles-mockup.html`.
+3. **Phase 6** per `plans/fase-6-sektioner.md`: three families on three branches from `main` (`fase-6-footers`, `fase-6-bento-cta`, `fase-6-kontakt`).
+4. **Templates** per `plans/skabeloner.md`: three groups (finance, dashboards, the rest) on three branches.
+5. Each PR: local CI, ManiLens (`/manilens-lokal`), CHANGELOG entry, then merge. Deploying to mikkelmanniche.dk/lab needs Mikkel's yes.
 
 ## What can run in parallel (separate sessions, no shared files)
 
@@ -66,3 +67,5 @@ Phase 5 primitives, not yet checked in a browser:
 - `bubble-chart`: how the focus ring looks, and its scale-from-centre origin.
 
 Check these when a template first uses the primitive, and fix them in the primitive itself.
+
+A QA run on 6/10 could not check them: the shared Vite server lost its prebundled deps (`node_modules/.vite/deps` gone, `motion_react.js` 504). Start the dev server with `npx vite --force` before the next browser check. From code reading, reduced motion should pass for all 11 (no entry animations; donut, dial, lollipop, card-stack, transaction-list and chart-kit's digits check `prefers-reduced-motion`). Use the preview URL with `c=<name>`, not `c=<name>-demo`.
