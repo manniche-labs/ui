@@ -10,10 +10,10 @@ The scrolltide-inspired plan for Manniche UI, built in our own **Tiles** design 
 |---|---|---|
 | 1–4 | Effects, carousel engine, WebGL carousels, late slides | Merged (#12, #15, #16, #17, #18) |
 | Pro move | Six components moved to Manniche UI Pro | Merged (#19) |
-| 5 | Tiles data primitives: chart-kit, data-tile + 11 primitives | Merged (#21). Lab export with phases 2–5 merged in mikkelmanniche.dk PR #109 (6/10); the live upload is pending (see Next steps) |
+| 5 | Tiles data primitives: chart-kit, data-tile + 11 primitives | Merged (#21). Live on mikkelmanniche.dk/lab with phases 2–4 and the Tiles pass (site PR #109, deployed 6/10) |
 | 6 | 17 page sections (footers, bento, CTA, contact) | Not started. Brief: `plans/fase-6-sektioner.md` |
 | Templates | 13 screen templates built from the phase 5 primitives | Not started. Brief: `plans/skabeloner.md` |
-| Tiles pass 2–4 | Nine phase 2–4 components restyled to Tiles | Merged (#20, claude-a9, 6/10); included in the lab export |
+| Tiles pass 2–4 | Nine phase 2–4 components restyled to Tiles | Merged (#20, claude-a9, 6/10); live on /lab |
 
 Progress on the plan: 5 of 7 parts merged (phases 1–5; phase 6 and the templates are left), about 71 %. The Tiles pass for phases 2–4 is counted by the session that owns it.
 
@@ -27,11 +27,10 @@ Progress on the plan: 5 of 7 parts merged (phases 1–5; phase 6 and the templat
 
 ## Next steps, in order
 
-1. **Lab live upload.** The site repo's main (mikkelmanniche.dk PR #109) holds the lab export, but it is not on the server yet: auto mode blocked the deploy. Mikkel runs it, or switches to manual mode so Claude can: from the site repo, `server/udrul.sh` (dry run), then `server/udrul.sh --live`. Use `server/udrul.sh`, not the old `deploy-side.sh`: the old script deletes server files and uploads `server/`.
-2. Run `git fetch` and look at the open PRs and branches, so you do not build over another session. Then read `plans/fase-6-sektioner.md` and `plans/skabeloner.md`, and open `plans/tiles-mockup.html`.
-3. **Phase 6** per `plans/fase-6-sektioner.md`: three families on three branches from `main` (`fase-6-footers`, `fase-6-bento-cta`, `fase-6-kontakt`).
-4. **Templates** per `plans/skabeloner.md`: three groups (finance, dashboards, the rest) on three branches.
-5. Each PR: local CI, ManiLens (`/manilens-lokal`), CHANGELOG entry, then merge. Deploying to mikkelmanniche.dk/lab needs Mikkel's yes.
+1. Run `git fetch` and look at the open PRs and branches, so you do not build over another session. Then read `plans/fase-6-sektioner.md` and `plans/skabeloner.md`, and open `plans/tiles-mockup.html`.
+2. **Phase 6** per `plans/fase-6-sektioner.md`: three families on three branches from `main` (`fase-6-footers`, `fase-6-bento-cta`, `fase-6-kontakt`).
+3. **Templates** per `plans/skabeloner.md`: three groups (finance, dashboards, the rest) on three branches.
+4. Each PR: local CI, ManiLens (`/manilens-lokal`), CHANGELOG entry, then merge. Deploying to mikkelmanniche.dk/lab needs Mikkel's yes.
 
 ## What can run in parallel (separate sessions, no shared files)
 
@@ -55,6 +54,10 @@ npm run lint && npx tsc -p tsconfig.app.json --noEmit && npm run build && npx sh
 `npx shadcn build` writes `public/r/*.json`. Those files are tracked: commit them with every new or changed component, or `shadcn add` gives a 404 after publish.
 
 Preview: `npm run dev`, then `/preview.html?c=<name>` with `&full=1&mode=light|dark` or `&mini=1`.
+
+## Deploying to /lab
+
+From the site repo (mikkelmanniche.dk), after the site PR is merged: `server/udrul.sh` (dry run), then `server/udrul.sh --live`. Never the old `deploy-side.sh`: it deletes server files and uploads `server/`.
 
 ## Known open items
 
