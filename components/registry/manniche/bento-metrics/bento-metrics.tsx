@@ -9,7 +9,7 @@
 // Screen readers: one `h2`, a real list of tiles, each with an `h3` label. Every figure is read once, with its
 // change ("up" or "down") and its trend sentence from the sparkline. The roll is hidden from them: they always
 // hear the final value, never a half-counted one.
-import { useId, useLayoutEffect, useRef, useState, type ComponentProps, type ReactNode } from 'react'
+import { useCallback, useId, useLayoutEffect, useRef, useState, type ComponentProps, type ReactNode } from 'react'
 import { cn } from '@/lib/utils'
 import { BigNumber, DeltaPill } from '@/registry/manniche/chart-kit/chart-kit'
 import { formatValue, type ValueFormat } from '@/registry/manniche/chart-kit/chart-utils'
@@ -63,10 +63,19 @@ const COLS = {
   4: '@4xl:grid-cols-2',
 } as const
 
-export function BentoMetrics({ heading, intro, eyebrow, note, metrics, roll = true, className, ...rest }: BentoMetricsProps) {
+export function BentoMetrics({ heading, intro, eyebrow, note, metrics, roll = true, className, ref, ...rest }: BentoMetricsProps) {
   const headingId = useId()
   const reduced = useReducedMotion()
-  const root = useRef<HTMLElement>(null)
+  const root = useRef<HTMLElement | null>(null)
+  // The section needs its own handle for the observer, and a ref from the caller must still reach it.
+  const setRoot = useCallback(
+    (node: HTMLElement | null) => {
+      root.current = node
+      if (typeof ref === 'function') ref(node)
+      else if (ref) ref.current = node
+    },
+    [ref],
+  )
   // "armed" shows the figures at zero until the section is seen; the real values are rendered until then.
   const [armed, setArmed] = useState(false)
   useLayoutEffect(() => {
@@ -80,16 +89,22 @@ export function BentoMetrics({ heading, intro, eyebrow, note, metrics, roll = tr
           io.disconnect()
         }
       },
-      { threshold: 0.25 },
+      // Any part of the section entering the lower 80 % of the view counts, so a section taller than the screen
+      // (one column at high zoom) still starts its roll.
+      { threshold: 0, rootMargin: '0px 0px -20% 0px' },
     )
     io.observe(node)
     return () => io.disconnect()
   }, [roll, reduced])
 
+  // Derived rather than reset in the effect: if reduced motion turns on (or `roll` turns off) after the section
+  // was armed, the effect returns early and the figures must still show their real values.
+  const zero = armed && roll && !reduced
+
   const cols = COLS[metrics.length as 2 | 3 | 4] ?? '@4xl:grid-cols-3'
   return (
     <section
-      ref={root}
+      ref={setRoot}
       aria-labelledby={headingId}
       className={cn('@container w-full py-12 @3xl:py-20', className)}
       {...rest}
@@ -122,7 +137,7 @@ export function BentoMetrics({ heading, intro, eyebrow, note, metrics, roll = tr
                       {/* The figure is spoken once, in full, whatever the roll is doing. */}
                       <span className="sr-only">{formatValue(m.value, m.format)}</span>
                       <span aria-hidden>
-                        <BigNumber value={armed ? 0 : m.value} format={m.format} size="lg" roll={roll} />
+                        <BigNumber value={zero ? 0 : m.value} format={m.format} size="lg" roll={roll} />
                       </span>
                     </TileFact>
                     {m.note && <p className="text-[13.5px] leading-normal text-pretty text-muted-foreground">{m.note}</p>}
