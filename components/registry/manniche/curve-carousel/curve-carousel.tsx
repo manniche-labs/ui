@@ -163,7 +163,7 @@ export function CurveCarousel({
   const atStart = !wraps && current === 0
   const atEnd = !wraps && current === n - 1
   const button =
-    'grid size-11 shrink-0 cursor-pointer place-items-center rounded-[4px] bg-card text-foreground shadow-[inset_0_0_0_1px_var(--border)] [-webkit-tap-highlight-color:transparent] hover:bg-muted ' +
+    'grid size-11 shrink-0 cursor-pointer place-items-center rounded-full bg-muted text-foreground [-webkit-tap-highlight-color:transparent] hover:bg-[color-mix(in_oklab,var(--foreground)_8%,var(--muted))] ' +
     'transition-[opacity,transform] duration-150 ease-out-quint active:scale-[0.96] aria-disabled:cursor-default aria-disabled:opacity-35 aria-disabled:active:scale-100 motion-reduce:transition-none ' +
     'focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring'
 
@@ -181,7 +181,7 @@ export function CurveCarousel({
         tabIndex={0}
         style={{ height: size?.height ?? 320, perspective: size?.perspective, perspectiveOrigin: size?.origin }}
         className={cn(
-          'relative w-full overflow-x-clip rounded-[4px] select-none [-webkit-tap-highlight-color:transparent]',
+          'relative w-full overflow-x-clip rounded-[calc(var(--radius)*2+2px)] select-none [-webkit-tap-highlight-color:transparent]',
           L.axis === 'x' ? 'touch-pan-y' : 'touch-pan-x',
           'cursor-grab data-dragging:cursor-grabbing',
           'focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-ring',
@@ -203,7 +203,7 @@ export function CurveCarousel({
                 onClick={on ? undefined : () => engine.go(i)}
                 style={{ width: size.cardWidth, height: size.cardHeight, marginLeft: -size.cardWidth / 2, marginTop: -size.cardHeight / 2 }}
                 className={cn(
-                  'absolute top-1/2 left-1/2 overflow-hidden rounded-[6px] bg-card will-change-transform',
+                  'absolute top-1/2 left-1/2 overflow-hidden rounded-[calc(var(--radius)+2px)] bg-card will-change-transform',
                   'shadow-[0_1px_2px_rgb(0_0_0/0.06),0_18px_36px_-18px_rgb(0_0_0/0.45)]',
                   !on && 'cursor-pointer',
                   // Hidden until the first frame places it, except the card in focus.
@@ -216,7 +216,7 @@ export function CurveCarousel({
                 >
                   {slide}
                 </div>
-                <span aria-hidden className="pointer-events-none absolute inset-0 rounded-[inherit] shadow-[inset_0_0_0_1px_var(--border)]" />
+                <span aria-hidden className="pointer-events-none absolute inset-0 rounded-[inherit] shadow-[inset_0_0_0_1px_color-mix(in_oklab,var(--foreground)_9%,transparent)]" />
                 <span aria-hidden className="pointer-events-none absolute inset-0 bg-background opacity-0" />
               </div>
             )
@@ -227,12 +227,12 @@ export function CurveCarousel({
         <div className="mx-auto mt-4 flex max-w-sm items-center gap-3">
           {/* aria-disabled, not disabled: a button that has focus keeps it when it reaches the end. */}
           <button type="button" aria-label={t.previous} aria-controls={id} aria-disabled={atStart} onClick={() => atStart || engine.move(-1)} className={button}>
-            <ChevronLeft className="size-[18px]" strokeWidth={1.75} aria-hidden />
+            <ChevronLeft className="size-[18px]" strokeWidth={2} aria-hidden />
           </button>
           <div className="flex min-w-0 flex-1 flex-col gap-2">
             {/* A hairline rule with a primary tick, one card's share of it long, that follows the position. In a
                 loop a second tick trails one rule-length behind, so the tick slides off one end and on at the other. */}
-            <div aria-hidden className="@container relative h-[3px] overflow-hidden before:absolute before:inset-x-0 before:top-px before:h-px before:bg-border">
+            <div aria-hidden className="@container relative h-1 overflow-hidden rounded-full bg-muted">
               {(wraps ? [0, 1] : [0]).map((k) => (
                 <span
                   key={k}
@@ -240,7 +240,7 @@ export function CurveCarousel({
                     ticks.current[k] = el
                   }}
                   style={{ width: `${100 / n}%` }}
-                  className="absolute inset-y-0 left-0 block bg-primary"
+                  className="absolute inset-y-0 left-0 block rounded-full bg-primary"
                 />
               ))}
             </div>
@@ -250,7 +250,7 @@ export function CurveCarousel({
             </p>
           </div>
           <button type="button" aria-label={t.next} aria-controls={id} aria-disabled={atEnd} onClick={() => atEnd || engine.move(1)} className={button}>
-            <ChevronRight className="size-[18px]" strokeWidth={1.75} aria-hidden />
+            <ChevronRight className="size-[18px]" strokeWidth={2} aria-hidden />
           </button>
         </div>
       ) : null}
