@@ -45,8 +45,7 @@ One Vite server and one browser per machine.
 
 Fix these in the primitive itself, each with a CHANGELOG entry under Fixed:
 
-- `lollipop`: the overlay overlaps at 320 px.
-- `bubble-chart`: labels collide at 320 px.
+- `lollipop` overlay and `bubble-chart` labels at 320 px: reported from a template pass, but not reproduced in Chromium on the demos at 320 px on 6/10. Recheck them inside the templates and in Safari before changing anything.
 - `donut`: needs a target or centre prop.
 - WebKit/Safari has not been tested at all. The Mac can do this.
 
