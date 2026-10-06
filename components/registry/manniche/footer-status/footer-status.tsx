@@ -132,7 +132,7 @@ export function FooterStatus({ status, updated, statusHref, version, links = [],
                         className={cn('inline-flex min-h-11 items-center rounded-sm text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline', focus)}
                       >
                         {l.label}
-                        {l.external && <span className="sr-only">{t.newTab}</span>}
+                        {l.external && <span className="sr-only"> {t.newTab}</span>}
                       </a>
                     </li>
                   ))}

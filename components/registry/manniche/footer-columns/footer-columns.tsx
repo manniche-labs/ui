@@ -171,7 +171,7 @@ function NewsletterTile({ data, labels }: { data: FooterNewsletter; labels: Requ
   return (
     <section
       aria-labelledby={`${uid}-title`}
-      className="flex min-w-0 flex-col rounded-[calc(var(--radius)*2+2px)] bg-card p-6 text-card-foreground shadow-[0_0_0_1px_color-mix(in_oklab,var(--foreground)_9%,transparent),0_1px_2px_rgba(0,0,0,0.03)]"
+      className="@container/news flex min-w-0 flex-col rounded-[calc(var(--radius)*2+2px)] bg-card p-6 text-card-foreground shadow-[0_0_0_1px_color-mix(in_oklab,var(--foreground)_9%,transparent),0_1px_2px_rgba(0,0,0,0.03)]"
     >
       <h3
         id={`${uid}-title`}
@@ -217,7 +217,8 @@ function NewsletterTile({ data, labels }: { data: FooterNewsletter; labels: Requ
           <label htmlFor={`${uid}-email`} className="text-[13px] font-medium">
             {labels.email}
           </label>
-          <div className="flex flex-col gap-2 @min-[26rem]:flex-row @min-[56rem]:flex-col @min-[80rem]:flex-row">
+          {/* Side by side only when the tile itself has room; it is a narrow column on wide pages. */}
+          <div className="flex flex-col gap-2 @min-[22rem]/news:flex-row">
             <input
               ref={inputRef}
               id={`${uid}-email`}
@@ -238,7 +239,8 @@ function NewsletterTile({ data, labels }: { data: FooterNewsletter; labels: Requ
                 if (email.trim()) setError(check(email))
               }}
               className={cn(
-                'h-11 min-w-0 flex-1 rounded-[14px] border bg-background px-3.5 text-base text-foreground placeholder:text-muted-foreground',
+                // flex-1 only in the row: in a column its zero basis would squash the field below 44 px.
+                'h-11 w-full min-w-0 rounded-[14px] @min-[22rem]/news:flex-1 border bg-background px-3.5 text-base text-foreground placeholder:text-muted-foreground',
                 'transition-[opacity] duration-200',
                 shown ? 'border-destructive' : 'border-foreground/25',
               )}
