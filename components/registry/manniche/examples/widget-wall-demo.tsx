@@ -2,6 +2,24 @@ import { WidgetWall, type WidgetWallData } from '@/registry/manniche/widget-wall
 
 // Example data only. All names and figures are invented.
 const data: WidgetWallData = {
+  profile: {
+    title: 'Profile completeness',
+    items: [
+      { label: 'Basics', value: 40 },
+      { label: 'Billing', value: 25 },
+      { label: 'Team', value: 15 },
+    ],
+    total: 100,
+    format: { suffix: '%' },
+  },
+  team: {
+    title: 'Sample team',
+    people: [
+      { id: 'p1', name: 'Alex Example', role: 'Lead' },
+      { id: 'p2', name: 'Sam Sample', role: 'Design' },
+      { id: 'p3', name: 'Robin Demo', role: 'Support' },
+    ],
+  },
   kpis: [
     { id: 'a', title: 'Sessions', value: 18240, change: 6.2, series: [10, 12, 11, 14, 13, 16, 18] },
     { id: 'b', title: 'Sign-ups', value: 412, change: 2.4, series: [8, 9, 12, 10, 11, 12, 13] },
