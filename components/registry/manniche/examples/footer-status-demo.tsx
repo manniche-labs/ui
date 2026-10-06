@@ -13,9 +13,9 @@ export default function FooterStatusDemo() {
           value={status}
           onChange={(id) => setStatus(id as ServiceStatus)}
           options={[
-            { id: 'operational', label: 'Operational' },
-            { id: 'degraded', label: 'Degraded' },
-            { id: 'outage', label: 'Outage' },
+            { id: 'operational', label: 'Up' },
+            { id: 'degraded', label: 'Slow' },
+            { id: 'outage', label: 'Down' },
           ]}
         />
       </div>
