@@ -114,6 +114,17 @@ There is also a hosted MCP server just for this registry, with no key: `https://
 | `integration-card` | Integrations that open into a card with a connect button |
 | `data-tile` | The tile a figure or chart sits in: name, control, figure, fine print; `inverted` lifts the one that matters, `compact` for dense dashboards |
 | `chart-kit` | Shared parts of the Tiles charts: number formatting, axis ticks, smooth line, one tooltip, the big display figure, change pill, pill switch, screen-reader table |
+| `bar-chart` | Column chart with round caps, today's dot, a pale comparison bar and automatic weekly buckets when bars get thin |
+| `area-chart` | Smooth line over a soft tint, with a dashed comparison line and a crosshair tooltip that reads the difference |
+| `sparkline` | Tiny trend line beside a figure or in a table cell, with a dot on the latest point |
+| `dot-matrix` | A days × hours grid of dots that grow with the value, with a now cell and keyboard reading |
+| `donut` | Ring of rounded segments with a centre figure and a legend list that light each other |
+| `dial` | Segmented arc that lights up to a value, or a three-zone gauge with a needle; read-only or a slider |
+| `bubble-chart` | Bubbles sized by value, on x/y axes or packed, with direct labels, a tooltip and keyboard stepping |
+| `lollipop` | Ranked lollipop list: stems, big heads, ranks that stay with their row, sorting that slides |
+| `card-stack` | Fanned payment cards: drag, tap or key the front one away and the next comes forward |
+| `transaction-list` | Payments by day with the day's net; incoming, pending and failed shown with more than colour |
+| `week-schedule` | A week by the hour: overlapping events in lanes, 44 px blocks, a now line, day tabs when narrow |
 | `use-reduced-motion` | Hook: true when the visitor asked for less motion |
 | `use-carousel-engine` | Hook: drag with momentum, trackpad, snapping and glides for your own carousel; you draw each frame |
 | `use-gl-stage` | Hook: a WebGL canvas that handles its context, size, theme colours and pausing, plus a texture atlas for pictures |

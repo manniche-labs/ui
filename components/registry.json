@@ -3509,6 +3509,442 @@
       "categories": [
         "surfaces"
       ]
+    },
+    {
+      "name": "bar-chart",
+      "type": "registry:component",
+      "title": "Bar chart",
+      "description": "A column chart with round-capped bars, a dot on today, an optional pale comparison bar, and day points grouped into weeks when the bars would get too thin; one Tab stop with arrow keys.",
+      "registryDependencies": [
+        "utils",
+        "@manniche/chart-kit",
+        "@manniche/data-tile"
+      ],
+      "files": [
+        {
+          "path": "registry/manniche/bar-chart/bar-chart.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "categories": [
+        "widgets"
+      ]
+    },
+    {
+      "name": "bar-chart-demo",
+      "type": "registry:example",
+      "title": "Bar chart demo",
+      "description": "How to use Bar chart.",
+      "registryDependencies": [
+        "@manniche/bar-chart",
+        "@manniche/chart-kit",
+        "@manniche/data-tile"
+      ],
+      "files": [
+        {
+          "path": "registry/manniche/examples/bar-chart-demo.tsx",
+          "type": "registry:example"
+        }
+      ],
+      "categories": [
+        "widgets"
+      ]
+    },
+    {
+      "name": "area-chart",
+      "type": "registry:component",
+      "title": "Area chart",
+      "description": "A smooth line over a soft tint for a value that moves day by day, with an optional dashed comparison line, a crosshair tooltip that reads the difference, and room under zero for a dip.",
+      "registryDependencies": [
+        "utils",
+        "@manniche/chart-kit"
+      ],
+      "files": [
+        {
+          "path": "registry/manniche/area-chart/area-chart.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "categories": [
+        "widgets"
+      ]
+    },
+    {
+      "name": "area-chart-demo",
+      "type": "registry:example",
+      "title": "Area chart demo",
+      "description": "How to use Area chart.",
+      "registryDependencies": [
+        "@manniche/area-chart",
+        "@manniche/chart-kit",
+        "@manniche/data-tile"
+      ],
+      "files": [
+        {
+          "path": "registry/manniche/examples/area-chart-demo.tsx",
+          "type": "registry:example"
+        }
+      ],
+      "categories": [
+        "widgets"
+      ]
+    },
+    {
+      "name": "sparkline",
+      "type": "registry:component",
+      "title": "Sparkline",
+      "description": "A tiny trend line without axes for beside a figure or in a table cell, with a dot on the latest point, a tooltip and a 44 px keyboard and touch target however thin it is.",
+      "registryDependencies": [
+        "utils",
+        "@manniche/chart-kit"
+      ],
+      "files": [
+        {
+          "path": "registry/manniche/sparkline/sparkline.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "categories": [
+        "widgets"
+      ]
+    },
+    {
+      "name": "sparkline-demo",
+      "type": "registry:example",
+      "title": "Sparkline demo",
+      "description": "How to use Sparkline.",
+      "registryDependencies": [
+        "@manniche/sparkline",
+        "@manniche/chart-kit",
+        "@manniche/data-tile"
+      ],
+      "files": [
+        {
+          "path": "registry/manniche/examples/sparkline-demo.tsx",
+          "type": "registry:example"
+        }
+      ],
+      "categories": [
+        "widgets"
+      ]
+    },
+    {
+      "name": "dot-matrix",
+      "type": "registry:component",
+      "title": "Dot matrix",
+      "description": "A grid of dots that grow with the value, such as payments per weekday and hour, with a now cell, keyboard reading and a table for screen readers.",
+      "registryDependencies": [
+        "utils",
+        "@manniche/chart-kit"
+      ],
+      "files": [
+        {
+          "path": "registry/manniche/dot-matrix/dot-matrix.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "categories": [
+        "widgets"
+      ]
+    },
+    {
+      "name": "dot-matrix-demo",
+      "type": "registry:example",
+      "title": "Dot matrix demo",
+      "description": "How to use Dot matrix.",
+      "registryDependencies": [
+        "@manniche/dot-matrix",
+        "@manniche/chart-kit",
+        "@manniche/data-tile"
+      ],
+      "files": [
+        {
+          "path": "registry/manniche/examples/dot-matrix-demo.tsx",
+          "type": "registry:example"
+        }
+      ],
+      "categories": [
+        "widgets"
+      ]
+    },
+    {
+      "name": "donut",
+      "type": "registry:component",
+      "title": "Donut",
+      "description": "A thick ring of rounded segments with gaps, a centre figure and a legend list; point at a segment or a row and it steps out while the centre reads its value and share.",
+      "registryDependencies": [
+        "utils",
+        "@manniche/chart-kit"
+      ],
+      "files": [
+        {
+          "path": "registry/manniche/donut/donut.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "categories": [
+        "widgets"
+      ]
+    },
+    {
+      "name": "donut-demo",
+      "type": "registry:example",
+      "title": "Donut demo",
+      "description": "How to use Donut.",
+      "registryDependencies": [
+        "@manniche/donut",
+        "@manniche/chart-kit",
+        "@manniche/data-tile"
+      ],
+      "files": [
+        {
+          "path": "registry/manniche/examples/donut-demo.tsx",
+          "type": "registry:example"
+        }
+      ],
+      "categories": [
+        "widgets"
+      ]
+    },
+    {
+      "name": "dial",
+      "type": "registry:component",
+      "title": "Dial",
+      "description": "A fat arc of rounded segments that light up to a value with a marker in the signal colour, or a three-zone gauge with a needle; read-only or a slider you can drag or key.",
+      "registryDependencies": [
+        "utils",
+        "@manniche/chart-kit"
+      ],
+      "files": [
+        {
+          "path": "registry/manniche/dial/dial.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "categories": [
+        "widgets"
+      ]
+    },
+    {
+      "name": "dial-demo",
+      "type": "registry:example",
+      "title": "Dial demo",
+      "description": "How to use Dial.",
+      "registryDependencies": [
+        "@manniche/dial",
+        "@manniche/data-tile"
+      ],
+      "files": [
+        {
+          "path": "registry/manniche/examples/dial-demo.tsx",
+          "type": "registry:example"
+        }
+      ],
+      "categories": [
+        "widgets"
+      ]
+    },
+    {
+      "name": "bubble-chart",
+      "type": "registry:component",
+      "title": "Bubble chart",
+      "description": "A bubble chart sized by value: on two axes when items have x and y, packed largest-first otherwise, with direct labels where they fit, one tooltip and one Tab stop with arrow keys.",
+      "registryDependencies": [
+        "utils",
+        "@manniche/chart-kit"
+      ],
+      "files": [
+        {
+          "path": "registry/manniche/bubble-chart/bubble-chart.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "categories": [
+        "widgets"
+      ]
+    },
+    {
+      "name": "bubble-chart-demo",
+      "type": "registry:example",
+      "title": "Bubble chart demo",
+      "description": "How to use Bubble chart.",
+      "registryDependencies": [
+        "@manniche/bubble-chart",
+        "@manniche/chart-kit",
+        "@manniche/data-tile"
+      ],
+      "files": [
+        {
+          "path": "registry/manniche/examples/bubble-chart-demo.tsx",
+          "type": "registry:example"
+        }
+      ],
+      "categories": [
+        "widgets"
+      ]
+    },
+    {
+      "name": "lollipop",
+      "type": "registry:component",
+      "title": "Lollipop",
+      "description": "A ranked list with thin stems and round heads at each value: sort by value or name and the rows slide into place; one Tab stop with arrow keys, a tooltip per row, and the list itself is the data for screen readers.",
+      "registryDependencies": [
+        "utils",
+        "@manniche/chart-kit"
+      ],
+      "files": [
+        {
+          "path": "registry/manniche/lollipop/lollipop.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "categories": [
+        "widgets"
+      ]
+    },
+    {
+      "name": "lollipop-demo",
+      "type": "registry:example",
+      "title": "Lollipop demo",
+      "description": "How to use Lollipop.",
+      "registryDependencies": [
+        "@manniche/lollipop",
+        "@manniche/chart-kit",
+        "@manniche/data-tile"
+      ],
+      "files": [
+        {
+          "path": "registry/manniche/examples/lollipop-demo.tsx",
+          "type": "registry:example"
+        }
+      ],
+      "categories": [
+        "widgets"
+      ]
+    },
+    {
+      "name": "card-stack",
+      "type": "registry:component",
+      "title": "Card stack",
+      "description": "A fanned stack of payment or account cards: drag, flick, tap or key the front card away and the next comes forward, with its balance under the fan and dots to pick a card.",
+      "dependencies": [
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "utils",
+        "@manniche/chart-kit"
+      ],
+      "files": [
+        {
+          "path": "registry/manniche/card-stack/card-stack.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "categories": [
+        "surfaces"
+      ]
+    },
+    {
+      "name": "card-stack-demo",
+      "type": "registry:example",
+      "title": "Card stack demo",
+      "description": "How to use Card stack.",
+      "registryDependencies": [
+        "@manniche/card-stack",
+        "@manniche/data-tile"
+      ],
+      "files": [
+        {
+          "path": "registry/manniche/examples/card-stack-demo.tsx",
+          "type": "registry:example"
+        }
+      ],
+      "categories": [
+        "surfaces"
+      ]
+    },
+    {
+      "name": "transaction-list",
+      "type": "registry:component",
+      "title": "Transaction list",
+      "description": "Payments grouped by day with the day's net, signed amounts in tabular mono, incoming, pending and failed states that never rely on colour alone, and a show-more limit.",
+      "dependencies": [
+        "lucide-react",
+        "motion"
+      ],
+      "registryDependencies": [
+        "utils",
+        "@manniche/chart-kit"
+      ],
+      "files": [
+        {
+          "path": "registry/manniche/transaction-list/transaction-list.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "categories": [
+        "widgets"
+      ]
+    },
+    {
+      "name": "transaction-list-demo",
+      "type": "registry:example",
+      "title": "Transaction list demo",
+      "description": "How to use Transaction list.",
+      "registryDependencies": [
+        "@manniche/transaction-list",
+        "@manniche/chart-kit",
+        "@manniche/data-tile"
+      ],
+      "files": [
+        {
+          "path": "registry/manniche/examples/transaction-list-demo.tsx",
+          "type": "registry:example"
+        }
+      ],
+      "categories": [
+        "widgets"
+      ]
+    },
+    {
+      "name": "week-schedule",
+      "type": "registry:component",
+      "title": "Week schedule",
+      "description": "A week by the hour with events in side-by-side lanes when they overlap, 44 px minimum blocks, a now line in the signal colour, and day tabs when the columns get too narrow.",
+      "registryDependencies": [
+        "utils",
+        "@manniche/chart-kit",
+        "@manniche/data-tile"
+      ],
+      "files": [
+        {
+          "path": "registry/manniche/week-schedule/week-schedule.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "categories": [
+        "widgets"
+      ]
+    },
+    {
+      "name": "week-schedule-demo",
+      "type": "registry:example",
+      "title": "Week schedule demo",
+      "description": "How to use Week schedule.",
+      "registryDependencies": [
+        "@manniche/week-schedule",
+        "@manniche/chart-kit",
+        "@manniche/data-tile"
+      ],
+      "files": [
+        {
+          "path": "registry/manniche/examples/week-schedule-demo.tsx",
+          "type": "registry:example"
+        }
+      ],
+      "categories": [
+        "widgets"
+      ]
     }
   ]
 }
