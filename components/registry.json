@@ -1897,6 +1897,52 @@
       ]
     },
     {
+      "name": "shader-backdrop",
+      "type": "registry:component",
+      "title": "Shader backdrop",
+      "description": "An animated WebGL background in seven families (mesh, swirl, halftone, metal, aurora, flame, cells) with 55 ready-made looks or your own colours.",
+      "dependencies": [],
+      "registryDependencies": [
+        "utils"
+      ],
+      "files": [
+        {
+          "path": "registry/manniche/shader-backdrop/shader-backdrop.tsx",
+          "type": "registry:component"
+        },
+        {
+          "path": "registry/manniche/hooks/use-reduced-motion.ts",
+          "type": "registry:hook"
+        }
+      ],
+      "categories": [
+        "surfaces"
+      ]
+    },
+    {
+      "name": "gravity-grid",
+      "type": "registry:component",
+      "title": "Gravity grid",
+      "description": "A grid of dots or lines that bends towards the pointer like a gravity well, on a canvas.",
+      "dependencies": [],
+      "registryDependencies": [
+        "utils"
+      ],
+      "files": [
+        {
+          "path": "registry/manniche/gravity-grid/gravity-grid.tsx",
+          "type": "registry:component"
+        },
+        {
+          "path": "registry/manniche/hooks/use-reduced-motion.ts",
+          "type": "registry:hook"
+        }
+      ],
+      "categories": [
+        "surfaces"
+      ]
+    },
+    {
       "name": "liquid-metal-demo",
       "type": "registry:example",
       "title": "Liquid metal demo",
@@ -1907,6 +1953,42 @@
       "files": [
         {
           "path": "registry/manniche/examples/liquid-metal-demo.tsx",
+          "type": "registry:example"
+        }
+      ],
+      "categories": [
+        "surfaces"
+      ]
+    },
+    {
+      "name": "shader-backdrop-demo",
+      "type": "registry:example",
+      "title": "Shader backdrop demo",
+      "description": "How to use Shader backdrop.",
+      "registryDependencies": [
+        "@manniche/shader-backdrop"
+      ],
+      "files": [
+        {
+          "path": "registry/manniche/examples/shader-backdrop-demo.tsx",
+          "type": "registry:example"
+        }
+      ],
+      "categories": [
+        "surfaces"
+      ]
+    },
+    {
+      "name": "gravity-grid-demo",
+      "type": "registry:example",
+      "title": "Gravity grid demo",
+      "description": "How to use Gravity grid.",
+      "registryDependencies": [
+        "@manniche/gravity-grid"
+      ],
+      "files": [
+        {
+          "path": "registry/manniche/examples/gravity-grid-demo.tsx",
           "type": "registry:example"
         }
       ],

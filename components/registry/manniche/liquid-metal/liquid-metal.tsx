@@ -30,13 +30,25 @@ void main(){
 
 /** A surface of flowing chrome, drawn with a tiny WebGL shader. Without WebGL it falls back to still metal bands. */
 export function LiquidMetal({ speed = 1, children, className }: LiquidMetalProps) {
-  const canvas = useRef<HTMLCanvasElement>(null)
+  const host = useRef<HTMLDivElement>(null)
   const reduce = useReducedMotion()
 
   useEffect(() => {
-    const el = canvas.current
-    const gl = el?.getContext('webgl', { antialias: false, premultipliedAlpha: false })
-    if (!el || !gl) return
+    const wrap = host.current
+    if (!wrap) return
+    // A fresh canvas per run: a canvas whose context was lost cannot hand out a new one.
+    const el = document.createElement('canvas')
+    el.setAttribute('aria-hidden', 'true')
+    el.className = 'absolute inset-0 -z-10 size-full opacity-0 transition-opacity duration-500 data-ready:opacity-100'
+    wrap.prepend(el)
+    const remove = () => el.remove()
+
+    const gl = el.getContext('webgl', { antialias: false, premultipliedAlpha: false })
+    if (!gl) return remove
+    const release = () => {
+      gl.getExtension('WEBGL_lose_context')?.loseContext()
+      remove()
+    }
 
     const shader = (type: number, src: string) => {
       const s = gl.createShader(type)!
@@ -48,7 +60,11 @@ export function LiquidMetal({ speed = 1, children, className }: LiquidMetalProps
     gl.attachShader(program, shader(gl.VERTEX_SHADER, VERTEX))
     gl.attachShader(program, shader(gl.FRAGMENT_SHADER, FRAGMENT))
     gl.linkProgram(program)
-    if (!gl.getProgramParameter(program, gl.LINK_STATUS)) return
+    // Free the context straight away, so a shader that cannot run does not hold one of the page's few.
+    if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {
+      release()
+      return
+    }
     gl.useProgram(program)
 
     // One triangle that covers the whole canvas.
@@ -74,7 +90,8 @@ export function LiquidMetal({ speed = 1, children, className }: LiquidMetalProps
     }
     const ro = new ResizeObserver(resize)
     ro.observe(el)
-    el.dataset.ready = ''
+    // Wait a frame so the new canvas fades in instead of popping.
+    requestAnimationFrame(() => (el.dataset.ready = ''))
 
     let raf = 0
     let visible = false
@@ -95,13 +112,13 @@ export function LiquidMetal({ speed = 1, children, className }: LiquidMetalProps
       ro.disconnect()
       io.disconnect()
       cancelAnimationFrame(raf)
-      delete el.dataset.ready
-      gl.getExtension('WEBGL_lose_context')?.loseContext()
+      release()
     }
   }, [speed, reduce])
 
   return (
     <div
+      ref={host}
       className={cn(
         'relative isolate overflow-hidden',
         // Fallback until (or if) WebGL starts: still chrome bands.
@@ -109,7 +126,6 @@ export function LiquidMetal({ speed = 1, children, className }: LiquidMetalProps
         className,
       )}
     >
-      <canvas ref={canvas} aria-hidden className="absolute inset-0 -z-10 size-full opacity-0 transition-opacity duration-500 data-ready:opacity-100" />
       {children}
     </div>
   )
