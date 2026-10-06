@@ -152,6 +152,11 @@ Whole pages, built from the same tokens. Install one like a component, or downlo
 | `bento-steps` | Section: numbered steps joined by a line, with done, now and up next |
 | `cta-band` | Section: an inverted call-to-action band with two actions and a fact line |
 | `cta-signup` | Section: email signup card with validation, sending state and confirmation |
+| `rental-portfolio` | Property dashboard in Tiles: portfolio figures, income vs payouts, rent-collection dial, transfers |
+| `delivery-board` | Project board in Tiles: client progress, day strip, roadmap lanes, assistant tile |
+| `people-ops` | People dashboard in Tiles: hiring funnel, today's schedule, payroll, attendance matrix |
+| `health-overview` | Health dashboard in Tiles: vitals, patient card, score dial, calorie bars with macros |
+| `gallery-shop` | Gallery and shop page in Tiles: side menu, two-tone headline, counters, events, collections |
 
 `npm run lab` writes the HTML files with `scripts/template-html.mjs`; the colours live in `src/template-theme.ts`.
 
