@@ -1,0 +1,20 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "footer-status-demo",
+  "title": "Footer Status demo",
+  "description": "How to use Footer Status.",
+  "registryDependencies": [
+    "@manniche/footer-status"
+  ],
+  "files": [
+    {
+      "path": "registry/manniche/examples/footer-status-demo.tsx",
+      "content": "import { useState } from 'react'\nimport { FooterStatus, type ServiceStatus } from '@/registry/manniche/footer-status/footer-status'\nimport { Pills } from '@/registry/manniche/chart-kit/chart-kit'\n\nexport default function FooterStatusDemo() {\n  const [status, setStatus] = useState<ServiceStatus>('operational')\n  return (\n    // The id that Back to top moves focus to.\n    <div id=\"top\" className=\"grid gap-8 py-8\">\n      <div className=\"mx-auto flex w-full max-w-6xl flex-wrap items-center gap-3 px-4 sm:px-6\">\n        <span className=\"font-mono text-[11px] tracking-[0.08em] text-muted-foreground uppercase\">Status</span>\n        <Pills\n          label=\"Service status\"\n          value={status}\n          onChange={(id) => setStatus(id as ServiceStatus)}\n          options={[\n            { id: 'operational', label: 'Up' },\n            { id: 'degraded', label: 'Slow' },\n            { id: 'outage', label: 'Down' },\n          ]}\n        />\n      </div>\n      <FooterStatus\n        status={status}\n        updated=\"14:20\"\n        statusHref=\"https://example.com/status\"\n        version={{ label: 'v2.4.1', href: 'https://example.com/changelog' }}\n        links={[\n          { label: 'Docs', href: 'https://example.com/docs' },\n          { label: 'API', href: 'https://example.com/api', external: true },\n          { label: 'Support', href: 'https://example.com/support' },\n          { label: 'Privacy', href: 'https://example.com/privacy' },\n        ]}\n        focusTarget=\"top\"\n        legal={<span>© 2026 Halden Studio</span>}\n      />\n      {/* Narrowest form: no links, no version. */}\n      <FooterStatus status=\"operational\" updated=\"14:20\" />\n    </div>\n  )\n}\n",
+      "type": "registry:example"
+    }
+  ],
+  "categories": [
+    "templates"
+  ],
+  "type": "registry:example"
+}

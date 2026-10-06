@@ -4179,6 +4179,283 @@
       ]
     },
     {
+      "name": "footer-columns",
+      "type": "registry:block",
+      "title": "Footer Columns",
+      "description": "A site footer with a brand block, three to five link columns, a newsletter tile and a legal row.",
+      "dependencies": [
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "utils"
+      ],
+      "files": [
+        {
+          "path": "registry/manniche/footer-columns/footer-columns.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "categories": [
+        "templates"
+      ]
+    },
+    {
+      "name": "footer-columns-demo",
+      "type": "registry:example",
+      "title": "Footer Columns demo",
+      "description": "How to use Footer Columns.",
+      "registryDependencies": [
+        "@manniche/footer-columns"
+      ],
+      "files": [
+        {
+          "path": "registry/manniche/examples/footer-columns-demo.tsx",
+          "type": "registry:example"
+        }
+      ],
+      "categories": [
+        "templates"
+      ]
+    },
+    {
+      "name": "footer-desk",
+      "type": "registry:block",
+      "title": "Footer Desk",
+      "description": "A front-desk footer: one inverted tile with a contact person, a way to reach them and office clocks that tick on the minute.",
+      "dependencies": [
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "utils",
+        "@manniche/data-tile"
+      ],
+      "files": [
+        {
+          "path": "registry/manniche/footer-desk/footer-desk.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "categories": [
+        "templates"
+      ]
+    },
+    {
+      "name": "footer-desk-demo",
+      "type": "registry:example",
+      "title": "Footer Desk demo",
+      "description": "How to use Footer Desk.",
+      "registryDependencies": [
+        "@manniche/footer-desk"
+      ],
+      "files": [
+        {
+          "path": "registry/manniche/examples/footer-desk-demo.tsx",
+          "type": "registry:example"
+        }
+      ],
+      "categories": [
+        "templates"
+      ]
+    },
+    {
+      "name": "footer-sitemap",
+      "type": "registry:block",
+      "title": "Footer Sitemap",
+      "description": "A dense sitemap footer with five to seven link groups that fold into disclosures on a narrow box, and a region picker.",
+      "dependencies": [
+        "lucide-react",
+        "motion"
+      ],
+      "registryDependencies": [
+        "utils",
+        "@manniche/data-tile"
+      ],
+      "files": [
+        {
+          "path": "registry/manniche/footer-sitemap/footer-sitemap.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "categories": [
+        "templates"
+      ]
+    },
+    {
+      "name": "footer-sitemap-demo",
+      "type": "registry:example",
+      "title": "Footer Sitemap demo",
+      "description": "How to use Footer Sitemap.",
+      "registryDependencies": [
+        "@manniche/footer-sitemap"
+      ],
+      "files": [
+        {
+          "path": "registry/manniche/examples/footer-sitemap-demo.tsx",
+          "type": "registry:example"
+        }
+      ],
+      "categories": [
+        "templates"
+      ]
+    },
+    {
+      "name": "footer-slim",
+      "type": "registry:block",
+      "title": "Footer Slim",
+      "description": "A one-row footer for apps and docs: wordmark, links, a light, dark and system switch and the copyright line.",
+      "registryDependencies": [
+        "utils",
+        "@manniche/chart-kit"
+      ],
+      "files": [
+        {
+          "path": "registry/manniche/footer-slim/footer-slim.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "categories": [
+        "templates"
+      ]
+    },
+    {
+      "name": "footer-slim-demo",
+      "type": "registry:example",
+      "title": "Footer Slim demo",
+      "description": "How to use Footer Slim.",
+      "registryDependencies": [
+        "@manniche/footer-slim"
+      ],
+      "files": [
+        {
+          "path": "registry/manniche/examples/footer-slim-demo.tsx",
+          "type": "registry:example"
+        }
+      ],
+      "categories": [
+        "templates"
+      ]
+    },
+    {
+      "name": "footer-statement",
+      "type": "registry:block",
+      "title": "Footer Statement",
+      "description": "A closing footer with one large display line in an inverted tile, an email action and a quiet row of links.",
+      "dependencies": [
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "utils",
+        "@manniche/data-tile"
+      ],
+      "files": [
+        {
+          "path": "registry/manniche/footer-statement/footer-statement.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "categories": [
+        "templates"
+      ]
+    },
+    {
+      "name": "footer-statement-demo",
+      "type": "registry:example",
+      "title": "Footer Statement demo",
+      "description": "How to use Footer Statement.",
+      "registryDependencies": [
+        "@manniche/footer-statement"
+      ],
+      "files": [
+        {
+          "path": "registry/manniche/examples/footer-statement-demo.tsx",
+          "type": "registry:example"
+        }
+      ],
+      "categories": [
+        "templates"
+      ]
+    },
+    {
+      "name": "footer-status",
+      "type": "registry:block",
+      "title": "Footer Status",
+      "description": "A product footer with a service status chip in words and shape, the version, a few links and a way back to the top.",
+      "dependencies": [
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "utils",
+        "@manniche/data-tile"
+      ],
+      "files": [
+        {
+          "path": "registry/manniche/footer-status/footer-status.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "categories": [
+        "templates"
+      ]
+    },
+    {
+      "name": "footer-status-demo",
+      "type": "registry:example",
+      "title": "Footer Status demo",
+      "description": "How to use Footer Status.",
+      "registryDependencies": [
+        "@manniche/footer-status"
+      ],
+      "files": [
+        {
+          "path": "registry/manniche/examples/footer-status-demo.tsx",
+          "type": "registry:example"
+        }
+      ],
+      "categories": [
+        "templates"
+      ]
+    },
+    {
+      "name": "footer-tiles",
+      "type": "registry:block",
+      "title": "Footer Tiles",
+      "description": "A footer as four tiles: address, opening hours with an open-now signal in the place's own time zone, links and social links.",
+      "dependencies": [
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "utils",
+        "@manniche/data-tile"
+      ],
+      "files": [
+        {
+          "path": "registry/manniche/footer-tiles/footer-tiles.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "categories": [
+        "templates"
+      ]
+    },
+    {
+      "name": "footer-tiles-demo",
+      "type": "registry:example",
+      "title": "Footer Tiles demo",
+      "description": "How to use Footer Tiles.",
+      "registryDependencies": [
+        "@manniche/footer-tiles"
+      ],
+      "files": [
+        {
+          "path": "registry/manniche/examples/footer-tiles-demo.tsx",
+          "type": "registry:example"
+        }
+      ],
+      "categories": [
+        "templates"
+      ]
+    },
+    {
       "name": "chart-kit",
       "type": "registry:component",
       "title": "Chart kit",

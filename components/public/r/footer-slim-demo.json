@@ -1,0 +1,20 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "footer-slim-demo",
+  "title": "Footer Slim demo",
+  "description": "How to use Footer Slim.",
+  "registryDependencies": [
+    "@manniche/footer-slim"
+  ],
+  "files": [
+    {
+      "path": "registry/manniche/examples/footer-slim-demo.tsx",
+      "content": "import { useState } from 'react'\nimport { FooterSlim, type FooterSlimTheme } from '@/registry/manniche/footer-slim/footer-slim'\n\n// Halden Studio is an invented company. Every link goes to example.com.\n// The switch is controlled but this demo does not change the page theme: the library's own toggle does that.\nexport default function FooterSlimDemo() {\n  const [theme, setTheme] = useState<FooterSlimTheme>('system')\n  return (\n    <FooterSlim\n      brand=\"Halden Docs\"\n      links={[\n        { label: 'Guides', href: 'https://example.com/guides' },\n        { label: 'API', href: 'https://example.com/api' },\n        { label: 'Status', href: 'https://example.com/status', external: true },\n        { label: 'Privacy', href: 'https://example.com/privacy' },\n      ]}\n      owner=\"Halden Studio\"\n      theme={theme}\n      onThemeChange={setTheme}\n    />\n  )\n}\n",
+      "type": "registry:example"
+    }
+  ],
+  "categories": [
+    "templates"
+  ],
+  "type": "registry:example"
+}
