@@ -13,7 +13,8 @@ export type OfficeHours = {
   day: number
   /** "09:00" in the office's local time. */
   open: string
-  /** "17:00" in the office's local time. */
+  /** "17:00" in the office's local time, later than `open` on the same day ("24:00" for midnight). For hours that run
+   * past midnight, give two rows: one to "24:00" and one from "00:00" on the next day. */
   close: string
 }
 
@@ -107,12 +108,12 @@ export function ContactOffices({ heading, intro, offices, now, labels = {}, clas
   const [clock, setClock] = useState<Date | null>(null)
   useEffect(() => {
     if (now) return
-    const first = setTimeout(() => setClock(new Date()), 0)
-    const id = setInterval(() => setClock(new Date()), 60_000)
-    return () => {
-      clearTimeout(first)
-      clearInterval(id)
-    }
+    // Read after mount, then again on each new minute (not on a timer from mount, which would lag up to 59 s).
+    let timer = setTimeout(function tick() {
+      setClock(new Date())
+      timer = setTimeout(tick, 60_000 - (Date.now() % 60_000) + 20)
+    }, 0)
+    return () => clearTimeout(timer)
   }, [now])
   const at = now ?? clock
   const statuses = at ? offices.map((o) => officeStatus(o, at)) : null

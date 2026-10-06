@@ -107,7 +107,7 @@ export function ContactChannels({
                   {...(c.action.external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
                   className={cn(
                     'mt-5 inline-flex min-h-11 w-fit items-center gap-1.5 rounded-full px-4 text-sm font-medium',
-                    'transition-[opacity,transform] duration-200 ease-out-quint active:scale-[0.98]',
+                    'transition-[opacity,transform] duration-200 ease-out-quint active:scale-[0.98] motion-reduce:transition-none motion-reduce:active:scale-100',
                     'outline-offset-2 focus-visible:outline-2 focus-visible:outline-ring',
                     inverted ? 'bg-background text-foreground' : 'bg-primary text-primary-foreground',
                   )}

@@ -2,7 +2,7 @@
 // button, optional "Book a call"). A team filter appears as Pills when there is more than one team.
 // Signature: copying an email shows "Copied" in place, announced through a live region.
 // Screen readers: a section named by its h2, a list of people with an h3 each; the filter is a radio group and the
-// result count is announced. Reduced motion: no animation is used beyond opacity.
+// result count is announced. Reduced motion: the press feedback on the buttons is dropped; nothing else moves.
 import { useEffect, useId, useRef, useState, type HTMLAttributes, type ReactNode } from 'react'
 import { Check, Copy } from 'lucide-react'
 import { cn } from '@/lib/utils'
@@ -50,7 +50,7 @@ function CopyEmail({ email, L }: { email: string; L: { copy: string; copied: str
   return (
     <>
       <button type="button" onClick={run}
-        className="inline-flex min-h-11 items-center gap-1.5 rounded-full bg-muted px-3.5 text-sm font-medium outline-offset-2 transition-[opacity,transform] duration-200 ease-out-quint focus-visible:outline-2 focus-visible:outline-ring active:scale-[0.98]">
+        className="inline-flex min-h-11 items-center gap-1.5 rounded-full bg-muted px-3.5 text-sm font-medium outline-offset-2 transition-[opacity,transform] duration-200 ease-out-quint focus-visible:outline-2 focus-visible:outline-ring active:scale-[0.98] motion-reduce:transition-none motion-reduce:active:scale-100">
         {s === 'copied' ? <Check className="size-4" aria-hidden /> : <Copy className="size-4" aria-hidden />}
         <span aria-hidden className="font-mono text-xs">{s === 'copied' ? L.copied : s === 'failed' ? L.failed : L.copy}</span>
         <span className="sr-only">{L.copy}: {email}</span>
@@ -65,7 +65,9 @@ export function ContactPeople({ heading, intro, people, labels = {}, className, 
   const uid = useId()
   const teams = Array.from(new Set(people.map((p) => p.team).filter((t): t is string => !!t)))
   const [team, setTeam] = useState('all')
-  const list = team === 'all' ? people : people.filter((p) => p.team === team)
+  // A team that is no longer in `people` falls back to everyone, so the list never ends up empty with no way out.
+  const active = team === 'all' || teams.includes(team) ? team : 'all'
+  const list = active === 'all' ? people : people.filter((p) => p.team === active)
   return (
     <section aria-labelledby={`${uid}-h`} className={cn('@container mx-auto w-full max-w-6xl px-4 py-12 sm:px-6', className)} {...rest}>
       <header className="flex flex-wrap items-end justify-between gap-4">
@@ -74,7 +76,7 @@ export function ContactPeople({ heading, intro, people, labels = {}, className, 
           {intro && <p className="mt-3 text-muted-foreground">{intro}</p>}
         </div>
         {teams.length > 1 && (
-          <Pills label={L.filter} value={team} onChange={setTeam} options={[{ id: 'all', label: L.all }, ...teams.map((t) => ({ id: t, label: t }))]} />
+          <Pills label={L.filter} value={active} onChange={setTeam} options={[{ id: 'all', label: L.all }, ...teams.map((t) => ({ id: t, label: t }))]} />
         )}
       </header>
       <p role="status" aria-live="polite" className="sr-only">{L.shown(list.length)}</p>
@@ -87,7 +89,7 @@ export function ContactPeople({ heading, intro, people, labels = {}, className, 
                   {p.avatar ?? initials(p.name)}
                 </span>
                 <div className="min-w-0">
-                  <h3 className="truncate text-lg font-semibold">{p.name}</h3>
+                  <h3 className="text-lg font-semibold break-words text-pretty">{p.name}</h3>
                   <p className="text-sm text-muted-foreground">{p.role}</p>
                 </div>
               </div>
