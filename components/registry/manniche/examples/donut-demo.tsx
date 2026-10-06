@@ -30,7 +30,7 @@ export default function DonutDemo() {
         <DataTile title="Wallet" density="compact" footer={<span>Example data.</span>}>
           <Donut layout="stack" data={data} label="Wallet spending by category" format={EUR} labels={{ total: 'Spent' }} />
         </DataTile>
-        <DataTile title="Monthly budget" density="compact" inverted footer={<span>Of a €1 800 month. Example data.</span>}>
+        <DataTile title="Monthly budget" density="compact" inverted footer={<span>Of a €1,800 month. Example data.</span>}>
           <Donut
             layout="stack"
             data={[

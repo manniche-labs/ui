@@ -24,7 +24,7 @@ export default function DialDemo() {
           value={used}
           onValueChange={setUsed}
           label="Monthly budget used"
-          caption="of €1 800 budget"
+          caption="of €1,800 budget"
           valueText={(v) => `${v} percent of the monthly budget`}
         />
         <div className="mt-5 border-t border-border pt-[18px]">
