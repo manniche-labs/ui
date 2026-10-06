@@ -41,7 +41,7 @@ export function MovingBorder({ duration, width = 1.5, variant = 'light', classNa
     <div
       style={{ padding: width, ...style } as CSSProperties}
       className={cn(
-        'relative isolate inline-grid overflow-hidden rounded-2xl bg-border',
+        'relative isolate inline-grid overflow-hidden rounded-[calc(var(--radius)*2+2px)] bg-[color-mix(in_oklab,var(--foreground)_10%,var(--card))] shadow-[0_1px_2px_rgba(0,0,0,0.03)]',
         film && 'has-focus-visible:outline-2 has-focus-visible:outline-offset-3 has-focus-visible:outline-ring',
         className,
       )}

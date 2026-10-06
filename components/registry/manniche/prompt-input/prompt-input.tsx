@@ -80,8 +80,10 @@ export function PromptInput({
       onSubmit={send}
       data-armed={armed ? '' : undefined}
       className={cn(
-        'rounded-2xl border bg-card p-2 shadow-sm',
-        'focus-within:border-ring focus-within:shadow-[0_0_0_3px_color-mix(in_oklch,var(--color-ring)_18%,transparent)]',
+        'rounded-[calc(var(--radius)*2+2px)] bg-card p-2.5 shadow-[0_0_0_1px_color-mix(in_oklab,var(--foreground)_9%,transparent),0_1px_2px_rgba(0,0,0,0.03)]',
+        'focus-within:shadow-[0_0_0_1px_var(--color-ring),0_0_0_4px_color-mix(in_oklch,var(--color-ring)_18%,transparent)]',
+        // Windows high contrast drops box-shadow, so the frame and focus come back as a real border and outline there only.
+        'forced-colors:border forced-colors:border-[CanvasText] forced-colors:focus-within:outline-2 forced-colors:focus-within:outline-[Highlight]',
         halo && 'relative',
         className,
       )}
@@ -94,7 +96,7 @@ export function PromptInput({
         >
           <span
             className={cn(
-              'absolute inset-0 bg-[color-mix(in_oklab,var(--color-primary)_42%,var(--color-border))]',
+              'absolute inset-0 bg-[color-mix(in_oklab,var(--color-primary)_42%,var(--color-card))]',
               'transition-opacity duration-200 ease-out-quint motion-reduce:transition-none',
               armed ? 'opacity-100' : 'opacity-0',
             )}
@@ -113,12 +115,12 @@ export function PromptInput({
       {files.length > 0 && (
         <ul className="flex flex-wrap gap-1.5 px-1 pt-1 pb-2" aria-label="Attached files">
           {files.map((f, i) => (
-            <li key={`${f.name}-${i}`} className="flex items-center gap-1 rounded-lg bg-muted py-1 pr-1 pl-2.5 text-sm">
+            <li key={`${f.name}-${i}`} className="flex items-center gap-1 rounded-full bg-muted py-1 pr-1 pl-3 text-sm">
               <span className="max-w-48 truncate">{f.name}</span>
               <button
                 type="button"
                 onClick={() => setFiles((all) => all.filter((_, j) => j !== i))}
-                className="grid size-7 place-items-center rounded-md text-muted-foreground hover:bg-background hover:text-foreground"
+                className="grid size-7 place-items-center rounded-full text-muted-foreground hover:bg-card hover:text-foreground"
                 aria-label={`Remove ${f.name}`}
               >
                 <X className="size-3.5" aria-hidden />
@@ -137,7 +139,7 @@ export function PromptInput({
         placeholder={placeholder}
         aria-label={label}
         aria-describedby={hintId}
-        className="block w-full resize-none bg-transparent px-2 py-2.5 text-base leading-6 outline-none placeholder:text-muted-foreground focus-visible:outline-none"
+        className="block w-full resize-none bg-transparent px-2.5 py-2.5 text-base leading-6 outline-none placeholder:text-muted-foreground focus-visible:outline-none"
       />
       <span id={hintId} className="sr-only">
         Enter sends. Shift and Enter makes a new line.
@@ -163,10 +165,10 @@ export function PromptInput({
             <button
               type="button"
               onClick={() => picker.current?.click()}
-              className="grid size-11 place-items-center rounded-xl text-muted-foreground hover:bg-muted hover:text-foreground"
+              className="grid size-11 place-items-center rounded-full bg-muted text-foreground hover:bg-[color-mix(in_oklab,var(--foreground)_8%,var(--muted))]"
               aria-label="Attach files"
             >
-              <Paperclip className="size-5" aria-hidden />
+              <Paperclip className="size-5" strokeWidth={2} aria-hidden />
             </button>
           </>
         )}
@@ -178,7 +180,7 @@ export function PromptInput({
             key="stop"
             type="button"
             onClick={onStop}
-            className="grid size-11 place-items-center rounded-xl bg-foreground text-background transition-transform duration-150 ease-out-quint active:scale-95"
+            className="grid size-11 place-items-center rounded-full bg-muted text-foreground transition-transform duration-150 ease-out-quint active:scale-95"
             aria-label="Stop"
           >
             <Square className="size-4 fill-current" aria-hidden />
@@ -189,7 +191,7 @@ export function PromptInput({
             type="submit"
             disabled={!canSend}
             className={cn(
-              'grid size-11 place-items-center rounded-xl bg-primary text-primary-foreground',
+              'grid size-11 place-items-center rounded-full bg-foreground text-card',
               'transition-[transform,opacity] duration-150 ease-out-quint active:scale-95',
               'disabled:cursor-not-allowed disabled:opacity-40 disabled:active:scale-100',
             )}

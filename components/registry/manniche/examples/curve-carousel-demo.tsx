@@ -29,8 +29,8 @@ function Plate({ no, title, children }: { no: number; title: string; children: R
       <svg viewBox="0 0 300 300" preserveAspectRatio="xMidYMid slice" aria-hidden className="absolute inset-y-0 -inset-x-[14%] h-full w-[128%] [translate:var(--curve-shift,0px)_0]">
         {children}
       </svg>
-      <figcaption className="absolute inset-x-0 bottom-0 flex items-baseline justify-between gap-2 bg-card px-3 py-2.5 shadow-[inset_0_1px_0_var(--border)]">
-        <span className="truncate text-[13px] leading-none font-medium tracking-[-0.005em]">{title}</span>
+      <figcaption className="absolute inset-x-0 bottom-0 flex items-baseline justify-between gap-2 bg-card px-3.5 py-3 shadow-[inset_0_1px_0_color-mix(in_oklab,var(--foreground)_9%,transparent)]">
+        <span className="truncate text-[13px] leading-none font-semibold tracking-[-0.01em]">{title}</span>
         <span className="font-mono text-[10.5px] leading-none font-medium text-muted-foreground tabular-nums">{String(no).padStart(2, '0')}</span>
       </figcaption>
     </figure>
@@ -223,7 +223,7 @@ export default function CurveCarouselDemo() {
   const [layout, setLayout] = useState<CurveLayoutName>('coverflow')
   return (
     <div className="flex w-full max-w-2xl flex-col items-center gap-5">
-      <div role="group" aria-label="Layout" className="flex flex-wrap justify-center gap-1">
+      <div role="group" aria-label="Layout" className="flex max-w-full flex-wrap justify-center gap-1 rounded-[calc(var(--radius)*2+2px)] bg-muted p-1">
         {NAMES.map((name) => (
           <button
             key={name}
@@ -231,8 +231,8 @@ export default function CurveCarouselDemo() {
             aria-pressed={name === layout}
             onClick={() => setLayout(name)}
             className={cn(
-              'h-11 cursor-pointer rounded-[4px] px-3 font-mono text-[11.5px] font-medium tracking-[0.02em] text-muted-foreground [-webkit-tap-highlight-color:transparent] hover:text-foreground',
-              'aria-pressed:bg-card aria-pressed:text-foreground aria-pressed:shadow-[inset_0_0_0_1px_var(--border)]',
+              'h-11 cursor-pointer rounded-full px-3.5 text-[13px] font-medium text-muted-foreground [-webkit-tap-highlight-color:transparent] hover:text-foreground',
+              'aria-pressed:bg-foreground aria-pressed:text-card',
               'focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring',
             )}
           >
