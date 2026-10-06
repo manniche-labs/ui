@@ -4,6 +4,7 @@
 
 ### Added
 
+- `HANDOFF.md` updated after the lab export: phases 2–5 and the Tiles pass are merged into mikkelmanniche.dk/lab (site PR #109) and wait for the live upload; the open browser checks for phase 5 are still open.
 - `HANDOFF.md` and `plans/`: where the work stands after phase 5, and the briefs for phase 6 (17 page sections) and the 13 screen templates, with the approved Tiles mockup. Any machine can continue from the repo alone.
 - Tiles data primitives: eleven charts and cards in one design language, each with a demo that shows a normal, a compact and an inverted tile. They share one tooltip, one display figure and one keyboard pattern (one Tab stop, arrow keys, Home, End, Escape), give screen readers a table or a list that is the data, animate only transform and opacity, and stand still under reduced motion. Every demo uses example data.
   - `chart-kit`: the shared parts: number formatting with a muted unit, nice axis ticks, a monotone smooth line, the tooltip, `BigNumber`, `DeltaPill`, `Pills` and `SrTable`, plus the `--chart-1` to `--chart-5` colours. `DeltaPill` shows the size of a change and lets the arrow carry its direction, so it never prints a sign.
