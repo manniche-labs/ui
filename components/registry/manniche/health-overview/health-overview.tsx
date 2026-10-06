@@ -24,7 +24,7 @@ export function HealthOverview({ data, labels, className }: HealthOverviewProps)
       <div className="grid grid-cols-1 gap-3 @lg:grid-cols-3 @3xl:grid-cols-6">
         {data.vitals.map((v) => (
           <div key={v.id} className="@3xl:col-span-2">
-            <DataTile title={v.title} density="compact">
+            <DataTile className="h-full" title={v.title} density="compact">
               <TileFact aside={<span className="text-sm text-muted-foreground">{v.unit}</span>}>
                 <BigNumber value={v.value} size="lg" />
               </TileFact>
@@ -32,7 +32,7 @@ export function HealthOverview({ data, labels, className }: HealthOverviewProps)
           </div>
         ))}
         <div className="@lg:col-span-3 @3xl:col-span-3">
-          <DataTile title={data.patient.name} inverted>
+          <DataTile className="h-full" title={data.patient.name} inverted>
             <dl className="grid grid-cols-2 gap-3 text-sm">
               {data.patient.details.map((d) => (
                 <div key={d.label}>
@@ -44,17 +44,17 @@ export function HealthOverview({ data, labels, className }: HealthOverviewProps)
           </DataTile>
         </div>
         <div className="@lg:col-span-3 @3xl:col-span-3">
-          <DataTile title={data.score.title} footer={note}>
+          <DataTile className="h-full" title={data.score.title} footer={note}>
             <Dial value={data.score.value} min={0} max={100} zones={data.score.zones} label={data.score.title} caption={data.score.caption} />
           </DataTile>
         </div>
         <div className="@lg:col-span-3 @3xl:col-span-4">
-          <DataTile title={data.calories.title} footer={note}>
+          <DataTile className="h-full" title={data.calories.title} footer={note}>
             <BarChart data={data.calories.points} label={data.calories.title} format={{ suffix: ' kcal' }} />
           </DataTile>
         </div>
         <div className="@lg:col-span-3 @3xl:col-span-2">
-          <DataTile title={data.calories.macrosTitle} footer={note}>
+          <DataTile className="h-full" title={data.calories.macrosTitle} footer={note}>
             <Donut data={data.calories.macros} label={data.calories.macrosTitle} format={{ suffix: ' g' }} />
           </DataTile>
         </div>

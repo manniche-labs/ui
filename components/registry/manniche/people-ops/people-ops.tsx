@@ -23,7 +23,7 @@ export function PeopleOps({ data, labels, className }: PeopleOpsProps) {
     <div className={cn('@container w-full rounded-2xl bg-background p-3 text-foreground', className)}>
       <div className="grid grid-cols-1 gap-3 @2xl:grid-cols-6">
         <div className="@2xl:col-span-3">
-          <DataTile title={data.today.title} inverted>
+          <DataTile className="h-full" title={data.today.title} inverted>
             <ol className="flex flex-col gap-3">
               {data.today.items.map((it) => (
                 <li key={it.id} className="flex items-baseline gap-3 text-sm">
@@ -36,17 +36,17 @@ export function PeopleOps({ data, labels, className }: PeopleOpsProps) {
           </DataTile>
         </div>
         <div className="@2xl:col-span-3">
-          <DataTile title={data.funnel.title} footer={note}>
+          <DataTile className="h-full" title={data.funnel.title} footer={note}>
             <BarChart data={data.funnel.stages} label={data.funnel.title} current={null} />
           </DataTile>
         </div>
         <div className="@2xl:col-span-3">
-          <DataTile title={data.payroll.title} footer={note}>
+          <DataTile className="h-full" title={data.payroll.title} footer={note}>
             <TransactionList data={data.payroll.items} label={data.payroll.title} today={data.payroll.today} format={data.payroll.format} />
           </DataTile>
         </div>
         <div className="@2xl:col-span-3">
-          <DataTile title={data.attendance.title} footer={note}>
+          <DataTile className="h-full" title={data.attendance.title} footer={note}>
             <DotMatrix data={data.attendance.data} rows={data.attendance.rows} columns={data.attendance.columns} label={data.attendance.title} />
           </DataTile>
         </div>

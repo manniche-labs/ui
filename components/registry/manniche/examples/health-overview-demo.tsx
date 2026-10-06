@@ -27,8 +27,8 @@ const data: HealthOverviewData = {
     ],
   },
   calories: {
-    title: 'Calories',
-    points: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'].map((label, i) => ({ label, value: [2100, 1950, 2250, 2000, 2300, 2600, 1900][i] })),
+    title: 'Calories, last 7 days',
+    points: ['Wed', 'Thu', 'Fri', 'Sat', 'Sun', 'Mon', 'Tue'].map((label, i) => ({ label, value: [2100, 1950, 2250, 2000, 2300, 2600, 1900][i] })),
     macrosTitle: 'Macros today',
     macros: [
       { label: 'Carbs', value: 240 },
