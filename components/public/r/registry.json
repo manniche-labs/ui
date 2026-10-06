@@ -3818,6 +3818,204 @@
       ]
     },
     {
+      "name": "rental-portfolio",
+      "type": "registry:block",
+      "title": "Rental portfolio",
+      "description": "A property dashboard in Tiles: portfolio figures, an area chart of income against payouts, a rent-collection dial and recent transfers.",
+      "registryDependencies": [
+        "utils",
+        "@manniche/data-tile",
+        "@manniche/chart-kit",
+        "@manniche/area-chart",
+        "@manniche/dial",
+        "@manniche/transaction-list"
+      ],
+      "files": [
+        {
+          "path": "registry/manniche/rental-portfolio/rental-portfolio.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "categories": [
+        "templates"
+      ]
+    },
+    {
+      "name": "rental-portfolio-demo",
+      "type": "registry:example",
+      "title": "Rental portfolio demo",
+      "description": "How to use Rental portfolio.",
+      "registryDependencies": [
+        "@manniche/rental-portfolio"
+      ],
+      "files": [
+        {
+          "path": "registry/manniche/examples/rental-portfolio-demo.tsx",
+          "type": "registry:example"
+        }
+      ],
+      "categories": [
+        "templates"
+      ]
+    },
+    {
+      "name": "delivery-board",
+      "type": "registry:block",
+      "title": "Delivery board",
+      "description": "A project delivery board in Tiles: client progress, a day strip that opens on today, roadmap lanes with initials avatars and a small assistant tile.",
+      "registryDependencies": [
+        "utils",
+        "@manniche/data-tile"
+      ],
+      "files": [
+        {
+          "path": "registry/manniche/delivery-board/delivery-board.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "categories": [
+        "templates"
+      ]
+    },
+    {
+      "name": "delivery-board-demo",
+      "type": "registry:example",
+      "title": "Delivery board demo",
+      "description": "How to use Delivery board.",
+      "registryDependencies": [
+        "@manniche/delivery-board"
+      ],
+      "files": [
+        {
+          "path": "registry/manniche/examples/delivery-board-demo.tsx",
+          "type": "registry:example"
+        }
+      ],
+      "categories": [
+        "templates"
+      ]
+    },
+    {
+      "name": "people-ops",
+      "type": "registry:block",
+      "title": "People ops",
+      "description": "A people dashboard in Tiles: a hiring funnel, today's schedule, a payroll list and an attendance dot matrix.",
+      "registryDependencies": [
+        "utils",
+        "@manniche/data-tile",
+        "@manniche/chart-kit",
+        "@manniche/bar-chart",
+        "@manniche/dot-matrix",
+        "@manniche/transaction-list"
+      ],
+      "files": [
+        {
+          "path": "registry/manniche/people-ops/people-ops.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "categories": [
+        "templates"
+      ]
+    },
+    {
+      "name": "people-ops-demo",
+      "type": "registry:example",
+      "title": "People ops demo",
+      "description": "How to use People ops.",
+      "registryDependencies": [
+        "@manniche/people-ops"
+      ],
+      "files": [
+        {
+          "path": "registry/manniche/examples/people-ops-demo.tsx",
+          "type": "registry:example"
+        }
+      ],
+      "categories": [
+        "templates"
+      ]
+    },
+    {
+      "name": "health-overview",
+      "type": "registry:block",
+      "title": "Health overview",
+      "description": "A health dashboard in Tiles: three vital figures, a patient card, a score dial and calorie bars with macros.",
+      "registryDependencies": [
+        "utils",
+        "@manniche/data-tile",
+        "@manniche/chart-kit",
+        "@manniche/bar-chart",
+        "@manniche/dial",
+        "@manniche/donut"
+      ],
+      "files": [
+        {
+          "path": "registry/manniche/health-overview/health-overview.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "categories": [
+        "templates"
+      ]
+    },
+    {
+      "name": "health-overview-demo",
+      "type": "registry:example",
+      "title": "Health overview demo",
+      "description": "How to use Health overview.",
+      "registryDependencies": [
+        "@manniche/health-overview"
+      ],
+      "files": [
+        {
+          "path": "registry/manniche/examples/health-overview-demo.tsx",
+          "type": "registry:example"
+        }
+      ],
+      "categories": [
+        "templates"
+      ]
+    },
+    {
+      "name": "gallery-shop",
+      "type": "registry:block",
+      "title": "Gallery shop",
+      "description": "A gallery and shop page in Tiles: a side menu, a two-tone headline, counters, events and collections with optional pictures.",
+      "registryDependencies": [
+        "utils",
+        "@manniche/data-tile",
+        "@manniche/chart-kit"
+      ],
+      "files": [
+        {
+          "path": "registry/manniche/gallery-shop/gallery-shop.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "categories": [
+        "templates"
+      ]
+    },
+    {
+      "name": "gallery-shop-demo",
+      "type": "registry:example",
+      "title": "Gallery shop demo",
+      "description": "How to use Gallery shop.",
+      "registryDependencies": [
+        "@manniche/gallery-shop"
+      ],
+      "files": [
+        {
+          "path": "registry/manniche/examples/gallery-shop-demo.tsx",
+          "type": "registry:example"
+        }
+      ],
+      "categories": [
+        "templates"
+      ]
+    },
+    {
       "name": "chart-kit",
       "type": "registry:component",
       "title": "Chart kit",

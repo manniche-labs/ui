@@ -1,0 +1,20 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "rental-portfolio-demo",
+  "title": "Rental portfolio demo",
+  "description": "How to use Rental portfolio.",
+  "registryDependencies": [
+    "@manniche/rental-portfolio"
+  ],
+  "files": [
+    {
+      "path": "registry/manniche/examples/rental-portfolio-demo.tsx",
+      "content": "import { RentalPortfolio, type RentalPortfolioData } from '@/registry/manniche/rental-portfolio/rental-portfolio'\n\n// Example data only. All names and figures are invented.\nconst money = { currency: 'EUR', decimals: 0 }\n\nconst data: RentalPortfolioData = {\n  figures: [\n    { id: 'v', title: 'Portfolio value', value: 1240000, format: money },\n    { id: 'u', title: 'Units', value: 14 },\n    { id: 'r', title: 'Monthly rent', value: 9800, format: money },\n  ],\n  income: {\n    title: 'Income vs payout',\n    format: money,\n    points: ['May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct'].map((label, i) => ({ label, value: [8800, 9100, 9300, 9500, 9700, 9800][i], previous: [7600, 7900, 8100, 8300, 8500, 8700][i] })),\n  },\n  collection: {\n    title: 'Rent collected',\n    value: 92,\n    caption: 'of rent due this month',\n    zones: [\n      { label: 'Late', to: 70 },\n      { label: 'Mostly in', to: 90 },\n      { label: 'Collected', to: 100 },\n    ],\n  },\n  transfers: {\n    title: 'Recent transfers',\n    today: '2026-10-06',\n    format: money,\n    items: [\n      { id: 't1', name: 'Example tenant, unit 3', amount: 850, date: '2026-10-05', category: 'Rent' },\n      { id: 't2', name: 'Sample Repairs', amount: -240, date: '2026-10-04', category: 'Repair' },\n      { id: 't3', name: 'Owner payout', amount: -3000, date: '2026-10-01', category: 'Payout' },\n    ],\n  },\n}\n\nexport default function RentalPortfolioDemo() {\n  return <RentalPortfolio data={data} />\n}\n",
+      "type": "registry:example"
+    }
+  ],
+  "categories": [
+    "templates"
+  ],
+  "type": "registry:example"
+}
