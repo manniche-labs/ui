@@ -1,0 +1,21 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "card-stack-demo",
+  "title": "Card stack demo",
+  "description": "How to use Card stack.",
+  "registryDependencies": [
+    "@manniche/card-stack",
+    "@manniche/data-tile"
+  ],
+  "files": [
+    {
+      "path": "registry/manniche/examples/card-stack-demo.tsx",
+      "content": "import { CardStack, type StackCard } from '@/registry/manniche/card-stack/card-stack'\nimport { DataTile } from '@/registry/manniche/data-tile/data-tile'\n\n// Example cards for the demo, not real accounts.\nconst CARDS: StackCard[] = [\n  { id: 'everyday', name: 'Everyday', kind: 'Debit', ending: '4821', amount: 2091.2 },\n  { id: 'travel', name: 'Travel', kind: 'Multi-currency', ending: '0937', amount: 612.08 },\n  { id: 'online', name: 'Online', kind: 'Virtual', ending: '5530', amount: 145.2 },\n  { id: 'savings', name: 'Savings', kind: 'Pot', ending: '1162', amount: 5470.58 },\n]\n\nconst SHARED: StackCard[] = [\n  { id: 'house', name: 'Household', kind: 'Joint', ending: '2210', amount: 1240.5 },\n  { id: 'car', name: 'Car', kind: 'Pot', ending: '7781', amount: 386 },\n  { id: 'trip', name: 'Summer trip', kind: 'Pot', ending: '3304', amount: 2150 },\n  { id: 'kids', name: 'Kids', kind: 'Debit', ending: '6612', amount: 74.3 },\n  { id: 'gifts', name: 'Gifts', kind: 'Virtual', ending: '9045', amount: 118.9 },\n  { id: 'rainy', name: 'Rainy day', kind: 'Pot', ending: '5127', amount: 3900 },\n]\n\nconst GIFT: StackCard[] = [\n  { id: 'books', name: 'Northwind Books', amount: 40 },\n  { id: 'cafe', name: 'Green Leaf Café', amount: 12.5 },\n  { id: 'market', name: 'Harbour Market', amount: 25 },\n]\n\nconst EUR = { currency: 'EUR', decimals: 2 }\n\nexport default function CardStackDemo() {\n  return (\n    <div className=\"grid w-full gap-4\">\n      <DataTile\n        title=\"Cards\"\n        inverted\n        footer={<span>Drag the front card away, tap it, or use the arrow keys; the next one comes forward. Example data.</span>}\n      >\n        <CardStack data={CARDS} label=\"Your cards\" format={EUR} />\n      </DataTile>\n      <div className=\"grid gap-4 sm:grid-cols-2\">\n        <DataTile title=\"Shared wallet\" density=\"compact\" footer={<span>Six cards. Example data.</span>}>\n          <CardStack data={SHARED} label=\"Shared cards\" format={EUR} />\n        </DataTile>\n        <DataTile title=\"Gift cards\" density=\"compact\" footer={<span>A custom card face. Example data.</span>}>\n          <CardStack\n            data={GIFT}\n            label=\"Gift cards\"\n            format={EUR}\n            labels={{ readout: (c) => c.name }}\n            renderCard={(card) => (\n              <>\n                <span aria-hidden className=\"text-[11px] font-medium tracking-[0.08em] uppercase opacity-80\">\n                  Gift card\n                </span>\n                <span aria-hidden className=\"text-[17px] leading-tight font-semibold tracking-[-0.01em]\">\n                  {card.name}\n                </span>\n              </>\n            )}\n          />\n        </DataTile>\n      </div>\n    </div>\n  )\n}\n",
+      "type": "registry:example"
+    }
+  ],
+  "categories": [
+    "surfaces"
+  ],
+  "type": "registry:example"
+}

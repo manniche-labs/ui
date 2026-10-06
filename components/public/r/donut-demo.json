@@ -1,0 +1,22 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "donut-demo",
+  "title": "Donut demo",
+  "description": "How to use Donut.",
+  "registryDependencies": [
+    "@manniche/donut",
+    "@manniche/chart-kit",
+    "@manniche/data-tile"
+  ],
+  "files": [
+    {
+      "path": "registry/manniche/examples/donut-demo.tsx",
+      "content": "import { useState } from 'react'\nimport { Pills } from '@/registry/manniche/chart-kit/chart-kit'\nimport { DataTile } from '@/registry/manniche/data-tile/data-tile'\nimport { Donut } from '@/registry/manniche/donut/donut'\n\n// Example figures for the demo, not real data.\nconst CATEGORIES = ['Groceries', 'Transport', 'Eating out', 'Shopping', 'Bills']\nconst PERIODS = [\n  { id: 'week', label: 'Week', long: 'last 7 days', values: [90.84, 47.1, 74.02, 40.37, 84.12] },\n  { id: 'month', label: 'Month', long: 'last 30 days', values: [414.96, 179.82, 235.14, 152.15, 401.13] },\n  { id: 'year', label: 'Year', long: 'last 12 months', values: [5023.4, 1944.54, 2592.72, 2268.63, 4375.23] },\n]\nconst EUR = { currency: 'EUR' }\n\nexport default function DonutDemo() {\n  const [period, setPeriod] = useState('month')\n  const p = PERIODS.find((x) => x.id === period) ?? PERIODS[1]\n  const data = CATEGORIES.map((label, i) => ({ label, value: p.values[i] }))\n  return (\n    <div className=\"grid w-full gap-4\">\n      <DataTile\n        title=\"Spending by category\"\n        action={<Pills label=\"Period\" options={PERIODS} value={period} onChange={setPeriod} />}\n        footer={<span>Card and account payments. Example data.</span>}\n      >\n        <p className=\"text-sm leading-[1.3] font-medium text-muted-foreground\">Where the money went, {p.long}</p>\n        <Donut className=\"mt-4\" data={data} label={`Spending by category, ${p.long}`} format={EUR} labels={{ total: 'Spent' }} />\n      </DataTile>\n      <div className=\"grid gap-4 sm:grid-cols-2\">\n        <DataTile title=\"Wallet\" density=\"compact\" footer={<span>Example data.</span>}>\n          <Donut layout=\"stack\" data={data} label=\"Wallet spending by category\" format={EUR} labels={{ total: 'Spent' }} />\n        </DataTile>\n        <DataTile title=\"Monthly budget\" density=\"compact\" inverted footer={<span>Of a €1,800 month. Example data.</span>}>\n          <Donut\n            layout=\"stack\"\n            data={[\n              { label: 'Spent', value: 1383.2, color: 'var(--chart-1)' },\n              { label: 'Planned', value: 240, color: 'var(--chart-3)' },\n            ]}\n            total={1800}\n            label=\"Monthly budget, spent and planned\"\n            format={EUR}\n            labels={{ total: 'Budget' }}\n          />\n        </DataTile>\n      </div>\n    </div>\n  )\n}\n",
+      "type": "registry:example"
+    }
+  ],
+  "categories": [
+    "widgets"
+  ],
+  "type": "registry:example"
+}
