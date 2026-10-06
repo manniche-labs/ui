@@ -1,0 +1,22 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "bubble-chart-demo",
+  "title": "Bubble chart demo",
+  "description": "How to use Bubble chart.",
+  "registryDependencies": [
+    "@manniche/bubble-chart",
+    "@manniche/chart-kit",
+    "@manniche/data-tile"
+  ],
+  "files": [
+    {
+      "path": "registry/manniche/examples/bubble-chart-demo.tsx",
+      "content": "import { useState } from 'react'\nimport { BubbleChart, type BubbleDatum } from '@/registry/manniche/bubble-chart/bubble-chart'\nimport { Pills } from '@/registry/manniche/chart-kit/chart-kit'\nimport { formatValue } from '@/registry/manniche/chart-kit/chart-utils'\nimport { DataTile, TileLegend } from '@/registry/manniche/data-tile/data-tile'\n\n// Example figures for the demo, not real data.\nconst CATS = ['Groceries', 'Transport', 'Eating out', 'Shopping', 'Bills']\nconst MERCHANTS = [\n  { name: 'Harbour Market', cat: 0, visits: 6, avg: 48.2 },\n  { name: 'City Transit', cat: 1, visits: 18, avg: 3.1 },\n  { name: 'Corner Bakery', cat: 2, visits: 12, avg: 6.4 },\n  { name: 'Green Leaf Café', cat: 2, visits: 9, avg: 9.8 },\n  { name: 'Northwind Books', cat: 3, visits: 2, avg: 31.5 },\n  { name: 'Pixel & Plug', cat: 3, visits: 1, avg: 58.9 },\n  { name: 'Lumen Energy', cat: 4, visits: 1, avg: 74 },\n  { name: 'Fresh Fields', cat: 0, visits: 4, avg: 27.35 },\n]\nconst EUR = { currency: 'EUR' }\n\n// Each merchant's colour follows its category, in the order of CATS.\nconst color = (cat: number) => `var(--chart-${cat + 1})`\nconst merchants: BubbleDatum[] = MERCHANTS.map((m) => ({\n  label: m.name,\n  value: Math.round(m.visits * m.avg * 100) / 100,\n  x: m.visits,\n  y: m.avg,\n  group: CATS[m.cat],\n  color: color(m.cat),\n}))\n\nconst PERIODS = [\n  { id: 'month', label: 'Month', values: [398.6, 55.8, 165, 121.9, 74] },\n  { id: 'year', label: 'Year', values: [5023.4, 1944.54, 2592.72, 2268.63, 4375.23] },\n]\n\nexport default function BubbleChartDemo() {\n  const [period, setPeriod] = useState('month')\n  const p = PERIODS.find((x) => x.id === period) ?? PERIODS[0]\n  return (\n    <div className=\"grid w-full gap-4\">\n      <DataTile\n        title=\"Where you shop\"\n        action={<TileLegend items={CATS.map((label, i) => ({ label, color: color(i), shape: 'dot' as const }))} />}\n        footer={<span>Position by visits and average spend, size by the month's total. Example data.</span>}\n      >\n        <p className=\"text-sm leading-[1.3] font-medium text-muted-foreground\">How often you go, what you spend each time</p>\n        <BubbleChart\n          className=\"mt-4\"\n          data={merchants}\n          label=\"Merchants by visits and average spend, sized by total this month\"\n          format={{ ...EUR, decimals: 2 }}\n          yFormat={{ ...EUR, decimals: 2 }}\n          labels={{\n            item: 'Merchant',\n            group: 'Category',\n            value: 'Total',\n            valueNote: 'this month',\n            x: 'Visits',\n            y: 'Average',\n            xUnit: 'visits',\n            describe: (d, t) => `${d.label}: ${t.x} visits, average ${t.y}, total ${t.value}`,\n          }}\n        />\n      </DataTile>\n      <div className=\"grid gap-4 sm:grid-cols-2\">\n        <DataTile\n          title=\"By category\"\n          density=\"compact\"\n          action={<Pills label=\"Period\" options={PERIODS} value={period} onChange={setPeriod} />}\n          footer={<span>Packed, largest first. Example data.</span>}\n        >\n          <BubbleChart\n            data={CATS.map((label, i) => ({ label, value: p.values[i] }))}\n            label={`Spending by category, last ${period}`}\n            format={EUR}\n            labels={{ item: 'Category', value: 'Spent' }}\n          />\n        </DataTile>\n        <DataTile title=\"Wallet\" density=\"compact\" inverted footer={<span>{formatValue(1383.2, EUR)} this month. Example data.</span>}>\n          <BubbleChart\n            data={merchants.slice(0, 5)}\n            label=\"Wallet merchants by visits and average spend\"\n            format={{ ...EUR, decimals: 2 }}\n            yFormat={EUR}\n            labels={{ item: 'Merchant', group: 'Category', value: 'Total', x: 'Visits', y: 'Average', xUnit: 'visits' }}\n          />\n        </DataTile>\n      </div>\n    </div>\n  )\n}\n",
+      "type": "registry:example"
+    }
+  ],
+  "categories": [
+    "widgets"
+  ],
+  "type": "registry:example"
+}

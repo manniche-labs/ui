@@ -1,0 +1,21 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "dial-demo",
+  "title": "Dial demo",
+  "description": "How to use Dial.",
+  "registryDependencies": [
+    "@manniche/dial",
+    "@manniche/data-tile"
+  ],
+  "files": [
+    {
+      "path": "registry/manniche/examples/dial-demo.tsx",
+      "content": "import { useState } from 'react'\nimport { DataTile } from '@/registry/manniche/data-tile/data-tile'\nimport { Dial, type DialZone } from '@/registry/manniche/dial/dial'\n\n// Example figures for the demo, not real data.\nconst ZONES: DialZone[] = [\n  { label: 'Under', to: 0.85, color: 'var(--chart-1)' },\n  { label: 'On track', to: 1.1, color: 'var(--success)' },\n  { label: 'Over', to: 1.6, color: 'var(--destructive)' },\n]\nconst PACE = { decimals: 2, suffix: '×' }\n\nexport default function DialDemo() {\n  const [used, setUsed] = useState(77)\n  const [pace, setPace] = useState(0.92)\n  return (\n    <div className=\"grid w-full gap-4\">\n      <DataTile\n        title=\"Monthly budget\"\n        inverted\n        footer={<span>Focus a dial and use the arrow keys, or drag along it. Example data.</span>}\n      >\n        <Dial\n          value={used}\n          onValueChange={setUsed}\n          label=\"Monthly budget used\"\n          caption=\"of €1,800 budget\"\n          valueText={(v) => `${v} percent of the monthly budget`}\n        />\n        <div className=\"mt-5 border-t border-border pt-[18px]\">\n          <Dial\n            value={pace}\n            onValueChange={setPace}\n            zones={ZONES}\n            step={0.05}\n            format={PACE}\n            label=\"Spending pace\"\n            caption=\"your daily budget so far\"\n            valueText={(v) => `${v.toFixed(2)} times the daily budget`}\n          />\n        </div>\n      </DataTile>\n      <div className=\"grid gap-4 sm:grid-cols-2\">\n        <DataTile title=\"Wallet\" density=\"compact\" footer={<span>Example data.</span>}>\n          <Dial value={77} segments={20} label=\"Monthly budget used\" caption=\"used\" />\n          <p className=\"mt-3 text-center text-[13.5px] text-muted-foreground tabular-nums\">€1,383 of €1,800</p>\n        </DataTile>\n        <DataTile title=\"Pace\" density=\"compact\" footer={<span>Read-only. Example data.</span>}>\n          <Dial value={1.24} zones={ZONES} format={PACE} label=\"Spending pace\" caption=\"your daily budget\" />\n        </DataTile>\n      </div>\n    </div>\n  )\n}\n",
+      "type": "registry:example"
+    }
+  ],
+  "categories": [
+    "widgets"
+  ],
+  "type": "registry:example"
+}

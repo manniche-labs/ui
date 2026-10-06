@@ -1,0 +1,21 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "data-tile-demo",
+  "title": "Data tile demo",
+  "description": "How to use Data tile.",
+  "registryDependencies": [
+    "@manniche/data-tile",
+    "@manniche/chart-kit"
+  ],
+  "files": [
+    {
+      "path": "registry/manniche/examples/data-tile-demo.tsx",
+      "content": "import { useState } from 'react'\nimport { BigNumber, DeltaPill, Pills } from '@/registry/manniche/chart-kit/chart-kit'\nimport { DataTile, TileFact } from '@/registry/manniche/data-tile/data-tile'\n\n// Example figures for the demo, not real data.\nconst PERIODS = [\n  { id: 'week', label: 'Week', value: 18420.5, change: 6.2 },\n  { id: 'month', label: 'Month', value: 74310.25, change: -2.4 },\n  { id: 'year', label: 'Year', value: 912880, change: 11.8 },\n]\n\nexport default function DataTileDemo() {\n  const [period, setPeriod] = useState('week')\n  const p = PERIODS.find((x) => x.id === period) ?? PERIODS[0]\n  return (\n    <div className=\"grid w-full gap-4\">\n      <DataTile\n        title=\"Revenue\"\n        action={<Pills label=\"Period\" options={PERIODS} value={period} onChange={setPeriod} />}\n        footer={<span>Paid orders, VAT included. Example data.</span>}\n      >\n        <TileFact label={`This ${p.label.toLowerCase()}`} aside={<DeltaPill value={p.change} />}>\n          <BigNumber value={p.value} size=\"xl\" format={{ currency: 'EUR', decimals: p.value % 1 ? 2 : 0 }} />\n        </TileFact>\n      </DataTile>\n      <div className=\"grid gap-4 sm:grid-cols-2\">\n        <DataTile title=\"Refunds\" density=\"compact\">\n          <TileFact aside={<DeltaPill value={-0.6} goodWhen=\"down\" />}>\n            <BigNumber value={1.8} size=\"md\" format={{ decimals: 1, suffix: '%' }} />\n          </TileFact>\n        </DataTile>\n        <DataTile title=\"Orders today\" density=\"compact\" inverted>\n          <TileFact aside={<DeltaPill value={14} format={{ suffix: '' }} />}>\n            <BigNumber value={312} size=\"md\" />\n          </TileFact>\n        </DataTile>\n      </div>\n    </div>\n  )\n}\n",
+      "type": "registry:example"
+    }
+  ],
+  "categories": [
+    "surfaces"
+  ],
+  "type": "registry:example"
+}

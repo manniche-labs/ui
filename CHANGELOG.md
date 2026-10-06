@@ -2,6 +2,14 @@
 
 ## 2026-10-06
 
+### Added
+
+- Tiles data primitives: eleven charts and cards in one design language, each with a demo that shows a normal, a compact and an inverted tile. They share one tooltip, one display figure and one keyboard pattern (one Tab stop, arrow keys, Home, End, Escape), give screen readers a table or a list that is the data, animate only transform and opacity, and stand still under reduced motion. Every demo uses example data.
+  - `chart-kit`: the shared parts: number formatting with a muted unit, nice axis ticks, a monotone smooth line, the tooltip, `BigNumber`, `DeltaPill`, `Pills` and `SrTable`, plus the `--chart-1` to `--chart-5` colours. `DeltaPill` shows the size of a change and lets the arrow carry its direction, so it never prints a sign.
+  - `data-tile`: the tile they sit in, with `inverted` to lift the figure that matters most and `compact` for dense dashboards.
+  - `bar-chart`, `area-chart`, `sparkline`, `dot-matrix`, `donut`, `dial`, `bubble-chart` and `lollipop` for figures over time, shares, ranks and grids. `bar-chart` groups day points into weeks when bars would get too thin.
+  - `card-stack`, `transaction-list` and `week-schedule` for money and time. Week-schedule blocks are at least 44 px tall, so a 15-minute event stays easy to hit; a block too narrow for its title shows only its colour bar, and events outside the visible hours are left out.
+
 ### Removed
 
 - `dot-globe`, `focus-frame`, `pill-to-card`, `keycap`, `glass-button` and `folder-card` have moved to Manniche UI Pro and are no longer in the free registry. Their files, demos and registry entries are gone, and so is the Natural Earth notice, which only `dot-globe` used. Copies you have already installed keep working.
