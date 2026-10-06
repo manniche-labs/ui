@@ -82,6 +82,8 @@ export function PromptInput({
       className={cn(
         'rounded-[calc(var(--radius)*2+2px)] bg-card p-2.5 shadow-[0_0_0_1px_color-mix(in_oklab,var(--foreground)_9%,transparent),0_1px_2px_rgba(0,0,0,0.03)]',
         'focus-within:shadow-[0_0_0_1px_var(--color-ring),0_0_0_4px_color-mix(in_oklch,var(--color-ring)_18%,transparent)]',
+        // Windows high contrast drops box-shadow, so the frame and focus come back as a real border and outline there only.
+        'forced-colors:border forced-colors:border-[CanvasText] forced-colors:focus-within:outline-2 forced-colors:focus-within:outline-[Highlight]',
         halo && 'relative',
         className,
       )}

@@ -16,7 +16,7 @@
 - Nine free components now share the Tiles look of the data tiles instead of the Instrument look. Surfaces are tiles with 26 px corners and a hairline shadow instead of a border; cards and pictures inside them get 14 px corners; buttons are round, muted and 44 px; and `--primary` is kept as a signal. The effects, the motion and the public API are unchanged.
   - `notch-card`: 26 px corners and a 56 px notch with a 14 px turn, a round arrow button, and a tabular footer.
   - `accordion-gallery`: the strips show number pills instead of screws, and the open panel sits inset with 14 px corners.
-  - `prompt-input`: a tile with no border, round attach, send and stop buttons, and pill-shaped file chips. The halo is unchanged.
+  - `prompt-input`: a tile with no border, round attach, send and stop buttons, and pill-shaped file chips. The halo is unchanged. In Windows high contrast (forced colors) the form gets a real border and a Highlight outline on focus, because box-shadow is dropped there.
   - `moving-border`: 26 px corners on an opaque hairline base. The demo uses the display font and pill buttons.
   - `curve-carousel` and `post-carousel`: round controls, 14 px cards, a rounded rule, and a pill layout switch in the demo. The post is a tile with an inset picture.
   - `lens-strip`, `sand-edge` and `wave-ribbon`: the shaders draw 14 px card corners (was 3–6 px), with round buttons and a rounded rule.
