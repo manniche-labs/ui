@@ -1,5 +1,6 @@
 // A business finance screen in Tiles: income against payments, a growth ring, a stock sparkline, activity and a
 // verification checklist.
+import { cn } from '@/lib/utils'
 import { BigNumber, DeltaPill } from '@/registry/manniche/chart-kit/chart-kit'
 import type { ValueFormat } from '@/registry/manniche/chart-kit/chart-utils'
 import { DataTile, TileLegend } from '@/registry/manniche/data-tile/data-tile'
@@ -52,7 +53,7 @@ export function BusinessFinance({ data, format = DEFAULT_FORMAT, title = 'Busine
   const doneCount = data.verification.filter((s) => s.done).length
   const pct = Math.round(data.growth * 100)
   return (
-    <div className={`@container w-full font-sans text-foreground ${className ?? ''}`}>
+    <div className={cn('@container w-full font-sans text-foreground', className)}>
       <div className="grid gap-4 @3xl:grid-cols-6 @6xl:grid-cols-12">
         <h1 className="text-[22px] leading-tight font-semibold tracking-tight @3xl:col-span-6 @6xl:col-span-12">{title}</h1>
         <DataTile
@@ -80,7 +81,7 @@ export function BusinessFinance({ data, format = DEFAULT_FORMAT, title = 'Busine
               <li key={s.id} className="flex items-start gap-3 text-sm">
                 <span
                   aria-hidden
-                  className={`mt-0.5 grid size-5 shrink-0 place-items-center rounded-full border text-[11px] ${s.done ? 'border-transparent bg-foreground text-background' : 'border-border text-transparent'}`}
+                  className={cn('mt-0.5 grid size-5 shrink-0 place-items-center rounded-full border text-[11px]', s.done ? 'border-transparent bg-foreground text-background' : 'border-border text-transparent')}
                 >
                   ✓
                 </span>

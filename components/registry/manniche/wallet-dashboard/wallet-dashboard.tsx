@@ -1,6 +1,7 @@
 // A wallet screen in Tiles: balance, a fanned stack of payment cards, cash flow, a spending donut and subscriptions.
 // Compose-only: every chart is a Manniche primitive; the screen owns layout and copy.
-import { useId, useState } from 'react'
+import { useState } from 'react'
+import { cn } from '@/lib/utils'
 import { BigNumber, DeltaPill, Pills } from '@/registry/manniche/chart-kit/chart-kit'
 import type { ValueFormat } from '@/registry/manniche/chart-kit/chart-utils'
 import { DataTile } from '@/registry/manniche/data-tile/data-tile'
@@ -54,12 +55,11 @@ export function WalletDashboard({ data, format = DEFAULT_FORMAT, title = 'Wallet
     monthlyTotal: 'Monthly total',
     ...labels,
   }
-  const uid = useId()
   const [periodId, setPeriodId] = useState(data.periods[0]?.id ?? '')
   const period = data.periods.find((p) => p.id === periodId) ?? data.periods[0]
   const monthly = data.subscriptions.reduce((s, x) => s + x.amount, 0)
   return (
-    <div className={`@container w-full font-sans text-foreground ${className ?? ''}`}>
+    <div className={cn('@container w-full font-sans text-foreground', className)}>
       <div className="grid gap-4 @3xl:grid-cols-6 @6xl:grid-cols-12">
         <div className="@3xl:col-span-6 @6xl:col-span-12">
           <h1 className="text-[22px] leading-tight font-semibold tracking-tight">{title}</h1>
@@ -92,8 +92,8 @@ export function WalletDashboard({ data, format = DEFAULT_FORMAT, title = 'Wallet
             </span>
           }
         >
-          <ul aria-labelledby={`${uid}-subs`} className="divide-y divide-border">
-            <li id={`${uid}-subs`} className="sr-only">{l.subscriptions}</li>
+          {/* The tile's heading names the list; a hidden <li> as its label would be counted as an extra item. */}
+          <ul aria-label={l.subscriptions} className="divide-y divide-border">
             {data.subscriptions.map((s) => (
               <li key={s.id} className="flex items-center gap-3 py-3 text-sm">
                 <span aria-hidden className="grid size-9 shrink-0 place-items-center rounded-full bg-muted text-xs font-semibold text-muted-foreground">
