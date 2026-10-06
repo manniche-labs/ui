@@ -37,9 +37,14 @@ export type CtaSignupLabels = {
   invalid?: string
   /** Shown when `onSubmit` rejects. Default "Something went wrong and nothing was saved. Try again in a moment." */
   failed?: string
+  /** The example text inside the empty field. Default "name@example.com". */
+  placeholder?: string
   /** The heading of the success state. Default "You are on the list." */
   successTitle?: string
-  /** The sentence in front of the address in the success state. Default "We sent a confirmation to" */
+  /**
+   * The sentence in front of the address in the success state. Default "Signed up as". If your `onSubmit` sends a
+   * confirmation mail, say so here, such as "We sent a confirmation to".
+   */
   successText?: string
   /** The button in the success state that goes back to the form. Default "Use a different address". */
   reset?: string
@@ -54,8 +59,9 @@ const DEFAULT_LABELS: Required<CtaSignupLabels> = {
   required: 'Enter your email address.',
   invalid: 'That does not look like an email address. Check it for typos, for example name@example.com.',
   failed: 'Something went wrong and nothing was saved. Try again in a moment.',
+  placeholder: 'name@example.com',
   successTitle: 'You are on the list.',
-  successText: 'We sent a confirmation to',
+  successText: 'Signed up as',
   reset: 'Use a different address',
   includes: 'What you get',
 }
@@ -244,7 +250,7 @@ export function CtaSignup({
                     'h-12 w-full min-w-0 rounded-[14px] @min-[32rem]:flex-1 bg-background px-4 text-base text-foreground shadow-[inset_0_0_0_1px_var(--border)] outline-offset-2 placeholder:text-muted-foreground/70',
                     showProblem && 'shadow-[inset_0_0_0_1.5px_var(--destructive)]',
                   )}
-                  placeholder="name@example.com"
+                  placeholder={l.placeholder}
                 />
                 <button
                   type="submit"
