@@ -1,0 +1,20 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "health-overview-demo",
+  "title": "Health overview demo",
+  "description": "How to use Health overview.",
+  "registryDependencies": [
+    "@manniche/health-overview"
+  ],
+  "files": [
+    {
+      "path": "registry/manniche/examples/health-overview-demo.tsx",
+      "content": "import { HealthOverview, type HealthOverviewData } from '@/registry/manniche/health-overview/health-overview'\n\n// Example data only. The person and all figures are invented; this is not medical information.\nconst data: HealthOverviewData = {\n  vitals: [\n    { id: 'hr', title: 'Heart rate', value: 64, unit: 'bpm' },\n    { id: 'sl', title: 'Sleep', value: 7, unit: 'hours' },\n    { id: 'st', title: 'Steps', value: 8200, unit: 'today' },\n  ],\n  patient: {\n    name: 'Sample Patient',\n    details: [\n      { label: 'Age', value: '41' },\n      { label: 'Height', value: '178 cm' },\n      { label: 'Last visit', value: '2 Oct 2026' },\n      { label: 'Plan', value: 'Example plan' },\n    ],\n  },\n  score: {\n    title: 'Wellness score',\n    value: 74,\n    caption: 'example score',\n    zones: [\n      { label: 'Low', to: 40 },\n      { label: 'Fair', to: 70 },\n      { label: 'Good', to: 100 },\n    ],\n  },\n  calories: {\n    title: 'Calories, last 7 days',\n    points: ['Wed', 'Thu', 'Fri', 'Sat', 'Sun', 'Mon', 'Tue'].map((label, i) => ({ label, value: [2100, 1950, 2250, 2000, 2300, 2600, 1900][i] })),\n    macrosTitle: 'Macros today',\n    macros: [\n      { label: 'Carbs', value: 240 },\n      { label: 'Protein', value: 110 },\n      { label: 'Fat', value: 70 },\n    ],\n  },\n}\n\nexport default function HealthOverviewDemo() {\n  return <HealthOverview data={data} />\n}\n",
+      "type": "registry:example"
+    }
+  ],
+  "categories": [
+    "templates"
+  ],
+  "type": "registry:example"
+}
