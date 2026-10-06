@@ -291,7 +291,7 @@ export function DotMatrix({
   return (
     <div
       className={cn('@container relative min-w-0', className)}
-      style={{ ['--dm-cols' as string]: Math.max(1, nCols), ...style }}
+      style={{ ['--dm-cols' as string]: loading && !nCols ? 16 : Math.max(1, nCols), ...style }}
       aria-busy={loading || undefined}
       {...rest}
     >
@@ -345,7 +345,7 @@ export function DotMatrix({
                     <i className={dotClass} style={empty ? { background: INK, opacity: 0.18, transform: 'scale(0.22)' } : dotStyle(r, c, lvl)} />
                   )}
                   {i === at && (
-                    <span className="pointer-events-none absolute inset-0 m-auto aspect-square h-full max-h-10 rounded-full shadow-[0_0_0_2px_var(--ring)]" />
+                    <span className="pointer-events-none absolute top-1/2 left-1/2 aspect-square h-[min(100%,40px)] -translate-x-1/2 -translate-y-1/2 rounded-full shadow-[0_0_0_2px_var(--ring)]" />
                   )}
                 </span>
               )
@@ -373,7 +373,7 @@ export function DotMatrix({
                 k === tipC && tipAt >= 0 ? 'text-foreground' : 'text-muted-foreground',
               )}
             >
-              {k % every === 0 || (k === tipC && tipAt >= 0) ? c : ''}
+              {tipAt >= 0 && k === tipC ? c : k % every === 0 && !(tipAt >= 0 && Math.abs(k - tipC) < fit) ? c : ''}
             </span>
           ))}
       </div>
