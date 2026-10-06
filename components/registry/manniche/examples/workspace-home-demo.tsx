@@ -9,6 +9,21 @@ const data: WorkspaceHomeData = {
     { id: 'files', label: 'Files' },
   ],
   offer: { title: 'Sample offer', text: 'Example tile: a short offer with one clear action.', action: 'See the offer' },
+  schedule: {
+    title: 'This week',
+    weekStart: '2026-10-05',
+    now: '2026-10-06T10:00',
+    categories: [
+      { id: 'call', label: 'Calls' },
+      { id: 'focus', label: 'Focus' },
+    ],
+    events: [
+      { id: 'e1', title: 'Sample kickoff', day: 0, start: '09:00', end: '10:00', category: 'call' },
+      { id: 'e2', title: 'Demo review', day: 1, start: '11:00', end: '12:00', category: 'call' },
+      { id: 'e3', title: 'Example focus block', day: 2, start: '13:00', end: '15:00', category: 'focus' },
+      { id: 'e4', title: 'Test planning', day: 3, start: '10:00', end: '11:30', category: 'focus' },
+    ],
+  },
   deals: {
     title: 'Deals closed per week',
     total: 84500,
