@@ -1,0 +1,20 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "people-ops-demo",
+  "title": "People ops demo",
+  "description": "How to use People ops.",
+  "registryDependencies": [
+    "@manniche/people-ops"
+  ],
+  "files": [
+    {
+      "path": "registry/manniche/examples/people-ops-demo.tsx",
+      "content": "import { PeopleOps, type PeopleOpsData } from '@/registry/manniche/people-ops/people-ops'\n\n// Example data only. All names and figures are invented.\nconst data: PeopleOpsData = {\n  funnel: {\n    title: 'Hiring funnel',\n    stages: [\n      { label: 'Applied', value: 120 },\n      { label: 'Screen', value: 48 },\n      { label: 'Interview', value: 20 },\n      { label: 'Offer', value: 5 },\n    ],\n  },\n  today: {\n    title: \"Today's schedule\",\n    items: [\n      { id: 's1', time: '09:30', title: 'Sample stand-up', who: 'Team' },\n      { id: 's2', time: '11:00', title: 'Demo interview', who: 'Alex E.' },\n      { id: 's3', time: '14:00', title: 'Example onboarding', who: 'Sam S.' },\n    ],\n  },\n  payroll: {\n    title: 'Payroll',\n    today: '2026-10-06',\n    format: { currency: 'EUR', decimals: 0 },\n    items: [\n      { id: 'p1', name: 'Alex Example', amount: -3200, date: '2026-09-30', category: 'Salary' },\n      { id: 'p2', name: 'Sam Sample', amount: -2900, date: '2026-09-30', category: 'Salary' },\n      { id: 'p3', name: 'Robin Demo', amount: -2600, date: '2026-09-30', category: 'Salary' },\n    ],\n  },\n  attendance: {\n    title: 'Attendance',\n    rows: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri'],\n    columns: ['W1', 'W2', 'W3', 'W4'],\n    data: [[8, 7, 8, 6], [7, 8, 8, 7], [8, 6, 7, 8], [7, 7, 8, 8], [5, 6, 4, 6]],\n  },\n}\n\nexport default function PeopleOpsDemo() {\n  return <PeopleOps data={data} />\n}\n",
+      "type": "registry:example"
+    }
+  ],
+  "categories": [
+    "templates"
+  ],
+  "type": "registry:example"
+}
