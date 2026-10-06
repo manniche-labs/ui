@@ -1,6 +1,6 @@
 # Handoff: Manniche UI (manniche-labs/ui)
 
-Updated 2026-10-06 by the Work Mac session. Everything the next session needs is in this repo; nothing depends on files on the Mac.
+Updated 2026-10-06 at 16:40 by the Work Mac steering session (end of day). Everything the next session needs is in this repo; nothing depends on files on the Mac.
 
 ## The plan
 
@@ -11,11 +11,11 @@ The scrolltide-inspired plan for Manniche UI, built in our own **Tiles** design 
 | 1–4 | Effects, carousel engine, WebGL carousels, late slides | Merged (#12, #15, #16, #17, #18) |
 | Pro move | Six components moved to Manniche UI Pro | Merged (#19) |
 | 5 | Tiles data primitives: chart-kit, data-tile + 11 primitives | Merged (#21). Live on mikkelmanniche.dk/lab with phases 2–4 and the Tiles pass (site PR #109, deployed 6/10) |
-| 6 | 17 page sections (footers, bento, CTA, contact) | In progress (6/10). Footers 7/7 written: draft PR #28. Bento + CTA 6/6 written: draft PR #26. Contact (4): another session, PR #27. Brief: `plans/fase-6-sektioner.md` |
-| Templates | 13 screen templates built from the phase 5 primitives | Not started. Brief: `plans/skabeloner.md` |
+| 6 | 17 page sections (footers, bento, CTA, contact) | All 17 written as code, not merged: footers 7/7 draft #28, bento + CTA 6/6 draft #26 (browser pass started 6/10), contact 4/4 draft #27. Brief: `plans/fase-6-sektioner.md` |
+| Templates | 13 screen templates built from the phase 5 primitives | All 13 written as code, not merged: finance 4/4 draft #32, dashboards 4/4 draft #25, the rest 5/5 draft #31. Brief: `plans/skabeloner.md` |
 | Tiles pass 2–4 | Nine phase 2–4 components restyled to Tiles | Merged (#20, claude-a9, 6/10); live on /lab |
 
-Progress on the plan: 5 of 7 parts merged (phases 1–5; phase 6 and the templates are left), about 71 %. The Tiles pass for phases 2–4 is counted by the session that owns it.
+Progress on the plan: 5 of 7 parts merged (phases 1–5), about 71 %. Phase 6 and the templates are fully written in six draft PRs; they count as done when merged. The Tiles pass for phases 2–4 is counted by the session that owns it.
 
 ## Branches and PRs
 
@@ -28,8 +28,8 @@ Progress on the plan: 5 of 7 parts merged (phases 1–5; phase 6 and the templat
 ## Next steps, in order
 
 1. Run `git fetch` and look at the open PRs and branches, so you do not build over another session. Then read `plans/fase-6-sektioner.md` and `plans/skabeloner.md`, and open `plans/tiles-mockup.html`.
-2. **Phase 6** per `plans/fase-6-sektioner.md`. #28 (footers) and #26 (bento + CTA) have all sections written with oxlint and `tsc` clean, but none has been seen in a browser. Left on each: the browser pass (1440/500/280 px, light/dark, `&mini=1`, keyboard, reduced motion), `registry.json` entries + `npx shadcn build` + `public/r`, README, CHANGELOG, ManiLens. The `footer-sitemap` hit-area overlap is fixed on #28 (44 px link rows; region pills with a 12 px row gap). Contact (`fase-6-kontakt`, #27) and the dashboard templates (`skabeloner-dashboards`, #25) belong to other sessions.
-3. **Templates** per `plans/skabeloner.md`: three groups (finance, dashboards, the rest) on three branches.
+2. **Finish the six draft PRs** (#25, #26, #27, #28, #31, #32). All code is written with oxlint and `tsc` clean, but only #26 has had a (partial) browser pass. Each PR body lists what is left and what the lead must add. Per PR: browser pass (1440/500/280–360 px, light/dark, `&mini=1`, keyboard, reduced motion), fix in the component, then the lead adds `registry.json` items (`registry:block`, categories per PR body), README rows, CHANGELOG, `npx shadcn build` + `public/r`. Merge one PR at a time, rebasing onto `main` and rebuilding before each. Known things to eyeball: `account-home` dial scale and `business-finance` growth ring (#32), `delivery-board` unused `now` prop (#31), gallery-shop uses colour tiles instead of images (#31).
+3. The browser passes run well in parallel: one session per PR family, but only ONE shared Vite server and one browser behind a lock per machine (16 GB Work Mac).
 4. Each PR: local CI, ManiLens (`/manilens-lokal`), CHANGELOG entry, then merge. Deploying to mikkelmanniche.dk/lab needs Mikkel's yes.
 
 ## What can run in parallel (separate sessions, no shared files)
