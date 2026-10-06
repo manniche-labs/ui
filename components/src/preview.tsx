@@ -1,4 +1,4 @@
-import { StrictMode, Suspense, lazy, useEffect, useState, type ComponentType } from 'react'
+import { StrictMode, Suspense, lazy, useEffect, useLayoutEffect, useRef, useState, type ComponentType, type ReactNode } from 'react'
 import { createRoot } from 'react-dom/client'
 import './preview.css'
 import { colourById, colourVars, type Mode } from './template-theme'
@@ -37,6 +37,66 @@ if (FULL) {
   })
 }
 
+// The card's Replay and star buttons sit in the top-right corner of the frame: 38 px down and 74 px in
+// from the right, in the card's own pixels. The demo keeps clear of them and of the edges.
+const EDGE = 12
+const BELOW_BUTTONS = 46
+const LEFT_OF_BUTTONS = 82
+
+// On a card, the demo is scaled down until it fits the frame, either below the buttons or, if it is narrow
+// enough, centred between them and the left edge. Whichever needs less shrinking wins.
+function Fit({ children }: { children: ReactNode }) {
+  const ref = useRef<HTMLDivElement>(null)
+
+  useLayoutEffect(() => {
+    const el = ref.current!
+    // Frame pixels per card pixel, since the card shows the frame scaled down.
+    let k = 1
+    let scale = Infinity
+
+    const fit = () => {
+      const w = Math.max(0, ...Array.from(el.children, (c) => (c as HTMLElement).offsetWidth))
+      const h = el.offsetHeight
+      if (!w || !h) return
+      const W = innerWidth
+      const H = innerHeight
+      const below = Math.min(1, (H - (BELOW_BUTTONS + EDGE) * k) / h, (W - 2 * EDGE * k) / w)
+      const beside = Math.min(1, (H - 2 * EDGE * k) / h, (W - 2 * LEFT_OF_BUTTONS * k) / w)
+      const s = Math.max(below, beside, 0.1)
+      // Only ever shrink while the demo plays, so a demo that grows and shrinks does not pump.
+      if (s >= scale) return
+      scale = s
+      el.style.top = `${beside >= below ? H / 2 : (BELOW_BUTTONS * k + H - EDGE * k) / 2}px`
+      el.style.transform = `translate(-50%, -50%) scale(${s})`
+      el.style.visibility = 'visible'
+    }
+
+    const resize = () => {
+      const frame = frameElement?.getBoundingClientRect().width
+      k = frame ? innerWidth / frame : 1
+      el.style.width = `${Math.min(576, innerWidth - 2 * EDGE * k)}px`
+      scale = Infinity
+      fit()
+    }
+
+    resize()
+    const observer = new ResizeObserver(fit)
+    observer.observe(el)
+    addEventListener('resize', resize)
+    return () => {
+      observer.disconnect()
+      removeEventListener('resize', resize)
+    }
+  }, [])
+
+  // A demo narrower than the column sits in the middle. The .mini-fit rule in preview.css cuts a wider one to the column.
+  return (
+    <div ref={ref} className="mini-fit invisible absolute left-1/2 grid grid-cols-[minmax(0,1fr)] origin-center justify-items-center">
+      {children}
+    </div>
+  )
+}
+
 function Preview() {
   const [run, setRun] = useState(0)
 
@@ -59,18 +119,23 @@ function Preview() {
 
   if (FULL) return demo
 
+  if (MINI)
+    return (
+      <main className="relative h-dvh overflow-hidden">
+        <Fit key={run}>{demo}</Fit>
+      </main>
+    )
+
   return (
     <main className="relative min-h-dvh">
-      {!MINI && (
-        <button
-          type="button"
-          onClick={() => setRun((n) => n + 1)}
-          className="absolute top-2 right-2 z-10 inline-flex min-h-11 items-center rounded-xl px-3 text-sm text-muted-foreground transition-colors duration-150 hover:bg-muted hover:text-foreground"
-        >
-          Replay
-        </button>
-      )}
-      {SCROLL.has(name) && !MINI ? (
+      <button
+        type="button"
+        onClick={() => setRun((n) => n + 1)}
+        className="absolute top-2 right-2 z-10 inline-flex min-h-11 items-center rounded-xl px-3 text-sm text-muted-foreground transition-colors duration-150 hover:bg-muted hover:text-foreground"
+      >
+        Replay
+      </button>
+      {SCROLL.has(name) ? (
         <div className="px-6">
           <p className="grid h-[70dvh] place-items-center text-sm text-muted-foreground">Scroll down</p>
           <div className="mx-auto max-w-xl">{demo}</div>
@@ -78,8 +143,7 @@ function Preview() {
         </div>
       ) : (
         <div className="grid min-h-dvh place-items-center px-6 py-14">
-          {/* On a card, a demo narrower than the column sits in the middle, not at the left edge. */}
-          <div className={MINI ? 'grid w-full min-w-0 max-w-xl justify-items-center' : 'w-full min-w-0 max-w-xl'}>{demo}</div>
+          <div className="w-full min-w-0 max-w-xl">{demo}</div>
         </div>
       )}
     </main>
