@@ -13,14 +13,13 @@ The scrolltide-inspired plan for Manniche UI, built in our own **Tiles** design 
 | 5 | Tiles data primitives: chart-kit, data-tile + 11 primitives | Merged (#21). Live on mikkelmanniche.dk/lab (site PR #109) |
 | Tiles pass 2–4 | Nine phase 2–4 components restyled to Tiles | Merged (#20); live on /lab |
 | Templates | 13 screen templates built from the phase 5 primitives | **All 13 merged 6/10**: dashboards #25, the rest #31, finance #32. Not on /lab yet |
-| 6 | 17 page sections (footers, bento, CTA, contact) | Bento + CTA merged (#26). Footers draft #28 and contact draft #27 are being finished by a separate session; see their PR bodies |
+| 6 | 17 page sections (footers, bento, CTA, contact) | **All 17 merged 6/10**: bento + CTA #26, footers #28, contact #27. Not on /lab yet |
 
-Not on /lab yet: #25, #26, #31 and #32 (and #27, #28 and #34 once merged). Deploying needs Mikkel's yes.
+All seven parts of the plan are merged. Not on /lab yet: #25, #26, #27, #28, #31, #32, #34 and #35. Deploying needs Mikkel's yes.
 
 ## Open PRs
 
-- **#34 `fix-primitiver`** (draft): primitive fixes found in the template browser passes. These are bubble-chart closing on Escape after hover, `Pills` at 44 px, week-schedule fitting 7 days at 320 px, and two colour transitions removed. Local CI is green. If it is still a draft, check those four things in the browser (see Shared QA setup) and merge it.
-- **#28 `fase-6-footers`** and **#27 `fase-6-kontakt`**: drafts. When they are ready, the lead adds registry items, README rows and CHANGELOG entries, then merges.
+None. The primitive fixes are merged too: #34 (bubble-chart closes on Escape after hover, `Pills` at 44 px, week-schedule fits 7 days at 320 px, colour transitions removed) and #35 (dot-matrix tooltip opens below the top rows, donut legend names wrap, `data-tile` `headingLevel`). Both were checked in Chromium at 1440 and 320 px.
 
 ## How the lead merges (one PR at a time)
 
@@ -42,24 +41,21 @@ One Vite server and one browser per machine.
 - Preview: `/preview.html?c=<name>&full=1` (add `&mode=dark` or `&mini=1`). Use the component name, not `<name>-demo`.
 - Browser lock: `mkdir ../.browser-laas` before you open a browser and `rmdir` it when you close it. Always close the browser in `finally`.
 
-## Remaining primitive issues (not in #34)
+## Remaining primitive issues
 
 Fix these in the primitive itself, each with a CHANGELOG entry under Fixed:
 
 - `lollipop`: the overlay overlaps at 320 px.
-- `dot-matrix`: the tooltip on the top row covers the title.
 - `bubble-chart`: labels collide at 320 px.
-- `donut`: needs a target or centre prop, and legend names are truncated.
-- `data-tile`: uses `h3` with no `h2` above it in the demos; let the caller choose the heading level.
+- `donut`: needs a target or centre prop.
 - WebKit/Safari has not been tested at all. The Mac can do this.
 
 ## Next steps on the Mac, in order
 
-1. `git fetch`, `gh pr list`, and read this file. Check whether #34, #28 and #27 are merged.
-2. Merge what is left, one PR at a time, as described above.
-3. Run a Safari pass of the templates and primitives, then fix the primitive issues listed above.
-4. Build the `/lab/ui/pro` page on the site (it gives a 404 today); Stripe is set up in sandbox (79 €, introductory price 49 € until 31/12-2026).
-5. Export to /lab and deploy **only after Mikkel's yes**.
+1. `git fetch`, `gh pr list`, and read this file. Nothing should be open from 6/10.
+2. Run a Safari pass of the templates and primitives, then fix the primitive issues listed above.
+3. Build the `/lab/ui/pro` page on the site (it gives a 404 today); Stripe is set up in sandbox (79 €, introductory price 49 € until 31/12-2026).
+4. Export to /lab and deploy **only after Mikkel's yes**.
 
 ## How to check
 
