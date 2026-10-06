@@ -36,6 +36,7 @@
 
 ### Fixed
 
+- `changelog-page` no longer scrolls sideways at 320 px (#PR): below 640 px the subscribe link is an icon button of 44 px with its name kept for screen readers. Found in a WebKit pass over all 35 templates and 26 widgets at 1440 and 320 px; the rest were clean.
 - `npm run lab`: templates that need data are exported to HTML through their demos, so the export no longer stops at the Tiles templates.
 - `dot-matrix`: on the top rows the tooltip opens below the cell, so it no longer covers the tile's title and figure.
 - `donut`: long legend names wrap instead of being cut off.
