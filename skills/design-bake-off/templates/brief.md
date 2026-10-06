@@ -16,6 +16,9 @@
 2. <…>
 3. Footer: <requirements>
 
+## Style frames (optional)
+<One to three styles from styles.refero.design, saved as DESIGN.md. Say which direction uses which. Inspiration only: copy no colours, logos or text.>
+
 ## Data (use verbatim, nothing else)
 <real or demo rows; label demo data as "Demo data">
 
