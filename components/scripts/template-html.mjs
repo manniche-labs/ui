@@ -61,7 +61,15 @@ for (const t of templates) {
   const entry = t.files[0].path
   const mod = await vite.ssrLoadModule('/' + entry)
   const Component = Object.values(mod).find((v) => typeof v === 'function')
-  const body = renderToStaticMarkup(createElement(Component))
+  // A template that needs data (the dashboards, sections and finance screens) is rendered through its demo, which passes example data.
+  const demo = `registry/manniche/examples/${t.name}-demo.tsx`
+  let body
+  try {
+    body = renderToStaticMarkup(createElement(Component))
+  } catch {
+    const demoMod = await vite.ssrLoadModule('/' + demo)
+    body = renderToStaticMarkup(createElement(Object.values(demoMod).find((v) => typeof v === 'function')))
+  }
   // Classes from the rendered markup and from the source, so classes that only show in another state are kept too.
   const candidates = scanner.scanFiles([
     { content: body, extension: 'html' },
