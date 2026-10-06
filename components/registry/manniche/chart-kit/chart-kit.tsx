@@ -184,7 +184,7 @@ export function Digits({ text, roll = true }: { text: string; roll?: boolean }) 
   )
 }
 
-/** A change as a small pill with an arrow. Green when it went the good way; set `goodWhen` to "down" for costs. */
+/** A change as a small pill with an arrow. Green when it went the good way; set `goodWhen` to "down" for costs. The arrow carries the direction, so the figure never shows a sign. */
 export function DeltaPill({
   value,
   format = { decimals: 1, suffix: '%' },
@@ -224,7 +224,7 @@ export function DeltaPill({
           <path d={up ? 'M6 10V2M2.5 5.5 6 2l3.5 3.5' : 'M6 2v8M2.5 6.5 6 10l3.5-3.5'} />
         </svg>
       )}
-      {formatValue(Math.abs(value), format)}
+      {formatValue(Math.abs(value), { ...format, sign: false })}
       <span className="sr-only">{flat ? ', unchanged' : up ? ', up' : ', down'}</span>
     </span>
   )
