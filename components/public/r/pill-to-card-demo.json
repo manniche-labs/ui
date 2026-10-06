@@ -1,0 +1,20 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "pill-to-card-demo",
+  "title": "Pill to card demo",
+  "description": "How to use Pill to card.",
+  "registryDependencies": [
+    "@manniche/pill-to-card"
+  ],
+  "files": [
+    {
+      "path": "registry/manniche/examples/pill-to-card-demo.tsx",
+      "content": "import { PillToCard } from '@/registry/manniche/pill-to-card/pill-to-card'\n\nconst button =\n  'inline-flex min-h-11 flex-1 items-center justify-center rounded-lg border px-4 text-sm leading-none font-medium outline-none transition-[transform] duration-120 ease-[cubic-bezier(0.23,1,0.32,1)] active:[transform:scale(.97)] focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-card motion-reduce:transition-none'\n\nexport default function PillToCardDemo() {\n  return (\n    <div className=\"grid min-h-[300px] w-full place-items-center\">\n      <PillToCard name=\"Ada Lovelace\" role=\"Analyst\">\n        <div className=\"mt-4 flex justify-between border-y border-border py-2 font-mono text-[11px] leading-[1.4] text-muted-foreground\">\n          <span>profile</span>\n          <span>demo</span>\n        </div>\n        <p className=\"mt-3 mb-4 text-sm leading-normal text-pretty\">\n          Wrote the first published algorithm meant for a machine, in her notes on Babbage’s Analytical Engine.\n        </p>\n        <div className=\"flex gap-2\">\n          <button type=\"button\" className={`${button} border-transparent bg-primary text-primary-foreground`}>\n            Message\n          </button>\n          <button type=\"button\" className={`${button} border-border bg-card text-card-foreground`}>\n            View profile\n          </button>\n        </div>\n      </PillToCard>\n    </div>\n  )\n}\n",
+      "type": "registry:example"
+    }
+  ],
+  "categories": [
+    "overlays"
+  ],
+  "type": "registry:example"
+}

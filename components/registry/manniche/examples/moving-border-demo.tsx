@@ -10,11 +10,37 @@ export default function MovingBorderDemo() {
           <p className="text-sm text-muted-foreground">Website, shop and bookings</p>
         </div>
       </MovingBorder>
-      <MovingBorder duration={3} className="rounded-xl">
-        <button type="button" className="min-h-11 px-5 text-sm font-medium">
-          Book a call
-        </button>
+
+      <MovingBorder variant="iridescent" duration={10} className="max-w-full">
+        <div className="grid w-[340px] max-w-full gap-2.5 px-[22px] pt-5 pb-[22px]">
+          <svg viewBox="0 0 40 40" aria-hidden className="size-10 fill-none stroke-foreground stroke-1">
+            <circle cx="20" cy="20" r="18.5" />
+            <circle cx="20" cy="20" r="13" />
+            <path d="M11.5 14a10 10 0 0 1 6-4.6" />
+          </svg>
+          <p className="font-mono text-[11px] leading-none font-medium tracking-[0.04em] text-muted-foreground tabular-nums">coated element · demo</p>
+          <h3 className="text-[19px] leading-tight tracking-[-0.015em]">Thin-film ring</h3>
+          <p className="text-[13.5px] leading-normal text-pretty text-muted-foreground">
+            The ring carries a band of hues around the signal colour, the way coated glass catches light. Only the border is lit.
+          </p>
+        </div>
       </MovingBorder>
+
+      <div className="flex flex-wrap justify-center gap-4">
+        <MovingBorder duration={3} className="rounded-xl">
+          <button type="button" className="min-h-11 px-5 text-sm font-medium">
+            Book a call
+          </button>
+        </MovingBorder>
+        <MovingBorder variant="iridescent" duration={7}>
+          <button
+            type="button"
+            className="min-h-11 px-5 text-sm font-medium transition-transform duration-[120ms] ease-out-quint focus-visible:outline-none active:scale-[0.97]"
+          >
+            Continue
+          </button>
+        </MovingBorder>
+      </div>
     </div>
   )
 }
