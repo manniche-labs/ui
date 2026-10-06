@@ -24,7 +24,7 @@ export function RentalPortfolio({ data, labels, className }: RentalPortfolioProp
     <div className={cn('@container w-full rounded-2xl bg-background p-3 text-foreground', className)}>
       <div className="grid grid-cols-1 gap-3 @lg:grid-cols-3 @3xl:grid-cols-6">
         {data.figures.map((f, i) => (
-          <div key={f.id} className={cn('@3xl:col-span-2', i === 0 && '@lg:col-span-3 @3xl:col-span-2')}>
+          <div key={f.id} className="@3xl:col-span-2">
             <DataTile className="h-full" title={f.title} inverted={i === 0} density="compact">
               <TileFact>
                 <BigNumber value={f.value} format={f.format} size="lg" />
