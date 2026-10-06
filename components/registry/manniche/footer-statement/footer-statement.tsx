@@ -81,13 +81,13 @@ function EmailCopy({ email, labels }: { email: string; labels: Required<FooterSt
   useEffect(() => () => clearTimeout(timer.current), [])
 
   const copy = async () => {
-    clearTimeout(timer.current)
     try {
       await navigator.clipboard.writeText(email)
       setState('copied')
     } catch {
       setState('failed')
     }
+    clearTimeout(timer.current)
     timer.current = setTimeout(() => setState('idle'), 1800)
   }
 

@@ -5,7 +5,8 @@ import { Pills } from '@/registry/manniche/chart-kit/chart-kit'
 export default function FooterStatusDemo() {
   const [status, setStatus] = useState<ServiceStatus>('operational')
   return (
-    <div className="grid gap-8 py-8">
+    // The id that Back to top moves focus to.
+    <div id="top" className="grid gap-8 py-8">
       <div className="mx-auto flex w-full max-w-6xl flex-wrap items-center gap-3 px-4 sm:px-6">
         <span className="font-mono text-[11px] tracking-[0.08em] text-muted-foreground uppercase">Status</span>
         <Pills
