@@ -43,7 +43,8 @@ export function CurrencyWallet({ data, defaultCurrency, title = 'Currency wallet
   const cur = data.find((c) => c.code === code) ?? data[0]
   if (!cur) return null
   const fmt = { currency: cur.code, decimals: 2 }
-  const progress = Math.min(1, cur.rewards.points / (cur.rewards.points + cur.rewards.next))
+  const toGo = cur.rewards.points + cur.rewards.next
+  const progress = toGo > 0 ? Math.min(1, Math.max(0, cur.rewards.points / toGo)) : 0
   return (
     <div className={cn('@container w-full font-sans text-foreground', className)}>
       <div className="grid gap-4 @3xl:grid-cols-6 @6xl:grid-cols-12">

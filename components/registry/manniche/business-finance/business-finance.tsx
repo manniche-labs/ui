@@ -29,6 +29,7 @@ export type BusinessFinanceProps = {
   title?: string
   note?: string
   today?: string
+  /** The current time. Used for `today` when that is not given. */
   now?: Date
   labels?: { income?: string; payments?: string; growth?: string; /** Under the share in the growth ring. Default "of target". */ ofTarget?: string; stock?: string; activity?: string; verification?: string; stepsDone?: (done: number, total: number) => string; done?: string; todo?: string }
   className?: string
@@ -37,7 +38,11 @@ export type BusinessFinanceProps = {
 const DEFAULT_FORMAT: ValueFormat = { currency: 'EUR', decimals: 0 }
 
 /** Business finance: cash flow, growth ring, stock sparkline, activity and a verification checklist. */
-export function BusinessFinance({ data, format = DEFAULT_FORMAT, title = 'Business finance', note = 'Example data.', today, labels, className }: BusinessFinanceProps) {
+// "YYYY-MM-DD" of `now` in local time, for TransactionList's "Today" and "Yesterday".
+const dayOf = (d: Date) => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`
+
+export function BusinessFinance({ data, format = DEFAULT_FORMAT, title = 'Business finance', note = 'Example data.', today, now, labels, className }: BusinessFinanceProps) {
+  const day = today ?? (now ? dayOf(now) : undefined)
   const l = {
     income: 'Income',
     payments: 'Payments',
@@ -67,7 +72,7 @@ export function BusinessFinance({ data, format = DEFAULT_FORMAT, title = 'Busine
             <BigNumber value={data.income} format={format} size="lg" />
             <DeltaPill value={data.incomeChange} format={{ decimals: 1, suffix: '%', sign: true }} />
           </div>
-          <AreaChart className="mt-4" data={data.cashflow} label={`${l.income} and ${l.payments}`} format={format} compare />
+          <AreaChart className="mt-4" data={data.cashflow} label={`${l.income} and ${l.payments}`} format={format} compare labels={{ previous: l.payments }} />
         </DataTile>
         <DataTile title={l.growth} inverted className="@3xl:col-span-3 @6xl:col-span-4">
           {/* One segment against a whole of 100, held highlighted so the centre reads the share of the target rather
@@ -105,7 +110,7 @@ export function BusinessFinance({ data, format = DEFAULT_FORMAT, title = 'Busine
           </ol>
         </DataTile>
         <DataTile title={l.activity} className="@3xl:col-span-6 @6xl:col-span-4">
-          <TransactionList data={data.activity} label={l.activity} today={today} format={{ ...format, decimals: 2 }} limit={4} />
+          <TransactionList data={data.activity} label={l.activity} today={day} format={{ ...format, decimals: 2 }} limit={4} />
         </DataTile>
       </div>
     </div>

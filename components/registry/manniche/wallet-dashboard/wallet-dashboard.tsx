@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import { cn } from '@/lib/utils'
 import { BigNumber, DeltaPill, Pills } from '@/registry/manniche/chart-kit/chart-kit'
-import type { ValueFormat } from '@/registry/manniche/chart-kit/chart-utils'
+import { formatValue, type ValueFormat } from '@/registry/manniche/chart-kit/chart-utils'
 import { DataTile } from '@/registry/manniche/data-tile/data-tile'
 import { BarChart, type BarPoint } from '@/registry/manniche/bar-chart/bar-chart'
 import { CardStack, type StackCard } from '@/registry/manniche/card-stack/card-stack'
@@ -88,7 +88,7 @@ export function WalletDashboard({ data, format = DEFAULT_FORMAT, title = 'Wallet
           className="@3xl:col-span-3 @6xl:col-span-6"
           footer={
             <span>
-              {l.monthlyTotal}: <strong className="tabular-nums">{new Intl.NumberFormat('en-GB', { style: 'currency', currency: format.currency ?? 'EUR' }).format(monthly)}</strong>
+              {l.monthlyTotal}: <strong className="tabular-nums">{formatValue(monthly, { ...format, decimals: 2 })}</strong>
             </span>
           }
         >
@@ -104,7 +104,7 @@ export function WalletDashboard({ data, format = DEFAULT_FORMAT, title = 'Wallet
                   <span className="block text-xs text-muted-foreground">{l.renews(s.renews)}</span>
                 </span>
                 <span className="font-medium tabular-nums">
-                  {new Intl.NumberFormat('en-GB', { style: 'currency', currency: format.currency ?? 'EUR' }).format(s.amount)}
+                  {formatValue(s.amount, { ...format, decimals: 2 })}
                   <span className="sr-only"> {l.perMonth}</span>
                 </span>
               </li>
