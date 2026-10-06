@@ -1,0 +1,20 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "contact-form-demo",
+  "title": "Contact Form demo",
+  "description": "How to use Contact Form.",
+  "registryDependencies": [
+    "@manniche/contact-form"
+  ],
+  "files": [
+    {
+      "path": "registry/manniche/examples/contact-form-demo.tsx",
+      "content": "import { ContactForm } from '@/registry/manniche/contact-form/contact-form'\n\nexport default function ContactFormDemo() {\n  return (\n    <ContactForm\n      heading=\"Tell us what you are building\"\n      intro=\"A few lines are enough. A person at Halden Studio reads every message.\"\n      topics={[\n        { id: 'project', label: 'New project' },\n        { id: 'support', label: 'Support' },\n        { id: 'other', label: 'Other' },\n      ]}\n      maxLength={400}\n      consent={<>I agree that Halden Studio may store this message to answer it. See the <a className=\"underline underline-offset-4\" href=\"https://example.com/privacy\">privacy policy</a>.</>}\n      info={{\n        email: 'hello@example.com',\n        phone: '+49 89 0000 0000',\n        address: <>Example Street 1<br />80331 Munich</>,\n        responseTime: 'We reply within two working days.',\n      }}\n      onSubmit={() => new Promise<void>((r) => setTimeout(r, 900))}\n    />\n  )\n}\n",
+      "type": "registry:example"
+    }
+  ],
+  "categories": [
+    "templates"
+  ],
+  "type": "registry:example"
+}
