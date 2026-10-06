@@ -1,0 +1,20 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "cta-signup-demo",
+  "title": "CTA signup demo",
+  "description": "How to use CTA signup.",
+  "registryDependencies": [
+    "@manniche/cta-signup"
+  ],
+  "files": [
+    {
+      "path": "registry/manniche/examples/cta-signup-demo.tsx",
+      "content": "import { CtaSignup } from '@/registry/manniche/cta-signup/cta-signup'\n\n// The demo \"sends\" by waiting a moment. An address that starts with \"fail\" rejects, to show the error state.\nconst fakeSend = ({ email }: { email: string }) =>\n  new Promise<void>((resolve, reject) => setTimeout(() => (email.startsWith('fail') ? reject(new Error('demo')) : resolve()), 1200))\n\nexport default function CtaSignupDemo() {\n  return (\n    <CtaSignup\n      title=\"Notes from the studio, once a month.\"\n      description=\"What we are building in Munich and Aalborg, what we learned and what we would do differently.\"\n      items={[\n        'One short letter on the first Monday of the month',\n        'Working files and templates we use ourselves',\n        'First word when we open a spot for a new project',\n        'Unsubscribe with one click, any time',\n      ]}\n      consent={\n        <>\n          We use your address only to send this letter. Read the{' '}\n          <a href=\"https://example.com/privacy\">privacy policy</a>.\n        </>\n      }\n      onSubmit={fakeSend}\n    />\n  )\n}\n",
+      "type": "registry:example"
+    }
+  ],
+  "categories": [
+    "templates"
+  ],
+  "type": "registry:example"
+}
