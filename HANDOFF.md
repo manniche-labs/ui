@@ -51,7 +51,6 @@ Fix these in the primitive itself, each with a CHANGELOG entry under Fixed:
 - `bubble-chart`: labels collide at 320 px.
 - `donut`: needs a target or centre prop, and legend names are truncated.
 - `data-tile`: uses `h3` with no `h2` above it in the demos; let the caller choose the heading level.
-- `preview.css` asks for `/assets/fonts/inter-latin.woff2`, which does not exist (404 in the preview only).
 - WebKit/Safari has not been tested at all. The Mac can do this.
 
 ## Next steps on the Mac, in order
@@ -75,3 +74,5 @@ npm run lint && npx tsc -p tsconfig.app.json --noEmit && npm run build && npx sh
 ## Deploying to /lab
 
 From the site repo (mikkelmanniche.dk), after the site PR is merged: `server/udrul.sh` (dry run), then `server/udrul.sh --live`. Never the old `deploy-side.sh`: it deletes server files and uploads `server/`.
+
+The 404 on `/assets/fonts/inter-latin.woff2` in local preview is expected: `preview.css` points at the site's self-hosted fonts, which exist on mikkelmanniche.dk.
