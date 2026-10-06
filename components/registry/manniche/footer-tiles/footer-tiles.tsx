@@ -258,7 +258,7 @@ function HoursTile({ hours, now, labels }: { hours: FooterTilesHours; now: Date 
           const isToday = status !== null && g.days.includes(status.day)
           return (
             <li key={g.key} className="flex items-baseline justify-between gap-3 text-[13.5px]">
-              <span className={cn('flex items-baseline gap-2', isToday ? 'font-medium text-foreground' : 'text-muted-foreground')}>
+              <span className={cn('flex items-baseline gap-2 whitespace-nowrap', isToday ? 'font-medium text-foreground' : 'text-muted-foreground')}>
                 {g.label}
                 {isToday && <span className="rounded-full bg-muted px-2 py-px text-[11px] font-medium text-foreground">{labels.today}</span>}
               </span>

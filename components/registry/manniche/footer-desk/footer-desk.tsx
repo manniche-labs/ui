@@ -191,9 +191,9 @@ export function FooterDesk({
                 <span className="inline-flex min-h-11 max-w-full items-center rounded-full bg-muted pr-1.5 pl-4">
                   <a
                     href={`mailto:${email}`}
-                    className="min-w-0 truncate rounded-sm font-mono text-[13px] underline-offset-4 hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
+                    className="flex min-h-11 min-w-0 items-center rounded-sm font-mono text-[13px] underline-offset-4 hover:underline focus-visible:outline-2 focus-visible:outline-offset-0 focus-visible:outline-ring"
                   >
-                    {email}
+                    <span className="truncate">{email}</span>
                   </a>
                   <button
                     type="button"
@@ -201,7 +201,7 @@ export function FooterDesk({
                     className="relative ml-2 grid size-9 flex-none cursor-pointer place-items-center rounded-full text-muted-foreground transition-[opacity] duration-200 ease-out-quint hover:text-foreground focus-visible:outline-2 focus-visible:outline-offset-0 focus-visible:outline-ring before:absolute before:-inset-y-1 before:inset-x-0 before:content-['']"
                   >
                     <span className="sr-only">{t.copy}</span>
-                    <Copy aria-hidden className={cn('absolute size-4 transition-[opacity] duration-200 ease-out-quint', copy === 'idle' ? 'opacity-100' : 'opacity-0')} />
+                    <Copy aria-hidden className={cn('absolute size-4 transition-[opacity] duration-200 ease-out-quint', copy === 'copied' ? 'opacity-0' : 'opacity-100')} />
                     <Check aria-hidden className={cn('absolute size-4 transition-[opacity] duration-200 ease-out-quint', copy === 'copied' ? 'opacity-100' : 'opacity-0')} />
                   </button>
                 </span>
@@ -213,7 +213,7 @@ export function FooterDesk({
                   >
                     {bookCall.label}
                     <ArrowUpRight aria-hidden className="size-4" />
-                    {bookCall.external && <span className="sr-only">{t.newTab}</span>}
+                    {bookCall.external && <span className="sr-only"> {t.newTab}</span>}
                   </a>
                 )}
                 <span role="status" className={cn('text-[13px] text-muted-foreground', copy === 'idle' && 'sr-only')}>

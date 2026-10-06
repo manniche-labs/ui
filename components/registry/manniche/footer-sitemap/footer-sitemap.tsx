@@ -94,7 +94,7 @@ function LinkList({ links, newTab }: { links: SitemapLink[]; newTab: string }) {
             )}
           >
             {l.label}
-            {l.external && <span className="sr-only">{newTab}</span>}
+            {l.external && <span className="sr-only"> {newTab}</span>}
           </a>
         </li>
       ))}
