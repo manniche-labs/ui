@@ -342,7 +342,7 @@ export function Donut({
                   )}
                 >
                   <i aria-hidden className="size-3 rounded-[4px]" style={{ background: d.color ?? seriesColor(k) }} />
-                  <span className="truncate">{d.label}</span>
+                  <span className="py-2 leading-snug [overflow-wrap:anywhere]">{d.label}</span>
                   <span aria-hidden className="font-medium whitespace-nowrap tabular-nums">
                     {p.sign}
                     {!p.unitAfter && unit}
