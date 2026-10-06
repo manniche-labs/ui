@@ -4,6 +4,7 @@
 
 ### Added
 
+- Six page sections from phase 6 (#26), each with a demo and example data: `bento-features` (a bento grid with one inverted lead tile), `bento-metrics` (figures that roll in once on first view and are final at once under reduced motion), `bento-product` (a media tile that cross-fades between variants), `bento-steps` (numbered steps joined by a line, with done, now and up next in words), `cta-band` (an inverted call-to-action band) and `cta-signup` (an email card with validation, a sending state and a confirmation; it sends nothing itself).
 - Four dashboard templates built from the Tiles data primitives (#25): `spend-control` (company spend with virtual cards and a merchant bubble chart), `widget-wall` (thirteen widgets), `workspace-home` (search, offer, deals and the week's schedule) and `sales-floor` (target dial, live call card, bars per seller). Buttons on an inverted tile stay visible, tiles fill their row, and every demo uses example data.
 - `HANDOFF.md`: phase 6 started; footers (#28) and bento + CTA (#26) are written as draft PRs, with what each still needs.
 - `HANDOFF.md` updated after the lab export: phases 2–5 and the Tiles pass are live on mikkelmanniche.dk/lab (site PR #109), with how to deploy to /lab; the open browser checks for phase 5 are still open.

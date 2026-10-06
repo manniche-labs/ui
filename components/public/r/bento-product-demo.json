@@ -1,0 +1,20 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "bento-product-demo",
+  "title": "Bento product demo",
+  "description": "How to use Bento product.",
+  "registryDependencies": [
+    "@manniche/bento-product"
+  ],
+  "files": [
+    {
+      "path": "registry/manniche/examples/bento-product-demo.tsx",
+      "content": "import { BentoProduct, type ProductVariant } from '@/registry/manniche/bento-product/bento-product'\n\n// An invented product for the demo. Colour is never the only signal: each variant is named in words.\nconst VARIANTS: ProductVariant[] = [\n  { id: 'ink', label: 'Ink', price: 189, mediaLabel: 'Halden desk lamp in ink' },\n  { id: 'sage', label: 'Sage', price: 189, mediaLabel: 'Halden desk lamp in sage' },\n  { id: 'honey', label: 'Honey', price: 209, mediaLabel: 'Halden desk lamp in honey' },\n]\n\nconst BODY: Record<string, string> = { ink: 'var(--foreground)', sage: 'var(--chart-4)', honey: 'var(--chart-2)' }\n\nfunction Lamp({ variant }: { variant: ProductVariant }) {\n  const fill = BODY[variant.id]\n  return (\n    // The floor runs far past the view box, so it fills the tile edge to edge and down to the bottom at any aspect\n    // ratio; the tile's rounded corners clip it.\n    <svg viewBox=\"0 0 400 300\" className=\"size-full overflow-visible\" preserveAspectRatio=\"xMidYMid meet\" aria-hidden>\n      <rect x=\"-2000\" y=\"244\" width=\"4400\" height=\"2000\" className=\"fill-muted\" />\n      <ellipse cx=\"150\" cy=\"248\" rx=\"62\" ry=\"9\" className=\"fill-foreground/10\" />\n      <rect x=\"104\" y=\"232\" width=\"92\" height=\"16\" rx=\"8\" style={{ fill }} />\n      <path d=\"M150 232 V132 L236 66\" fill=\"none\" strokeWidth=\"9\" strokeLinecap=\"round\" strokeLinejoin=\"round\" style={{ stroke: fill }} />\n      <circle cx=\"150\" cy=\"132\" r=\"8\" className=\"fill-card stroke-foreground/30\" strokeWidth=\"2\" />\n      <path d=\"M208 52 l54 -16 l22 46 a40 40 0 0 1 -54 16 z\" style={{ fill }} />\n      <path d=\"M232 100 L300 252\" stroke=\"var(--primary)\" strokeOpacity=\"0.35\" strokeWidth=\"1.5\" strokeDasharray=\"3 6\" />\n    </svg>\n  )\n}\n\nexport default function BentoProductDemo() {\n  return (\n    <BentoProduct\n      eyebrow=\"Halden Studio, Munich\"\n      name=\"The Halden desk lamp.\"\n      intro=\"A lamp that does one thing well. Example product for a demo company.\"\n      variantLabel=\"Colour\"\n      variants={VARIANTS}\n      media={(v) => <Lamp variant={v} />}\n      specs={[\n        { label: 'Weight', value: '1.2 kg' },\n        { label: 'Height', value: '48 cm, arm folds' },\n        { label: 'Light', value: '2700 K, dimmable' },\n        { label: 'Cable', value: '1.8 m, textile' },\n      ]}\n      priceNote=\"Incl. VAT. Ships in 3 to 5 working days.\"\n      action={{ label: 'Add to basket', href: 'https://example.com/basket' }}\n    />\n  )\n}\n",
+      "type": "registry:example"
+    }
+  ],
+  "categories": [
+    "templates"
+  ],
+  "type": "registry:example"
+}
