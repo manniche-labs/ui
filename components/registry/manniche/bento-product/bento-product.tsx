@@ -149,7 +149,7 @@ export function BentoProduct({
             </div>
             <span
               aria-hidden
-              className="absolute bottom-4 left-4 rounded-full bg-muted px-3 py-1.5 font-mono text-[11.5px] leading-none text-muted-foreground tabular-nums"
+              className="absolute bottom-4 left-4 rounded-full bg-card px-3 py-1.5 shadow-[0_0_0_1px_color-mix(in_oklab,var(--foreground)_9%,transparent)] font-mono text-[11.5px] leading-none text-muted-foreground tabular-nums"
             >
               {variantLabel}: {variant.label}
             </span>

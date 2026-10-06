@@ -26,6 +26,8 @@ export type BentoStepsLabels = {
   done?: string
   /** Shown on the current step. Default "Now". */
   now?: string
+  /** Read aloud before each step number. Not shown. Default "Step". */
+  step?: string
   /** Read aloud on the steps after the current one. Not shown. Default "Up next". */
   upcoming?: string
 }
@@ -52,7 +54,7 @@ const COLS: Record<number, string> = {
   5: '@3xl:grid-cols-5',
 }
 
-const DEFAULT_LABELS = { done: 'Done', now: 'Now', upcoming: 'Up next' } satisfies Required<BentoStepsLabels>
+const DEFAULT_LABELS = { step: 'Step', done: 'Done', now: 'Now', upcoming: 'Up next' } satisfies Required<BentoStepsLabels>
 
 export function BentoSteps({ heading, intro, eyebrow, steps, current, labels, className, ...rest }: BentoStepsProps) {
   const headingId = useId()
@@ -93,7 +95,7 @@ export function BentoSteps({ heading, intro, eyebrow, steps, current, labels, cl
                 >
                   <div className="flex min-h-7 items-center justify-between gap-3">
                     <span className="font-mono text-[12px] tracking-[0.04em] text-muted-foreground tabular-nums">
-                      <span className="sr-only">Step </span>
+                      <span className="sr-only">{t.step} </span>
                       {String(i + 1).padStart(2, '0')}
                     </span>
                     {state ? (

@@ -105,6 +105,7 @@ export function CtaSignup({
   const errorId = `${uid}-error`
   const consentId = `${uid}-consent`
   const inputRef = useRef<HTMLInputElement>(null)
+  const resetRef = useRef<HTMLButtonElement>(null)
   const alive = useRef(false)
   const [value, setValue] = useState('')
   const [touched, setTouched] = useState(false)
@@ -118,6 +119,12 @@ export function CtaSignup({
       alive.current = false
     }
   }, [])
+
+  // The submit button goes away with the form, so focus moves to the success state's only control instead of
+  // falling back to the page. The live region still reads the confirmation.
+  useEffect(() => {
+    if (status === 'sent') resetRef.current?.focus()
+  }, [status])
 
   const trimmed = value.trim()
   const problem = !trimmed ? l.required : !EMAIL.test(trimmed) ? l.invalid : null
@@ -164,7 +171,7 @@ export function CtaSignup({
     <section
       aria-labelledby={headingId}
       {...rest}
-      className={cn('@container mx-auto w-full max-w-6xl px-4 sm:px-6', className)}
+      className={cn('@container mx-auto w-full max-w-6xl px-4 py-12 sm:px-6 @3xl:py-20', className)}
     >
       <div className="grid gap-10 rounded-[calc(var(--radius)*2+2px)] bg-card px-6 py-8 text-card-foreground shadow-[0_0_0_1px_color-mix(in_oklab,var(--foreground)_9%,transparent),0_1px_2px_rgba(0,0,0,0.03)] @min-[40rem]:px-10 @min-[40rem]:py-12 @min-[56rem]:grid-cols-2 @min-[56rem]:gap-16 @min-[64rem]:px-14 @min-[64rem]:py-14">
         <div className="min-w-0">
@@ -200,6 +207,7 @@ export function CtaSignup({
                 <p className="mt-2 text-[15px] leading-relaxed text-muted-foreground">{l.successText}</p>
                 <p className="mt-1 font-mono text-[13px] leading-relaxed break-all tabular-nums">{sentTo}</p>
                 <button
+                  ref={resetRef}
                   type="button"
                   onClick={reset}
                   className="mt-4 -ml-3 inline-flex min-h-11 items-center rounded-full px-3 text-sm font-medium underline underline-offset-4 transition-[opacity,transform] duration-150 ease-out-quint hover:opacity-70 active:scale-[0.97] motion-reduce:transition-none"
@@ -233,7 +241,7 @@ export function CtaSignup({
                   aria-invalid={showProblem ? true : undefined}
                   aria-describedby={describedBy}
                   className={cn(
-                    'h-12 min-w-0 flex-1 rounded-[14px] bg-background px-4 text-base text-foreground shadow-[inset_0_0_0_1px_var(--border)] outline-offset-2 placeholder:text-muted-foreground/70',
+                    'h-12 w-full min-w-0 rounded-[14px] @min-[32rem]:flex-1 bg-background px-4 text-base text-foreground shadow-[inset_0_0_0_1px_var(--border)] outline-offset-2 placeholder:text-muted-foreground/70',
                     showProblem && 'shadow-[inset_0_0_0_1.5px_var(--destructive)]',
                   )}
                   placeholder="name@example.com"
