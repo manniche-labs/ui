@@ -1,0 +1,20 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "footer-desk-demo",
+  "title": "Footer Desk demo",
+  "description": "How to use Footer Desk.",
+  "registryDependencies": [
+    "@manniche/footer-desk"
+  ],
+  "files": [
+    {
+      "path": "registry/manniche/examples/footer-desk-demo.tsx",
+      "content": "import { useState } from 'react'\nimport { Pills } from '@/registry/manniche/chart-kit/chart-kit'\nimport { FooterDesk } from '@/registry/manniche/footer-desk/footer-desk'\n\nconst legal = (\n  <>\n    <span>© 2026 Halden Studio</span>\n    <a href=\"https://example.com/privacy\" className=\"inline-flex min-h-11 items-center underline-offset-4 hover:underline focus-visible:outline-2 focus-visible:outline-ring\">\n      Privacy\n    </a>\n    <a href=\"https://example.com/imprint\" className=\"inline-flex min-h-11 items-center underline-offset-4 hover:underline focus-visible:outline-2 focus-visible:outline-ring\">\n      Imprint\n    </a>\n  </>\n)\n\nconst DESKS = {\n  // Two offices in one offset: the \"Same time\" chip shows, and the clocks tick.\n  same: {\n    heading: 'Talk to a person, not a form.',\n    description: 'Halden Studio is a small product studio in Munich and Aalborg. Write to Mara and you get Mara.',\n    contact: { name: 'Mara Lindqvist', role: 'Studio lead' },\n    email: 'hello@example.com',\n    bookCall: { label: 'Book a call', href: 'https://example.com/call' },\n    offices: [\n      { city: 'Munich', timeZone: 'Europe/Berlin' },\n      { city: 'Aalborg', timeZone: 'Europe/Copenhagen' },\n    ],\n  },\n  // Three offsets and a fixed moment, so the layout is stable.\n  spread: {\n    heading: 'Ask us anything.',\n    contact: { name: 'Jonas Albrecht', role: 'Partnerships', initials: 'JA' },\n    email: 'partners@example.com',\n    bookCall: { label: 'Book a call', href: 'https://example.com/call', external: true },\n    offices: [\n      { city: 'Munich', timeZone: 'Europe/Berlin' },\n      { city: 'Lisbon', timeZone: 'Europe/Lisbon' },\n      { city: 'New York', timeZone: 'America/New_York' },\n    ],\n    now: new Date('2026-10-06T14:20:00Z'),\n  },\n}\n\nexport default function FooterDeskDemo() {\n  const [desk, setDesk] = useState<keyof typeof DESKS>('same')\n  return (\n    <div className=\"grid gap-8 py-8\">\n      <div className=\"mx-auto flex w-full max-w-6xl flex-wrap items-center gap-3 px-4 sm:px-6\">\n        <span className=\"font-mono text-[11px] tracking-[0.08em] text-muted-foreground uppercase\">Offices</span>\n        <Pills\n          label=\"Offices\"\n          value={desk}\n          onChange={(id) => setDesk(id as keyof typeof DESKS)}\n          options={[\n            { id: 'same', label: 'One zone' },\n            { id: 'spread', label: 'Three' },\n          ]}\n        />\n      </div>\n      <FooterDesk key={desk} {...DESKS[desk]} legal={legal} />\n    </div>\n  )\n}\n",
+      "type": "registry:example"
+    }
+  ],
+  "categories": [
+    "templates"
+  ],
+  "type": "registry:example"
+}
