@@ -7,7 +7,10 @@
 // finger dragging across the ring all behave the same. The legend is a real list of buttons and the keyboard path:
 // one Tab stop, arrow keys, Home and End move between rows, and the row and its segment light each other.
 //
-// Screen readers: the ring is one image named "<label>. Total €1,383."; the list is the data, so each row reads
+// A target draws a short mark across the ring where the goal falls, and the centre reads how far the total has come
+// ("92% of target"). The centre can also be replaced with your own content for when nothing is active.
+//
+// Screen readers: the ring is one image named "<label>. Total €1,383." (plus "Target €1,500." with a target); the list is the data, so each row reads
 // "Groceries: €415, 30 percent" as focus lands on it. Nothing else is announced, so nothing is read twice.
 //
 // Motion: on first view the segments fade in and turn a few degrees into place, one after another (all done in
@@ -21,97 +24,126 @@ import {
   type HTMLAttributes,
   type KeyboardEvent,
   type PointerEvent,
-} from 'react'
-import { cn } from '@/lib/utils'
-import { BigNumber } from '@/registry/manniche/chart-kit/chart-kit'
-import { EASE_CSS, formatValue, seriesColor, stepIndex, valueParts, type ValueFormat } from '@/registry/manniche/chart-kit/chart-utils'
-import { useChartFrame } from '@/registry/manniche/chart-kit/use-chart'
+  type ReactNode,
+} from "react";
+import { cn } from "@/lib/utils";
+import { BigNumber } from "@/registry/manniche/chart-kit/chart-kit";
+import {
+  EASE_CSS,
+  formatValue,
+  seriesColor,
+  stepIndex,
+  valueParts,
+  type ValueFormat,
+} from "@/registry/manniche/chart-kit/chart-utils";
+import { useChartFrame } from "@/registry/manniche/chart-kit/use-chart";
 
 export type DonutDatum = {
   /** The category's name, shown in the list and read aloud. Also the row's key, so keep it unique. */
-  label: string
+  label: string;
   /** The amount. Negative values count as zero. */
-  value: number
+  value: number;
   /** Any CSS colour. Defaults to the series colours --chart-1 … --chart-5 in order. */
-  color?: string
-}
+  color?: string;
+};
 
 export type DonutLabels = {
   /** The centre label when no category is active. Default "Total". */
-  total?: string
+  total?: string;
   /** After the share in the centre, as in "30% of total". Default "of total". */
-  ofTotal?: string
+  ofTotal?: string;
   /** The word after a share for screen readers, as in "30 percent". Default "percent". */
-  percent?: string
-}
+  percent?: string;
+  /** Names the target for screen readers, as in "Target €1,500". Default "Target". */
+  target?: string;
+  /** After the progress in the centre, as in "92% of target". Default "of target". */
+  ofTarget?: string;
+};
 
-export type DonutProps = Omit<HTMLAttributes<HTMLDivElement>, 'children' | 'onSelect'> & {
+export type DonutProps = Omit<
+  HTMLAttributes<HTMLDivElement>,
+  "children" | "onSelect"
+> & {
   /** One entry per category, in the order the ring and the list show them: `{ label, value, color? }`. */
-  data: DonutDatum[]
+  data: DonutDatum[];
   /** What the chart shows, such as "Spending by category, last 30 days". Names the ring and the list. */
-  label: string
+  label: string;
   /** How values are written. Default: a plain whole number in en-GB. */
-  format?: ValueFormat
+  format?: ValueFormat;
   /**
    * The whole the shares are taken of. Leave it out to use the sum of `data`. A larger total (a budget, say)
    * leaves the rest of the ring empty.
    */
-  total?: number
+  total?: number;
+  /**
+   * A goal to measure the total against. The ring gets a mark where it falls, and the centre reads the progress when
+   * nothing is active. A target above the total (or the sum) widens the ring to fit it.
+   */
+  target?: number;
+  /** Your own centre content, shown when no category is active. The active category still takes over the centre. */
+  centre?: ReactNode;
   /** "row" puts the list beside the ring, "stack" puts it under; "auto" (default) picks by the width available. */
-  layout?: 'auto' | 'row' | 'stack'
+  layout?: "auto" | "row" | "stack";
   /** The highlighted category, or null for none. Pass it to control the highlight; leave it out to let the chart. */
-  activeIndex?: number | null
+  activeIndex?: number | null;
   /** The highlighted category on first render when uncontrolled. Default null. */
-  defaultActiveIndex?: number | null
+  defaultActiveIndex?: number | null;
   /** Called when the highlight moves by pointer, focus or keys, with null when it clears. */
-  onActiveIndexChange?: (index: number | null) => void
+  onActiveIndexChange?: (index: number | null) => void;
   /** Called when a row is clicked or pressed with Enter or Space, for drilling into a category. */
-  onSelect?: (index: number) => void
+  onSelect?: (index: number) => void;
   /** Words for other languages. */
-  labels?: DonutLabels
+  labels?: DonutLabels;
   /** "compact" draws a smaller ring and tighter gaps. Inside a compact DataTile this happens on its own. */
-  density?: 'comfortable' | 'compact'
-}
+  density?: "comfortable" | "compact";
+};
 
 // The ring in a 200 × 200 box: radius 74, 30 wide, 5° between segments plus room for the round caps.
-const C = 100
-const R = 74
-const SW = 30
-const GAP = 5
-const CAP = ((SW / 2 / R) * 180) / Math.PI
-const rad = (deg: number) => (deg * Math.PI) / 180
-const pt = (deg: number) => [C + R * Math.cos(rad(deg)), C + R * Math.sin(rad(deg))] as const
-const f2 = (v: number) => v.toFixed(2)
+const C = 100;
+const R = 74;
+const SW = 30;
+const GAP = 5;
+const CAP = ((SW / 2 / R) * 180) / Math.PI;
+const rad = (deg: number) => (deg * Math.PI) / 180;
+const pt = (deg: number) =>
+  [C + R * Math.cos(rad(deg)), C + R * Math.sin(rad(deg))] as const;
+const f2 = (v: number) => v.toFixed(2);
 
-type Seg = { d: string; mid: number; from: number; to: number }
+type Seg = { d: string; mid: number; from: number; to: number };
 
 function geometry(values: number[], whole: number): Seg[] {
-  let a0 = -90
+  let a0 = -90;
   return values.map((v) => {
-    const span = whole > 0 ? (v / whole) * 360 : 0
-    const s0 = a0 + CAP + GAP / 2
-    const s1 = a0 + span - CAP - GAP / 2
+    const span = whole > 0 ? (v / whole) * 360 : 0;
+    const s0 = a0 + CAP + GAP / 2;
+    const s1 = a0 + span - CAP - GAP / 2;
     // A slice too thin for its caps is drawn as a dot in its middle.
-    const start = s1 > s0 ? s0 : a0 + span / 2 - 0.25
-    const end = Math.max(s1, start + 0.5)
-    const [x0, y0] = pt(start)
-    const [x1, y1] = pt(end)
+    const start = s1 > s0 ? s0 : a0 + span / 2 - 0.25;
+    const end = Math.max(s1, start + 0.5);
+    const [x0, y0] = pt(start);
+    const [x1, y1] = pt(end);
     const seg = {
-      d: span > 0 ? `M${f2(x0)} ${f2(y0)}A${R} ${R} 0 ${end - start > 180 ? 1 : 0} 1 ${f2(x1)} ${f2(y1)}` : '',
+      d:
+        span > 0
+          ? `M${f2(x0)} ${f2(y0)}A${R} ${R} 0 ${end - start > 180 ? 1 : 0} 1 ${f2(x1)} ${f2(y1)}`
+          : "",
       mid: (start + end) / 2,
       from: a0,
       to: a0 + span,
-    }
-    a0 += span
-    return seg
-  })
+    };
+    a0 += span;
+    return seg;
+  });
 }
 
 /** The figure in the centre is sized to the ring and shrinks for long numbers, so it always fits the hole. */
 function centreSize(text: string) {
   // Rough widths in em: digits 0.6, separators 0.28, the small currency sign 0.3. The hole is 52 % of the figure.
-  const em = [...text].reduce((w, ch) => w + (/\d/.test(ch) ? 0.6 : /[\s.,'’]/.test(ch) ? 0.28 : 0.3), 0)
-  return `clamp(18px, min(17cqi, ${f2(52 / Math.max(em, 2))}cqi), 36px)`
+  const em = [...text].reduce(
+    (w, ch) => w + (/\d/.test(ch) ? 0.6 : /[\s.,'’]/.test(ch) ? 0.28 : 0.3),
+    0,
+  );
+  return `clamp(18px, min(17cqi, ${f2(52 / Math.max(em, 2))}cqi), 36px)`;
 }
 
 export function Donut({
@@ -119,7 +151,9 @@ export function Donut({
   label,
   format,
   total,
-  layout = 'auto',
+  target,
+  centre,
+  layout = "auto",
   activeIndex,
   defaultActiveIndex = null,
   onActiveIndexChange,
@@ -130,129 +164,164 @@ export function Donut({
   style,
   ...rest
 }: DonutProps) {
-  const { total: totalWord = 'Total', ofTotal = 'of total', percent = 'percent' } = labels ?? {}
-  const { ref, drawn, reduced } = useChartFrame<HTMLDivElement>()
-  const [own, setOwn] = useState<number | null>(defaultActiveIndex)
-  const raw = activeIndex !== undefined ? activeIndex : own
-  const active = raw !== null && raw >= 0 && raw < data.length ? raw : null
-  const rootRef = useRef<HTMLDivElement | null>(null)
-  const rows = useRef<(HTMLButtonElement | null)[]>([])
+  const {
+    total: totalWord = "Total",
+    ofTotal = "of total",
+    percent = "percent",
+    target: targetWord = "Target",
+    ofTarget = "of target",
+  } = labels ?? {};
+  const { ref, drawn, reduced } = useChartFrame<HTMLDivElement>();
+  const [own, setOwn] = useState<number | null>(defaultActiveIndex);
+  const raw = activeIndex !== undefined ? activeIndex : own;
+  const active = raw !== null && raw >= 0 && raw < data.length ? raw : null;
+  const rootRef = useRef<HTMLDivElement | null>(null);
+  const rows = useRef<(HTMLButtonElement | null)[]>([]);
   // Where Tab lands: the last row the keyboard used, else the active row, else the first.
-  const [cursor, setCursor] = useState(0)
-  const [settled, setSettled] = useState(false)
+  const [cursor, setCursor] = useState(0);
+  const [settled, setSettled] = useState(false);
 
-  const values = data.map((d) => Math.max(0, d.value))
-  const sum = values.reduce((a, b) => a + b, 0)
-  const whole = Math.max(total ?? sum, sum)
-  const segs = geometry(values, whole)
-  const share = (v: number) => (whole > 0 ? Math.round((v / whole) * 100) : 0)
-  const pct = (v: number) => formatValue(share(v), { locale: format?.locale, suffix: '%' })
+  const values = data.map((d) => Math.max(0, d.value));
+  const sum = values.reduce((a, b) => a + b, 0);
+  const goal = target !== undefined && target > 0 ? target : null;
+  const whole = Math.max(total ?? sum, sum, goal ?? 0);
+  const segs = geometry(values, whole);
+  const share = (v: number) => (whole > 0 ? Math.round((v / whole) * 100) : 0);
+  const pct = (v: number) =>
+    formatValue(share(v), { locale: format?.locale, suffix: "%" });
 
   const set = (i: number | null) => {
-    if (i === active) return
-    if (activeIndex === undefined) setOwn(i)
-    onActiveIndexChange?.(i)
-  }
-  const latest = useRef(set)
+    if (i === active) return;
+    if (activeIndex === undefined) setOwn(i);
+    onActiveIndexChange?.(i);
+  };
+  const latest = useRef(set);
   useEffect(() => {
-    latest.current = set
-  })
+    latest.current = set;
+  });
 
   // After the entrance, hover moves drop the stagger delay.
   useEffect(() => {
-    if (!drawn || settled) return
-    const t = window.setTimeout(() => setSettled(true), reduced ? 0 : 620)
-    return () => window.clearTimeout(t)
-  }, [drawn, settled, reduced])
+    if (!drawn || settled) return;
+    const t = window.setTimeout(() => setSettled(true), reduced ? 0 : 620);
+    return () => window.clearTimeout(t);
+  }, [drawn, settled, reduced]);
 
   // A tap that left a segment lit on a touch screen clears when the next tap lands outside the chart.
-  const sticky = active !== null
+  const sticky = active !== null;
   useEffect(() => {
-    if (!sticky) return
+    if (!sticky) return;
     const off = (e: globalThis.PointerEvent) => {
-      const root = rootRef.current
-      if (root && !root.contains(e.target as Node)) latest.current(null)
-    }
-    document.addEventListener('pointerdown', off)
-    return () => document.removeEventListener('pointerdown', off)
-  }, [sticky])
+      const root = rootRef.current;
+      if (root && !root.contains(e.target as Node)) latest.current(null);
+    };
+    document.addEventListener("pointerdown", off);
+    return () => document.removeEventListener("pointerdown", off);
+  }, [sticky]);
 
   const focusedRow = () => {
-    const i = rows.current.findIndex((r) => r && r === document.activeElement)
-    return i < 0 ? null : i
-  }
+    const i = rows.current.findIndex((r) => r && r === document.activeElement);
+    return i < 0 ? null : i;
+  };
 
   const onRingPointer = (e: PointerEvent<SVGSVGElement>) => {
-    const box = e.currentTarget.getBoundingClientRect()
-    if (!box.width) return
-    const x = ((e.clientX - box.left) / box.width) * 200 - C
-    const y = ((e.clientY - box.top) / box.height) * 200 - C
-    const dist = Math.hypot(x, y)
-    if (dist < R - SW / 2 - 6 || dist > R + SW / 2 + 10) return
-    let deg = (Math.atan2(y, x) * 180) / Math.PI
-    if (deg < -90) deg += 360
-    const i = segs.findIndex((s) => deg >= s.from && deg < s.to)
-    if (i >= 0) set(i)
-  }
+    const box = e.currentTarget.getBoundingClientRect();
+    if (!box.width) return;
+    const x = ((e.clientX - box.left) / box.width) * 200 - C;
+    const y = ((e.clientY - box.top) / box.height) * 200 - C;
+    const dist = Math.hypot(x, y);
+    if (dist < R - SW / 2 - 6 || dist > R + SW / 2 + 10) return;
+    let deg = (Math.atan2(y, x) * 180) / Math.PI;
+    if (deg < -90) deg += 360;
+    const i = segs.findIndex((s) => deg >= s.from && deg < s.to);
+    if (i >= 0) set(i);
+  };
   const onRingLeave = (e: PointerEvent<SVGSVGElement>) => {
     // A finger lifting keeps its segment; a mouse leaving lets go unless a row has focus.
-    if (e.pointerType === 'touch') return
-    set(focusedRow())
-  }
+    if (e.pointerType === "touch") return;
+    set(focusedRow());
+  };
 
   const onKey = (e: KeyboardEvent<HTMLButtonElement>, i: number) => {
-    if (e.key === 'Escape') {
-      if (active === null) return
-      e.preventDefault()
-      set(null)
-      return
+    if (e.key === "Escape") {
+      if (active === null) return;
+      e.preventDefault();
+      set(null);
+      return;
     }
-    const key = e.key === 'ArrowDown' ? 'ArrowRight' : e.key === 'ArrowUp' ? 'ArrowLeft' : e.key
-    const to = stepIndex(key, i, data.length)
-    if (to === null) return
-    e.preventDefault()
-    rows.current[to]?.focus()
-  }
+    const key =
+      e.key === "ArrowDown"
+        ? "ArrowRight"
+        : e.key === "ArrowUp"
+          ? "ArrowLeft"
+          : e.key;
+    const to = stepIndex(key, i, data.length);
+    if (to === null) return;
+    e.preventDefault();
+    rows.current[to]?.focus();
+  };
 
-  const stagger = data.length > 1 ? Math.min(60, 240 / (data.length - 1)) : 0
-  const tabStop = Math.min(active ?? cursor, Math.max(0, data.length - 1))
-  const centreValue = active === null ? whole : values[active]
-  const centreText = formatValue(centreValue, format)
+  const stagger = data.length > 1 ? Math.min(60, 240 / (data.length - 1)) : 0;
+  const tabStop = Math.min(active ?? cursor, Math.max(0, data.length - 1));
+  const centreValue =
+    active === null ? (goal === null ? whole : sum) : values[active];
+  const centreText = formatValue(centreValue, format);
+  // The target mark crosses the ring a little past both edges, at the goal's share of the whole.
+  const goalDeg =
+    goal !== null && whole > 0 ? -90 + (goal / whole) * 360 : null;
+  const goalLine =
+    goalDeg === null
+      ? null
+      : [R - SW / 2 - 5, R + SW / 2 + 5].map((r) => [
+          C + r * Math.cos(rad(goalDeg)),
+          C + r * Math.sin(rad(goalDeg)),
+        ]);
+  const progress =
+    goal === null
+      ? ""
+      : `${formatValue(Math.round((sum / goal) * 100), { locale: format?.locale, suffix: "%" })} ${ofTarget}`;
 
   return (
     <div
       ref={(el) => {
-        ref(el)
-        rootRef.current = el
+        ref(el);
+        rootRef.current = el;
       }}
-      className={cn('@container w-full min-w-0', className)}
+      className={cn("@container w-full min-w-0", className)}
       style={style}
       {...rest}
     >
       <div
         data-layout={layout}
         className={cn(
-          'grid grid-cols-1 items-center justify-center justify-items-center gap-4',
-          'group-data-[density=compact]/tile:gap-3',
-          density === 'compact' && 'gap-3',
-          layout === 'row' && 'grid-cols-[minmax(150px,210px)_minmax(0,24rem)] gap-6',
-          layout === 'row' && 'group-data-[density=compact]/tile:grid-cols-[minmax(120px,168px)_minmax(0,24rem)] group-data-[density=compact]/tile:gap-4',
-          layout === 'row' && density === 'compact' && 'grid-cols-[minmax(120px,168px)_minmax(0,24rem)] gap-4',
-          layout === 'auto' && '@[26rem]:grid-cols-[minmax(150px,210px)_minmax(0,24rem)] @[26rem]:gap-6',
-          layout === 'auto' &&
-            'group-data-[density=compact]/tile:@[26rem]:grid-cols-[minmax(120px,168px)_minmax(0,24rem)] group-data-[density=compact]/tile:@[26rem]:gap-4',
-          layout === 'auto' && density === 'compact' && '@[26rem]:grid-cols-[minmax(120px,168px)_minmax(0,24rem)] @[26rem]:gap-4',
+          "grid grid-cols-1 items-center justify-center justify-items-center gap-4",
+          "group-data-[density=compact]/tile:gap-3",
+          density === "compact" && "gap-3",
+          layout === "row" &&
+            "grid-cols-[minmax(150px,210px)_minmax(0,24rem)] gap-6",
+          layout === "row" &&
+            "group-data-[density=compact]/tile:grid-cols-[minmax(120px,168px)_minmax(0,24rem)] group-data-[density=compact]/tile:gap-4",
+          layout === "row" &&
+            density === "compact" &&
+            "grid-cols-[minmax(120px,168px)_minmax(0,24rem)] gap-4",
+          layout === "auto" &&
+            "@[26rem]:grid-cols-[minmax(150px,210px)_minmax(0,24rem)] @[26rem]:gap-6",
+          layout === "auto" &&
+            "group-data-[density=compact]/tile:@[26rem]:grid-cols-[minmax(120px,168px)_minmax(0,24rem)] group-data-[density=compact]/tile:@[26rem]:gap-4",
+          layout === "auto" &&
+            density === "compact" &&
+            "@[26rem]:grid-cols-[minmax(120px,168px)_minmax(0,24rem)] @[26rem]:gap-4",
         )}
       >
         <div
           role="img"
-          aria-label={`${label}. ${totalWord} ${formatValue(whole, format)}.`}
+          aria-label={`${label}. ${totalWord} ${formatValue(goal === null ? whole : sum, format)}.${goal === null ? "" : ` ${targetWord} ${formatValue(goal, format)}.`}`}
           className={cn(
-            'relative @container aspect-square w-[min(100%,200px)] justify-self-center',
-            'group-data-[density=compact]/tile:w-[min(100%,168px)]',
-            density === 'compact' && 'w-[min(100%,168px)]',
-            layout !== 'stack' && '@[26rem]:w-full',
-            layout === 'row' && 'w-full',
+            "relative @container aspect-square w-[min(100%,200px)] justify-self-center",
+            "group-data-[density=compact]/tile:w-[min(100%,168px)]",
+            density === "compact" && "w-[min(100%,168px)]",
+            layout !== "stack" && "@[26rem]:w-full",
+            layout === "row" && "w-full",
           )}
         >
           <svg
@@ -264,86 +333,162 @@ export function Donut({
             onPointerLeave={onRingLeave}
           >
             {segs.map((s, k) => {
-              const hot = k === active
-              const m = rad(s.mid)
+              const hot = k === active;
+              const m = rad(s.mid);
               const moves = [
-                hot ? `translate(${f2(Math.cos(m) * 6)}px, ${f2(Math.sin(m) * 6)}px)` : '',
-                drawn ? '' : 'rotate(-28deg)',
-              ].join(' ')
+                hot
+                  ? `translate(${f2(Math.cos(m) * 6)}px, ${f2(Math.sin(m) * 6)}px)`
+                  : "",
+                drawn ? "" : "rotate(-28deg)",
+              ].join(" ");
               const segStyle: CSSProperties = {
                 stroke: data[k].color ?? seriesColor(k),
-                transformBox: 'view-box',
-                transformOrigin: '100px 100px',
-                transform: moves.trim() || 'none',
+                transformBox: "view-box",
+                transformOrigin: "100px 100px",
+                transform: moves.trim() || "none",
                 opacity: !drawn ? 0 : active !== null && !hot ? 0.26 : 1,
                 transition: reduced
-                  ? 'none'
+                  ? "none"
                   : settled
                     ? `transform 260ms ${EASE_CSS}, opacity 200ms ${EASE_CSS}`
                     : `transform 300ms ${EASE_CSS} ${Math.round(k * stagger)}ms, opacity 300ms ${EASE_CSS} ${Math.round(k * stagger)}ms`,
-              }
+              };
               return s.d ? (
-                <path key={data[k].label} d={s.d} fill="none" strokeWidth={SW} strokeLinecap="round" style={segStyle} />
-              ) : null
+                <path
+                  key={data[k].label}
+                  d={s.d}
+                  fill="none"
+                  strokeWidth={SW}
+                  strokeLinecap="round"
+                  style={segStyle}
+                />
+              ) : null;
             })}
+            {goalLine && (
+              <g
+                data-donut-target=""
+                style={{
+                  opacity: drawn ? 1 : 0,
+                  transition: reduced
+                    ? "none"
+                    : `opacity 300ms ${EASE_CSS} 360ms`,
+                }}
+              >
+                <line
+                  x1={f2(goalLine[0][0])}
+                  y1={f2(goalLine[0][1])}
+                  x2={f2(goalLine[1][0])}
+                  y2={f2(goalLine[1][1])}
+                  strokeWidth={8}
+                  strokeLinecap="round"
+                  className="stroke-background"
+                />
+                <line
+                  x1={f2(goalLine[0][0])}
+                  y1={f2(goalLine[0][1])}
+                  x2={f2(goalLine[1][0])}
+                  y2={f2(goalLine[1][1])}
+                  strokeWidth={3}
+                  strokeLinecap="round"
+                  className="stroke-foreground"
+                />
+              </g>
+            )}
           </svg>
-          <div aria-hidden className="pointer-events-none absolute inset-0 grid place-content-center justify-items-center text-center">
-            <span className="max-w-[11ch] text-[12.5px] leading-[1.2] font-medium text-balance text-muted-foreground">
-              {active === null ? totalWord : data[active].label}
-            </span>
-            <span className="mt-1" style={{ ['--dn-num' as string]: centreSize(centreText) }}>
-              <BigNumber value={centreValue} format={format} size="md" roll={drawn} className="text-[length:var(--dn-num)]" />
-            </span>
-            <span className="mt-1 min-h-[11px] font-mono text-[11px] leading-none font-medium text-muted-foreground tabular-nums">
-              {active === null ? '' : `${pct(values[active])} ${ofTotal}`}
-            </span>
-          </div>
+          {active === null && centre !== undefined ? (
+            <div
+              aria-hidden
+              className="pointer-events-none absolute inset-0 grid place-content-center justify-items-center text-center"
+            >
+              {centre}
+            </div>
+          ) : (
+            <div
+              aria-hidden
+              className="pointer-events-none absolute inset-0 grid place-content-center justify-items-center text-center"
+            >
+              <span className="max-w-[11ch] text-[12.5px] leading-[1.2] font-medium text-balance text-muted-foreground">
+                {active === null ? totalWord : data[active].label}
+              </span>
+              <span
+                className="mt-1"
+                style={{ ["--dn-num" as string]: centreSize(centreText) }}
+              >
+                <BigNumber
+                  value={centreValue}
+                  format={format}
+                  size="md"
+                  roll={drawn}
+                  className="text-[length:var(--dn-num)]"
+                />
+              </span>
+              <span className="mt-1 min-h-[11px] font-mono text-[11px] leading-none font-medium text-muted-foreground tabular-nums">
+                {active === null
+                  ? progress
+                  : `${pct(values[active])} ${ofTotal}`}
+              </span>
+            </div>
+          )}
         </div>
 
         <ul
           aria-label={label}
           className="grid w-full max-w-sm min-w-0 gap-0.5"
           onPointerLeave={(e) => {
-            if (e.pointerType !== 'touch') set(focusedRow())
+            if (e.pointerType !== "touch") set(focusedRow());
           }}
           onBlur={(e) => {
-            if (!e.currentTarget.contains(e.relatedTarget as Node | null)) set(null)
+            if (!e.currentTarget.contains(e.relatedTarget as Node | null))
+              set(null);
           }}
         >
           {data.map((d, k) => {
-            const on = k === active
-            const p = valueParts(values[k], format)
-            const unit = p.unit && <span className="font-normal text-muted-foreground">{p.unit}</span>
+            const on = k === active;
+            const p = valueParts(values[k], format);
+            const unit = p.unit && (
+              <span className="font-normal text-muted-foreground">
+                {p.unit}
+              </span>
+            );
             return (
               <li key={d.label} className="min-w-0">
                 <button
                   ref={(el) => {
-                    rows.current[k] = el
+                    rows.current[k] = el;
                   }}
                   type="button"
                   tabIndex={k === tabStop ? 0 : -1}
                   aria-label={`${d.label}: ${formatValue(values[k], format)}, ${share(values[k])} ${percent}`}
                   onPointerEnter={() => set(k)}
                   onFocus={() => {
-                    setCursor(k)
-                    set(k)
+                    setCursor(k);
+                    set(k);
                   }}
                   onClick={(e) => {
                     // Safari does not focus a button on click; focusing it keeps the row lit like everywhere else.
-                    e.currentTarget.focus()
-                    set(k)
-                    onSelect?.(k)
+                    e.currentTarget.focus();
+                    set(k);
+                    onSelect?.(k);
                   }}
                   onKeyDown={(e) => onKey(e, k)}
                   className={cn(
-                    'relative isolate grid min-h-11 w-full min-w-0 cursor-pointer grid-cols-[12px_minmax(0,1fr)_auto_40px] items-center gap-2.5 rounded-xl px-2.5 text-left text-sm focus-visible:outline-offset-0',
+                    "relative isolate grid min-h-11 w-full min-w-0 cursor-pointer grid-cols-[12px_minmax(0,1fr)_auto_40px] items-center gap-2.5 rounded-xl px-2.5 text-left text-sm focus-visible:outline-offset-0",
                     'before:absolute before:inset-0 before:-z-10 before:rounded-xl before:bg-muted before:opacity-0 before:transition-opacity before:duration-150 before:ease-out-quint before:content-[""] hover:before:opacity-100 motion-reduce:before:transition-none',
-                    on && 'before:opacity-100',
+                    on && "before:opacity-100",
                   )}
                 >
-                  <i aria-hidden className="size-3 rounded-[4px]" style={{ background: d.color ?? seriesColor(k) }} />
-                  <span className="py-2 leading-snug [overflow-wrap:anywhere]">{d.label}</span>
-                  <span aria-hidden className="font-medium whitespace-nowrap tabular-nums">
+                  <i
+                    aria-hidden
+                    className="size-3 rounded-[4px]"
+                    style={{ background: d.color ?? seriesColor(k) }}
+                  />
+                  <span className="py-2 leading-snug [overflow-wrap:anywhere]">
+                    {d.label}
+                  </span>
+                  <span
+                    aria-hidden
+                    className="font-medium whitespace-nowrap tabular-nums"
+                  >
                     {p.sign}
                     {!p.unitAfter && unit}
                     {p.whole}
@@ -351,17 +496,20 @@ export function Donut({
                     {p.unitAfter && <> {unit}</>}
                     {p.suffix}
                   </span>
-                  <span aria-hidden className="text-right font-mono text-[11.5px] leading-none text-muted-foreground tabular-nums">
+                  <span
+                    aria-hidden
+                    className="text-right font-mono text-[11.5px] leading-none text-muted-foreground tabular-nums"
+                  >
                     {pct(values[k])}
                   </span>
                 </button>
               </li>
-            )
+            );
           })}
         </ul>
       </div>
     </div>
-  )
+  );
 }
 
-export default Donut
+export default Donut;
