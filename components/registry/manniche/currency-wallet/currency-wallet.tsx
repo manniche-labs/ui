@@ -13,7 +13,8 @@ export type WalletCurrency = {
   spending: DonutDatum[]
   /** Share of the balance per holding, 0 to 1. */
   allocation: { id: string; label: string; share: number }[]
-  rewards: { points: number; next: number; tier: string; perks: string[] }
+  /** `tier` is the current tier, `nextTier` the one `next` more points reach. */
+  rewards: { points: number; next: number; tier: string; nextTier: string; perks: string[] }
 }
 
 export type CurrencyWalletProps = {
@@ -63,7 +64,7 @@ export function CurrencyWallet({ data, defaultCurrency, title = 'Currency wallet
           <div aria-hidden className="mt-4 h-1.5 overflow-hidden rounded-full bg-current/20">
             <div className="h-full origin-left rounded-full bg-current transition-transform duration-700 motion-reduce:transition-none" style={{ transform: `scaleX(${progress})` }} />
           </div>
-          <p className="mt-2 text-xs opacity-80">{l.toNext(cur.rewards.next, cur.rewards.tier)}</p>
+          <p className="mt-2 text-xs opacity-80">{l.toNext(cur.rewards.next, cur.rewards.nextTier)}</p>
           <ul className="mt-4 space-y-1 text-sm">
             {cur.rewards.perks.map((p) => (
               <li key={p}>{p}</li>
@@ -78,7 +79,7 @@ export function CurrencyWallet({ data, defaultCurrency, title = 'Currency wallet
             {cur.allocation.map((a) => (
               <li key={a.id}>
                 <TileFact label={a.label} aside={<span className="tabular-nums">{Math.round(a.share * 100)}%</span>}>
-                  <span aria-hidden className="mt-2 block h-2 overflow-hidden rounded-full bg-muted">
+                  <span aria-hidden className="mt-2 block h-2 w-full overflow-hidden rounded-full bg-muted">
                     <span className="block h-full origin-left rounded-full bg-chart-1 transition-transform duration-700 motion-reduce:transition-none" style={{ transform: `scaleX(${a.share})` }} />
                   </span>
                 </TileFact>

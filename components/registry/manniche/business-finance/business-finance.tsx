@@ -69,7 +69,16 @@ export function BusinessFinance({ data, format = DEFAULT_FORMAT, title = 'Busine
           <AreaChart className="mt-4" data={data.cashflow} label={`${l.income} and ${l.payments}`} format={format} compare />
         </DataTile>
         <DataTile title={l.growth} inverted className="@3xl:col-span-3 @6xl:col-span-4">
-          <Donut data={[{ label: l.growth, value: pct }, { label: data.growthTarget, value: Math.max(0, 100 - pct) }]} label={`${l.growth}, ${pct} percent of ${data.growthTarget}`} format={{ suffix: '%' }} total={100} />
+          {/* One segment against a whole of 100, held highlighted so the centre reads the share of the target rather
+              than "Total 100%". */}
+          <Donut
+            data={[{ label: l.growth, value: pct }]}
+            total={100}
+            activeIndex={0}
+            label={`${l.growth}, ${pct} percent of ${data.growthTarget}`}
+            format={{ suffix: '%' }}
+            labels={{ ofTotal: `of ${data.growthTarget}` }}
+          />
         </DataTile>
         <DataTile title={l.stock} className="@3xl:col-span-3 @6xl:col-span-4">
           <p className="text-sm font-medium text-muted-foreground">{data.stockName}</p>

@@ -17,7 +17,7 @@ const data: WalletCurrency[] = [
       { id: 'save', label: 'Savings', share: 0.45 },
       { id: 'trip', label: 'Trip pot', share: 0.15 },
     ],
-    rewards: { points: 3820, next: 1180, tier: 'Silver', perks: ['Free ATM withdrawals', 'Travel insurance'] },
+    rewards: { points: 3820, next: 1180, tier: 'Silver', nextTier: 'Gold', perks: ['Free ATM withdrawals', 'Travel insurance'] },
   },
   {
     code: 'USD',
@@ -32,7 +32,7 @@ const data: WalletCurrency[] = [
       { id: 'spend', label: 'Spending', share: 0.7 },
       { id: 'save', label: 'Savings', share: 0.3 },
     ],
-    rewards: { points: 640, next: 360, tier: 'Silver', perks: ['No fee on card payments abroad'] },
+    rewards: { points: 640, next: 360, tier: 'Silver', nextTier: 'Gold', perks: ['No fee on card payments abroad'] },
   },
   {
     code: 'DKK',
@@ -47,7 +47,7 @@ const data: WalletCurrency[] = [
       { id: 'spend', label: 'Spending', share: 0.55 },
       { id: 'save', label: 'Savings', share: 0.45 },
     ],
-    rewards: { points: 1210, next: 790, tier: 'Silver', perks: ['Free transfers between pots'] },
+    rewards: { points: 1210, next: 790, tier: 'Silver', nextTier: 'Gold', perks: ['Free transfers between pots'] },
   },
 ]
 
