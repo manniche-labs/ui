@@ -35,6 +35,9 @@
 
 ### Fixed
 
+- `dot-matrix`: on the top rows the tooltip opens below the cell, so it no longer covers the tile's title and figure.
+- `donut`: long legend names wrap instead of being cut off.
+- `data-tile`: `headingLevel` sets the title's heading level (default 3), so a page without an `h2` above its tiles keeps a sound outline.
 - `bubble-chart`: a tooltip opened by hover now closes on Escape without moving the pointer (WCAG 1.4.13).
 - `Pills` in `chart-kit`: segments are 44 px tall (were 36 px), so they meet the touch target size.
 - `week-schedule`: the day strip fits seven days at 320 px, so Sunday is no longer pushed out of view. Days stay 44 px tall.
