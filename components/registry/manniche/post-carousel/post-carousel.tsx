@@ -89,13 +89,15 @@ export function PostCarousel({
   const engine = useCarouselEngine({ count: n, index, defaultIndex, onIndexChange, step: width || 300, onFrame: paint })
   const current = engine.index
 
+  // The stage only exists while there are pictures, so watch it again when the first ones arrive.
+  const empty = !n
   useLayoutEffect(() => {
     const el = stage.current
     if (!el) return
     const ro = new ResizeObserver(([e]) => setWidth(Math.round(e.contentRect.width)))
     ro.observe(el)
     return () => ro.disconnect()
-  }, [])
+  }, [empty])
 
   // A new size or set of pictures: draw the current frame again.
   const { draw } = engine
