@@ -4,6 +4,8 @@
 
 ### Added
 
+- Four contact sections in the Tiles language (#27): `contact-channels` (a tile per channel with its response time, and a FAQ), `contact-form` (topic, character count, optional consent and an info tile), `contact-offices` (local time and an open or closed signal in words per office) and `contact-people` (person cards with a team filter and an email to copy). Focus stays put while a form sends, and status changes are announced to screen readers.
+- Seven footer sections in the Tiles language (#28): `footer-columns` (link columns and a newsletter tile), `footer-desk` (a contact person and office clocks), `footer-sitemap` (link groups that fold on a narrow box), `footer-slim` (one row with a theme switch), `footer-statement` (one large closing line), `footer-status` (a service status chip and the version) and `footer-tiles` (address, opening hours with an open-now signal, and links). Each adapts to its own box rather than the viewport, keeps 44 px targets, and is a <footer> landmark with a heading for screen readers.
 - Four finance templates in Tiles (#32), each with a demo and example data: `wallet-dashboard` (balance, a stack of payment cards, cash flow, a spending donut and subscriptions), `account-home` (a payment card, balance, a three-state dial and transactions), `currency-wallet` (a currency switch, rewards that name the next tier, a spending donut and allocation bars) and `business-finance` (income against payments, a growth ring against target, a stock sparkline, activity and a checklist). Amounts follow `locale` and `format`.
 - Five more templates in Tiles (#31), each with a demo and example data: `rental-portfolio` (portfolio figures, income against payouts, a rent-collection dial and transfers), `delivery-board` (client progress, a day strip that opens on today, roadmap lanes and an assistant tile), `people-ops` (hiring funnel, today's schedule, payroll and an attendance matrix), `health-overview` (vitals, a patient card, a score dial and calorie bars) and `gallery-shop` (side menu, counters, events and collections with optional pictures).
 - Six page sections from phase 6 (#26), each with a demo and example data: `bento-features` (a bento grid with one inverted lead tile), `bento-metrics` (figures that roll in once on first view and are final at once under reduced motion), `bento-product` (a media tile that cross-fades between variants), `bento-steps` (numbered steps joined by a line, with done, now and up next in words), `cta-band` (an inverted call-to-action band) and `cta-signup` (an email card with validation, a sending state and a confirmation; it sends nothing itself).
@@ -36,6 +38,10 @@
 - `dot-matrix`: on the top rows the tooltip opens below the cell, so it no longer covers the tile's title and figure.
 - `donut`: long legend names wrap instead of being cut off.
 - `data-tile`: `headingLevel` sets the title's heading level (default 3), so a page without an `h2` above its tiles keeps a sound outline.
+- `bubble-chart`: a tooltip opened by hover now closes on Escape without moving the pointer (WCAG 1.4.13).
+- `Pills` in `chart-kit`: segments are 44 px tall (were 36 px), so they meet the touch target size.
+- `week-schedule`: the day strip fits seven days at 320 px, so Sunday is no longer pushed out of view. Days stay 44 px tall.
+- `spend-control` and `workspace-home`: the last colour transitions are gone; only opacity, transform and filter animate.
 - `curve-carousel` and `post-carousel`: slides that arrive after the first render now show. Before, the carousel stayed empty or unpositioned until the window was resized.
 
 ### Added

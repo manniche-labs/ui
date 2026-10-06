@@ -1,0 +1,20 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "footer-tiles-demo",
+  "title": "Footer Tiles demo",
+  "description": "How to use Footer Tiles.",
+  "registryDependencies": [
+    "@manniche/footer-tiles"
+  ],
+  "files": [
+    {
+      "path": "registry/manniche/examples/footer-tiles-demo.tsx",
+      "content": "import { FooterTiles, type OpeningRange, type Weekday } from '@/registry/manniche/footer-tiles/footer-tiles'\n\n// Halden Studio is an invented company. Every link goes to example.com; the address is made up.\nconst WEEK: Weekday[] = [1, 2, 3, 4, 5]\nconst SCHEDULE: OpeningRange[] = WEEK.flatMap((day) => [\n  { day, open: '09:00', close: '12:30' },\n  { day, open: '13:30', close: '18:00' },\n])\n\nconst Glyph = ({ d }: { d: string }) => (\n  <svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" strokeWidth=\"1.75\" strokeLinecap=\"round\" strokeLinejoin=\"round\">\n    <path d={d} />\n  </svg>\n)\n\nexport default function FooterTilesDemo() {\n  return (\n    <FooterTiles\n      address={{\n        name: 'Halden Studio, Munich',\n        lines: ['Example Strasse 12', '80331 Munich', 'Germany'],\n        directionsHref: 'https://example.com/map/munich',\n      }}\n      hours={{ timeZone: 'Europe/Berlin', schedule: SCHEDULE }}\n      links={[\n        { label: 'Work', href: 'https://example.com/work' },\n        { label: 'Studio', href: 'https://example.com/about' },\n        { label: 'Journal', href: 'https://example.com/journal' },\n        { label: 'Contact', href: 'https://example.com/contact' },\n      ]}\n      social={[\n        { label: 'LinkedIn', href: 'https://example.com/linkedin', icon: <Glyph d=\"M4 9h4v11H4zM6 4a2 2 0 1 1 0 4 2 2 0 0 1 0-4zM11 9h4v2c.7-1.3 2-2.2 4-2.2 3 0 4 2 4 5V20h-4v-5.5c0-1.5-.5-2.5-2-2.5s-2 1-2 2.5V20h-4z\" /> },\n        { label: 'Mastodon', href: 'https://example.com/mastodon', icon: <Glyph d=\"M4 12c0-5 1-8 8-8s8 3 8 8-3 7-8 7c-2 0-4-.3-5-1l-3 2 1-4c-1-1-1-2-1-4zM9 9v5M12 14V9l3 5V9\" /> },\n        { label: 'RSS feed', href: 'https://example.com/feed.xml', icon: <Glyph d=\"M5 5a14 14 0 0 1 14 14M5 11a8 8 0 0 1 8 8M6 19h.01\" /> },\n      ]}\n      owner=\"Halden Studio\"\n      legalLinks={[\n        { label: 'Privacy', href: 'https://example.com/privacy' },\n        { label: 'Imprint', href: 'https://example.com/imprint' },\n      ]}\n    />\n  )\n}\n",
+      "type": "registry:example"
+    }
+  ],
+  "categories": [
+    "templates"
+  ],
+  "type": "registry:example"
+}

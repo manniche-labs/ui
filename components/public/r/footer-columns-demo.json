@@ -1,0 +1,20 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "footer-columns-demo",
+  "title": "Footer Columns demo",
+  "description": "How to use Footer Columns.",
+  "registryDependencies": [
+    "@manniche/footer-columns"
+  ],
+  "files": [
+    {
+      "path": "registry/manniche/examples/footer-columns-demo.tsx",
+      "content": "import { useState } from 'react'\nimport { FooterColumns } from '@/registry/manniche/footer-columns/footer-columns'\n\n// Halden Studio is an invented company. Every link goes to example.com.\nconst COLUMNS = [\n  {\n    title: 'Studio',\n    links: [\n      { label: 'About', href: 'https://example.com/about' },\n      { label: 'Work', href: 'https://example.com/work' },\n      { label: 'Journal', href: 'https://example.com/journal' },\n      { label: 'Careers', href: 'https://example.com/careers' },\n    ],\n  },\n  {\n    title: 'Services',\n    links: [\n      { label: 'Product design', href: 'https://example.com/design' },\n      { label: 'Web development', href: 'https://example.com/web' },\n      { label: 'Workshops', href: 'https://example.com/workshops' },\n      { label: 'Retainers', href: 'https://example.com/retainers' },\n    ],\n  },\n  {\n    title: 'Offices',\n    links: [\n      { label: 'Munich', href: 'https://example.com/munich' },\n      { label: 'Aalborg', href: 'https://example.com/aalborg' },\n      { label: 'Visit us', href: 'https://example.com/visit' },\n    ],\n  },\n  {\n    title: 'Follow',\n    links: [\n      { label: 'LinkedIn', href: 'https://example.com/linkedin', external: true },\n      { label: 'Mastodon', href: 'https://example.com/mastodon', external: true },\n      { label: 'RSS feed', href: 'https://example.com/feed.xml' },\n    ],\n  },\n]\n\nexport default function FooterColumnsDemo() {\n  const [language, setLanguage] = useState('en')\n  return (\n    <FooterColumns\n      brand=\"Halden Studio\"\n      description=\"A small product studio in Munich and Aalborg. We design and build software people keep using.\"\n      columns={COLUMNS}\n      newsletter={{\n        title: 'The Halden letter',\n        description: 'One short note a month on what we are making and learning. No tracking pixels.',\n        onSubmit: () => new Promise<void>((resolve) => setTimeout(resolve, 900)),\n        note: 'You can unsubscribe in one click. We keep your address only for this letter.',\n      }}\n      owner=\"Halden Studio\"\n      legalLinks={[\n        { label: 'Privacy', href: 'https://example.com/privacy' },\n        { label: 'Terms', href: 'https://example.com/terms' },\n        { label: 'Imprint', href: 'https://example.com/imprint' },\n      ]}\n      region={{\n        label: 'Language',\n        value: language,\n        onChange: setLanguage,\n        options: [\n          { value: 'en', label: 'English' },\n          { value: 'de', label: 'Deutsch' },\n          { value: 'da', label: 'Dansk' },\n        ],\n      }}\n    />\n  )\n}\n",
+      "type": "registry:example"
+    }
+  ],
+  "categories": [
+    "templates"
+  ],
+  "type": "registry:example"
+}
