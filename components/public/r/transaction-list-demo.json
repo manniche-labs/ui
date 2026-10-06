@@ -1,0 +1,22 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "transaction-list-demo",
+  "title": "Transaction list demo",
+  "description": "How to use Transaction list.",
+  "registryDependencies": [
+    "@manniche/transaction-list",
+    "@manniche/chart-kit",
+    "@manniche/data-tile"
+  ],
+  "files": [
+    {
+      "path": "registry/manniche/examples/transaction-list-demo.tsx",
+      "content": "import { useState } from 'react'\nimport { Pills } from '@/registry/manniche/chart-kit/chart-kit'\nimport { DataTile } from '@/registry/manniche/data-tile/data-tile'\nimport { TransactionList, type Transaction } from '@/registry/manniche/transaction-list/transaction-list'\n\n// Example payments for the demo, not a real account. \"Today\" is Thursday 8 October 2026.\nconst TODAY = '2026-10-08'\nconst TXS: Transaction[] = [\n  { id: 't1', name: 'Harbour Market', category: 'Groceries', date: '2026-10-08T12:58', amount: -48.2, status: 'pending' },\n  { id: 't2', name: 'City Transit', category: 'Transport', date: '2026-10-08T08:31', amount: -3.1 },\n  { id: 't3', name: 'Corner Bakery', category: 'Eating out', date: '2026-10-08T08:12', amount: -6.4 },\n  { id: 't4', name: 'Pixel & Plug', category: 'Shopping', date: '2026-10-07T19:40', amount: -129, status: 'failed', note: 'Card limit reached' },\n  { id: 't5', name: 'Northwind Books', category: 'Shopping', date: '2026-10-07T16:05', amount: -31.5 },\n  { id: 't6', name: 'From Savings', category: 'Transfer', date: '2026-10-07T09:00', amount: 200 },\n  { id: 't7', name: 'Lumen Energy', category: 'Bills', date: '2026-10-06T07:00', amount: -74 },\n  { id: 't8', name: 'Refund, Northwind Books', category: 'Shopping', date: '2026-10-06T11:20', amount: 12 },\n  { id: 't9', name: 'Green Leaf Café', category: 'Eating out', date: '2026-10-06T12:41', amount: -9.8 },\n]\nconst CATEGORIES = {\n  Groceries: 'var(--chart-1)',\n  Transport: 'var(--chart-2)',\n  'Eating out': 'var(--chart-3)',\n  Shopping: 'var(--chart-4)',\n  Bills: 'var(--chart-5)',\n}\nconst SHOW = [\n  { id: 'all', label: 'All' },\n  { id: 'in', label: 'In' },\n  { id: 'out', label: 'Out' },\n]\nconst EUR = { currency: 'EUR', decimals: 2 }\n\nexport default function TransactionListDemo() {\n  const [show, setShow] = useState('all')\n  const [open, setOpen] = useState<Transaction | null>(null)\n  const rows = TXS.filter((t) => (show === 'in' ? t.amount > 0 : show === 'out' ? t.amount < 0 : true))\n  return (\n    <div className=\"grid w-full gap-4\">\n      <DataTile\n        title=\"Transactions\"\n        action={<Pills label=\"Show\" options={SHOW} value={show} onChange={setShow} />}\n        footer={\n          <span>\n            {open ? `Opened ${open.name}. ` : 'Rows grouped by day, with chips for pending and failed payments. '}\n            Example data.\n          </span>\n        }\n      >\n        <TransactionList\n          data={rows}\n          label=\"Recent transactions\"\n          today={TODAY}\n          format={EUR}\n          categories={CATEGORIES}\n          onSelect={setOpen}\n          selectedId={open?.id}\n        />\n      </DataTile>\n      <div className=\"grid gap-4 sm:grid-cols-2\">\n        <DataTile title=\"Latest\" density=\"compact\" footer={<span>Four rows, the rest behind a button. Example data.</span>}>\n          <TransactionList data={TXS} label=\"Latest transactions\" today={TODAY} format={EUR} categories={CATEGORIES} limit={4} />\n        </DataTile>\n        <DataTile title=\"Money in\" density=\"compact\" inverted footer={<span>Example data.</span>}>\n          <TransactionList data={TXS.filter((t) => t.amount > 0)} label=\"Money in\" today={TODAY} format={EUR} />\n        </DataTile>\n      </div>\n    </div>\n  )\n}\n",
+      "type": "registry:example"
+    }
+  ],
+  "categories": [
+    "widgets"
+  ],
+  "type": "registry:example"
+}

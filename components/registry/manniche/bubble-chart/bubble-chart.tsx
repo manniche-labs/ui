@@ -242,8 +242,11 @@ export function BubbleChart({
     const maxV = Math.max(...data.map((d) => Math.max(0, d.value)), Number.EPSILON)
     if (axes) {
       const pw = W - GUT
-      const xs = niceScale(Math.max(...data.map((d) => d.x as number)), 4)
-      const ys = niceScale(Math.max(...data.map((d) => d.y as number)), 4)
+      // The axes start at 0, or lower when a value is negative.
+      const xv = data.map((d) => d.x as number)
+      const yv = data.map((d) => d.y as number)
+      const xs = niceScale(Math.max(...xv), 4, Math.min(0, ...xv))
+      const ys = niceScale(Math.max(...yv), 4, Math.min(0, ...yv))
       const rmax = Math.min(maxRadius ?? (W < 400 ? 22 : W < 560 ? 30 : 40), H / 8)
       const rmin = Math.min(6, rmax / 2)
       const X = (v: number) => 16 + ((v - xs.min) / (xs.max - xs.min || 1)) * (pw - 32)
