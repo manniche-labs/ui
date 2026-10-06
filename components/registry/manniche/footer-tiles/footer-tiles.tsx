@@ -221,7 +221,8 @@ function HoursTile({ hours, now, labels }: { hours: FooterTilesHours; now: Date 
   const status = now ? openStatus(hours, now) : null
   const groups = dayGroups(hours.schedule, labels.days, labels.shut)
 
-  let line: string = labels.unknown
+  // Closed with no next opening only happens for an empty schedule: then "Closed" stands alone.
+  let line: string = status && !status.open && !status.next ? '' : labels.unknown
   if (status?.open) line = fill(labels.closesAt, { time: status.closes })
   else if (status?.next) {
     line = status.next.today
@@ -243,10 +244,12 @@ function HoursTile({ hours, now, labels }: { hours: FooterTilesHours; now: Date 
             />
             <span>
               {status.open ? labels.openNow : labels.closed}
-              <span className="font-normal text-muted-foreground">
-                {status.open ? ' · ' : ', '}
-                <span className="font-mono text-[13px] tabular-nums">{line}</span>
-              </span>
+              {line && (
+                <span className="font-normal text-muted-foreground">
+                  {status.open ? ' · ' : ', '}
+                  <span className="font-mono text-[13px] tabular-nums">{line}</span>
+                </span>
+              )}
             </span>
           </>
         ) : (

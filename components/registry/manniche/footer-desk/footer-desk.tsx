@@ -145,13 +145,13 @@ export function FooterDesk({
   useEffect(() => () => clearTimeout(reset.current), [])
 
   const copyEmail = async () => {
-    clearTimeout(reset.current)
     try {
       await navigator.clipboard.writeText(email)
       setCopy('copied')
     } catch {
       setCopy('failed')
     }
+    clearTimeout(reset.current)
     reset.current = setTimeout(() => setCopy('idle'), 2400)
   }
 
@@ -198,7 +198,7 @@ export function FooterDesk({
                   <button
                     type="button"
                     onClick={copyEmail}
-                    className="relative ml-2 grid size-9 flex-none cursor-pointer place-items-center rounded-full text-muted-foreground transition-[opacity] duration-200 ease-out-quint hover:text-foreground focus-visible:outline-2 focus-visible:outline-offset-0 focus-visible:outline-ring before:absolute before:-inset-y-1 before:inset-x-0 before:content-['']"
+                    className="relative ml-2 grid size-9 flex-none cursor-pointer place-items-center rounded-full text-muted-foreground transition-[opacity] duration-200 ease-out-quint hover:text-foreground focus-visible:outline-2 focus-visible:outline-offset-0 focus-visible:outline-ring before:absolute before:-inset-1 before:content-['']"
                   >
                     <span className="sr-only">{t.copy}</span>
                     <Copy aria-hidden className={cn('absolute size-4 transition-[opacity] duration-200 ease-out-quint', copy === 'copied' ? 'opacity-0' : 'opacity-100')} />

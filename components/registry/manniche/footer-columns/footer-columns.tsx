@@ -41,6 +41,8 @@ export type FooterRegion = {
 }
 
 export type FooterColumnsLabels = {
+  /** Hidden heading of the footer. */
+  heading?: string
   navigation?: string
   email?: string
   subscribe?: string
@@ -76,6 +78,7 @@ export type FooterColumnsProps = Omit<ComponentPropsWithoutRef<'footer'>, 'child
 }
 
 const DEFAULT_LABELS: Required<FooterColumnsLabels> = {
+  heading: 'Site footer',
   navigation: 'Footer',
   email: 'Email address',
   subscribe: 'Subscribe',
@@ -292,6 +295,7 @@ export function FooterColumns({
 
   return (
     <footer {...rest} className={cn('@container w-full bg-background text-foreground', className)}>
+      <h2 className="sr-only">{l.heading}</h2>
       <div className="mx-auto w-full max-w-6xl px-4 py-12 @min-[40rem]:py-16 sm:px-6">
         <div
           className={cn(
