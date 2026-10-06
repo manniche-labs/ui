@@ -1,3 +1,5 @@
+// The "cells" family's border distance is based on Inigo Quilez's "Voronoi - distances" (MIT, © 2013 Inigo Quilez,
+// https://www.shadertoy.com/view/ldl3W8). See THIRD_PARTY_NOTICES.md.
 import { useEffect, useRef, type CSSProperties, type ReactNode } from 'react'
 import { useReducedMotion } from '@/registry/manniche/hooks/use-reduced-motion'
 import { cn } from '@/lib/utils'
@@ -205,6 +207,7 @@ vec3 shade(vec2 p,vec2 uv){
   return pal(heat*heat*(3.-2.*heat));
 }`,
   // Cells whose seeds wander in small circles; each cell takes a colour from the ramp, with even gaps between them.
+  // The gap is the exact distance to the nearest border, after Inigo Quilez (see the top of this file).
   // Hash offsets stay whole numbers so a cell gets the same colour from every grid square it covers.
   cells: `vec2 site(vec2 c,float T){vec2 o=vec2(h(c),h(c+vec2(17.,31.)));return .5+.4*sin(T+6.2831853*o);}
 vec3 shade(vec2 p,vec2 uv){
@@ -300,6 +303,10 @@ export function ShaderBackdrop({
 
     const gl = el.getContext('webgl', { antialias: false, premultipliedAlpha: false, powerPreference: 'low-power' })
     if (!gl) return remove
+    const release = () => {
+      gl.getExtension('WEBGL_lose_context')?.loseContext()
+      remove()
+    }
 
     const shader = (type: number, src: string) => {
       const s = gl.createShader(type)!
@@ -311,7 +318,7 @@ export function ShaderBackdrop({
     gl.attachShader(program, shader(gl.VERTEX_SHADER, VERTEX))
     gl.attachShader(program, shader(gl.FRAGMENT_SHADER, HEAD + SHADE[kind] + MAIN))
     gl.linkProgram(program)
-    if (!gl.getProgramParameter(program, gl.LINK_STATUS)) return remove
+    if (!gl.getProgramParameter(program, gl.LINK_STATUS)) return release
     gl.useProgram(program)
 
     // One triangle that covers the whole canvas.
@@ -360,6 +367,8 @@ export function ShaderBackdrop({
 
     let raf = 0
     let visible = false
+    // Set once the GPU drops the context; nothing restarts the loop after that.
+    let dead = false
     const loop = (now: number) => {
       // Cap the step so a stalled tab does not jump the pattern ahead.
       clock += Math.min(50, now - (last || now)) * speed
@@ -369,7 +378,7 @@ export function ShaderBackdrop({
     }
     // Only animate while on screen.
     const io = new IntersectionObserver(([entry]) => {
-      if (reduce || speed === 0 || entry.isIntersecting === visible) return
+      if (dead || reduce || speed === 0 || entry.isIntersecting === visible) return
       visible = entry.isIntersecting
       last = 0
       if (visible) raf = requestAnimationFrame(loop)
@@ -379,6 +388,7 @@ export function ShaderBackdrop({
 
     // If the GPU drops the context, the CSS fallback shows again.
     const lost = () => {
+      dead = true
       cancelAnimationFrame(raf)
       delete el.dataset.ready
     }
@@ -389,8 +399,7 @@ export function ShaderBackdrop({
       io.disconnect()
       cancelAnimationFrame(raf)
       el.removeEventListener('webglcontextlost', lost)
-      gl.getExtension('WEBGL_lose_context')?.loseContext()
-      remove()
+      release()
     }
   }, [kind, palette, grainAmount, scale, seed, speed, reduce])
 

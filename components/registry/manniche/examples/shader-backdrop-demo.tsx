@@ -24,12 +24,13 @@ function isLight(hex: string) {
 export default function ShaderBackdropDemo() {
   const [preset, setPreset] = useState<ShaderPreset>('mesh-lilac')
   const { variant, colors } = SHADER_PRESETS[preset]
-  // Light text on dark looks; aurora and flame are dark at the top, where the text sits.
+  // Light text on dark looks. Aurora and flame are night skies whatever their ramp, so they always get light text;
+  // flame burns at the bottom, so its text goes to the top.
   const light = variant !== 'aurora' && variant !== 'flame' && isLight(colors[0])
 
   return (
     <div className="flex w-full flex-col gap-4">
-      <ShaderBackdrop preset={preset} className="flex aspect-[16/10] w-full flex-col justify-end rounded-3xl p-6 sm:p-8">
+      <ShaderBackdrop preset={preset} className={`flex aspect-[16/10] w-full flex-col rounded-3xl p-6 sm:p-8 ${variant === 'flame' ? 'justify-start' : 'justify-end'}`}>
         <div className={light ? 'text-neutral-950' : 'text-white'}>
           <p className="text-sm font-medium opacity-75">Spring collection</p>
           <h3 className="mt-1 max-w-xs font-serif text-3xl leading-tight text-balance">Made slowly, worn for years</h3>
