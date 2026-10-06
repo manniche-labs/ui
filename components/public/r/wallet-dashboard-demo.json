@@ -1,0 +1,20 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "wallet-dashboard-demo",
+  "title": "Wallet dashboard demo",
+  "description": "How to use Wallet dashboard.",
+  "registryDependencies": [
+    "@manniche/wallet-dashboard"
+  ],
+  "files": [
+    {
+      "path": "registry/manniche/examples/wallet-dashboard-demo.tsx",
+      "content": "import { WalletDashboard } from '@/registry/manniche/wallet-dashboard/wallet-dashboard'\n\n// Example data for the demo, not real accounts.\nconst data = {\n  balance: 8318.06,\n  change: 3.2,\n  cards: [\n    { id: 'everyday', name: 'Everyday', kind: 'Debit', ending: '4821', amount: 2091.2 },\n    { id: 'travel', name: 'Travel', kind: 'Multi-currency', ending: '0937', amount: 612.08 },\n    { id: 'savings', name: 'Savings', kind: 'Pot', ending: '1162', amount: 5614.78 },\n  ],\n  periods: [\n    {\n      id: 'week',\n      label: 'Week',\n      long: 'last 7 days',\n      flow: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'].map((label, i) => ({ label, value: [120, 340, -80, 210, 560, -150, 90][i] })),\n      spending: [\n        { label: 'Groceries', value: 90.84 },\n        { label: 'Transport', value: 47.1 },\n        { label: 'Eating out', value: 74.02 },\n        { label: 'Bills', value: 84.12 },\n      ],\n    },\n    {\n      id: 'month',\n      label: 'Month',\n      long: 'last 30 days',\n      flow: ['Wk 1', 'Wk 2', 'Wk 3', 'Wk 4'].map((label, i) => ({ label, value: [820, 640, 1180, 910][i] })),\n      spending: [\n        { label: 'Groceries', value: 414.96 },\n        { label: 'Transport', value: 179.82 },\n        { label: 'Eating out', value: 235.14 },\n        { label: 'Shopping', value: 152.15 },\n        { label: 'Bills', value: 401.13 },\n      ],\n    },\n  ],\n  subscriptions: [\n    { id: 'music', name: 'Northwind Music', amount: 10.99, renews: '12 Oct' },\n    { id: 'cloud', name: 'Harbour Cloud', amount: 2.99, renews: '15 Oct' },\n    { id: 'news', name: 'Green Leaf Daily', amount: 7.5, renews: '21 Oct' },\n  ],\n}\n\nexport default function WalletDashboardDemo() {\n  return <WalletDashboard data={data} />\n}\n",
+      "type": "registry:example"
+    }
+  ],
+  "categories": [
+    "templates"
+  ],
+  "type": "registry:example"
+}

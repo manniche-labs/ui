@@ -1,0 +1,20 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "account-home-demo",
+  "title": "Account home demo",
+  "description": "How to use Account home.",
+  "registryDependencies": [
+    "@manniche/account-home"
+  ],
+  "files": [
+    {
+      "path": "registry/manniche/examples/account-home-demo.tsx",
+      "content": "import { AccountHome } from '@/registry/manniche/account-home/account-home'\n\n// Example data for the demo, not a real account. \"Today\" is Thursday 8 October 2026.\nconst data = {\n  card: { id: 'everyday', name: 'Everyday', kind: 'Debit', ending: '4821', amount: 2091.2 },\n  balance: 2091.2,\n  change: 1.8,\n  pace: 0.92,\n  budget: 1800,\n  categories: {\n    Groceries: 'var(--chart-1)',\n    Transport: 'var(--chart-2)',\n    'Eating out': 'var(--chart-3)',\n    Shopping: 'var(--chart-4)',\n    Bills: 'var(--chart-5)',\n  },\n  transactions: [\n    { id: 't1', name: 'Harbour Market', category: 'Groceries', date: '2026-10-08T12:58', amount: -48.2, status: 'pending' as const },\n    { id: 't2', name: 'City Transit', category: 'Transport', date: '2026-10-08T08:31', amount: -3.1 },\n    { id: 't3', name: 'Corner Bakery', category: 'Eating out', date: '2026-10-08T08:12', amount: -6.4 },\n    { id: 't5', name: 'Northwind Books', category: 'Shopping', date: '2026-10-07T16:05', amount: -31.5 },\n    { id: 't6', name: 'From Savings', category: 'Transfer', date: '2026-10-07T09:00', amount: 200 },\n    { id: 't7', name: 'Lumen Energy', category: 'Bills', date: '2026-10-06T07:00', amount: -74 },\n  ],\n}\n\nexport default function AccountHomeDemo() {\n  return <AccountHome data={data} today=\"2026-10-08\" />\n}\n",
+      "type": "registry:example"
+    }
+  ],
+  "categories": [
+    "templates"
+  ],
+  "type": "registry:example"
+}

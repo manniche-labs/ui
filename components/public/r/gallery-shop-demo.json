@@ -1,0 +1,20 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "gallery-shop-demo",
+  "title": "Gallery shop demo",
+  "description": "How to use Gallery shop.",
+  "registryDependencies": [
+    "@manniche/gallery-shop"
+  ],
+  "files": [
+    {
+      "path": "registry/manniche/examples/gallery-shop-demo.tsx",
+      "content": "import { GalleryShop, type GalleryShopData } from '@/registry/manniche/gallery-shop/gallery-shop'\n\n// Example data only. All names, places and figures are invented.\nconst data: GalleryShopData = {\n  menu: [\n    { id: 'home', label: 'Home' },\n    { id: 'works', label: 'Works' },\n    { id: 'events', label: 'Events' },\n    { id: 'shop', label: 'Shop' },\n  ],\n  headline: { strong: 'Sample gallery.', soft: 'Example art for everyone.' },\n  counters: [\n    { id: 'a', title: 'Works', value: 240 },\n    { id: 'b', title: 'Artists', value: 36 },\n    { id: 'c', title: 'Events a year', value: 12 },\n  ],\n  events: {\n    title: 'Events',\n    items: [\n      { id: 'e1', date: '12 Oct', place: 'Example Hall', title: 'Sample opening night' },\n      { id: 'e2', date: '24 Oct', place: 'Demo Room', title: 'Test artist talk' },\n    ],\n  },\n  collections: {\n    title: 'Collections',\n    items: [\n      { id: 'c1', name: 'Sample Blues', works: 18, color: 'oklch(0.7 0.08 250)' },\n      { id: 'c2', name: 'Demo Earth', works: 24, color: 'oklch(0.7 0.08 60)' },\n      { id: 'c3', name: 'Example Green', works: 9, color: 'oklch(0.7 0.08 150)' },\n      { id: 'c4', name: 'Test Rose', works: 14, color: 'oklch(0.7 0.08 10)' },\n    ],\n  },\n}\n\nexport default function GalleryShopDemo() {\n  return <GalleryShop data={data} />\n}\n",
+      "type": "registry:example"
+    }
+  ],
+  "categories": [
+    "templates"
+  ],
+  "type": "registry:example"
+}

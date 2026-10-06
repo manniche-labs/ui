@@ -1,0 +1,25 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "health-overview",
+  "title": "Health overview",
+  "description": "A health dashboard in Tiles: three vital figures, a patient card, a score dial and calorie bars with macros.",
+  "registryDependencies": [
+    "utils",
+    "@manniche/data-tile",
+    "@manniche/chart-kit",
+    "@manniche/bar-chart",
+    "@manniche/dial",
+    "@manniche/donut"
+  ],
+  "files": [
+    {
+      "path": "registry/manniche/health-overview/health-overview.tsx",
+      "content": "// A health overview: three vital figures, a patient card, a score dial and calorie bars with macros.\nimport { cn } from '@/lib/utils'\nimport { BarChart, type BarPoint } from '@/registry/manniche/bar-chart/bar-chart'\nimport { BigNumber } from '@/registry/manniche/chart-kit/chart-kit'\nimport { DataTile, TileFact } from '@/registry/manniche/data-tile/data-tile'\nimport { Dial, type DialZone } from '@/registry/manniche/dial/dial'\nimport { Donut, type DonutDatum } from '@/registry/manniche/donut/donut'\n\nexport type HealthOverviewData = {\n  vitals: { id: string; title: string; value: number; unit: string }[]\n  patient: { name: string; details: { label: string; value: string }[] }\n  score: { title: string; value: number; zones: DialZone[]; caption: string }\n  calories: { title: string; points: BarPoint[]; macros: DonutDatum[]; macrosTitle: string }\n}\n\nexport type HealthOverviewLabels = { note?: string }\n\nexport type HealthOverviewProps = { data: HealthOverviewData; labels?: HealthOverviewLabels; className?: string }\n\nexport function HealthOverview({ data, labels, className }: HealthOverviewProps) {\n  const note = labels?.note ?? 'Example data.'\n  return (\n    <div className={cn('@container w-full rounded-2xl bg-background p-3 text-foreground', className)}>\n      <div className=\"grid grid-cols-1 gap-3 @lg:grid-cols-3 @3xl:grid-cols-6\">\n        {data.vitals.map((v) => (\n          <div key={v.id} className=\"@3xl:col-span-2\">\n            <DataTile className=\"h-full\" title={v.title} density=\"compact\">\n              <TileFact aside={<span className=\"text-sm text-muted-foreground\">{v.unit}</span>}>\n                <BigNumber value={v.value} size=\"lg\" />\n              </TileFact>\n            </DataTile>\n          </div>\n        ))}\n        <div className=\"@lg:col-span-3 @3xl:col-span-3\">\n          <DataTile className=\"h-full\" title={data.patient.name} inverted>\n            <dl className=\"grid grid-cols-2 gap-3 text-sm\">\n              {data.patient.details.map((d) => (\n                <div key={d.label}>\n                  <dt className=\"opacity-70\">{d.label}</dt>\n                  <dd className=\"font-medium\">{d.value}</dd>\n                </div>\n              ))}\n            </dl>\n          </DataTile>\n        </div>\n        <div className=\"@lg:col-span-3 @3xl:col-span-3\">\n          <DataTile className=\"h-full\" title={data.score.title} footer={note}>\n            <Dial value={data.score.value} min={0} max={100} zones={data.score.zones} label={data.score.title} caption={data.score.caption} />\n          </DataTile>\n        </div>\n        <div className=\"@lg:col-span-3 @3xl:col-span-4\">\n          <DataTile className=\"h-full\" title={data.calories.title} footer={note}>\n            <BarChart data={data.calories.points} label={data.calories.title} format={{ suffix: ' kcal' }} />\n          </DataTile>\n        </div>\n        <div className=\"@lg:col-span-3 @3xl:col-span-2\">\n          <DataTile className=\"h-full\" title={data.calories.macrosTitle} footer={note}>\n            <Donut data={data.calories.macros} label={data.calories.macrosTitle} format={{ suffix: ' g' }} />\n          </DataTile>\n        </div>\n      </div>\n    </div>\n  )\n}\n",
+      "type": "registry:component"
+    }
+  ],
+  "categories": [
+    "templates"
+  ],
+  "type": "registry:block"
+}
