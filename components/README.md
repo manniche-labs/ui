@@ -168,6 +168,10 @@ Whole pages, built from the same tokens. Install one like a component, or downlo
 | `footer-statement` | Section: closing statement in an inverted tile with fluid type |
 | `footer-status` | Section: product footer with a status chip, version and back to top |
 | `footer-tiles` | Section: bento footer with address, opening hours and links |
+| `contact-channels` | Section: contact channels with response times and a FAQ |
+| `contact-form` | Section: contact form with topic, character count and an info tile |
+| `contact-offices` | Section: office tiles with local time and open or closed signals |
+| `contact-people` | Section: people grid with a team filter and copyable emails |
 
 `npm run lab` writes the HTML files with `scripts/template-html.mjs`; the colours live in `src/template-theme.ts`.
 

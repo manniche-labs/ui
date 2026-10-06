@@ -4456,6 +4456,161 @@
       ]
     },
     {
+      "name": "contact-channels",
+      "type": "registry:block",
+      "title": "Contact Channels",
+      "description": "One tile per way to reach a team, with how fast each answers and the recommended one inverted, and a short FAQ underneath.",
+      "dependencies": [
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "utils"
+      ],
+      "files": [
+        {
+          "path": "registry/manniche/contact-channels/contact-channels.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "categories": [
+        "templates"
+      ]
+    },
+    {
+      "name": "contact-channels-demo",
+      "type": "registry:example",
+      "title": "Contact Channels demo",
+      "description": "How to use Contact Channels.",
+      "registryDependencies": [
+        "@manniche/contact-channels"
+      ],
+      "files": [
+        {
+          "path": "registry/manniche/examples/contact-channels-demo.tsx",
+          "type": "registry:example"
+        }
+      ],
+      "categories": [
+        "templates"
+      ]
+    },
+    {
+      "name": "contact-form",
+      "type": "registry:block",
+      "title": "Contact Form",
+      "description": "A two-tile contact form with a topic picker, a character count, optional consent, and an info tile with the response time.",
+      "registryDependencies": [
+        "utils",
+        "@manniche/chart-kit"
+      ],
+      "files": [
+        {
+          "path": "registry/manniche/contact-form/contact-form.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "categories": [
+        "templates"
+      ]
+    },
+    {
+      "name": "contact-form-demo",
+      "type": "registry:example",
+      "title": "Contact Form demo",
+      "description": "How to use Contact Form.",
+      "registryDependencies": [
+        "@manniche/contact-form"
+      ],
+      "files": [
+        {
+          "path": "registry/manniche/examples/contact-form-demo.tsx",
+          "type": "registry:example"
+        }
+      ],
+      "categories": [
+        "templates"
+      ]
+    },
+    {
+      "name": "contact-offices",
+      "type": "registry:block",
+      "title": "Contact Offices",
+      "description": "One tile per office with address, phone, weekly hours, local time and an open or closed signal in words.",
+      "dependencies": [
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "utils"
+      ],
+      "files": [
+        {
+          "path": "registry/manniche/contact-offices/contact-offices.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "categories": [
+        "templates"
+      ]
+    },
+    {
+      "name": "contact-offices-demo",
+      "type": "registry:example",
+      "title": "Contact Offices demo",
+      "description": "How to use Contact Offices.",
+      "registryDependencies": [
+        "@manniche/contact-offices"
+      ],
+      "files": [
+        {
+          "path": "registry/manniche/examples/contact-offices-demo.tsx",
+          "type": "registry:example"
+        }
+      ],
+      "categories": [
+        "templates"
+      ]
+    },
+    {
+      "name": "contact-people",
+      "type": "registry:block",
+      "title": "Contact People",
+      "description": "A grid of person cards with role, languages, an email to copy and an optional booking link, filtered by team.",
+      "dependencies": [
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "utils",
+        "@manniche/chart-kit"
+      ],
+      "files": [
+        {
+          "path": "registry/manniche/contact-people/contact-people.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "categories": [
+        "templates"
+      ]
+    },
+    {
+      "name": "contact-people-demo",
+      "type": "registry:example",
+      "title": "Contact People demo",
+      "description": "How to use Contact People.",
+      "registryDependencies": [
+        "@manniche/contact-people"
+      ],
+      "files": [
+        {
+          "path": "registry/manniche/examples/contact-people-demo.tsx",
+          "type": "registry:example"
+        }
+      ],
+      "categories": [
+        "templates"
+      ]
+    },
+    {
       "name": "chart-kit",
       "type": "registry:component",
       "title": "Chart kit",
