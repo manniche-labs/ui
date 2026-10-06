@@ -390,7 +390,9 @@ export function DotGlobe({
     <div className={cn('grid w-full justify-items-center gap-[18px]', className)} style={style} {...rest}>
       <div
         ref={ball}
-        role="img"
+        // A focusable globe turned with the arrow keys is a widget, so screen readers hand it the keys.
+        role={interactive ? 'application' : 'img'}
+        aria-roledescription={interactive ? 'globe' : undefined}
         aria-label={
           label ?? (interactive ? 'Globe of dots, land drawn denser. Drag or use the arrow keys to turn it.' : 'Globe of dots, land drawn denser.')
         }

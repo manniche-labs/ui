@@ -54,7 +54,7 @@ export function Keycap({
   onPointerDown,
   onPointerUp,
   onPointerCancel,
-  onLostPointerCapture,
+  onPointerLeave,
   onKeyDown,
   onKeyUp,
   onBlur,
@@ -82,7 +82,6 @@ export function Keycap({
       onPointerDown={(e: PointerEvent<HTMLButtonElement>) => {
         onPointerDown?.(e)
         if (e.button !== 0) return
-        e.currentTarget.setPointerCapture?.(e.pointerId)
         const r = e.currentTarget.getBoundingClientRect()
         if (reduce) tilt(0, 0)
         else tilt((e.clientX - r.left) / r.width - 0.5, (e.clientY - r.top) / r.height - 0.5)
@@ -96,8 +95,9 @@ export function Keycap({
         onPointerCancel?.(e)
         setHeld(false)
       }}
-      onLostPointerCapture={(e: PointerEvent<HTMLButtonElement>) => {
-        onLostPointerCapture?.(e)
+      // No pointer capture: dragging off the key lets it rise and cancels the press, as on a native button.
+      onPointerLeave={(e: PointerEvent<HTMLButtonElement>) => {
+        onPointerLeave?.(e)
         setHeld(false)
       }}
       onKeyDown={(e: KeyboardEvent<HTMLButtonElement>) => {

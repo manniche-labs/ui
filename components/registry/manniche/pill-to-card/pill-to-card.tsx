@@ -203,7 +203,8 @@ export function PillToCard({
         el.style.transform = 'none'
       })
       reveals().forEach((el, i) => {
-        const d = T ? 70 + i * 28 : 0
+        // Capped, so the last row is still done within 300 ms however many children there are.
+        const d = T ? Math.min(70 + i * 28, 100) : 0
         setTransition(el, `opacity ${T ? 180 : 0}ms ${E} ${d}ms, transform ${T ? 200 : 0}ms ${E} ${d}ms`)
         el.style.opacity = '1'
         el.style.transform = 'none'
@@ -326,8 +327,10 @@ export function PillToCard({
         id={cardId}
         role="dialog"
         aria-labelledby={titleId}
+        // Focusable, so a click on plain text inside keeps focus in the card and Escape still reaches the root.
+        tabIndex={-1}
         hidden={!shown}
-        className="absolute top-0 left-0 z-50 w-[min(316px,calc(100vw-16px))] p-4 text-card-foreground"
+        className="absolute top-0 left-0 z-50 outline-none w-[min(316px,calc(100vw-16px))] p-4 text-card-foreground"
       >
         <div
           ref={surf}
@@ -342,7 +345,7 @@ export function PillToCard({
             <span
               ref={cardName}
               id={titleId}
-              className="block origin-top-left text-[15px] leading-[1.2] font-medium tracking-[-0.01em] whitespace-nowrap"
+              className="block justify-self-start origin-top-left text-[15px] leading-[1.2] font-medium tracking-[-0.01em] whitespace-nowrap"
             >
               {name}
             </span>

@@ -30,7 +30,7 @@ function smooth(pts: [number, number][]) {
 const fills = {
   a0: 'fill-[color-mix(in_oklab,var(--primary)_80%,var(--card))]',
   a1: 'fill-[color-mix(in_oklab,var(--primary)_32%,var(--card))]',
-  a2: 'fill-[color-mix(in_oklab,var(--success)_58%,var(--card))]',
+  a2: 'fill-[color-mix(in_oklab,var(--success,var(--primary))_58%,var(--card))]',
   a3: 'fill-[color-mix(in_oklab,var(--card)_92%,var(--foreground))]',
   a4: 'fill-[color-mix(in_oklab,var(--destructive)_55%,var(--card))]',
   a5: 'fill-[color-mix(in_oklab,var(--primary)_55%,var(--foreground))]',
