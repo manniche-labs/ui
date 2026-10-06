@@ -2,6 +2,12 @@
 
 Newest first.
 
+## 1.1.0 — 2026-10-06
+
+- **`scripts/gather.mjs`.** Merges the agents' answers (`answer-*.json`) and the blind customers' logs (`customer-*/customer-log.json`) into a draft of `review.json` and `fixes.json`: the pages from both layers, findings with ids by severity (layer 1 before layer 3), life cards that point to their fix, and customers with their folder. It warns about unknown pattern names, Upgrade outside layer 3, customers without a result, and findings from two answers that point to the same lines (possible duplicates). It never overwrites an existing review or fix list without `--replace`. SKILL.md (step 4) and the README mention it.
+- **Six rules for dangerous actions in layer 1, item 6 (feedback on actions).** Hold to delete small things, buttons that say verb and thing, the destructive button away from the "OK" place with focus on the safe one, red only for destructive actions, a danger zone at the bottom, and soft deletion with a deadline and a restore button. Points to the matching Manniche UI components.
+- The self-test has 444 checks (17 new for `gather.mjs`).
+
 ## 1.0.0 — 2026-10-03
 
 First release in English.

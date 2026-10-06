@@ -63,7 +63,7 @@ Windows (PowerShell):
     npm install
     npm test
 
-`npm test` measures the skill's own test pages in a real browser and takes four to five minutes. It ends with a line like `427 of 427 checks passed.` This version is tested on Windows 11. macOS and Linux have not been tried with it yet.
+`npm test` measures the skill's own test pages in a real browser and takes four to five minutes. It ends with a line like `444 of 444 checks passed.` This version passes on macOS. Version 1.0 was tested on Windows 11. Linux has not been tried yet.
 
 ## Use
 
@@ -83,6 +83,7 @@ The first command checks the plan without starting a browser. The second measure
 | `scripts/extract.mjs` | Prints what the measurement knows about one page, ordered by the checklist |
 | `scripts/slices.mjs` | Cuts tall screenshots into slices that can be read at full size. The measurement runs it by itself |
 | `scripts/browse.mjs` | The blind customer's browser: `start`, `click`, `type`, `press`, `scroll`, `finish` |
+| `scripts/gather.mjs` | Merges the agents' answers and the customer logs into a first draft of the review and the fix list, and warns about likely duplicates |
 | `scripts/fixes.mjs` | Checks the fix list, writes the fix prompt, and tracks what is solved |
 | `scripts/preview.mjs` | Shows one fix as three variants next to the page as it is |
 | `scripts/report.mjs` | Writes the report as one HTML file |

@@ -107,6 +107,14 @@ You do not need to search the whole file. `node scripts/extract.mjs --out <folde
    Measurement: `stress` (longer text and a very long word), `clipped`, and `notFoundPage` at the top of the file (an address that does not exist). Text in a scroll area (a wide table in a container with `overflow: auto`) does not count as clipped: it can be scrolled into view.
 6. **Feedback on actions.** Can you see that a click worked? A receipt after submitting, confirmation before something that cannot be undone, and a way back. A form cannot be submitted twice by a double click.
    Measurement: `doubleSubmit` (`submits`, `showsWork`, `buttonAfterFirstPress`), `performance.inpMs`.
+   **Dangerous actions** (delete, close, cancel a plan, reset) follow six rules. Every break is a finding:
+   - Small, frequent deletions are held down (about 300 ms to 1.2 s) instead of opening a dialog.
+   - The buttons say verb and thing: "Delete project" and "Keep project", never "Yes", "No" or "OK".
+   - The destructive button stands away from where "OK" usually stands, and the safe button has focus when the dialog opens. Enter or a habit click keeps the data.
+   - Red is only for actions that destroy something. Save, send and continue are never red.
+   - Dangerous settings stand together at the bottom in a danger zone with a frame and a heading (like GitHub's "Danger zone"), not spread between ordinary fields.
+   - Deletion is soft first: seconds to undo for a single item, days (typically 14) for accounts and projects, with the date and a restore button visible. If it concerns personal data, the period must fit the erasure obligation: check it against the law that applies.
+   Look at the code for delete buttons and dialogs, and at the screenshots of open dialogs. The components in Manniche UI (`hold-to-confirm`, `confirm-dialog`, `danger-zone`, `timed-undo`, `scheduled-deletion`) follow the rules and can be proposed as the change.
 7. **Wayfinding.** Do you know where you are and how to get back? Active menu item, telling page title, links that look like links, no dead ends.
    Measurement: `structure.title`, `structure.landmarks`, `notFoundPage.linkHome`.
 8. **Mobile.** The most important thing without scrolling far. Tables that can be read. Nothing that only works with a mouse.
