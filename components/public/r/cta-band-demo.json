@@ -1,0 +1,20 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "cta-band-demo",
+  "title": "CTA band demo",
+  "description": "How to use CTA band.",
+  "registryDependencies": [
+    "@manniche/cta-band"
+  ],
+  "files": [
+    {
+      "path": "registry/manniche/examples/cta-band-demo.tsx",
+      "content": "import { CtaBand } from '@/registry/manniche/cta-band/cta-band'\n\nexport default function CtaBandDemo() {\n  return (\n    <CtaBand\n      headline=\"Bring the next product to Halden Studio.\"\n      description=\"Tell us what you are building. We reply with a plan, a team and a start date, in Munich or Aalborg.\"\n      primary={{ label: 'Start a project', href: 'https://example.com/start' }}\n      secondary={{ label: 'See our work', href: 'https://example.com/work' }}\n      fact=\"No brief needed. A first call costs nothing.\"\n    />\n  )\n}\n",
+      "type": "registry:example"
+    }
+  ],
+  "categories": [
+    "templates"
+  ],
+  "type": "registry:example"
+}

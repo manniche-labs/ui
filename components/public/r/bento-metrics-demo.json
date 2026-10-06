@@ -1,0 +1,20 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "bento-metrics-demo",
+  "title": "Bento metrics demo",
+  "description": "How to use Bento metrics.",
+  "registryDependencies": [
+    "@manniche/bento-metrics"
+  ],
+  "files": [
+    {
+      "path": "registry/manniche/examples/bento-metrics-demo.tsx",
+      "content": "import { BentoMetrics, type BentoMetric } from '@/registry/manniche/bento-metrics/bento-metrics'\n\n// Example figures for the demo, not real data.\nconst METRICS: BentoMetric[] = [\n  {\n    id: 'shipped',\n    label: 'Projects shipped',\n    value: 42,\n    delta: 12.5,\n    trend: [3, 4, 3, 5, 6, 5, 7, 9],\n    trendLabel: 'Projects shipped, last 8 months',\n    note: 'Counted when the client signs off, per month.',\n    inverted: true,\n  },\n  {\n    id: 'turnaround',\n    label: 'Days to first draft',\n    value: 4.5,\n    format: { decimals: 1 },\n    delta: -8.2,\n    goodWhen: 'down',\n    trend: [7, 6.5, 6, 5.5, 5.2, 5, 4.8, 4.5],\n    trendLabel: 'Days to first draft, last 8 months',\n    note: 'From signed brief to the first draft.',\n  },\n  {\n    id: 'revisions',\n    label: 'Revision rounds',\n    value: 1.8,\n    format: { decimals: 1 },\n    delta: 0,\n    note: 'Average per project. Fewer is better.',\n  },\n  {\n    id: 'hours',\n    label: 'Hours saved per week',\n    value: 126,\n    format: { suffix: ' h' },\n    delta: 6.4,\n    trend: [90, 96, 101, 99, 108, 115, 121, 126],\n    trendLabel: 'Hours saved per week, last 8 weeks',\n    note: 'Handover and review time the team no longer spends.',\n  },\n  {\n    id: 'budget',\n    label: 'Average project budget',\n    value: 18400,\n    format: { currency: 'EUR' },\n    delta: 3.1,\n    note: 'Fixed price, before VAT.',\n  },\n  {\n    id: 'ontime',\n    label: 'Delivered on time',\n    value: 94,\n    format: { suffix: '%' },\n    delta: 2,\n    deltaFormat: { decimals: 0, suffix: ' pts' },\n    trend: [88, 89, 91, 90, 92, 93, 93, 94],\n    trendLabel: 'Delivered on time, last 8 months',\n    note: 'Against the date in the brief.',\n  },\n]\n\nexport default function BentoMetricsDemo() {\n  return (\n    <BentoMetrics\n      eyebrow=\"Halden Studio, Munich and Aalborg\"\n      heading=\"A year of work, in six figures.\"\n      intro=\"What a small studio can count, and nothing it cannot.\"\n      note=\"Example data.\"\n      metrics={METRICS}\n    />\n  )\n}\n",
+      "type": "registry:example"
+    }
+  ],
+  "categories": [
+    "templates"
+  ],
+  "type": "registry:example"
+}
