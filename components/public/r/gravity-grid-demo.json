@@ -1,0 +1,20 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "gravity-grid-demo",
+  "title": "Gravity grid demo",
+  "description": "How to use Gravity grid.",
+  "registryDependencies": [
+    "@manniche/gravity-grid"
+  ],
+  "files": [
+    {
+      "path": "registry/manniche/examples/gravity-grid-demo.tsx",
+      "content": "import { useState, type KeyboardEvent } from 'react'\nimport { GravityGrid } from '@/registry/manniche/gravity-grid/gravity-grid'\n\n// Radio groups take one tab stop; the arrow keys move the choice, as with native radio buttons.\nfunction arrows(e: KeyboardEvent<HTMLDivElement>) {\n  const step = ({ ArrowRight: 1, ArrowDown: 1, ArrowLeft: -1, ArrowUp: -1 } as Record<string, number>)[e.key]\n  if (!step) return\n  e.preventDefault()\n  const radios = [...e.currentTarget.querySelectorAll<HTMLButtonElement>('[role=\"radio\"]')]\n  const next = radios[(radios.indexOf(document.activeElement as HTMLButtonElement) + step + radios.length) % radios.length]\n  next.focus()\n  next.click()\n}\n\nexport default function GravityGridDemo() {\n  const [variant, setVariant] = useState<'dots' | 'lines'>('dots')\n\n  return (\n    <div className=\"flex w-full flex-col gap-4\">\n      <GravityGrid\n        variant={variant}\n        gap={variant === 'dots' ? 24 : 32}\n        className=\"grid aspect-[16/10] w-full place-items-center rounded-3xl border bg-card p-6 text-center\"\n      >\n        <div>\n          <p className=\"text-sm font-medium text-muted-foreground\">Move the pointer over the grid</p>\n          <h3 className=\"mt-1 font-serif text-3xl text-balance\">Everything leans towards you</h3>\n        </div>\n      </GravityGrid>\n      <div role=\"radiogroup\" aria-label=\"Grid\" onKeyDown={arrows} className=\"flex gap-1\">\n        {(['dots', 'lines'] as const).map((v) => (\n          <button\n            key={v}\n            type=\"button\"\n            role=\"radio\"\n            aria-checked={variant === v}\n            tabIndex={variant === v ? 0 : -1}\n            onClick={() => setVariant(v)}\n            className=\"min-h-11 rounded-xl px-3 text-sm font-medium capitalize text-muted-foreground hover:text-foreground aria-checked:bg-muted aria-checked:text-foreground\"\n          >\n            {v}\n          </button>\n        ))}\n      </div>\n    </div>\n  )\n}\n",
+      "type": "registry:example"
+    }
+  ],
+  "categories": [
+    "surfaces"
+  ],
+  "type": "registry:example"
+}
