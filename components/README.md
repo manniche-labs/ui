@@ -118,7 +118,7 @@ There is also a hosted MCP server just for this registry, with no key: `https://
 | `area-chart` | Smooth line over a soft tint, with a dashed comparison line and a crosshair tooltip that reads the difference |
 | `sparkline` | Tiny trend line beside a figure or in a table cell, with a dot on the latest point |
 | `dot-matrix` | A days × hours grid of dots that grow with the value, with a now cell and keyboard reading |
-| `donut` | Ring of rounded segments with a centre figure and a legend list that light each other |
+| `donut` | Ring of rounded segments with a centre figure and a legend list that light each other; optional target mark |
 | `dial` | Segmented arc that lights up to a value, or a three-zone gauge with a needle; read-only or a slider |
 | `bubble-chart` | Bubbles sized by value, on x/y axes or packed, with direct labels, a tooltip and keyboard stepping |
 | `lollipop` | Ranked lollipop list: stems, big heads, ranks that stay with their row, sorting that slides |
