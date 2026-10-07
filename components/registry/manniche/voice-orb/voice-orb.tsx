@@ -5,12 +5,15 @@ import { cn } from '@/lib/utils'
 export type VoiceOrbState = 'idle' | 'listening' | 'thinking' | 'speaking'
 
 export type VoiceOrbProps = {
+  /** What the assistant is doing: idle, listening, thinking or speaking. */
   state: VoiceOrbState
   /** 0 to 1, the loudness right now (from the microphone or the voice being played). */
   level?: number
   /** Diameter in px. */
   size?: number
+  /** Screen reader text per state, with English defaults. Keys: `idle`, `listening`, `thinking` and `speaking`. */
   labels?: Partial<Record<VoiceOrbState, string>>
+  /** Classes for the status element that holds the orb. */
   className?: string
 }
 

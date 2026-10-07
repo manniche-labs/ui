@@ -9,7 +9,9 @@ export type HoverHighlightItem = {
 }
 
 export type HoverHighlightProps = {
+  /** The cards, each with a title, a text and an optional href that makes it a link. */
   items: HoverHighlightItem[]
+  /** Classes for the list. */
   className?: string
 }
 

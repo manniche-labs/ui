@@ -7,6 +7,7 @@ export type LiquidMetalProps = {
   speed?: number
   /** Content shown on top of the metal. */
   children?: ReactNode
+  /** Classes for the outer element. */
   className?: string
 }
 

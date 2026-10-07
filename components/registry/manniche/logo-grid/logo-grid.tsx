@@ -8,10 +8,13 @@ export type LogoGridItem = { name: string; logo: ReactNode }
 export type LogoGridProps = {
   /** Twelve fill the grid around the centre; fewer leave empty cells. */
   items: LogoGridItem[]
+  /** The heading in the centre cell. */
   title: ReactNode
+  /** A short line under the heading. */
   description?: ReactNode
   /** E.g. a link to all integrations. */
   action?: ReactNode
+  /** Classes for the outer section. */
   className?: string
 }
 

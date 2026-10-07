@@ -99,6 +99,7 @@ export type ShaderBackdropProps = {
   seed?: number
   /** Content shown on top. */
   children?: ReactNode
+  /** Classes for the outer element. */
   className?: string
 }
 
