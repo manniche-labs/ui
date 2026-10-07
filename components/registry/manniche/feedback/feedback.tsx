@@ -1,24 +1,36 @@
 // Based on Watermelon UI's “Feedback” (MIT, © 2026 Watermelon Platform Contributors,
 // github.com/WatermelonCorp/watermelon-platform). Rewritten with lucide icons, focus handling and an async submit.
 import { Send, Sparkle, ThumbsDown, ThumbsUp, X } from 'lucide-react'
-import { AnimatePresence, LayoutGroup, MotionConfig, motion } from 'motion/react'
+import { AnimatePresence, LayoutGroup, MotionConfig, motion, useReducedMotion } from 'motion/react'
 import { useEffect, useId, useRef, useState } from 'react'
 import { cn } from '@/lib/utils'
 
 export type FeedbackRating = 'up' | 'down'
 
 export type FeedbackProps = {
+  /** Called with the rating and the trimmed text when the form is sent. The form closes once the returned promise resolves. */
   onSubmit: (data: { rating: FeedbackRating; text: string }) => Promise<void> | void
+  /** The heading of the form. Default “Share feedback”. */
   title?: string
+  /** The question above the field after a thumbs up. */
   upPrompt?: string
+  /** The question above the field after a thumbs down. */
   downPrompt?: string
+  /** The placeholder text in the field. Default “Optional”. */
   placeholder?: string
+  /** The text on the send button. Default “Send”. */
   sendLabel?: string
+  /** The text on the send button while it is sending. */
   sendingLabel?: string
+  /** The line shown under the thumbs after sending. */
   thanksLabel?: string
+  /** The accessible name of the thumbs up button. Default “Helpful”. */
   upLabel?: string
+  /** The accessible name of the thumbs down button. Default “Not helpful”. */
   downLabel?: string
+  /** The accessible name of the close button. Default “Close”. */
   closeLabel?: string
+  /** Classes for the outer wrapper. */
   className?: string
 }
 
@@ -46,6 +58,7 @@ export function Feedback({
   const field = useRef<HTMLTextAreaElement>(null)
   const thumbs = useRef<HTMLDivElement>(null)
   const id = useId()
+  const reduce = useReducedMotion()
 
   useEffect(() => {
     if (!popping) return
@@ -64,7 +77,9 @@ export function Feedback({
     if (popping) return
     setThanks(false)
     setRating(r)
-    setPopping(r)
+    // Without motion there is no pop to wait for, so the form opens at once.
+    if (reduce) setOpen(true)
+    else setPopping(r)
   }
   const close = () => {
     setOpen(false)
@@ -171,7 +186,7 @@ export function Feedback({
                   <button
                     type="submit"
                     disabled={sending}
-                    className="mt-3 inline-flex min-h-11 items-center gap-2 rounded-xl bg-foreground px-5 font-medium text-background active:scale-95 disabled:opacity-60"
+                    className="mt-3 inline-flex min-h-11 items-center gap-2 rounded-xl bg-foreground px-5 font-medium text-background active:scale-95 motion-reduce:active:scale-100 disabled:opacity-60"
                   >
                     <Send className="size-4" aria-hidden />
                     {sending ? sendingLabel : sendLabel}
