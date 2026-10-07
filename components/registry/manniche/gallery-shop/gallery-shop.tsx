@@ -15,7 +15,14 @@ export type GalleryShopData = {
 
 export type GalleryShopLabels = { note?: string; menuLabel?: string; works?: (n: number) => string }
 
-export type GalleryShopProps = { data: GalleryShopData; labels?: GalleryShopLabels; className?: string }
+export type GalleryShopProps = {
+  /** The gallery menu, headline, counters, events and collections to show. */
+  data: GalleryShopData
+  /** Visible text and screen reader text, with English defaults. Keys: note, menuLabel, works. */
+  labels?: GalleryShopLabels
+  /** Classes for the outer container. */
+  className?: string
+}
 
 export function GalleryShop({ data, labels, className }: GalleryShopProps) {
   const note = labels?.note ?? 'Example data.'
@@ -29,7 +36,7 @@ export function GalleryShop({ data, labels, className }: GalleryShopProps) {
             <button
               key={m.id}
               type="button"
-              aria-current={m.id === current ? 'page' : undefined}
+              aria-pressed={m.id === current}
               onClick={() => setCurrent(m.id)}
               className={cn('shrink-0 rounded-xl px-3 py-2 text-left text-sm text-muted-foreground hover:bg-muted hover:text-foreground focus-visible:outline-2 focus-visible:outline-ring', m.id === current && 'bg-foreground text-background hover:bg-foreground hover:text-background')}
             >

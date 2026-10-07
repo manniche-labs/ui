@@ -17,10 +17,15 @@ export type WorkspaceHomeData = {
 export type WorkspaceHomeLabels = { search?: string; searchLabel?: string; navLabel?: string; note?: string }
 
 export type WorkspaceHomeProps = {
+  /** The navigation items, offer tile, deals chart and schedule to show. */
   data: WorkspaceHomeData
+  /** Visible text and screen reader text, with English defaults. Keys: search, searchLabel, navLabel, note. */
   labels?: WorkspaceHomeLabels
+  /** Called with the typed text when the search form is submitted. */
   onSearch?: (query: string) => void
+  /** Called with no arguments when the offer tile's button is pressed. */
   onOffer?: () => void
+  /** Classes for the outer container. */
   className?: string
 }
 

@@ -16,7 +16,16 @@ export type SalesFloorData = {
 
 export type SalesFloorLabels = { note?: string }
 
-export type SalesFloorProps = { data: SalesFloorData; labels?: SalesFloorLabels; onEndCall?: () => void; className?: string }
+export type SalesFloorProps = {
+  /** The target dial, current call, performance bars and lead sources to show. */
+  data: SalesFloorData
+  /** Visible text and screen reader text, with English defaults. Key: note, the footer text on the tiles. */
+  labels?: SalesFloorLabels
+  /** Called with no arguments when the call tile's end-call button is pressed. */
+  onEndCall?: () => void
+  /** Classes for the outer container. */
+  className?: string
+}
 
 export function SalesFloor({ data, labels, onEndCall, className }: SalesFloorProps) {
   const note = labels?.note ?? 'Example data.'

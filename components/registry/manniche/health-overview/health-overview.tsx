@@ -15,7 +15,14 @@ export type HealthOverviewData = {
 
 export type HealthOverviewLabels = { note?: string }
 
-export type HealthOverviewProps = { data: HealthOverviewData; labels?: HealthOverviewLabels; className?: string }
+export type HealthOverviewProps = {
+  /** The patient, vitals, score dial and calorie charts to show. */
+  data: HealthOverviewData
+  /** Visible text and screen reader text, with English defaults. Key: note, the footer text on the tiles. */
+  labels?: HealthOverviewLabels
+  /** Classes for the outer container. */
+  className?: string
+}
 
 export function HealthOverview({ data, labels, className }: HealthOverviewProps) {
   const note = labels?.note ?? 'Example data.'
