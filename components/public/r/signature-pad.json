@@ -18,7 +18,33 @@
     }
   ],
   "meta": {
-    "credit": "Adapted from Watermelon UI (MIT)."
+    "credit": "Adapted from Watermelon UI (MIT).",
+    "tier": "free",
+    "added": "2026-10-03",
+    "usedIn": [],
+    "props": [
+      {
+        "name": "onSign",
+        "type": "(signature: Signature) => void",
+        "default": null,
+        "required": true,
+        "description": null
+      },
+      {
+        "name": "labels",
+        "type": "Partial<Record<'title' | 'clear' | 'done' | 'type' | 'draw' | 'typed' | 'signed' | 'pad', string>>",
+        "default": "{}",
+        "required": false,
+        "description": null
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "default": null,
+        "required": false,
+        "description": null
+      }
+    ]
   },
   "categories": [
     "controls"

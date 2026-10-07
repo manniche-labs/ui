@@ -14,6 +14,63 @@
       "type": "registry:component"
     }
   ],
+  "meta": {
+    "tier": "free",
+    "added": "2026-10-06",
+    "usedIn": [],
+    "props": [
+      {
+        "name": "brand",
+        "type": "ReactNode",
+        "default": null,
+        "required": true,
+        "description": "The wordmark or logo, rendered as given."
+      },
+      {
+        "name": "links",
+        "type": "FooterSlimLink[]",
+        "default": "[]",
+        "required": false,
+        "description": "Inline links: docs, status, privacy. Keep to about five."
+      },
+      {
+        "name": "owner",
+        "type": "string",
+        "default": null,
+        "required": true,
+        "description": "The name after the © sign."
+      },
+      {
+        "name": "theme",
+        "type": "FooterSlimTheme",
+        "default": null,
+        "required": false,
+        "description": "The current theme choice. The switch only shows when `onThemeChange` is also given."
+      },
+      {
+        "name": "onThemeChange",
+        "type": "(theme: FooterSlimTheme) => void",
+        "default": null,
+        "required": false,
+        "description": "Called with the picked theme. Apply it to your app yourself; this footer never touches the DOM."
+      },
+      {
+        "name": "now",
+        "type": "Date",
+        "default": null,
+        "required": false,
+        "description": "Pins the © year and keeps the first render pure. When absent the year appears after mount."
+      },
+      {
+        "name": "labels",
+        "type": "FooterSlimLabels",
+        "default": null,
+        "required": false,
+        "description": "UI strings, for translation."
+      }
+    ],
+    "extends": "Omit<ComponentPropsWithoutRef<'footer'>, 'children'>"
+  },
   "categories": [
     "templates"
   ],

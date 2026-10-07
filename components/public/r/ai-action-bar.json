@@ -18,7 +18,54 @@
     }
   ],
   "meta": {
-    "credit": "Adapted from Watermelon UI (MIT)."
+    "credit": "Adapted from Watermelon UI (MIT).",
+    "tier": "free",
+    "added": "2026-10-03",
+    "usedIn": [],
+    "props": [
+      {
+        "name": "tools",
+        "type": "AiBarTool[]",
+        "default": null,
+        "required": true,
+        "description": null
+      },
+      {
+        "name": "onAsk",
+        "type": "(prompt: string) => void",
+        "default": null,
+        "required": true,
+        "description": "Runs with the instruction when the person sends it."
+      },
+      {
+        "name": "placeholder",
+        "type": "string",
+        "default": "'Ask AI to change it…'",
+        "required": false,
+        "description": null
+      },
+      {
+        "name": "labels",
+        "type": "{ tools?: string; ask?: string; send?: string }",
+        "default": "{}",
+        "required": false,
+        "description": null
+      },
+      {
+        "name": "defaultMode",
+        "type": "'tools' | 'ask'",
+        "default": "'tools'",
+        "required": false,
+        "description": null
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "default": null,
+        "required": false,
+        "description": null
+      }
+    ]
   },
   "categories": [
     "agent"

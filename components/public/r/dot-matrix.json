@@ -14,6 +14,136 @@
       "type": "registry:component"
     }
   ],
+  "meta": {
+    "tier": "free",
+    "added": "2026-10-06",
+    "usedIn": [
+      "people-ops",
+      "widget-wall"
+    ],
+    "props": [
+      {
+        "name": "data",
+        "type": "number[][]",
+        "default": null,
+        "required": true,
+        "description": "The values, one array per row with one number per column: `data[row][column]`. Missing cells count as 0."
+      },
+      {
+        "name": "rows",
+        "type": "string[]",
+        "default": null,
+        "required": true,
+        "description": "The short row names at the left: \"Mon\" or \"M\"."
+      },
+      {
+        "name": "rowTitles",
+        "type": "string[]",
+        "default": null,
+        "required": false,
+        "description": "The full row names for the tooltip, the table and screen readers: \"Mon\", \"Monday\". Default `rows`."
+      },
+      {
+        "name": "columns",
+        "type": "string[]",
+        "default": null,
+        "required": true,
+        "description": "The short column names along the bottom: \"07\", \"08\"."
+      },
+      {
+        "name": "columnTitles",
+        "type": "string[]",
+        "default": null,
+        "required": false,
+        "description": "The full column names for the tooltip, the table and screen readers: \"07:00–08:00\". Default `columns`."
+      },
+      {
+        "name": "label",
+        "type": "string",
+        "default": null,
+        "required": true,
+        "description": "The chart's accessible name, such as \"Card payments per hour over the last 4 weeks\"."
+      },
+      {
+        "name": "format",
+        "type": "ValueFormat",
+        "default": null,
+        "required": false,
+        "description": "How values are written in the tooltip, the table and when read. Default a plain whole number."
+      },
+      {
+        "name": "levels",
+        "type": "[number, number, number, number]",
+        "default": null,
+        "required": false,
+        "description": "The upper bounds of levels 0 to 3, ascending; anything above the last is the top level. The mockup's `[0, 1, 3, 5]` puts 0 at the smallest dot, 1 next, 2–3, 4–5 and 6 or more at full size. Default: 0, then quarters of the largest value."
+      },
+      {
+        "name": "current",
+        "type": "number | null",
+        "default": "null",
+        "required": false,
+        "description": "The cell marked as now in --primary, as `row * columns.length + column`. Default null, none."
+      },
+      {
+        "name": "labelEvery",
+        "type": "number",
+        "default": null,
+        "required": false,
+        "description": "Name every nth column, counted from the first. Default as many as fit, at most about six."
+      },
+      {
+        "name": "loading",
+        "type": "boolean",
+        "default": "false",
+        "required": false,
+        "description": "Show breathing skeleton dots instead of data."
+      },
+      {
+        "name": "placeholder",
+        "type": "ReactNode",
+        "default": null,
+        "required": false,
+        "description": "Shown over the empty grid when there is no data or every value is 0, such as a message and a next step."
+      },
+      {
+        "name": "activeIndex",
+        "type": "number | null",
+        "default": null,
+        "required": false,
+        "description": "The highlighted cell as `row * columns.length + column`, or null. Pass it to control the highlight."
+      },
+      {
+        "name": "defaultActiveIndex",
+        "type": "number | null",
+        "default": "null",
+        "required": false,
+        "description": "The highlighted cell to start with, when `activeIndex` is not controlled. Default null."
+      },
+      {
+        "name": "onActiveIndexChange",
+        "type": "(index: number | null) => void",
+        "default": null,
+        "required": false,
+        "description": "Called when hover, a finger or the keyboard picks another cell, and with null when it lets go."
+      },
+      {
+        "name": "density",
+        "type": "'comfortable' | 'compact'",
+        "default": null,
+        "required": false,
+        "description": "\"compact\" draws smaller, flatter cells. Inside a compact DataTile this happens on its own."
+      },
+      {
+        "name": "labels",
+        "type": "DotMatrixLabels",
+        "default": null,
+        "required": false,
+        "description": "Every visible and spoken string that is not data."
+      }
+    ],
+    "extends": "Omit<ComponentProps<'div'>, 'children'>"
+  },
   "categories": [
     "widgets"
   ],

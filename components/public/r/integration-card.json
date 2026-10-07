@@ -18,7 +18,82 @@
     }
   ],
   "meta": {
-    "credit": "Adapted from Watermelon UI (MIT)."
+    "credit": "Adapted from Watermelon UI (MIT).",
+    "tier": "free",
+    "added": "2026-10-04",
+    "usedIn": [],
+    "props": [
+      {
+        "name": "title",
+        "type": "string",
+        "default": "'Integrations'",
+        "required": false,
+        "description": null
+      },
+      {
+        "name": "items",
+        "type": "Integration[]",
+        "default": null,
+        "required": true,
+        "description": null
+      },
+      {
+        "name": "onConnectChange",
+        "type": "(id: string, connected: boolean) => Promise<void> | void",
+        "default": null,
+        "required": false,
+        "description": null
+      },
+      {
+        "name": "connectLabel",
+        "type": "string",
+        "default": "'Connect'",
+        "required": false,
+        "description": null
+      },
+      {
+        "name": "connectedLabel",
+        "type": "string",
+        "default": "'Connected'",
+        "required": false,
+        "description": null
+      },
+      {
+        "name": "disconnectLabel",
+        "type": "string",
+        "default": "'Disconnect'",
+        "required": false,
+        "description": null
+      },
+      {
+        "name": "triggersLabel",
+        "type": "string",
+        "default": "'Triggers'",
+        "required": false,
+        "description": null
+      },
+      {
+        "name": "actionsLabel",
+        "type": "string",
+        "default": "'Actions'",
+        "required": false,
+        "description": null
+      },
+      {
+        "name": "closeLabel",
+        "type": "string",
+        "default": "'Close'",
+        "required": false,
+        "description": null
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "default": null,
+        "required": false,
+        "description": null
+      }
+    ]
   },
   "categories": [
     "widgets"

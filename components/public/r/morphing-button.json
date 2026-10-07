@@ -18,7 +18,54 @@
     }
   ],
   "meta": {
-    "credit": "Adapted from Watermelon UI (MIT)."
+    "credit": "Adapted from Watermelon UI (MIT).",
+    "tier": "free",
+    "added": "2026-10-04",
+    "usedIn": [],
+    "props": [
+      {
+        "name": "label",
+        "type": "string",
+        "default": "'Notify me'",
+        "required": false,
+        "description": null
+      },
+      {
+        "name": "placeholder",
+        "type": "string",
+        "default": "'Your email'",
+        "required": false,
+        "description": null
+      },
+      {
+        "name": "submitLabel",
+        "type": "string",
+        "default": "'Notify me'",
+        "required": false,
+        "description": null
+      },
+      {
+        "name": "doneLabel",
+        "type": "string",
+        "default": "'You are on the list'",
+        "required": false,
+        "description": null
+      },
+      {
+        "name": "onSubmit",
+        "type": "(email: string) => void",
+        "default": null,
+        "required": true,
+        "description": null
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "default": null,
+        "required": false,
+        "description": null
+      }
+    ]
   },
   "categories": [
     "controls"

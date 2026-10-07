@@ -14,6 +14,42 @@
       "type": "registry:component"
     }
   ],
+  "meta": {
+    "tier": "free",
+    "added": "2026-10-06",
+    "usedIn": [],
+    "props": [
+      {
+        "name": "heading",
+        "type": "ReactNode",
+        "default": null,
+        "required": true,
+        "description": "The section's `h2`."
+      },
+      {
+        "name": "intro",
+        "type": "ReactNode",
+        "default": null,
+        "required": false,
+        "description": "A short line under the heading."
+      },
+      {
+        "name": "eyebrow",
+        "type": "ReactNode",
+        "default": null,
+        "required": false,
+        "description": "A small mono label above the heading, such as \"Features\"."
+      },
+      {
+        "name": "features",
+        "type": "readonly BentoFeature[]",
+        "default": null,
+        "required": true,
+        "description": "The features, lead first. Six fill the bento exactly; other counts reflow without holes at the ends."
+      }
+    ],
+    "extends": "Omit<ComponentProps<'section'>, 'children' | 'title'>"
+  },
   "categories": [
     "templates"
   ],

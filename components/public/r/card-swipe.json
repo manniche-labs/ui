@@ -18,7 +18,47 @@
     }
   ],
   "meta": {
-    "credit": "Adapted from Watermelon UI (MIT)."
+    "credit": "Adapted from Watermelon UI (MIT).",
+    "tier": "free",
+    "added": "2026-10-04",
+    "usedIn": [],
+    "props": [
+      {
+        "name": "cards",
+        "type": "ReactNode[]",
+        "default": null,
+        "required": true,
+        "description": "One node per card."
+      },
+      {
+        "name": "label",
+        "type": "string",
+        "default": "'Cards'",
+        "required": false,
+        "description": null
+      },
+      {
+        "name": "previousLabel",
+        "type": "string",
+        "default": "'Previous'",
+        "required": false,
+        "description": null
+      },
+      {
+        "name": "nextLabel",
+        "type": "string",
+        "default": "'Next'",
+        "required": false,
+        "description": null
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "default": null,
+        "required": false,
+        "description": null
+      }
+    ]
   },
   "categories": [
     "surfaces"

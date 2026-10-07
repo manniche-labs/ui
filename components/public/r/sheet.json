@@ -13,6 +13,48 @@
       "type": "registry:component"
     }
   ],
+  "meta": {
+    "tier": "free",
+    "added": "2026-10-03",
+    "usedIn": [],
+    "props": [
+      {
+        "name": "open",
+        "type": "boolean",
+        "default": null,
+        "required": true,
+        "description": null
+      },
+      {
+        "name": "onOpenChange",
+        "type": "(open: boolean) => void",
+        "default": null,
+        "required": true,
+        "description": null
+      },
+      {
+        "name": "title",
+        "type": "string",
+        "default": null,
+        "required": true,
+        "description": "Accessible name, and the heading at the top of the sheet."
+      },
+      {
+        "name": "children",
+        "type": "ReactNode",
+        "default": null,
+        "required": true,
+        "description": null
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "default": null,
+        "required": false,
+        "description": null
+      }
+    ]
+  },
   "categories": [
     "overlays"
   ],

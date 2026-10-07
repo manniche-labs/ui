@@ -18,7 +18,82 @@
     }
   ],
   "meta": {
-    "credit": "Adapted from Watermelon UI (MIT)."
+    "credit": "Adapted from Watermelon UI (MIT).",
+    "tier": "free",
+    "added": "2026-10-04",
+    "usedIn": [],
+    "props": [
+      {
+        "name": "label",
+        "type": "string",
+        "default": null,
+        "required": true,
+        "description": null
+      },
+      {
+        "name": "value",
+        "type": "string",
+        "default": null,
+        "required": true,
+        "description": null
+      },
+      {
+        "name": "onSave",
+        "type": "(value: string) => void",
+        "default": null,
+        "required": true,
+        "description": null
+      },
+      {
+        "name": "icon",
+        "type": "ReactNode",
+        "default": null,
+        "required": false,
+        "description": null
+      },
+      {
+        "name": "multiline",
+        "type": "boolean",
+        "default": "false",
+        "required": false,
+        "description": null
+      },
+      {
+        "name": "placeholder",
+        "type": "string",
+        "default": "'Empty'",
+        "required": false,
+        "description": "Shown when the value is empty."
+      },
+      {
+        "name": "editLabel",
+        "type": "string",
+        "default": "'Edit'",
+        "required": false,
+        "description": null
+      },
+      {
+        "name": "saveLabel",
+        "type": "string",
+        "default": "'Save'",
+        "required": false,
+        "description": null
+      },
+      {
+        "name": "cancelLabel",
+        "type": "string",
+        "default": "'Cancel'",
+        "required": false,
+        "description": null
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "default": null,
+        "required": false,
+        "description": null
+      }
+    ]
   },
   "categories": [
     "controls"

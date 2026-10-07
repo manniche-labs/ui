@@ -16,6 +16,55 @@
       "type": "registry:component"
     }
   ],
+  "meta": {
+    "tier": "free",
+    "added": "2026-10-03",
+    "usedIn": [],
+    "props": [
+      {
+        "name": "commands",
+        "type": "Command[]",
+        "default": null,
+        "required": true,
+        "description": null
+      },
+      {
+        "name": "open",
+        "type": "boolean",
+        "default": null,
+        "required": true,
+        "description": null
+      },
+      {
+        "name": "onOpenChange",
+        "type": "(open: boolean) => void",
+        "default": null,
+        "required": true,
+        "description": null
+      },
+      {
+        "name": "placeholder",
+        "type": "string",
+        "default": "'Type a command or search'",
+        "required": false,
+        "description": null
+      },
+      {
+        "name": "hotkey",
+        "type": "boolean",
+        "default": "true",
+        "required": false,
+        "description": "Open and close with Cmd+K / Ctrl+K."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "default": null,
+        "required": false,
+        "description": null
+      }
+    ]
+  },
   "categories": [
     "overlays"
   ],

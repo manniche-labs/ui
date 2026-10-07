@@ -16,6 +16,112 @@
       "type": "registry:component"
     }
   ],
+  "meta": {
+    "tier": "free",
+    "added": "2026-10-06",
+    "usedIn": [],
+    "props": [
+      {
+        "name": "name",
+        "type": "ReactNode",
+        "default": null,
+        "required": true,
+        "description": "The product's name, shown as the section's `h2`."
+      },
+      {
+        "name": "intro",
+        "type": "ReactNode",
+        "default": null,
+        "required": false,
+        "description": "A short line under the name."
+      },
+      {
+        "name": "eyebrow",
+        "type": "ReactNode",
+        "default": null,
+        "required": false,
+        "description": "A small mono label above the name, such as the maker."
+      },
+      {
+        "name": "media",
+        "type": "ReactNode | ((variant: ProductVariant) => ReactNode)",
+        "default": null,
+        "required": true,
+        "description": "The picture: a node, or a function that gets the chosen variant (so the picture can change with it)."
+      },
+      {
+        "name": "variants",
+        "type": "readonly ProductVariant[]",
+        "default": null,
+        "required": true,
+        "description": "The variants, two to four."
+      },
+      {
+        "name": "defaultVariantId",
+        "type": "string",
+        "default": null,
+        "required": false,
+        "description": "The variant chosen first when `variantId` is not controlled. Default the first."
+      },
+      {
+        "name": "variantId",
+        "type": "string",
+        "default": null,
+        "required": false,
+        "description": "The chosen variant, when you control it."
+      },
+      {
+        "name": "onVariantChange",
+        "type": "(id: string) => void",
+        "default": null,
+        "required": false,
+        "description": "Called when the visitor picks another variant."
+      },
+      {
+        "name": "variantLabel",
+        "type": "string",
+        "default": null,
+        "required": true,
+        "description": "The group's name on the switch and its tile: \"Colour\"."
+      },
+      {
+        "name": "priceLabel",
+        "type": "string",
+        "default": "'Price'",
+        "required": false,
+        "description": "The name of the price tile. Default \"Price\"."
+      },
+      {
+        "name": "specs",
+        "type": "readonly ProductSpec[]",
+        "default": null,
+        "required": true,
+        "description": "The specs, three or four."
+      },
+      {
+        "name": "priceFormat",
+        "type": "ValueFormat",
+        "default": "{ currency: 'EUR' }",
+        "required": false,
+        "description": "How the price is written. Default euros, no decimals."
+      },
+      {
+        "name": "priceNote",
+        "type": "ReactNode",
+        "default": null,
+        "required": false,
+        "description": "Fine print under the price: \"Incl. VAT. Ships in 3 to 5 days.\""
+      },
+      {
+        "name": "action",
+        "type": "{ label: string; href: string }",
+        "default": null,
+        "required": true,
+        "description": "The one primary action."
+      }
+    ],
+    "extends": "Omit<ComponentProps<'section'>, 'children' | 'title'>"
+  },
   "categories": [
     "templates"
   ],

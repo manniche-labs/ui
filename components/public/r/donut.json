@@ -14,6 +14,112 @@
       "type": "registry:component"
     }
   ],
+  "meta": {
+    "tier": "free",
+    "added": "2026-10-06",
+    "usedIn": [
+      "business-finance",
+      "currency-wallet",
+      "health-overview",
+      "sales-floor",
+      "wallet-dashboard",
+      "widget-wall"
+    ],
+    "props": [
+      {
+        "name": "data",
+        "type": "DonutDatum[]",
+        "default": null,
+        "required": true,
+        "description": "One entry per category, in the order the ring and the list show them: `{ label, value, color? }`."
+      },
+      {
+        "name": "label",
+        "type": "string",
+        "default": null,
+        "required": true,
+        "description": "What the chart shows, such as \"Spending by category, last 30 days\". Names the ring and the list."
+      },
+      {
+        "name": "format",
+        "type": "ValueFormat",
+        "default": null,
+        "required": false,
+        "description": "How values are written. Default: a plain whole number in en-GB."
+      },
+      {
+        "name": "total",
+        "type": "number",
+        "default": null,
+        "required": false,
+        "description": "The whole the shares are taken of. Leave it out to use the sum of `data`. A larger total (a budget, say) leaves the rest of the ring empty."
+      },
+      {
+        "name": "target",
+        "type": "number",
+        "default": null,
+        "required": false,
+        "description": "A goal to measure the total against. The ring gets a mark where it falls, and the centre reads the progress when nothing is active. A target above the total (or the sum) widens the ring to fit it."
+      },
+      {
+        "name": "centre",
+        "type": "ReactNode",
+        "default": null,
+        "required": false,
+        "description": "Your own centre content, shown when no category is active. The active category still takes over the centre."
+      },
+      {
+        "name": "layout",
+        "type": "\"auto\" | \"row\" | \"stack\"",
+        "default": "\"auto\"",
+        "required": false,
+        "description": "\"row\" puts the list beside the ring, \"stack\" puts it under; \"auto\" (default) picks by the width available."
+      },
+      {
+        "name": "activeIndex",
+        "type": "number | null",
+        "default": null,
+        "required": false,
+        "description": "The highlighted category, or null for none. Pass it to control the highlight; leave it out to let the chart."
+      },
+      {
+        "name": "defaultActiveIndex",
+        "type": "number | null",
+        "default": "null",
+        "required": false,
+        "description": "The highlighted category on first render when uncontrolled. Default null."
+      },
+      {
+        "name": "onActiveIndexChange",
+        "type": "(index: number | null) => void",
+        "default": null,
+        "required": false,
+        "description": "Called when the highlight moves by pointer, focus or keys, with null when it clears."
+      },
+      {
+        "name": "onSelect",
+        "type": "(index: number) => void",
+        "default": null,
+        "required": false,
+        "description": "Called when a row is clicked or pressed with Enter or Space, for drilling into a category."
+      },
+      {
+        "name": "labels",
+        "type": "DonutLabels",
+        "default": null,
+        "required": false,
+        "description": "Words for other languages."
+      },
+      {
+        "name": "density",
+        "type": "\"comfortable\" | \"compact\"",
+        "default": null,
+        "required": false,
+        "description": "\"compact\" draws a smaller ring and tighter gaps. Inside a compact DataTile this happens on its own."
+      }
+    ],
+    "extends": "Omit<HTMLAttributes<HTMLDivElement>, \"children\" | \"onSelect\">"
+  },
   "categories": [
     "widgets"
   ],

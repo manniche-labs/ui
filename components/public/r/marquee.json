@@ -13,6 +13,55 @@
       "type": "registry:component"
     }
   ],
+  "meta": {
+    "tier": "free",
+    "added": "2026-10-03",
+    "usedIn": [],
+    "props": [
+      {
+        "name": "children",
+        "type": "ReactNode",
+        "default": null,
+        "required": true,
+        "description": null
+      },
+      {
+        "name": "duration",
+        "type": "number",
+        "default": "30",
+        "required": false,
+        "description": "Seconds for one full loop."
+      },
+      {
+        "name": "gap",
+        "type": "number",
+        "default": "14",
+        "required": false,
+        "description": "Gap between items in pixels."
+      },
+      {
+        "name": "reverse",
+        "type": "boolean",
+        "default": "false",
+        "required": false,
+        "description": null
+      },
+      {
+        "name": "label",
+        "type": "string",
+        "default": null,
+        "required": false,
+        "description": "Accessible name for the list, e.g. \"Customers\"."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "default": null,
+        "required": false,
+        "description": null
+      }
+    ]
+  },
   "categories": [
     "motion"
   ],

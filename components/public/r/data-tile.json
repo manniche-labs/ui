@@ -13,6 +13,93 @@
       "type": "registry:component"
     }
   ],
+  "meta": {
+    "tier": "free",
+    "added": "2026-10-06",
+    "usedIn": [
+      "account-home",
+      "bar-chart",
+      "bento-features",
+      "bento-metrics",
+      "bento-product",
+      "business-finance",
+      "currency-wallet",
+      "delivery-board",
+      "footer-desk",
+      "footer-sitemap",
+      "footer-statement",
+      "footer-status",
+      "footer-tiles",
+      "gallery-shop",
+      "health-overview",
+      "people-ops",
+      "rental-portfolio",
+      "sales-floor",
+      "spend-control",
+      "wallet-dashboard",
+      "week-schedule",
+      "widget-wall",
+      "workspace-home"
+    ],
+    "props": [
+      {
+        "name": "title",
+        "type": "ReactNode",
+        "default": null,
+        "required": false,
+        "description": "The question the tile answers, as a short name: \"Revenue\", \"Sleep\"."
+      },
+      {
+        "name": "headingLevel",
+        "type": "2 | 3 | 4 | 5 | 6",
+        "default": "3",
+        "required": false,
+        "description": "The heading level of the title, to fit the page outline. Default 3."
+      },
+      {
+        "name": "action",
+        "type": "ReactNode",
+        "default": null,
+        "required": false,
+        "description": "A control set at the right of the title row, such as a period switch."
+      },
+      {
+        "name": "footer",
+        "type": "ReactNode",
+        "default": null,
+        "required": false,
+        "description": "The fine print under a line: what is counted, from when, by whom."
+      },
+      {
+        "name": "inverted",
+        "type": "boolean",
+        "default": "false",
+        "required": false,
+        "description": "Swap the tile to the opposite theme, to lift the one figure that matters most on a screen."
+      },
+      {
+        "name": "density",
+        "type": "'comfortable' | 'compact'",
+        "default": "'comfortable'",
+        "required": false,
+        "description": "\"compact\" tightens the padding and gaps for dense dashboards. Default \"comfortable\"."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "default": null,
+        "required": false,
+        "description": null
+      },
+      {
+        "name": "children",
+        "type": "ReactNode",
+        "default": null,
+        "required": false,
+        "description": null
+      }
+    ]
+  },
   "categories": [
     "surfaces"
   ],

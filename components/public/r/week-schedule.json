@@ -15,6 +15,142 @@
       "type": "registry:component"
     }
   ],
+  "meta": {
+    "tier": "free",
+    "added": "2026-10-06",
+    "usedIn": [
+      "workspace-home"
+    ],
+    "props": [
+      {
+        "name": "data",
+        "type": "ScheduleEvent[]",
+        "default": null,
+        "required": true,
+        "description": "The events of the week."
+      },
+      {
+        "name": "label",
+        "type": "string",
+        "default": null,
+        "required": true,
+        "description": "The accessible name, such as \"This week\"."
+      },
+      {
+        "name": "weekStart",
+        "type": "string",
+        "default": null,
+        "required": true,
+        "description": "\"YYYY-MM-DD\" of the first column."
+      },
+      {
+        "name": "days",
+        "type": "number",
+        "default": "7",
+        "required": false,
+        "description": "How many days to show. Default 7."
+      },
+      {
+        "name": "categories",
+        "type": "ScheduleCategory[]",
+        "default": null,
+        "required": false,
+        "description": "The categories, in legend order. Without them events use their own `color` or the first series colour."
+      },
+      {
+        "name": "now",
+        "type": "string",
+        "default": null,
+        "required": false,
+        "description": "\"YYYY-MM-DDTHH:MM\". Draws the now line when it falls inside the week and marks that day as today."
+      },
+      {
+        "name": "startHour",
+        "type": "number",
+        "default": "8",
+        "required": false,
+        "description": "The first hour on the rail. Default 8."
+      },
+      {
+        "name": "endHour",
+        "type": "number",
+        "default": "21",
+        "required": false,
+        "description": "The hour the grid ends. Default 21."
+      },
+      {
+        "name": "hourHeight",
+        "type": "number",
+        "default": null,
+        "required": false,
+        "description": "The height of an hour in px. Default 46, or 40 inside a compact tile."
+      },
+      {
+        "name": "layout",
+        "type": "'auto' | 'week' | 'day'",
+        "default": "'auto'",
+        "required": false,
+        "description": "\"auto\" shows the week while each day gets `minDayWidth`, then day tabs. Default \"auto\"."
+      },
+      {
+        "name": "minDayWidth",
+        "type": "number",
+        "default": "60",
+        "required": false,
+        "description": "The narrowest a day column may get before \"auto\" switches to day tabs. Default 60."
+      },
+      {
+        "name": "day",
+        "type": "number",
+        "default": null,
+        "required": false,
+        "description": "The day shown in day tabs (controlled)."
+      },
+      {
+        "name": "defaultDay",
+        "type": "number",
+        "default": null,
+        "required": false,
+        "description": "The day shown first in day tabs. Default today, else the first day."
+      },
+      {
+        "name": "onDayChange",
+        "type": "(day: number) => void",
+        "default": null,
+        "required": false,
+        "description": null
+      },
+      {
+        "name": "onSelect",
+        "type": "(event: ScheduleEvent) => void",
+        "default": null,
+        "required": false,
+        "description": "Makes each event a button and is called with it."
+      },
+      {
+        "name": "legend",
+        "type": "boolean",
+        "default": "true",
+        "required": false,
+        "description": "Show the category legend under the grid. Default true."
+      },
+      {
+        "name": "locale",
+        "type": "string",
+        "default": "'en-GB'",
+        "required": false,
+        "description": "Number and date language. Default \"en-GB\"."
+      },
+      {
+        "name": "labels",
+        "type": "WeekScheduleLabels",
+        "default": null,
+        "required": false,
+        "description": null
+      }
+    ],
+    "extends": "Omit<HTMLAttributes<HTMLDivElement>, 'onSelect'>"
+  },
   "categories": [
     "widgets"
   ],

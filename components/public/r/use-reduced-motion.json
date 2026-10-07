@@ -10,6 +10,15 @@
       "type": "registry:hook"
     }
   ],
+  "meta": {
+    "tier": "free",
+    "added": "2026-10-03",
+    "usedIn": [
+      "bento-metrics",
+      "bento-product"
+    ],
+    "props": []
+  },
   "categories": [
     "hooks"
   ],

@@ -16,6 +16,69 @@
       "type": "registry:component"
     }
   ],
+  "meta": {
+    "tier": "free",
+    "added": "2026-10-03",
+    "usedIn": [],
+    "props": [
+      {
+        "name": "tool",
+        "type": "string",
+        "default": null,
+        "required": true,
+        "description": "The tool the agent wants to call, e.g. \"send_email\"."
+      },
+      {
+        "name": "summary",
+        "type": "string",
+        "default": null,
+        "required": true,
+        "description": "One sentence in plain words about what will happen."
+      },
+      {
+        "name": "args",
+        "type": "Record<string, unknown>",
+        "default": null,
+        "required": false,
+        "description": "The arguments, shown as JSON so nothing is hidden."
+      },
+      {
+        "name": "risky",
+        "type": "boolean",
+        "default": "false",
+        "required": false,
+        "description": "Mark a call that changes something outside the app."
+      },
+      {
+        "name": "state",
+        "type": "ToolApprovalState",
+        "default": null,
+        "required": false,
+        "description": "Controlled state. Leave it out and the card keeps its own."
+      },
+      {
+        "name": "onApprove",
+        "type": "() => void",
+        "default": null,
+        "required": false,
+        "description": null
+      },
+      {
+        "name": "onDeny",
+        "type": "() => void",
+        "default": null,
+        "required": false,
+        "description": null
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "default": null,
+        "required": false,
+        "description": null
+      }
+    ]
+  },
   "categories": [
     "agent"
   ],

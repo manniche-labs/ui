@@ -19,6 +19,69 @@
       "type": "registry:component"
     }
   ],
+  "meta": {
+    "tier": "free",
+    "added": "2026-10-06",
+    "usedIn": [],
+    "props": [
+      {
+        "name": "data",
+        "type": "{ cashflow: AreaPoint[]; income: number; incomeChange: number; growth: number; growthTarget: string; stock: { label: string; value: number }[]; stockName: string; activity: Transaction[]; …",
+        "default": null,
+        "required": true,
+        "description": null
+      },
+      {
+        "name": "format",
+        "type": "ValueFormat",
+        "default": "DEFAULT_FORMAT",
+        "required": false,
+        "description": null
+      },
+      {
+        "name": "title",
+        "type": "string",
+        "default": "'Business finance'",
+        "required": false,
+        "description": null
+      },
+      {
+        "name": "note",
+        "type": "string",
+        "default": "'Example data.'",
+        "required": false,
+        "description": null
+      },
+      {
+        "name": "today",
+        "type": "string",
+        "default": null,
+        "required": false,
+        "description": null
+      },
+      {
+        "name": "now",
+        "type": "Date",
+        "default": null,
+        "required": false,
+        "description": "The current time. Used for `today` when that is not given."
+      },
+      {
+        "name": "labels",
+        "type": "{ income?: string; payments?: string; growth?: string; ofTarget?: string; stock?: string; activity?: string; verification?: string; stepsDone?: (done: number, total: number) => string; done?: …",
+        "default": null,
+        "required": false,
+        "description": null
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "default": null,
+        "required": false,
+        "description": null
+      }
+    ]
+  },
   "categories": [
     "templates"
   ],

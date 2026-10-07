@@ -16,6 +16,83 @@
       "type": "registry:component"
     }
   ],
+  "meta": {
+    "tier": "free",
+    "added": "2026-10-03",
+    "usedIn": [],
+    "props": [
+      {
+        "name": "onSubmit",
+        "type": "(text: string, files: File[]) => void",
+        "default": null,
+        "required": true,
+        "description": "Called with the trimmed text and the attached files."
+      },
+      {
+        "name": "onStop",
+        "type": "() => void",
+        "default": null,
+        "required": false,
+        "description": "Called when the visitor presses stop while a reply is being written."
+      },
+      {
+        "name": "busy",
+        "type": "boolean",
+        "default": "false",
+        "required": false,
+        "description": "True while a reply is being written. The send button turns into a stop button."
+      },
+      {
+        "name": "placeholder",
+        "type": "string",
+        "default": "'Ask anything'",
+        "required": false,
+        "description": null
+      },
+      {
+        "name": "label",
+        "type": "string",
+        "default": "'Message'",
+        "required": false,
+        "description": "Accessible name for the text field."
+      },
+      {
+        "name": "accept",
+        "type": "string",
+        "default": null,
+        "required": false,
+        "description": "Lets the visitor attach files. The value is passed to the file input's accept."
+      },
+      {
+        "name": "footer",
+        "type": "ReactNode",
+        "default": null,
+        "required": false,
+        "description": "Optional choices next to the buttons, e.g. a model picker."
+      },
+      {
+        "name": "maxRows",
+        "type": "number",
+        "default": "8",
+        "required": false,
+        "description": null
+      },
+      {
+        "name": "halo",
+        "type": "boolean",
+        "default": "false",
+        "required": false,
+        "description": "Lights the border while there is something to send: a band of primary light runs round the ring. Off by default."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "default": null,
+        "required": false,
+        "description": null
+      }
+    ]
+  },
   "categories": [
     "agent"
   ],

@@ -19,6 +19,76 @@
       "type": "registry:hook"
     }
   ],
+  "meta": {
+    "tier": "free",
+    "added": "2026-10-06",
+    "usedIn": [],
+    "props": [
+      {
+        "name": "preset",
+        "type": "ShaderPreset",
+        "default": "'mesh-lilac'",
+        "required": false,
+        "description": "A ready-made look. `variant` and `colors` override parts of it."
+      },
+      {
+        "name": "variant",
+        "type": "ShaderVariant",
+        "default": null,
+        "required": false,
+        "description": "The kind of motion. Defaults to the preset's."
+      },
+      {
+        "name": "colors",
+        "type": "string[]",
+        "default": null,
+        "required": false,
+        "description": "Two to five hex colours; fewer are stretched to five. Defaults to the preset's."
+      },
+      {
+        "name": "speed",
+        "type": "number",
+        "default": "1",
+        "required": false,
+        "description": "1 is slow enough to sit behind a headline. 0 stands still."
+      },
+      {
+        "name": "grain",
+        "type": "number",
+        "default": null,
+        "required": false,
+        "description": "0 to 1: fine print grain on top, which also hides banding."
+      },
+      {
+        "name": "scale",
+        "type": "number",
+        "default": "1",
+        "required": false,
+        "description": "Above 1 the pattern gets smaller and busier, below 1 bigger and calmer."
+      },
+      {
+        "name": "seed",
+        "type": "number",
+        "default": "0",
+        "required": false,
+        "description": "Another whole number gives the same look a different layout, e.g. for two backdrops on one page."
+      },
+      {
+        "name": "children",
+        "type": "ReactNode",
+        "default": null,
+        "required": false,
+        "description": "Content shown on top."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "default": null,
+        "required": false,
+        "description": null
+      }
+    ]
+  },
   "categories": [
     "surfaces"
   ],

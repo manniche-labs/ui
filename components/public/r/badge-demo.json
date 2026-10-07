@@ -1,0 +1,20 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "badge-demo",
+  "title": "Badge demo",
+  "description": "How to use Badge.",
+  "registryDependencies": [
+    "@manniche/badge"
+  ],
+  "files": [
+    {
+      "path": "registry/manniche/examples/badge-demo.tsx",
+      "content": "import { Badge } from '@/registry/manniche/badge/badge'\n\n// Every variant, alone and the way they sit together on a gallery card. The \"New\" labels are example data.\nexport default function BadgeDemo() {\n  return (\n    <div className=\"grid w-full gap-6\">\n      <div className=\"grid gap-3 rounded-[calc(var(--radius)*2+2px)] bg-card p-6 text-card-foreground shadow-[0_0_0_1px_color-mix(in_oklab,var(--foreground)_9%,transparent),0_1px_2px_rgba(0,0,0,0.03)]\">\n        <p className=\"text-sm text-muted-foreground\">Variants</p>\n        <div className=\"flex flex-wrap items-center gap-2\">\n          <Badge variant=\"neutral\">controls</Badge>\n          <Badge variant=\"free\">Free</Badge>\n          <Badge variant=\"pro\">Pro</Badge>\n          <Badge variant=\"new\">New</Badge>\n          <Badge variant=\"demo\">Demo data</Badge>\n        </div>\n        <p className=\"mt-3 text-sm text-muted-foreground\">Together, as on a card</p>\n        <div className=\"flex flex-wrap items-center gap-1.5\">\n          <Badge>surfaces</Badge>\n          <Badge variant=\"new\">New</Badge>\n          <Badge variant=\"pro\">Pro</Badge>\n        </div>\n        <div className=\"flex flex-wrap items-center gap-1.5\">\n          <Badge>agent</Badge>\n          <Badge variant=\"free\">MIT</Badge>\n        </div>\n      </div>\n      <p className=\"flex flex-wrap items-center gap-2 text-sm text-muted-foreground\">\n        <Badge variant=\"demo\">Demo data</Badge>\n        The “New” labels above are examples; no dates exist yet.\n      </p>\n    </div>\n  )\n}\n",
+      "type": "registry:example"
+    }
+  ],
+  "categories": [
+    "controls"
+  ],
+  "type": "registry:example"
+}

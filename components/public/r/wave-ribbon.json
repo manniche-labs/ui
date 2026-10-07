@@ -31,6 +31,98 @@
       "type": "registry:hook"
     }
   ],
+  "meta": {
+    "tier": "free",
+    "added": "2026-10-06",
+    "usedIn": [],
+    "props": [
+      {
+        "name": "images",
+        "type": "GlImage[]",
+        "default": null,
+        "required": true,
+        "description": "The pictures, each with alt text. Pictures from another origin must send CORS headers to be drawn into WebGL."
+      },
+      {
+        "name": "label",
+        "type": "string",
+        "default": null,
+        "required": true,
+        "description": "Read by screen readers, e.g. “Landscapes”."
+      },
+      {
+        "name": "index",
+        "type": "number",
+        "default": null,
+        "required": false,
+        "description": "Controlled: the picture at the front."
+      },
+      {
+        "name": "defaultIndex",
+        "type": "number",
+        "default": null,
+        "required": false,
+        "description": "The picture at the front at first, when uncontrolled."
+      },
+      {
+        "name": "onIndexChange",
+        "type": "(index: number) => void",
+        "default": null,
+        "required": false,
+        "description": "Called when the ribbon heads for a new picture: on release, a key, a button or a click."
+      },
+      {
+        "name": "loop",
+        "type": "boolean",
+        "default": "false",
+        "required": false,
+        "description": "Wrap round from the last picture to the first. Needs three pictures or more."
+      },
+      {
+        "name": "aspect",
+        "type": "number",
+        "default": "4 / 5",
+        "required": false,
+        "description": "Picture width over height."
+      },
+      {
+        "name": "amplitude",
+        "type": "number",
+        "default": "1",
+        "required": false,
+        "description": "How deep the wave runs; 0 lays the pictures out in a flat row."
+      },
+      {
+        "name": "fog",
+        "type": "number",
+        "default": "0.6",
+        "required": false,
+        "description": "How much the pictures away from the front fade into the page, 0–1."
+      },
+      {
+        "name": "animate",
+        "type": "boolean",
+        "default": "false",
+        "required": false,
+        "description": "A very slow drift in the wave while the ribbon is at rest. Off under reduced motion and off screen."
+      },
+      {
+        "name": "controls",
+        "type": "boolean",
+        "default": "true",
+        "required": false,
+        "description": "Show the previous and next buttons and the position rule."
+      },
+      {
+        "name": "labels",
+        "type": "Partial<Record<'previous' | 'next' | 'picture' | 'of', string>>",
+        "default": "{}",
+        "required": false,
+        "description": "The words on the buttons and for screen readers, to translate them, e.g. `{ picture: 'Bild', of: 'von' }`."
+      }
+    ],
+    "extends": "Omit<HTMLAttributes<HTMLDivElement>, 'onChange'>"
+  },
   "categories": [
     "widgets"
   ],

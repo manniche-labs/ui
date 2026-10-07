@@ -18,6 +18,21 @@
       "type": "registry:hook"
     }
   ],
+  "meta": {
+    "tier": "free",
+    "added": "2026-10-03",
+    "usedIn": [],
+    "props": [
+      {
+        "name": "magnetic",
+        "type": "boolean",
+        "default": "false",
+        "required": false,
+        "description": "Lean a few pixels towards the pointer."
+      }
+    ],
+    "extends": "ButtonHTMLAttributes<HTMLButtonElement>"
+  },
   "categories": [
     "surfaces"
   ],

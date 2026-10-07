@@ -17,6 +17,70 @@
       "type": "registry:component"
     }
   ],
+  "meta": {
+    "tier": "free",
+    "added": "2026-10-06",
+    "usedIn": [],
+    "props": [
+      {
+        "name": "headline",
+        "type": "string",
+        "default": null,
+        "required": true,
+        "description": "The statement, one sentence, e.g. \"Let's make the next one together.\""
+      },
+      {
+        "name": "action",
+        "type": "FooterStatementLink",
+        "default": null,
+        "required": true,
+        "description": "The one primary action beside the email, e.g. \"Start a project\"."
+      },
+      {
+        "name": "email",
+        "type": "string",
+        "default": null,
+        "required": false,
+        "description": "The email address shown in mono with a mailto link and a copy button."
+      },
+      {
+        "name": "links",
+        "type": "FooterStatementLink[]",
+        "default": "[]",
+        "required": false,
+        "description": "A quiet row of links under the tile."
+      },
+      {
+        "name": "owner",
+        "type": "string",
+        "default": null,
+        "required": true,
+        "description": "The name after the © sign."
+      },
+      {
+        "name": "legalLinks",
+        "type": "FooterStatementLink[]",
+        "default": "[]",
+        "required": false,
+        "description": "Legal links on the last line: privacy, terms, imprint."
+      },
+      {
+        "name": "now",
+        "type": "Date",
+        "default": null,
+        "required": false,
+        "description": "Pins the © year and keeps the first render pure. When absent the year appears after mount."
+      },
+      {
+        "name": "labels",
+        "type": "FooterStatementLabels",
+        "default": null,
+        "required": false,
+        "description": "UI strings, for translation."
+      }
+    ],
+    "extends": "Omit<ComponentPropsWithoutRef<'footer'>, 'children'>"
+  },
   "categories": [
     "templates"
   ],

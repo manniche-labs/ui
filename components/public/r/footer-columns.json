@@ -16,6 +16,77 @@
       "type": "registry:component"
     }
   ],
+  "meta": {
+    "tier": "free",
+    "added": "2026-10-06",
+    "usedIn": [],
+    "props": [
+      {
+        "name": "brand",
+        "type": "ReactNode",
+        "default": null,
+        "required": true,
+        "description": "The wordmark or logo. Rendered as given; wrap it in a link yourself if it should go home."
+      },
+      {
+        "name": "description",
+        "type": "ReactNode",
+        "default": null,
+        "required": false,
+        "description": "One line on what the company does."
+      },
+      {
+        "name": "columns",
+        "type": "FooterColumn[]",
+        "default": null,
+        "required": true,
+        "description": "Three to five link columns."
+      },
+      {
+        "name": "newsletter",
+        "type": "FooterNewsletter",
+        "default": null,
+        "required": false,
+        "description": "The newsletter tile. Leave out to drop the tile and let the columns take the width."
+      },
+      {
+        "name": "owner",
+        "type": "string",
+        "default": null,
+        "required": true,
+        "description": "The name after the © sign, e.g. \"Halden Studio\"."
+      },
+      {
+        "name": "legalLinks",
+        "type": "FooterLink[]",
+        "default": "[]",
+        "required": false,
+        "description": "Legal links: privacy, terms, imprint."
+      },
+      {
+        "name": "region",
+        "type": "FooterRegion",
+        "default": null,
+        "required": false,
+        "description": "A language or region select at the end of the legal row."
+      },
+      {
+        "name": "now",
+        "type": "Date",
+        "default": null,
+        "required": false,
+        "description": "Pins the © year and keeps the first render pure. When absent the year appears after mount."
+      },
+      {
+        "name": "labels",
+        "type": "FooterColumnsLabels",
+        "default": null,
+        "required": false,
+        "description": "UI strings, for translation."
+      }
+    ],
+    "extends": "Omit<ComponentPropsWithoutRef<'footer'>, 'children'>"
+  },
   "categories": [
     "templates"
   ],

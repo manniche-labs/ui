@@ -16,6 +16,34 @@
       "type": "registry:component"
     }
   ],
+  "meta": {
+    "tier": "free",
+    "added": "2026-10-03",
+    "usedIn": [],
+    "props": [
+      {
+        "name": "filename",
+        "type": "string",
+        "default": null,
+        "required": true,
+        "description": "The file the change is in."
+      },
+      {
+        "name": "diff",
+        "type": "string",
+        "default": null,
+        "required": true,
+        "description": "A unified diff, as `git diff` writes it. Header lines (diff, index, ---, +++) are skipped."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "default": null,
+        "required": false,
+        "description": null
+      }
+    ]
+  },
   "categories": [
     "agent"
   ],

@@ -18,6 +18,69 @@
       "type": "registry:component"
     }
   ],
+  "meta": {
+    "tier": "free",
+    "added": "2026-10-06",
+    "usedIn": [],
+    "props": [
+      {
+        "name": "data",
+        "type": "{ card: StackCard; balance: number; change: number; pace: number; budget: number; transactions: Transaction[]; categories?: Record<string, string> }",
+        "default": null,
+        "required": true,
+        "description": null
+      },
+      {
+        "name": "format",
+        "type": "ValueFormat",
+        "default": "DEFAULT_FORMAT",
+        "required": false,
+        "description": null
+      },
+      {
+        "name": "title",
+        "type": "string",
+        "default": "'Account'",
+        "required": false,
+        "description": null
+      },
+      {
+        "name": "note",
+        "type": "string",
+        "default": "'Example data.'",
+        "required": false,
+        "description": null
+      },
+      {
+        "name": "today",
+        "type": "string",
+        "default": null,
+        "required": false,
+        "description": "\"YYYY-MM-DD\" of today, so the list reads \"Today\" and \"Yesterday\". Default the day of `now`."
+      },
+      {
+        "name": "now",
+        "type": "Date",
+        "default": null,
+        "required": false,
+        "description": "The current time. Used for `today` when that is not given."
+      },
+      {
+        "name": "labels",
+        "type": "{ card?: string; balance?: string; pace?: string; paceCaption?: string; transactions?: string; budget?: string; zones?: [string, string, string] }",
+        "default": null,
+        "required": false,
+        "description": null
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "default": null,
+        "required": false,
+        "description": null
+      }
+    ]
+  },
   "categories": [
     "templates"
   ],
