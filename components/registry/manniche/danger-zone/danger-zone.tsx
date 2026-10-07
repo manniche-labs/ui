@@ -12,8 +12,11 @@ export type DangerZoneAction = {
 }
 
 export type DangerZoneProps = {
+  /** Heading of the section. */
   title?: string
+  /** The risky actions, each with a title, a description and the control that runs it. */
   actions: DangerZoneAction[]
+  /** Classes for the outer section. */
   className?: string
 }
 

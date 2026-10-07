@@ -12,9 +12,13 @@ export type OpeningDay = { id: string; label: string; open: boolean; ranges: Tim
 export type OpeningHoursProps = {
   /** Controlled week. Times are "HH:MM", as a time input gives them. */
   value?: OpeningDay[]
+  /** Starting week when the control is not controlled. */
   defaultValue?: OpeningDay[]
+  /** Called with the whole updated week after any switch, time or range changes. */
   onChange?: (days: OpeningDay[]) => void
+  /** Visible text and screen reader text for the time fields and the add and remove buttons; defaults to English. */
   labels?: { from?: string; to?: string; add?: string; remove?: string }
+  /** Classes for the outer list of days. */
   className?: string
 }
 

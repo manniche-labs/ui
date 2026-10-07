@@ -6,13 +6,17 @@ import { RollingNumber } from '@/registry/manniche/rolling-number/rolling-number
 import { cn } from '@/lib/utils'
 
 export type PaginationProps = {
+  /** Number of pages. */
   total: number
   /** Controlled page, counted from 1. */
   page?: number
+  /** Starting page when the control is not controlled, counted from 1. */
   defaultPage?: number
+  /** Called with the new page number when previous or next is pressed. */
   onChange?: (page: number) => void
   /** The words, so the control speaks your language. */
   labels?: { nav?: string; previous?: string; next?: string; of?: string }
+  /** Classes for the outer nav. */
   className?: string
 }
 
