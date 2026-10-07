@@ -70,7 +70,7 @@ export default function ShaderBackdropDemo() {
             tabIndex={preset === n ? 0 : -1}
             title={n}
             onClick={() => setPreset(n)}
-            className="grid size-11 place-items-center rounded-full ring-offset-2 ring-offset-background transition-transform duration-150 ease-out-quint active:scale-[0.94] aria-checked:ring-2 aria-checked:ring-foreground"
+            className="grid size-11 place-items-center rounded-full ring-offset-2 ring-offset-background transition-transform duration-150 ease-out-quint active:scale-[0.94] motion-reduce:transition-none aria-checked:ring-2 aria-checked:ring-foreground"
           >
             <span
               className="size-9 rounded-full border border-black/10"

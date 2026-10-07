@@ -99,7 +99,7 @@ export function ReceiptPrinter({ merchant, lines, onPay, currency = 'EUR', local
                       <button
                         type="button"
                         onClick={() => setPhase('idle')}
-                        className="ml-auto inline-flex min-h-10 items-center gap-1.5 rounded-lg px-2.5 text-neutral-300 transition-colors duration-150 hover:bg-white/10 hover:text-white"
+                        className="ml-auto inline-flex min-h-10 relative after:inset-x-0 after:-inset-y-0.5 after:absolute after:content-[''] items-center gap-1.5 rounded-lg px-2.5 text-neutral-300 transition-colors duration-150 hover:bg-white/10 hover:text-white"
                       >
                         <RotateCcw className="size-3.5" aria-hidden />
                         {t.again}

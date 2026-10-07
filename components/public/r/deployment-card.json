@@ -13,7 +13,7 @@
   "files": [
     {
       "path": "registry/manniche/deployment-card/deployment-card.tsx",
-      "content": "// Based on Watermelon UI's “Deployment card” (MIT, © 2026 Watermelon Platform Contributors,\n// github.com/WatermelonCorp/watermelon-platform). Rewritten as a controlled card: you pass the steps, it animates what changes.\nimport { Check, ChevronDown, CircleAlert, GitBranch, LoaderCircle, TriangleAlert } from 'lucide-react'\nimport { AnimatePresence, MotionConfig, motion } from 'motion/react'\nimport { useState, type ReactNode } from 'react'\nimport { cn } from '@/lib/utils'\n\nexport type DeploymentStepStatus = 'pending' | 'running' | 'success' | 'warning' | 'error'\n\nexport type DeploymentStep = {\n  id: string\n  label: string\n  status: DeploymentStepStatus\n  /** 0 to 1. Drawn as the bar under the step. */\n  progress: number\n  duration?: string\n  /** Shown when the step is opened, for logs or numbers. */\n  details?: ReactNode\n}\n\nexport type DeploymentCardProps = {\n  title: string\n  environment: string\n  branch: string\n  commit: string\n  message: string\n  steps: DeploymentStep[]\n  /** Overall state in the header. */\n  state: 'building' | 'ready' | 'failed'\n  stateLabels?: Record<DeploymentCardProps['state'], string>\n  actions?: ReactNode\n  className?: string\n}\n\nconst tone: Record<DeploymentStepStatus, string> = {\n  pending: 'text-muted-foreground',\n  running: 'text-foreground',\n  success: 'text-success',\n  warning: 'text-amber-500',\n  error: 'text-destructive',\n}\nconst bar: Record<DeploymentStepStatus, string> = {\n  pending: 'bg-border',\n  running: 'bg-foreground',\n  success: 'bg-success',\n  warning: 'bg-amber-500',\n  error: 'bg-destructive',\n}\n\nfunction StepIcon({ status }: { status: DeploymentStepStatus }) {\n  const cls = 'size-4'\n  if (status === 'running') return <LoaderCircle className={cn(cls, 'animate-spin motion-reduce:animate-none')} aria-hidden />\n  if (status === 'success') return <Check className={cls} strokeWidth={3} aria-hidden />\n  if (status === 'warning') return <TriangleAlert className={cls} aria-hidden />\n  if (status === 'error') return <CircleAlert className={cls} aria-hidden />\n  return <span className=\"block size-2 rounded-full bg-current opacity-50\" aria-hidden />\n}\n\n/** A build and deploy card: status in the header, one animated bar per step, and details that fold out. */\nexport function DeploymentCard({\n  title,\n  environment,\n  branch,\n  commit,\n  message,\n  steps,\n  state,\n  stateLabels = { building: 'Building', ready: 'Ready', failed: 'Failed' },\n  actions,\n  className,\n}: DeploymentCardProps) {\n  const [openId, setOpenId] = useState<string | null>(null)\n  const dot = state === 'ready' ? 'bg-success' : state === 'failed' ? 'bg-destructive' : 'bg-amber-500'\n\n  return (\n    <MotionConfig reducedMotion=\"user\" transition={{ type: 'spring', stiffness: 260, damping: 30 }}>\n      <article className={cn('w-full max-w-md overflow-hidden rounded-3xl border bg-card text-card-foreground shadow-sm', className)}>\n        <header className=\"flex items-start gap-3 border-b p-5\">\n          <div className=\"min-w-0 flex-1\">\n            <p className=\"text-xs text-muted-foreground\">{environment}</p>\n            <h3 className=\"truncate font-semibold\">{title}</h3>\n            <p className=\"mt-2 flex items-center gap-1.5 text-xs text-muted-foreground\">\n              <GitBranch className=\"size-3.5\" aria-hidden />\n              <span className=\"font-mono\">{branch}</span>\n              <span aria-hidden>·</span>\n              <span className=\"font-mono\">{commit}</span>\n            </p>\n            <p className=\"mt-1 truncate text-sm\">{message}</p>\n          </div>\n          <span className=\"inline-flex shrink-0 items-center gap-2 rounded-full border px-2.5 py-1 text-xs font-medium\" role=\"status\">\n            <span className=\"relative flex size-2\">\n              {state === 'building' && <span className={cn('absolute inset-0 animate-ping rounded-full opacity-60 motion-reduce:animate-none', dot)} />}\n              <span className={cn('relative size-2 rounded-full transition-colors duration-300', dot)} />\n            </span>\n            {stateLabels[state]}\n          </span>\n        </header>\n        <ol className=\"divide-y\">\n          {steps.map((s) => {\n            const open = openId === s.id\n            return (\n              <li key={s.id}>\n                <button\n                  type=\"button\"\n                  aria-expanded={s.details ? open : undefined}\n                  disabled={!s.details}\n                  onClick={() => setOpenId(open ? null : s.id)}\n                  className=\"flex w-full items-center gap-3 px-5 py-3.5 text-left transition-colors duration-150 enabled:hover:bg-muted/50\"\n                >\n                  <span className={cn('grid size-6 shrink-0 place-items-center rounded-full bg-muted transition-colors duration-300', tone[s.status])}>\n                    <StepIcon status={s.status} />\n                  </span>\n                  <span className=\"min-w-0 flex-1\">\n                    <span className=\"flex items-center justify-between gap-2 text-sm\">\n                      <span className={cn('truncate font-medium', s.status === 'pending' && 'text-muted-foreground')}>{s.label}</span>\n                      <span className=\"shrink-0 text-xs text-muted-foreground tabular-nums\">{s.duration}</span>\n                    </span>\n                    <span className=\"mt-2 block h-1 overflow-hidden rounded-full bg-muted\">\n                      <motion.span\n                        className={cn('block h-full origin-left rounded-full transition-colors duration-300', bar[s.status])}\n                        initial={false}\n                        animate={{ scaleX: Math.max(0, Math.min(1, s.progress)) }}\n                      />\n                    </span>\n                  </span>\n                  {s.details && (\n                    <ChevronDown className={cn('size-4 shrink-0 text-muted-foreground transition-transform duration-200', open && 'rotate-180')} aria-hidden />\n                  )}\n                </button>\n                <AnimatePresence initial={false}>\n                  {open && (\n                    <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: 'auto', opacity: 1 }} exit={{ height: 0, opacity: 0 }} className=\"overflow-hidden\">\n                      <div className=\"px-5 pb-4 pl-14 text-sm text-muted-foreground\">{s.details}</div>\n                    </motion.div>\n                  )}\n                </AnimatePresence>\n              </li>\n            )\n          })}\n        </ol>\n        {actions && <footer className=\"flex justify-end gap-2 border-t bg-muted/30 p-3\">{actions}</footer>}\n      </article>\n    </MotionConfig>\n  )\n}\n",
+      "content": "// Based on Watermelon UI's “Deployment card” (MIT, © 2026 Watermelon Platform Contributors,\n// github.com/WatermelonCorp/watermelon-platform). Rewritten as a controlled card: you pass the steps, it animates what changes.\nimport { Check, ChevronDown, CircleAlert, GitBranch, LoaderCircle, TriangleAlert } from 'lucide-react'\nimport { AnimatePresence, MotionConfig, motion } from 'motion/react'\nimport { useState, type ReactNode } from 'react'\nimport { cn } from '@/lib/utils'\n\nexport type DeploymentStepStatus = 'pending' | 'running' | 'success' | 'warning' | 'error'\n\nexport type DeploymentStep = {\n  id: string\n  label: string\n  status: DeploymentStepStatus\n  /** 0 to 1. Drawn as the bar under the step. */\n  progress: number\n  duration?: string\n  /** Shown when the step is opened, for logs or numbers. */\n  details?: ReactNode\n}\n\nexport type DeploymentCardProps = {\n  /** The name of the project, shown as the heading. */\n  title: string\n  /** The small line above the title, such as the environment name. */\n  environment: string\n  /** The branch name, shown in monospace under the title. */\n  branch: string\n  /** The commit id, shown after the branch. */\n  commit: string\n  /** The commit message, shown on one line under the branch. */\n  message: string\n  /** The steps to list, in order; each gets a status, a bar and optional details. */\n  steps: DeploymentStep[]\n  /** Overall state in the header. */\n  state: 'building' | 'ready' | 'failed'\n  /** The text shown for each overall state in the header, with English defaults. */\n  stateLabels?: Record<DeploymentCardProps['state'], string>\n  /** Screen reader text for each step status, plus `progress`, the word added to each step's progress bar name. */\n  labels?: Partial<Record<DeploymentStepStatus | 'progress', string>>\n  /** Buttons for the footer, aligned to the right. The footer is left out without them. */\n  actions?: ReactNode\n  /** Classes for the outer article. */\n  className?: string\n}\n\nconst tone: Record<DeploymentStepStatus, string> = {\n  pending: 'text-muted-foreground',\n  running: 'text-foreground',\n  success: 'text-success',\n  warning: 'text-amber-500',\n  error: 'text-destructive',\n}\nconst bar: Record<DeploymentStepStatus, string> = {\n  pending: 'bg-border',\n  running: 'bg-foreground',\n  success: 'bg-success',\n  warning: 'bg-amber-500',\n  error: 'bg-destructive',\n}\n\nconst EN = { pending: 'Pending', running: 'Running', success: 'Succeeded', warning: 'Finished with warnings', error: 'Failed', progress: 'progress' }\n\nfunction StepIcon({ status }: { status: DeploymentStepStatus }) {\n  const cls = 'size-4'\n  if (status === 'running') return <LoaderCircle className={cn(cls, 'animate-spin motion-reduce:animate-none')} aria-hidden />\n  if (status === 'success') return <Check className={cls} strokeWidth={3} aria-hidden />\n  if (status === 'warning') return <TriangleAlert className={cls} aria-hidden />\n  if (status === 'error') return <CircleAlert className={cls} aria-hidden />\n  return <span className=\"block size-2 rounded-full bg-current opacity-50\" aria-hidden />\n}\n\n/** A build and deploy card: status in the header, one animated bar per step, and details that fold out. */\nexport function DeploymentCard({\n  title,\n  environment,\n  branch,\n  commit,\n  message,\n  steps,\n  state,\n  stateLabels = { building: 'Building', ready: 'Ready', failed: 'Failed' },\n  labels = {},\n  actions,\n  className,\n}: DeploymentCardProps) {\n  const t = { ...EN, ...labels }\n  const [openId, setOpenId] = useState<string | null>(null)\n  const dot = state === 'ready' ? 'bg-success' : state === 'failed' ? 'bg-destructive' : 'bg-amber-500'\n\n  return (\n    <MotionConfig reducedMotion=\"user\" transition={{ type: 'spring', stiffness: 260, damping: 30 }}>\n      <article className={cn('w-full max-w-md overflow-hidden rounded-3xl border bg-card text-card-foreground shadow-sm', className)}>\n        <header className=\"flex items-start gap-3 border-b p-5\">\n          <div className=\"min-w-0 flex-1\">\n            <p className=\"text-xs text-muted-foreground\">{environment}</p>\n            <h3 className=\"truncate font-semibold\">{title}</h3>\n            <p className=\"mt-2 flex items-center gap-1.5 text-xs text-muted-foreground\">\n              <GitBranch className=\"size-3.5\" aria-hidden />\n              <span className=\"font-mono\">{branch}</span>\n              <span aria-hidden>·</span>\n              <span className=\"font-mono\">{commit}</span>\n            </p>\n            <p className=\"mt-1 truncate text-sm\">{message}</p>\n          </div>\n          <span className=\"inline-flex shrink-0 items-center gap-2 rounded-full border px-2.5 py-1 text-xs font-medium\" role=\"status\">\n            <span className=\"relative flex size-2\">\n              {state === 'building' && <span className={cn('absolute inset-0 animate-ping rounded-full opacity-60 motion-reduce:animate-none', dot)} />}\n              <span className={cn('relative size-2 rounded-full transition-colors duration-300 motion-reduce:transition-none', dot)} />\n            </span>\n            {stateLabels[state]}\n          </span>\n        </header>\n        <ol className=\"divide-y\">\n          {steps.map((s) => {\n            const open = openId === s.id\n            const pct = Math.round(Math.max(0, Math.min(1, s.progress)) * 100)\n            return (\n              <li key={s.id} className=\"transition-colors duration-150 motion-reduce:transition-none has-[button:enabled]:hover:bg-muted/50\">\n                {/* The button's overlay covers this header row only, so the details below stay selectable. */}\n                <div className=\"relative flex items-center gap-3 px-5 py-3.5\">\n                  <span className={cn('grid size-6 shrink-0 place-items-center rounded-full bg-muted transition-colors duration-300 motion-reduce:transition-none', tone[s.status])}>\n                    <StepIcon status={s.status} />\n                  </span>\n                  <span className=\"min-w-0 flex-1\">\n                    <button\n                      type=\"button\"\n                      aria-expanded={s.details ? open : undefined}\n                      disabled={!s.details}\n                      onClick={() => setOpenId(open ? null : s.id)}\n                      className=\"flex w-full items-center justify-between gap-2 text-left text-sm focus-visible:outline-none after:absolute after:inset-0 focus-visible:after:outline-2 focus-visible:after:-outline-offset-2 focus-visible:after:outline-ring\"\n                    >\n                      <span className={cn('truncate font-medium', s.status === 'pending' && 'text-muted-foreground')}>\n                        {/* One text node for the name, so it reads \"Install packages: Succeeded\" without a stray space. */}\n                        <span aria-hidden>{s.label}</span>\n                        <span className=\"sr-only\">{`${s.label}: ${t[s.status]}`}</span>\n                      </span>\n                      <span className=\"shrink-0 text-xs text-muted-foreground tabular-nums\">{s.duration}</span>\n                    </button>\n                    <span\n                      role=\"progressbar\"\n                      aria-label={`${s.label} ${t.progress}`}\n                      aria-valuemin={0}\n                      aria-valuemax={100}\n                      aria-valuenow={pct}\n                      className=\"mt-2 block h-1 overflow-hidden rounded-full bg-muted\"\n                    >\n                      <motion.span\n                        className={cn('block h-full origin-left rounded-full transition-colors duration-300 motion-reduce:transition-none', bar[s.status])}\n                        initial={false}\n                        animate={{ scaleX: pct / 100 }}\n                      />\n                    </span>\n                  </span>\n                  {s.details && (\n                    <ChevronDown className={cn('size-4 shrink-0 text-muted-foreground transition-transform duration-200 motion-reduce:transition-none', open && 'rotate-180')} aria-hidden />\n                  )}\n                </div>\n                <AnimatePresence initial={false}>\n                  {open && (\n                    <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: 'auto', opacity: 1 }} exit={{ height: 0, opacity: 0 }} className=\"overflow-hidden\">\n                      <div className=\"px-5 pb-4 pl-14 text-sm text-muted-foreground\">{s.details}</div>\n                    </motion.div>\n                  )}\n                </AnimatePresence>\n              </li>\n            )\n          })}\n        </ol>\n        {actions && <footer className=\"flex justify-end gap-2 border-t bg-muted/30 p-3\">{actions}</footer>}\n      </article>\n    </MotionConfig>\n  )\n}\n",
       "type": "registry:component"
     }
   ],
@@ -28,42 +28,42 @@
         "type": "string",
         "default": null,
         "required": true,
-        "description": null
+        "description": "The name of the project, shown as the heading."
       },
       {
         "name": "environment",
         "type": "string",
         "default": null,
         "required": true,
-        "description": null
+        "description": "The small line above the title, such as the environment name."
       },
       {
         "name": "branch",
         "type": "string",
         "default": null,
         "required": true,
-        "description": null
+        "description": "The branch name, shown in monospace under the title."
       },
       {
         "name": "commit",
         "type": "string",
         "default": null,
         "required": true,
-        "description": null
+        "description": "The commit id, shown after the branch."
       },
       {
         "name": "message",
         "type": "string",
         "default": null,
         "required": true,
-        "description": null
+        "description": "The commit message, shown on one line under the branch."
       },
       {
         "name": "steps",
         "type": "DeploymentStep[]",
         "default": null,
         "required": true,
-        "description": null
+        "description": "The steps to list, in order; each gets a status, a bar and optional details."
       },
       {
         "name": "state",
@@ -77,27 +77,34 @@
         "type": "Record<DeploymentCardProps['state'], string>",
         "default": "{ building: 'Building', ready: 'Ready', failed: 'Failed' }",
         "required": false,
-        "description": null
+        "description": "The text shown for each overall state in the header, with English defaults."
+      },
+      {
+        "name": "labels",
+        "type": "Partial<Record<DeploymentStepStatus | 'progress', string>>",
+        "default": "{}",
+        "required": false,
+        "description": "Screen reader text for each step status, plus `progress`, the word added to each step's progress bar name."
       },
       {
         "name": "actions",
         "type": "ReactNode",
         "default": null,
         "required": false,
-        "description": null
+        "description": "Buttons for the footer, aligned to the right. The footer is left out without them."
       },
       {
         "name": "className",
         "type": "string",
         "default": null,
         "required": false,
-        "description": null
+        "description": "Classes for the outer article."
       }
     ],
     "a11y": [
       {
         "topic": "keyboard",
-        "text": "Each step is a button. A step without details is disabled; one with details toggles its details.",
+        "text": "Each step is a button. A step without details is disabled; one with details toggles its details. The whole row is the click target, and the focus ring wraps the row.",
         "keys": [
           "Tab",
           "Enter",
@@ -106,11 +113,11 @@
       },
       {
         "topic": "screen-reader",
-        "text": "The card is an article. The state chip has role status and its text comes from stateLabels. A step with details carries aria-expanded. The icons are aria-hidden."
+        "text": "The card is an article. The state chip has role status and its text comes from stateLabels. Each step button reads its label followed by its status in text (Pending, Running, Succeeded, Finished with warnings, Failed), set through labels. Each step's bar is a progressbar named after the step, with a value from 0 to 100. A step with details carries aria-expanded. The icons are aria-hidden."
       },
       {
         "topic": "motion",
-        "text": "The spin and ping animations stop under reduced motion, and the rest uses Motion with reduced motion set to user."
+        "text": "The spin and ping animations and the colour and chevron transitions stop under reduced motion, and the rest uses Motion with reduced motion set to user."
       }
     ]
   },

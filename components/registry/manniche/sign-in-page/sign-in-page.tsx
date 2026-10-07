@@ -1,7 +1,7 @@
 // A split-screen sign-in page. "Sign in" and "Create account" share one form and swap with two radio buttons and :has(),
 // and fields show their error state with :user-invalid, so it all works without JavaScript. Colours come from the theme tokens.
 import { ArrowRight, Fingerprint, KeyRound, Mail, Star } from 'lucide-react'
-import { useRef, useState } from 'react'
+import { useId, useRef, useState } from 'react'
 
 function Logo({ className }: { className?: string }) {
   return (
@@ -37,6 +37,8 @@ export function SignInPage({ labels = {} }: SignInPageProps) {
   const { emailError = 'Enter an email address like name@shop.com.', passwordError = 'Use at least 8 characters.', rating = '5 out of 5' } = labels
   // The error texts show through :user-invalid alone. This state only mirrors it into aria-invalid and aria-describedby,
   // so a screen reader is not given the error text as a description while the field is fine.
+  // Prefix for ids and the radio group, so two forms on one page never share them.
+  const uid = useId()
   const [invalid, setInvalid] = useState({ email: false, password: false })
   const dirty = useRef({ email: false, password: false })
   const mark = (name: 'email' | 'password', bad: boolean) => setInvalid((v) => (v[name] === bad ? v : { ...v, [name]: bad }))
@@ -50,7 +52,7 @@ export function SignInPage({ labels = {} }: SignInPageProps) {
     },
     onInvalid: () => mark(name, true),
     'aria-invalid': invalid[name] || undefined,
-    'aria-describedby': invalid[name] ? `auth-${name}-error` : undefined,
+    'aria-describedby': invalid[name] ? `${uid}auth-${name}-error` : undefined,
   })
   return (
     <div id="top" className="group/auth grid min-h-dvh bg-background font-sans text-foreground antialiased lg:grid-cols-2">
@@ -83,7 +85,7 @@ export function SignInPage({ labels = {} }: SignInPageProps) {
                   key={value}
                   className="cursor-pointer rounded-lg py-2 text-center text-muted-foreground transition-[background-color,color,box-shadow] duration-200 has-checked:bg-background has-checked:text-foreground has-checked:shadow-sm has-focus-visible:ring-2 has-focus-visible:ring-ring"
                 >
-                  <input type="radio" name="auth-mode" value={value} defaultChecked={value === 'signin'} className="sr-only" />
+                  <input type="radio" name={`${uid}auth-mode`} value={value} defaultChecked={value === 'signin'} className="sr-only" />
                   {label}
                 </label>
               ))}
@@ -105,23 +107,23 @@ export function SignInPage({ labels = {} }: SignInPageProps) {
 
             <form className="space-y-4" action="#">
               <div className="hidden space-y-1.5 group-has-[[value=signup]:checked]/auth:block">
-                <label htmlFor="auth-shop" className="text-sm font-medium">
+                <label htmlFor={`${uid}auth-shop`} className="text-sm font-medium">
                   Shop name
                 </label>
-                <input id="auth-shop" name="shop" placeholder="Linden Homeware" className={field} />
+                <input id={`${uid}auth-shop`} name="shop" placeholder="Linden Homeware" className={field} />
               </div>
 
               <div className="space-y-1.5">
-                <label htmlFor="auth-email" className="text-sm font-medium">
+                <label htmlFor={`${uid}auth-email`} className="text-sm font-medium">
                   Email
                 </label>
                 <div className="relative">
-                  <input id="auth-email" name="email" type="email" required autoComplete="email" placeholder="you@shop.com" className={`${field} pl-10`} {...track('email')} />
+                  <input id={`${uid}auth-email`} name="email" type="email" required autoComplete="email" placeholder="you@shop.com" className={`${field} pl-10`} {...track('email')} />
                   <Mail
                     className="pointer-events-none absolute top-5.5 left-3.5 size-4 -translate-y-1/2 text-muted-foreground peer-focus:text-primary"
                     aria-hidden
                   />
-                  <p id="auth-email-error" className="mt-1.5 hidden text-xs text-destructive peer-user-invalid:block">
+                  <p id={`${uid}auth-email-error`} className="mt-1.5 hidden text-xs text-destructive peer-user-invalid:block">
                     {emailError}
                   </p>
                 </div>
@@ -129,7 +131,7 @@ export function SignInPage({ labels = {} }: SignInPageProps) {
 
               <div className="space-y-1.5">
                 <div className="flex items-center justify-between">
-                  <label htmlFor="auth-password" className="text-sm font-medium">
+                  <label htmlFor={`${uid}auth-password`} className="text-sm font-medium">
                     Password
                   </label>
                   <a
@@ -141,7 +143,7 @@ export function SignInPage({ labels = {} }: SignInPageProps) {
                 </div>
                 <div className="relative">
                   <input
-                    id="auth-password"
+                    id={`${uid}auth-password`}
                     name="password"
                     type="password"
                     required
@@ -155,7 +157,7 @@ export function SignInPage({ labels = {} }: SignInPageProps) {
                     className="pointer-events-none absolute top-5.5 left-3.5 size-4 -translate-y-1/2 text-muted-foreground peer-focus:text-primary"
                     aria-hidden
                   />
-                  <p id="auth-password-error" className="mt-1.5 hidden text-xs text-destructive peer-user-invalid:block">
+                  <p id={`${uid}auth-password-error`} className="mt-1.5 hidden text-xs text-destructive peer-user-invalid:block">
                     {passwordError}
                   </p>
                 </div>
@@ -200,11 +202,11 @@ export function SignInPage({ labels = {} }: SignInPageProps) {
       <aside className="relative hidden overflow-hidden bg-primary p-10 text-primary-foreground lg:flex lg:flex-col">
         <svg aria-hidden className="absolute inset-0 size-full opacity-[0.12]">
           <defs>
-            <pattern id="auth-waves" width="56" height="28" patternUnits="userSpaceOnUse">
+            <pattern id={`${uid}auth-waves`} width="56" height="28" patternUnits="userSpaceOnUse">
               <path d="M0 14c14-10 28-10 28 0s14 10 28 0" fill="none" stroke="currentColor" strokeWidth="1.5" />
             </pattern>
           </defs>
-          <rect width="100%" height="100%" fill="url(#auth-waves)" />
+          <rect width="100%" height="100%" fill={`url(#${uid}auth-waves)`} />
         </svg>
         <div aria-hidden className="absolute -right-24 -bottom-24 size-96 rounded-full bg-primary-foreground/10 blur-2xl" />
 

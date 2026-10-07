@@ -4,7 +4,8 @@
   "title": "Curve carousel demo",
   "description": "How to use Curve carousel.",
   "registryDependencies": [
-    "@manniche/curve-carousel"
+    "@manniche/curve-carousel",
+    "utils"
   ],
   "files": [
     {

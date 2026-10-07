@@ -35,7 +35,7 @@ export default function MovingBorderDemo() {
         <MovingBorder variant="iridescent" duration={7} className="rounded-full">
           <button
             type="button"
-            className="min-h-11 px-6 text-sm font-medium transition-transform duration-[120ms] ease-out-quint focus-visible:outline-none active:scale-[0.97]"
+            className="min-h-11 px-6 text-sm font-medium transition-transform duration-[120ms] ease-out-quint focus-visible:outline-none active:scale-[0.97] motion-reduce:transition-none"
           >
             Continue
           </button>

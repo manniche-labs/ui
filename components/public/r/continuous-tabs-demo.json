@@ -9,7 +9,7 @@
   "files": [
     {
       "path": "registry/manniche/examples/continuous-tabs-demo.tsx",
-      "content": "import { ContinuousTabs } from '@/registry/manniche/continuous-tabs/continuous-tabs'\n\nexport default function ContinuousTabsDemo() {\n  return (\n    <div className=\"flex justify-center\">\n      <ContinuousTabs\n        label=\"Orders\"\n        tabs={[\n          { id: 'all', label: 'All' },\n          { id: 'open', label: 'Open' },\n          { id: 'shipped', label: 'Shipped' },\n          { id: 'returned', label: 'Returned' },\n        ]}\n      />\n    </div>\n  )\n}\n",
+      "content": "import { ContinuousTabs } from '@/registry/manniche/continuous-tabs/continuous-tabs'\n\nconst panels: Record<string, string> = {\n  all: 'Every order, newest first.',\n  open: 'Orders that are paid and waiting to be packed.',\n  shipped: 'Orders that are on their way to the customer.',\n  returned: 'Orders that came back and are waiting for a refund.',\n}\n\nexport default function ContinuousTabsDemo() {\n  return (\n    <div className=\"flex flex-col items-center gap-4\">\n      <ContinuousTabs\n        label=\"Orders\"\n        tabs={[\n          { id: 'all', label: 'All' },\n          { id: 'open', label: 'Open' },\n          { id: 'shipped', label: 'Shipped' },\n          { id: 'returned', label: 'Returned' },\n        ]}\n      >\n        {(active) => <p className=\"px-2 py-3 text-sm text-muted-foreground\">{panels[active]}</p>}\n      </ContinuousTabs>\n    </div>\n  )\n}\n",
       "type": "registry:example"
     }
   ],

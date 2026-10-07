@@ -57,13 +57,13 @@ export function TimedUndo({ seconds = 5, label = 'Delete', undoLabel = 'Undo', o
         style={{ borderRadius: 14 }}
         className={cn(
           'inline-flex min-h-11 items-center gap-2 overflow-hidden px-1.5 font-medium transition-colors duration-300 motion-reduce:transition-none',
-          waiting ? 'bg-destructive/10 text-destructive' : 'bg-destructive px-5 text-white',
+          waiting ? 'bg-destructive/10 text-destructive' : 'bg-destructive px-5 text-background',
           className,
         )}
       >
         <AnimatePresence mode="popLayout" initial={false}>
           {waiting && (
-            <motion.span key="icon" {...fade} className="grid size-8 place-items-center rounded-[10px] bg-destructive text-white">
+            <motion.span key="icon" {...fade} className="grid size-8 place-items-center rounded-[10px] bg-destructive text-background">
               <Undo2 className="size-4" aria-hidden />
             </motion.span>
           )}
@@ -71,7 +71,7 @@ export function TimedUndo({ seconds = 5, label = 'Delete', undoLabel = 'Undo', o
             {waiting ? undoLabel : label}
           </motion.span>
           {waiting && (
-            <motion.span key="count" {...fade} className="grid h-8 min-w-8 place-items-center overflow-hidden rounded-[10px] bg-destructive px-2 text-white tabular-nums">
+            <motion.span key="count" {...fade} className="grid h-8 min-w-8 place-items-center overflow-hidden rounded-[10px] bg-destructive px-2 text-background tabular-nums">
               <AnimatePresence mode="popLayout" initial={false}>
                 <motion.span
                   key={left}

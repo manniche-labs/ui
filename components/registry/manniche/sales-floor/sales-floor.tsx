@@ -49,7 +49,7 @@ export function SalesFloor({ data, labels, onEndCall, className }: SalesFloorPro
             <button
               type="button"
               onClick={onEndCall}
-              className="mt-4 rounded-full bg-foreground px-4 py-2 text-sm font-medium text-background transition-transform active:scale-[0.97] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
+              className="mt-4 rounded-full bg-foreground px-4 py-2 text-sm font-medium text-background transition-transform active:scale-[0.97] motion-reduce:transition-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
             >
               {data.call.action}
             </button>

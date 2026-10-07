@@ -123,7 +123,7 @@ export function PromptInput({
               <button
                 type="button"
                 onClick={() => setFiles((all) => all.filter((_, j) => j !== i))}
-                className="grid size-7 place-items-center rounded-full text-muted-foreground hover:bg-card hover:text-foreground"
+                className="grid size-7 relative after:-inset-2 after:absolute after:content-[''] place-items-center rounded-full text-muted-foreground hover:bg-card hover:text-foreground"
                 aria-label={`Remove ${f.name}`}
               >
                 <X className="size-3.5" aria-hidden />
@@ -183,7 +183,7 @@ export function PromptInput({
             key="stop"
             type="button"
             onClick={onStop}
-            className="grid size-11 place-items-center rounded-full bg-muted text-foreground transition-transform duration-150 ease-out-quint active:scale-95"
+            className="grid size-11 place-items-center rounded-full bg-muted text-foreground transition-transform duration-150 ease-out-quint active:scale-95 motion-reduce:transition-none"
             aria-label="Stop"
           >
             <Square className="size-4 fill-current" aria-hidden />
@@ -195,7 +195,7 @@ export function PromptInput({
             disabled={!canSend}
             className={cn(
               'grid size-11 place-items-center rounded-full bg-foreground text-card',
-              'transition-[transform,opacity] duration-150 ease-out-quint active:scale-95',
+              'transition-[transform,opacity] duration-150 ease-out-quint active:scale-95 motion-reduce:transition-none',
               'disabled:cursor-not-allowed disabled:opacity-40 disabled:active:scale-100',
             )}
             aria-label="Send"

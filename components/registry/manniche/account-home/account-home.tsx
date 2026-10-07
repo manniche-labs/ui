@@ -53,10 +53,10 @@ export function AccountHome({ data, format = DEFAULT_FORMAT, title = 'Account', 
     <div className={cn('@container w-full font-sans text-foreground', className)}>
       <div className="grid gap-4 @3xl:grid-cols-6 @6xl:grid-cols-12">
         <h1 className="text-[22px] leading-tight font-semibold tracking-tight @3xl:col-span-6 @6xl:col-span-12">{title}</h1>
-        <DataTile title={l.card} className="@3xl:col-span-3 @6xl:col-span-4">
+        <DataTile headingLevel={2} title={l.card} className="@3xl:col-span-3 @6xl:col-span-4">
           <CardStack data={[data.card]} label={l.card} format={format} hideAmount />
         </DataTile>
-        <DataTile title={l.balance} inverted className="@3xl:col-span-3 @6xl:col-span-4" footer={<span>{note}</span>}>
+        <DataTile headingLevel={2} title={l.balance} inverted className="@3xl:col-span-3 @6xl:col-span-4" footer={<span>{note}</span>}>
           <BigNumber value={data.balance} format={format} size="lg" />
           <div className="mt-3">
             <DeltaPill value={data.change} format={{ decimals: 1, suffix: '%', sign: true }} />
@@ -65,11 +65,11 @@ export function AccountHome({ data, format = DEFAULT_FORMAT, title = 'Account', 
             <TileFact label={l.budget}>{formatValue(data.budget, { ...format, decimals: 2 })}</TileFact>
           </div>
         </DataTile>
-        <DataTile title={l.pace} className="@3xl:col-span-6 @6xl:col-span-4">
+        <DataTile headingLevel={2} title={l.pace} className="@3xl:col-span-6 @6xl:col-span-4">
           <Dial value={data.pace} zones={zones} format={{ decimals: 2, suffix: '×' }} label={l.pace} caption={l.paceCaption} />
         </DataTile>
-        <DataTile title={l.transactions} className="@3xl:col-span-6 @6xl:col-span-12">
-          <TransactionList data={data.transactions} label={l.transactions} today={day} format={format} categories={data.categories} limit={5} />
+        <DataTile headingLevel={2} title={l.transactions} className="@3xl:col-span-6 @6xl:col-span-12">
+          <TransactionList headingLevel={3} data={data.transactions} label={l.transactions} today={day} format={format} categories={data.categories} limit={5} />
         </DataTile>
       </div>
     </div>

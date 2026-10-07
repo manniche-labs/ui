@@ -1,6 +1,7 @@
 // A pricing page for a software product. The monthly/yearly switch is two radio buttons and a :has() selector,
 // so it works without JavaScript and the same markup can ship as a static page. Colours come from the theme tokens.
 import { ArrowRight, Check, Minus, Sparkles } from 'lucide-react'
+import { useId } from 'react'
 import { cn } from '@/lib/utils'
 
 type Plan = { name: string; blurb: string; monthly: number; yearly: number; cta: string; featured?: boolean; features: string[] }
@@ -118,6 +119,8 @@ export type PricingPageProps = {
 /** Pricing page: plans with a monthly/yearly switch, a comparison table, FAQ and a closing call to action. */
 export function PricingPage({ labels = {} }: PricingPageProps) {
   const { compareTable = 'Plan comparison table' } = labels
+  // Prefix for the radio group, so two of these on one page never share it.
+  const uid = useId()
   return (
     <div id="top" className="group/pricing min-h-dvh bg-background font-sans text-foreground antialiased">
       <header className="border-b">
@@ -175,7 +178,7 @@ export function PricingPage({ labels = {} }: PricingPageProps) {
                   key={value}
                   className="relative flex cursor-pointer items-center gap-2 rounded-full px-4 py-2 text-muted-foreground transition-colors duration-200 has-checked:bg-background has-checked:text-foreground has-checked:shadow-sm has-focus-visible:ring-2 has-focus-visible:ring-ring"
                 >
-                  <input type="radio" name="billing" value={value} defaultChecked={value === 'monthly'} className="sr-only" />
+                  <input type="radio" name={`${uid}billing`} value={value} defaultChecked={value === 'monthly'} className="sr-only" />
                   {label}
                   {value === 'yearly' && <span className="rounded-full bg-primary/15 px-2 py-0.5 text-xs text-primary">−20%</span>}
                 </label>

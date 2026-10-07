@@ -13,7 +13,7 @@
   "files": [
     {
       "path": "registry/manniche/feedback/feedback.tsx",
-      "content": "// Based on Watermelon UI's “Feedback” (MIT, © 2026 Watermelon Platform Contributors,\n// github.com/WatermelonCorp/watermelon-platform). Rewritten with lucide icons, focus handling and an async submit.\nimport { Send, Sparkle, ThumbsDown, ThumbsUp, X } from 'lucide-react'\nimport { AnimatePresence, LayoutGroup, MotionConfig, motion } from 'motion/react'\nimport { useEffect, useId, useRef, useState } from 'react'\nimport { cn } from '@/lib/utils'\n\nexport type FeedbackRating = 'up' | 'down'\n\nexport type FeedbackProps = {\n  onSubmit: (data: { rating: FeedbackRating; text: string }) => Promise<void> | void\n  title?: string\n  upPrompt?: string\n  downPrompt?: string\n  placeholder?: string\n  sendLabel?: string\n  sendingLabel?: string\n  thanksLabel?: string\n  upLabel?: string\n  downLabel?: string\n  closeLabel?: string\n  className?: string\n}\n\n/** Thumbs up or down. The thumb pops, then grows into a card that asks for a line more. */\nexport function Feedback({\n  onSubmit,\n  title = 'Share feedback',\n  upPrompt = 'What did you like most?',\n  downPrompt = 'What could be better?',\n  placeholder = 'Optional',\n  sendLabel = 'Send',\n  sendingLabel = 'Sending…',\n  thanksLabel = 'Thanks for the feedback',\n  upLabel = 'Helpful',\n  downLabel = 'Not helpful',\n  closeLabel = 'Close',\n  className,\n}: FeedbackProps) {\n  const [rating, setRating] = useState<FeedbackRating | null>(null)\n  const [popping, setPopping] = useState<FeedbackRating | null>(null)\n  const [open, setOpen] = useState(false)\n  const [text, setText] = useState('')\n  const [sending, setSending] = useState(false)\n  const [thanks, setThanks] = useState(false)\n  const field = useRef<HTMLTextAreaElement>(null)\n  const thumbs = useRef<HTMLDivElement>(null)\n  const id = useId()\n\n  useEffect(() => {\n    if (!popping) return\n    const t = setTimeout(() => {\n      setPopping(null)\n      setOpen(true)\n    }, 480)\n    return () => clearTimeout(t)\n  }, [popping])\n\n  useEffect(() => {\n    if (open) field.current?.focus()\n  }, [open])\n\n  const pick = (r: FeedbackRating) => {\n    if (popping) return\n    setThanks(false)\n    setRating(r)\n    setPopping(r)\n  }\n  const close = () => {\n    setOpen(false)\n    setText('')\n    requestAnimationFrame(() => thumbs.current?.querySelector<HTMLButtonElement>('[aria-pressed=true]')?.focus())\n  }\n\n  return (\n    <MotionConfig reducedMotion=\"user\" transition={{ duration: 0.3, ease: 'easeInOut' }}>\n      <LayoutGroup id={id}>\n        <div className={cn('grid min-h-16 place-items-center', className)}>\n          <AnimatePresence mode=\"popLayout\" initial={false}>\n            {!open ? (\n              <motion.div key=\"thumbs\" ref={thumbs} exit={{ opacity: 0, transition: { duration: 0.1 } }} className=\"flex flex-col items-center gap-2\">\n                <div className=\"flex gap-3\">\n                  {(['up', 'down'] as const).map((r) => {\n                    const Icon = r === 'up' ? ThumbsUp : ThumbsDown\n                    return (\n                      <motion.button\n                        key={r}\n                        layoutId={rating === r ? `${id}-card` : undefined}\n                        type=\"button\"\n                        aria-label={r === 'up' ? upLabel : downLabel}\n                        aria-pressed={rating === r}\n                        onClick={() => pick(r)}\n                        whileTap={{ scale: 0.94 }}\n                        style={{ borderRadius: 20 }}\n                        className=\"relative grid size-14 place-items-center bg-foreground text-background shadow-lg\"\n                      >\n                        {popping === r &&\n                          [0, 1, 2, 3, 4, 5].map((i) => {\n                            const a = (i * Math.PI) / 3\n                            return (\n                              <motion.span\n                                key={i}\n                                aria-hidden\n                                className=\"pointer-events-none absolute text-foreground\"\n                                initial={{ scale: 0, x: 0, y: 0, opacity: 1 }}\n                                animate={{ scale: [0, 1.2, 0], x: Math.cos(a) * 44, y: Math.sin(a) * 44, opacity: [1, 1, 0], rotate: 90 }}\n                                transition={{ duration: 0.48, ease: 'easeOut' }}\n                              >\n                                <Sparkle className=\"size-3\" fill=\"currentColor\" />\n                              </motion.span>\n                            )\n                          })}\n                        <motion.span\n                          animate={popping === r ? { scale: [1, 1.7, 1], rotate: [0, r === 'up' ? -30 : 30, 0], y: [0, -4, 0] } : { scale: 1 }}\n                          transition={{ duration: 0.48, ease: 'easeOut' }}\n                        >\n                          <Icon className=\"size-6\" fill={rating === r ? 'currentColor' : 'none'} aria-hidden />\n                        </motion.span>\n                      </motion.button>\n                    )\n                  })}\n                </div>\n                <p className=\"min-h-5 text-sm text-muted-foreground\" aria-live=\"polite\">\n                  {thanks && thanksLabel}\n                </p>\n              </motion.div>\n            ) : (\n              <motion.form\n                key=\"card\"\n                layoutId={`${id}-card`}\n                style={{ borderRadius: 28 }}\n                onKeyDown={(e) => e.key === 'Escape' && close()}\n                onSubmit={async (e) => {\n                  e.preventDefault()\n                  setSending(true)\n                  try {\n                    await onSubmit({ rating: rating!, text: text.trim() })\n                    setThanks(true)\n                    close()\n                  } finally {\n                    setSending(false)\n                  }\n                }}\n                aria-labelledby={`${id}-title`}\n                className=\"relative w-full max-w-sm overflow-hidden border bg-card p-6 text-card-foreground shadow-2xl\"\n              >\n                <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.12 }}>\n                  <button\n                    type=\"button\"\n                    aria-label={closeLabel}\n                    onClick={close}\n                    className=\"absolute top-4 right-4 grid size-8 place-items-center rounded-full bg-muted text-muted-foreground hover:text-foreground\"\n                  >\n                    <X className=\"size-4\" strokeWidth={2.5} aria-hidden />\n                  </button>\n                  <h2 id={`${id}-title`} className=\"pr-10 text-xl font-semibold\">\n                    {title}\n                  </h2>\n                  <label htmlFor={`${id}-text`} className=\"mt-1 mb-4 block text-sm text-muted-foreground\">\n                    {rating === 'up' ? upPrompt : downPrompt}\n                  </label>\n                  <textarea\n                    ref={field}\n                    id={`${id}-text`}\n                    rows={4}\n                    value={text}\n                    onChange={(e) => setText(e.target.value)}\n                    placeholder={placeholder}\n                    className=\"w-full resize-none rounded-2xl border bg-muted p-3.5 outline-none focus-visible:ring-2 focus-visible:ring-ring\"\n                  />\n                  <button\n                    type=\"submit\"\n                    disabled={sending}\n                    className=\"mt-3 inline-flex min-h-11 items-center gap-2 rounded-xl bg-foreground px-5 font-medium text-background active:scale-95 disabled:opacity-60\"\n                  >\n                    <Send className=\"size-4\" aria-hidden />\n                    {sending ? sendingLabel : sendLabel}\n                  </button>\n                </motion.div>\n              </motion.form>\n            )}\n          </AnimatePresence>\n        </div>\n      </LayoutGroup>\n    </MotionConfig>\n  )\n}\n",
+      "content": "// Based on Watermelon UI's “Feedback” (MIT, © 2026 Watermelon Platform Contributors,\n// github.com/WatermelonCorp/watermelon-platform). Rewritten with lucide icons, focus handling and an async submit.\nimport { Send, Sparkle, ThumbsDown, ThumbsUp, X } from 'lucide-react'\nimport { AnimatePresence, LayoutGroup, MotionConfig, motion, useReducedMotion } from 'motion/react'\nimport { useEffect, useId, useRef, useState } from 'react'\nimport { cn } from '@/lib/utils'\n\nexport type FeedbackRating = 'up' | 'down'\n\nexport type FeedbackProps = {\n  /** Called with the rating and the trimmed text when the form is sent. The form closes once the returned promise resolves. */\n  onSubmit: (data: { rating: FeedbackRating; text: string }) => Promise<void> | void\n  /** The heading of the form. Default “Share feedback”. */\n  title?: string\n  /** The question above the field after a thumbs up. */\n  upPrompt?: string\n  /** The question above the field after a thumbs down. */\n  downPrompt?: string\n  /** The placeholder text in the field. Default “Optional”. */\n  placeholder?: string\n  /** The text on the send button. Default “Send”. */\n  sendLabel?: string\n  /** The text on the send button while it is sending. */\n  sendingLabel?: string\n  /** The line shown under the thumbs after sending. */\n  thanksLabel?: string\n  /** The accessible name of the thumbs up button. Default “Helpful”. */\n  upLabel?: string\n  /** The accessible name of the thumbs down button. Default “Not helpful”. */\n  downLabel?: string\n  /** The accessible name of the close button. Default “Close”. */\n  closeLabel?: string\n  /** Classes for the outer wrapper. */\n  className?: string\n}\n\n/** Thumbs up or down. The thumb pops, then grows into a card that asks for a line more. */\nexport function Feedback({\n  onSubmit,\n  title = 'Share feedback',\n  upPrompt = 'What did you like most?',\n  downPrompt = 'What could be better?',\n  placeholder = 'Optional',\n  sendLabel = 'Send',\n  sendingLabel = 'Sending…',\n  thanksLabel = 'Thanks for the feedback',\n  upLabel = 'Helpful',\n  downLabel = 'Not helpful',\n  closeLabel = 'Close',\n  className,\n}: FeedbackProps) {\n  const [rating, setRating] = useState<FeedbackRating | null>(null)\n  const [popping, setPopping] = useState<FeedbackRating | null>(null)\n  const [open, setOpen] = useState(false)\n  const [text, setText] = useState('')\n  const [sending, setSending] = useState(false)\n  const [thanks, setThanks] = useState(false)\n  const field = useRef<HTMLTextAreaElement>(null)\n  const thumbs = useRef<HTMLDivElement>(null)\n  const id = useId()\n  const reduce = useReducedMotion()\n\n  useEffect(() => {\n    if (!popping) return\n    const t = setTimeout(() => {\n      setPopping(null)\n      setOpen(true)\n    }, 480)\n    return () => clearTimeout(t)\n  }, [popping])\n\n  useEffect(() => {\n    if (open) field.current?.focus()\n  }, [open])\n\n  const pick = (r: FeedbackRating) => {\n    if (popping) return\n    setThanks(false)\n    setRating(r)\n    // Without motion there is no pop to wait for, so the form opens at once.\n    if (reduce) setOpen(true)\n    else setPopping(r)\n  }\n  const close = () => {\n    setOpen(false)\n    setText('')\n    requestAnimationFrame(() => thumbs.current?.querySelector<HTMLButtonElement>('[aria-pressed=true]')?.focus())\n  }\n\n  return (\n    <MotionConfig reducedMotion=\"user\" transition={{ duration: 0.3, ease: 'easeInOut' }}>\n      <LayoutGroup id={id}>\n        <div className={cn('grid min-h-16 place-items-center', className)}>\n          <AnimatePresence mode=\"popLayout\" initial={false}>\n            {!open ? (\n              <motion.div key=\"thumbs\" ref={thumbs} exit={{ opacity: 0, transition: { duration: 0.1 } }} className=\"flex flex-col items-center gap-2\">\n                <div className=\"flex gap-3\">\n                  {(['up', 'down'] as const).map((r) => {\n                    const Icon = r === 'up' ? ThumbsUp : ThumbsDown\n                    return (\n                      <motion.button\n                        key={r}\n                        layoutId={rating === r ? `${id}-card` : undefined}\n                        type=\"button\"\n                        aria-label={r === 'up' ? upLabel : downLabel}\n                        aria-pressed={rating === r}\n                        onClick={() => pick(r)}\n                        whileTap={{ scale: 0.94 }}\n                        style={{ borderRadius: 20 }}\n                        className=\"relative grid size-14 place-items-center bg-foreground text-background shadow-lg\"\n                      >\n                        {popping === r &&\n                          [0, 1, 2, 3, 4, 5].map((i) => {\n                            const a = (i * Math.PI) / 3\n                            return (\n                              <motion.span\n                                key={i}\n                                aria-hidden\n                                className=\"pointer-events-none absolute text-foreground\"\n                                initial={{ scale: 0, x: 0, y: 0, opacity: 1 }}\n                                animate={{ scale: [0, 1.2, 0], x: Math.cos(a) * 44, y: Math.sin(a) * 44, opacity: [1, 1, 0], rotate: 90 }}\n                                transition={{ duration: 0.48, ease: 'easeOut' }}\n                              >\n                                <Sparkle className=\"size-3\" fill=\"currentColor\" />\n                              </motion.span>\n                            )\n                          })}\n                        <motion.span\n                          animate={popping === r ? { scale: [1, 1.7, 1], rotate: [0, r === 'up' ? -30 : 30, 0], y: [0, -4, 0] } : { scale: 1 }}\n                          transition={{ duration: 0.48, ease: 'easeOut' }}\n                        >\n                          <Icon className=\"size-6\" fill={rating === r ? 'currentColor' : 'none'} aria-hidden />\n                        </motion.span>\n                      </motion.button>\n                    )\n                  })}\n                </div>\n                <p className=\"min-h-5 text-sm text-muted-foreground\" aria-live=\"polite\">\n                  {thanks && thanksLabel}\n                </p>\n              </motion.div>\n            ) : (\n              <motion.form\n                key=\"card\"\n                layoutId={`${id}-card`}\n                style={{ borderRadius: 28 }}\n                onKeyDown={(e) => e.key === 'Escape' && close()}\n                onSubmit={async (e) => {\n                  e.preventDefault()\n                  setSending(true)\n                  try {\n                    await onSubmit({ rating: rating!, text: text.trim() })\n                    setThanks(true)\n                    close()\n                  } finally {\n                    setSending(false)\n                  }\n                }}\n                aria-labelledby={`${id}-title`}\n                className=\"relative w-full max-w-sm overflow-hidden border bg-card p-6 text-card-foreground shadow-2xl\"\n              >\n                <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.12 }}>\n                  <button\n                    type=\"button\"\n                    aria-label={closeLabel}\n                    onClick={close}\n                    className=\"absolute top-4 right-4 grid size-8 after:-inset-1.5 after:absolute after:content-[''] place-items-center rounded-full bg-muted text-muted-foreground hover:text-foreground\"\n                  >\n                    <X className=\"size-4\" strokeWidth={2.5} aria-hidden />\n                  </button>\n                  <h2 id={`${id}-title`} className=\"pr-10 text-xl font-semibold\">\n                    {title}\n                  </h2>\n                  <label htmlFor={`${id}-text`} className=\"mt-1 mb-4 block text-sm text-muted-foreground\">\n                    {rating === 'up' ? upPrompt : downPrompt}\n                  </label>\n                  <textarea\n                    ref={field}\n                    id={`${id}-text`}\n                    rows={4}\n                    value={text}\n                    onChange={(e) => setText(e.target.value)}\n                    placeholder={placeholder}\n                    className=\"w-full resize-none rounded-2xl border bg-muted p-3.5 outline-none focus-visible:ring-2 focus-visible:ring-ring\"\n                  />\n                  <button\n                    type=\"submit\"\n                    disabled={sending}\n                    className=\"mt-3 inline-flex min-h-11 items-center gap-2 rounded-xl bg-foreground px-5 font-medium text-background active:scale-95 motion-reduce:active:scale-100 disabled:opacity-60\"\n                  >\n                    <Send className=\"size-4\" aria-hidden />\n                    {sending ? sendingLabel : sendLabel}\n                  </button>\n                </motion.div>\n              </motion.form>\n            )}\n          </AnimatePresence>\n        </div>\n      </LayoutGroup>\n    </MotionConfig>\n  )\n}\n",
       "type": "registry:component"
     }
   ],
@@ -28,84 +28,84 @@
         "type": "(data: { rating: FeedbackRating; text: string }) => Promise<void> | void",
         "default": null,
         "required": true,
-        "description": null
+        "description": "Called with the rating and the trimmed text when the form is sent. The form closes once the returned promise resolves."
       },
       {
         "name": "title",
         "type": "string",
         "default": "'Share feedback'",
         "required": false,
-        "description": null
+        "description": "The heading of the form. Default “Share feedback”."
       },
       {
         "name": "upPrompt",
         "type": "string",
         "default": "'What did you like most?'",
         "required": false,
-        "description": null
+        "description": "The question above the field after a thumbs up."
       },
       {
         "name": "downPrompt",
         "type": "string",
         "default": "'What could be better?'",
         "required": false,
-        "description": null
+        "description": "The question above the field after a thumbs down."
       },
       {
         "name": "placeholder",
         "type": "string",
         "default": "'Optional'",
         "required": false,
-        "description": null
+        "description": "The placeholder text in the field. Default “Optional”."
       },
       {
         "name": "sendLabel",
         "type": "string",
         "default": "'Send'",
         "required": false,
-        "description": null
+        "description": "The text on the send button. Default “Send”."
       },
       {
         "name": "sendingLabel",
         "type": "string",
         "default": "'Sending…'",
         "required": false,
-        "description": null
+        "description": "The text on the send button while it is sending."
       },
       {
         "name": "thanksLabel",
         "type": "string",
         "default": "'Thanks for the feedback'",
         "required": false,
-        "description": null
+        "description": "The line shown under the thumbs after sending."
       },
       {
         "name": "upLabel",
         "type": "string",
         "default": "'Helpful'",
         "required": false,
-        "description": null
+        "description": "The accessible name of the thumbs up button. Default “Helpful”."
       },
       {
         "name": "downLabel",
         "type": "string",
         "default": "'Not helpful'",
         "required": false,
-        "description": null
+        "description": "The accessible name of the thumbs down button. Default “Not helpful”."
       },
       {
         "name": "closeLabel",
         "type": "string",
         "default": "'Close'",
         "required": false,
-        "description": null
+        "description": "The accessible name of the close button. Default “Close”."
       },
       {
         "name": "className",
         "type": "string",
         "default": null,
         "required": false,
-        "description": null
+        "description": "Classes for the outer wrapper."
       }
     ],
     "a11y": [
@@ -124,7 +124,7 @@
       },
       {
         "topic": "motion",
-        "text": "The pop uses Motion with reduced motion set to user."
+        "text": "The pop uses Motion with reduced motion set to user. Under reduced motion there is no pop and no wait: the form opens at once. The send button's press scale also stops."
       }
     ]
   },

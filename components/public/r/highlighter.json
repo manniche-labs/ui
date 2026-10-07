@@ -9,7 +9,7 @@
   "files": [
     {
       "path": "registry/manniche/highlighter/highlighter.tsx",
-      "content": "import { useEffect, useRef, useState, type ReactNode } from 'react'\nimport { cn } from '@/lib/utils'\n\nexport type HighlighterProps = {\n  children: ReactNode\n  /** Delay in milliseconds after the phrase enters the view. */\n  delay?: number\n  className?: string\n}\n\n/**\n * A marker stroke draws behind a phrase the first time it scrolls into view.\n * The stroke colour is the text colour of `--highlight`, or the primary colour at low strength.\n * Under reduced motion the stroke is simply there.\n */\nexport function Highlighter({ children, delay = 200, className }: HighlighterProps) {\n  const el = useRef<HTMLElement>(null)\n  const [on, setOn] = useState(false)\n\n  useEffect(() => {\n    if (on || !el.current) return\n    const io = new IntersectionObserver(([e]) => e.isIntersecting && setOn(true), { threshold: 0.6 })\n    io.observe(el.current)\n    return () => io.disconnect()\n  }, [on])\n\n  return (\n    <mark\n      ref={el}\n      data-on={on}\n      style={{ transitionDelay: `${delay}ms` }}\n      className={cn(\n        'bg-transparent bg-no-repeat px-0.5 text-inherit [background-position:0_88%]',\n        '[background-image:linear-gradient(var(--highlight,color-mix(in_oklch,var(--color-primary)_24%,transparent)),var(--highlight,color-mix(in_oklch,var(--color-primary)_24%,transparent)))]',\n        '[background-size:0%_40%] transition-[background-size] duration-900 ease-out-quint data-[on=true]:[background-size:100%_40%]',\n        'motion-reduce:[background-size:100%_40%] motion-reduce:transition-none',\n        '[box-decoration-break:clone]',\n        className,\n      )}\n    >\n      {children}\n    </mark>\n  )\n}\n",
+      "content": "import { useEffect, useRef, useState, type ReactNode } from 'react'\nimport { cn } from '@/lib/utils'\n\nexport type HighlighterProps = {\n  /** The text to mark. */\n  children: ReactNode\n  /** Delay in milliseconds after the phrase enters the view. */\n  delay?: number\n  /** Classes for the mark element. */\n  className?: string\n}\n\n/**\n * A marker stroke draws behind a phrase the first time it scrolls into view.\n * The stroke colour is the text colour of `--highlight`, or the primary colour at low strength.\n * Under reduced motion the stroke is simply there.\n */\nexport function Highlighter({ children, delay = 200, className }: HighlighterProps) {\n  const el = useRef<HTMLElement>(null)\n  const [on, setOn] = useState(false)\n\n  useEffect(() => {\n    if (on || !el.current) return\n    const io = new IntersectionObserver(([e]) => e.isIntersecting && setOn(true), { threshold: 0.6 })\n    io.observe(el.current)\n    return () => io.disconnect()\n  }, [on])\n\n  return (\n    <mark\n      ref={el}\n      data-on={on}\n      style={{ transitionDelay: `${delay}ms` }}\n      className={cn(\n        'bg-transparent bg-no-repeat px-0.5 text-inherit [background-position:0_88%]',\n        '[background-image:linear-gradient(var(--highlight,color-mix(in_oklch,var(--color-primary)_24%,transparent)),var(--highlight,color-mix(in_oklch,var(--color-primary)_24%,transparent)))]',\n        '[background-size:0%_40%] transition-[background-size] duration-900 ease-out-quint data-[on=true]:[background-size:100%_40%]',\n        'motion-reduce:[background-size:100%_40%] motion-reduce:transition-none',\n        '[box-decoration-break:clone]',\n        className,\n      )}\n    >\n      {children}\n    </mark>\n  )\n}\n",
       "type": "registry:component"
     }
   ],
@@ -23,7 +23,7 @@
         "type": "ReactNode",
         "default": null,
         "required": true,
-        "description": null
+        "description": "The text to mark."
       },
       {
         "name": "delay",
@@ -37,7 +37,7 @@
         "type": "string",
         "default": null,
         "required": false,
-        "description": null
+        "description": "Classes for the mark element."
       }
     ],
     "a11y": [

@@ -1,6 +1,7 @@
 // A changelog page with a timeline. The filter is a row of radio buttons; :has() hides the changes that do not match,
 // so it works without JavaScript and the markup can ship as a static page. Colours come from the theme tokens.
 import { ArrowRight, Rss, Sparkles, Wrench, Zap } from "lucide-react";
+import { useId } from "react";
 import { cn } from "@/lib/utils";
 
 type Kind = "new" | "improved" | "fixed";
@@ -153,6 +154,8 @@ function KindBadge({ kind }: { kind: Kind }) {
 
 /** Changelog page: a filterable timeline of releases with a highlight card, a version index and a subscribe form. */
 export function ChangelogPage() {
+  // Prefix for ids and the radio group, so two of these on one page never share them.
+  const uid = useId()
   return (
     <div
       id="top"
@@ -200,7 +203,7 @@ export function ChangelogPage() {
               >
                 <input
                   type="radio"
-                  name="changelog-filter"
+                  name={`${uid}changelog-filter`}
                   value={value}
                   defaultChecked={value === "all"}
                   className="sr-only"
@@ -332,11 +335,11 @@ export function ChangelogPage() {
               </p>
             </div>
             <form action="#" className="flex flex-col gap-2 sm:flex-row">
-              <label htmlFor="changelog-email" className="sr-only">
+              <label htmlFor={`${uid}changelog-email`} className="sr-only">
                 Email
               </label>
               <input
-                id="changelog-email"
+                id={`${uid}changelog-email`}
                 type="email"
                 required
                 placeholder="you@shop.com"
@@ -348,7 +351,7 @@ export function ChangelogPage() {
               >
                 Subscribe
                 <ArrowRight
-                  className="size-4 transition-transform duration-200 group-hover/sub:translate-x-0.5"
+                  className="size-4 transition-transform duration-200 group-hover/sub:translate-x-0.5 motion-reduce:transition-none motion-reduce:group-hover/sub:translate-x-0"
                   aria-hidden
                 />
               </button>

@@ -13,7 +13,7 @@
   "files": [
     {
       "path": "registry/manniche/timed-undo/timed-undo.tsx",
-      "content": "// Based on Watermelon UI's “Timed undo action” (MIT, © 2026 Watermelon Platform Contributors,\n// github.com/WatermelonCorp/watermelon-platform). Rewritten so the action actually runs when the time is up.\nimport { Undo2 } from 'lucide-react'\nimport { AnimatePresence, MotionConfig, motion } from 'motion/react'\nimport { useEffect, useRef, useState } from 'react'\nimport { cn } from '@/lib/utils'\n\nexport type TimedUndoProps = {\n  /** Seconds the person has to change their mind. */\n  seconds?: number\n  label?: string\n  undoLabel?: string\n  /** Runs when the countdown reaches zero without an undo. */\n  onConfirm: () => void\n  onUndo?: () => void\n  className?: string\n}\n\n/** A destructive button that waits a few seconds and can be undone in the meantime. */\nexport function TimedUndo({ seconds = 5, label = 'Delete', undoLabel = 'Undo', onConfirm, onUndo, className }: TimedUndoProps) {\n  const [left, setLeft] = useState<number | null>(null)\n  const confirm = useRef(onConfirm)\n  useEffect(() => {\n    confirm.current = onConfirm\n  })\n  const waiting = left !== null\n\n  useEffect(() => {\n    if (left === null) return\n    const t = setTimeout(() => {\n      if (left > 1) return setLeft(left - 1)\n      setLeft(null)\n      confirm.current()\n    }, 1000)\n    return () => clearTimeout(t)\n  }, [left])\n\n  const toggle = () => {\n    if (waiting) {\n      setLeft(null)\n      onUndo?.()\n    } else setLeft(seconds)\n  }\n\n  const fade = { initial: { opacity: 0, filter: 'blur(2px)' }, animate: { opacity: 1, filter: 'blur(0px)' }, exit: { opacity: 0, filter: 'blur(2px)' } }\n\n  return (\n    <MotionConfig reducedMotion=\"user\" transition={{ type: 'spring', stiffness: 260, damping: 32 }}>\n      <motion.button\n        layout\n        type=\"button\"\n        onClick={toggle}\n        style={{ borderRadius: 14 }}\n        className={cn(\n          'inline-flex min-h-11 items-center gap-2 overflow-hidden px-1.5 font-medium transition-colors duration-300',\n          waiting ? 'bg-destructive/10 text-destructive' : 'bg-destructive px-5 text-white',\n          className,\n        )}\n      >\n        <AnimatePresence mode=\"popLayout\" initial={false}>\n          {waiting && (\n            <motion.span key=\"icon\" {...fade} className=\"grid size-8 place-items-center rounded-[10px] bg-destructive text-white\">\n              <Undo2 className=\"size-4\" aria-hidden />\n            </motion.span>\n          )}\n          <motion.span key={waiting ? 'undo' : 'label'} layout=\"position\" {...fade} className=\"px-1\">\n            {waiting ? undoLabel : label}\n          </motion.span>\n          {waiting && (\n            <motion.span key=\"count\" {...fade} className=\"grid h-8 min-w-8 place-items-center overflow-hidden rounded-[10px] bg-destructive px-2 text-white tabular-nums\">\n              <AnimatePresence mode=\"popLayout\" initial={false}>\n                <motion.span\n                  key={left}\n                  initial={{ y: -14, opacity: 0 }}\n                  animate={{ y: 0, opacity: 1 }}\n                  exit={{ y: 14, opacity: 0 }}\n                  aria-hidden\n                >\n                  {left}\n                </motion.span>\n              </AnimatePresence>\n            </motion.span>\n          )}\n        </AnimatePresence>\n        {/* Said once when the countdown starts, not every second. */}\n        <span className=\"sr-only\" aria-live=\"polite\">\n          {waiting ? `${label} in ${seconds} seconds. Press again to undo.` : ''}\n        </span>\n      </motion.button>\n    </MotionConfig>\n  )\n}\n",
+      "content": "// Based on Watermelon UI's “Timed undo action” (MIT, © 2026 Watermelon Platform Contributors,\n// github.com/WatermelonCorp/watermelon-platform). Rewritten so the action actually runs when the time is up.\nimport { Undo2 } from 'lucide-react'\nimport { AnimatePresence, MotionConfig, motion } from 'motion/react'\nimport { useEffect, useRef, useState } from 'react'\nimport { cn } from '@/lib/utils'\n\nexport type TimedUndoProps = {\n  /** Seconds the person has to change their mind. */\n  seconds?: number\n  /** Text on the button before it is pressed. */\n  label?: string\n  /** Text on the button while the countdown runs. */\n  undoLabel?: string\n  /** Runs when the countdown reaches zero without an undo. */\n  onConfirm: () => void\n  /** Called when the person undoes during the countdown. */\n  onUndo?: () => void\n  /** Classes for the button. */\n  className?: string\n}\n\n/** A destructive button that waits a few seconds and can be undone in the meantime. */\nexport function TimedUndo({ seconds = 5, label = 'Delete', undoLabel = 'Undo', onConfirm, onUndo, className }: TimedUndoProps) {\n  const [left, setLeft] = useState<number | null>(null)\n  const confirm = useRef(onConfirm)\n  useEffect(() => {\n    confirm.current = onConfirm\n  })\n  const waiting = left !== null\n\n  useEffect(() => {\n    if (left === null) return\n    const t = setTimeout(() => {\n      if (left > 1) return setLeft(left - 1)\n      setLeft(null)\n      confirm.current()\n    }, 1000)\n    return () => clearTimeout(t)\n  }, [left])\n\n  const toggle = () => {\n    if (waiting) {\n      setLeft(null)\n      onUndo?.()\n    } else setLeft(seconds)\n  }\n\n  const fade = { initial: { opacity: 0, filter: 'blur(2px)' }, animate: { opacity: 1, filter: 'blur(0px)' }, exit: { opacity: 0, filter: 'blur(2px)' } }\n\n  return (\n    <MotionConfig reducedMotion=\"user\" transition={{ type: 'spring', stiffness: 260, damping: 32 }}>\n      <motion.button\n        layout\n        type=\"button\"\n        onClick={toggle}\n        style={{ borderRadius: 14 }}\n        className={cn(\n          'inline-flex min-h-11 items-center gap-2 overflow-hidden px-1.5 font-medium transition-colors duration-300 motion-reduce:transition-none',\n          waiting ? 'bg-destructive/10 text-destructive' : 'bg-destructive px-5 text-background',\n          className,\n        )}\n      >\n        <AnimatePresence mode=\"popLayout\" initial={false}>\n          {waiting && (\n            <motion.span key=\"icon\" {...fade} className=\"grid size-8 place-items-center rounded-[10px] bg-destructive text-background\">\n              <Undo2 className=\"size-4\" aria-hidden />\n            </motion.span>\n          )}\n          <motion.span key={waiting ? 'undo' : 'label'} layout=\"position\" {...fade} className=\"px-1\">\n            {waiting ? undoLabel : label}\n          </motion.span>\n          {waiting && (\n            <motion.span key=\"count\" {...fade} className=\"grid h-8 min-w-8 place-items-center overflow-hidden rounded-[10px] bg-destructive px-2 text-background tabular-nums\">\n              <AnimatePresence mode=\"popLayout\" initial={false}>\n                <motion.span\n                  key={left}\n                  initial={{ y: -14, opacity: 0 }}\n                  animate={{ y: 0, opacity: 1 }}\n                  exit={{ y: 14, opacity: 0 }}\n                  aria-hidden\n                >\n                  {left}\n                </motion.span>\n              </AnimatePresence>\n            </motion.span>\n          )}\n        </AnimatePresence>\n        {/* Said once when the countdown starts, not every second. */}\n        <span className=\"sr-only\" aria-live=\"polite\">\n          {waiting ? `${label} in ${seconds} seconds. Press again to undo.` : ''}\n        </span>\n      </motion.button>\n    </MotionConfig>\n  )\n}\n",
       "type": "registry:component"
     }
   ],
@@ -35,14 +35,14 @@
         "type": "string",
         "default": "'Delete'",
         "required": false,
-        "description": null
+        "description": "Text on the button before it is pressed."
       },
       {
         "name": "undoLabel",
         "type": "string",
         "default": "'Undo'",
         "required": false,
-        "description": null
+        "description": "Text on the button while the countdown runs."
       },
       {
         "name": "onConfirm",
@@ -56,14 +56,14 @@
         "type": "() => void",
         "default": null,
         "required": false,
-        "description": null
+        "description": "Called when the person undoes during the countdown."
       },
       {
         "name": "className",
         "type": "string",
         "default": null,
         "required": false,
-        "description": null
+        "description": "Classes for the button."
       }
     ],
     "a11y": [
@@ -82,7 +82,7 @@
       },
       {
         "topic": "motion",
-        "text": "The component is wrapped in MotionConfig with reducedMotion set to user, so Motion follows the system setting for the layout and fade animations."
+        "text": "The component is wrapped in MotionConfig with reducedMotion set to user, so Motion follows the system setting for the layout and fade animations. The colour change on the button is off under reduced motion."
       }
     ]
   },

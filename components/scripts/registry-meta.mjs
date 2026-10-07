@@ -212,6 +212,14 @@ function expand(node, decls, seen = new Set()) {
     out.members.push(...node.members.map((m) => ({ m, sf })))
   } else if (ts.isIntersectionTypeNode(node)) {
     for (const t of node.types) merge(expand(t, decls, seen))
+  } else if (ts.isUnionTypeNode(node) && node.types.every((t) => ts.isTypeLiteralNode(ts.isParenthesizedTypeNode(t) ? t.type : t))) {
+    // Props that come in alternatives, such as a visible label or a spoken one. Every member is listed, and a member
+    // is only required when each alternative requires it.
+    const branches = node.types.map((t) => expand(t, decls, seen).members)
+    const requiredIn = (b, name) => b.some(({ m, sf: s }) => memberName(m.name, s) === name && !m.questionToken)
+    for (const b of branches) {
+      for (const mm of b) out.members.push({ ...mm, optional: !branches.every((o) => requiredIn(o, memberName(mm.m.name, mm.sf))) })
+    }
   } else if (ts.isTypeReferenceNode(node) || ts.isExpressionWithTypeArguments(node)) {
     const name = ts.isTypeReferenceNode(node) ? node.typeName.getText(sf) : node.expression.getText(sf)
     const local = decls.types.get(name)
@@ -228,14 +236,14 @@ function expand(node, decls, seen = new Set()) {
   return out
 }
 
-function memberToProp({ m, sf }) {
+function memberToProp({ m, sf, optional }) {
   if (ts.isPropertySignature(m)) {
-    return { name: memberName(m.name, sf), type: shorten(m.type ? text(m.type, sf) : 'any', TYPE_MAX), required: !m.questionToken, description: jsdoc(m, sf) }
+    return { name: memberName(m.name, sf), type: shorten(m.type ? text(m.type, sf) : 'any', TYPE_MAX), required: !m.questionToken && !optional, description: jsdoc(m, sf) }
   }
   if (ts.isMethodSignature(m)) {
     const params = m.parameters.map((p) => text(p, sf)).join(', ')
     const type = `(${params}) => ${m.type ? text(m.type, sf) : 'void'}`
-    return { name: memberName(m.name, sf), type: shorten(type, TYPE_MAX), required: !m.questionToken, description: jsdoc(m, sf) }
+    return { name: memberName(m.name, sf), type: shorten(type, TYPE_MAX), required: !m.questionToken && !optional, description: jsdoc(m, sf) }
   }
   return null
 }
@@ -304,6 +312,16 @@ function propsOf(item) {
   /** { props, extends } from expanded members, with defaults from the component's destructuring. */
   function propList({ members, bases }, c) {
     const defaults = c ? defaultsOf(c.fn, decls.sf) : new Map()
+    // A component that only passes `...props` on, such as a wrapper that picks a static or a live plot, keeps its
+    // defaults in a local function that takes the same props type.
+    const own = c?.fn.parameters[0]?.type
+    if (own && ts.isTypeReferenceNode(own)) {
+      for (const [, f] of decls.funcs) {
+        const t = f.fn.parameters[0]?.type
+        if (f === c || !t || !ts.isTypeReferenceNode(t) || t.typeName.getText(decls.sf) !== own.typeName.getText(decls.sf)) continue
+        for (const [k, v] of defaultsOf(f.fn, decls.sf)) if (!defaults.has(k)) defaults.set(k, v)
+      }
+    }
     const props = []
     for (const mm of members) {
       const p = memberToProp(mm)

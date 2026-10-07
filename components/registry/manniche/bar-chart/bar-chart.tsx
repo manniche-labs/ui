@@ -469,7 +469,10 @@ export function BarChart({
               </div>
             )}
           </div>
-          <div aria-hidden className="relative mt-[9px] h-[11px]" style={{ marginRight: GUT }}>
+          {/* The bars hide below the baseline by sliding down inside a clip, and contrast checkers that skip the clip
+              read them as the labels' background. The card colour under the labels, the surface the chart already
+              assumes for the now dot's ring, shows them the real one and changes nothing on screen. */}
+          <div aria-hidden className="relative mt-[9px] h-[11px] bg-card" style={{ marginRight: GUT }}>
             {width > 0 &&
               slots.map((s, i) =>
                 (n - 1 - i) % every === 0 ? (

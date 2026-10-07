@@ -4,19 +4,22 @@
 // There is no chart library. Each primitive draws its own SVG with these pieces, so the axes, tooltips and numbers
 // look the same everywhere. Series colours come from --chart-1 … --chart-5 and the signal from --primary.
 import { AnimatePresence, motion } from 'motion/react'
-import { useEffect, useRef, useState, type KeyboardEvent, type ReactNode } from 'react'
+import { useEffect, useRef, useState, type CSSProperties, type KeyboardEvent, type ReactNode } from 'react'
 import { useReducedMotion } from '@/registry/manniche/hooks/use-reduced-motion'
 import { cn } from '@/lib/utils'
 import { EASE, formatValue, stepIndex, valueParts, type ValueFormat } from './chart-utils'
+import { StaticChartFrame } from './use-chart'
 
 // Tooltip -------------------------------------------------------------------------------------------------------
 
 export type TooltipRow = { label: string; value: string; color?: string }
 
 export type ChartTooltipProps = {
+  /** Shows the tooltip. It fades and scales out when false. */
   open: boolean
   /** Where the tooltip points, in px inside the chart's positioned wrapper. */
   x: number
+  /** The vertical point in px inside the wrapper. The tooltip sits 12 px above it, or below with `below`. */
   y: number
   /** The wrapper's width, so the tooltip stays inside it. */
   bounds: number
@@ -26,6 +29,7 @@ export type ChartTooltipProps = {
   title: string
   /** The figure itself. */
   value: ReactNode
+  /** Extra lines under the figure, each with a label, a value and an optional colour key. */
   rows?: TooltipRow[]
 }
 
@@ -98,12 +102,15 @@ export function ChartTooltip({ open, x, y, bounds, below = false, title, value, 
 // The display number --------------------------------------------------------------------------------------------
 
 export type BigNumberProps = {
+  /** The number to show. Screen readers get it whole and formatted. */
   value: number
+  /** Decimals, unit, suffix and sign, as in chart-utils `formatValue`. */
   format?: ValueFormat
   /** xl for the one figure a tile is about, sm for a figure inside a chart. Default "lg". */
   size?: 'xl' | 'lg' | 'md' | 'sm'
   /** Roll the digits that change. Default true; never under reduced motion. */
   roll?: boolean
+  /** Classes for the outer span. */
   className?: string
 }
 
@@ -152,7 +159,15 @@ export function BigNumber({ value, format, size = 'lg', roll = true, className }
 }
 
 /** Digits that roll up when they grow and down when they shrink, counted from the right so places stay put. */
-export function Digits({ text, roll = true }: { text: string; roll?: boolean }) {
+export function Digits({
+  text,
+  roll = true,
+}: {
+  /** The digits as already formatted text. Each place rolls on its own. */
+  text: string
+  /** Roll the digits that change. Default true; never under reduced motion. */
+  roll?: boolean
+}) {
   const reduced = useReducedMotion()
   const [last, setLast] = useState({ text, dir: 1 })
   const dir = last.text === text ? last.dir : Number(text.replace(/\D/g, '')) >= Number(last.text.replace(/\D/g, '')) ? 1 : -1
@@ -190,12 +205,20 @@ export function DeltaPill({
   format = { decimals: 1, suffix: '%' },
   goodWhen = 'up',
   className,
+  labels = {},
 }: {
+  /** The change. Its sign sets the arrow; the figure is shown without a sign. */
   value: number
+  /** How the figure is written. Default one decimal with a % suffix. */
   format?: ValueFormat
+  /** Which way is good: green then, red the other way. Default "up"; use "down" for costs. */
   goodWhen?: 'up' | 'down'
+  /** Classes for the pill. */
   className?: string
+  /** Screen reader text after the figure. Keys up, down and unchanged; English by default. */
+  labels?: { up?: string; down?: string; unchanged?: string }
 }) {
+  const { up: upText = 'up', down: downText = 'down', unchanged = 'unchanged' } = labels
   const up = value > 0
   const flat = Number(Math.abs(value).toFixed(format.decimals ?? 0)) === 0
   const good = flat ? null : up === (goodWhen === 'up')
@@ -225,7 +248,7 @@ export function DeltaPill({
         </svg>
       )}
       {formatValue(Math.abs(value), { ...format, sign: false })}
-      <span className="sr-only">{flat ? ', unchanged' : up ? ', up' : ', down'}</span>
+      <span className="sr-only">, {flat ? unchanged : up ? upText : downText}</span>
     </span>
   )
 }
@@ -242,11 +265,15 @@ export function Pills({
   label,
   className,
 }: {
+  /** The choices, each with an id and the visible label. */
   options: PillOption[]
+  /** The id of the picked option. */
   value: string
+  /** Called with the option's id on click and on arrow keys, Home and End. */
   onChange: (id: string) => void
   /** Read aloud for the group, e.g. "Period". */
   label: string
+  /** Classes for the radio group. */
   className?: string
 }) {
   const refs = useRef<(HTMLButtonElement | null)[]>([])
@@ -300,7 +327,18 @@ export function Pills({
 // Screen readers ------------------------------------------------------------------------------------------------
 
 /** The chart's data as a table only screen readers see. The first column is read as the row heading. */
-export function SrTable({ caption, head, rows }: { caption: string; head: string[]; rows: (string | number)[][] }) {
+export function SrTable({
+  caption,
+  head,
+  rows,
+}: {
+  /** The table's caption, read before the data. */
+  caption: string
+  /** The column headings. */
+  head: string[]
+  /** One array per row; the first cell is the row heading. */
+  rows: (string | number)[][]
+}) {
   return (
     <div className="sr-only">
       <table>
@@ -330,6 +368,40 @@ export function SrTable({ caption, head, rows }: { caption: string; head: string
           ))}
         </tbody>
       </table>
+    </div>
+  )
+}
+
+/** One size of a chart in a static file, and the container query classes that show it. */
+export type StaticPlot = { width: number; height: number; className: string }
+
+/**
+ * Inside StaticChartFrame a chart cannot measure, so one fixed width is too small on a phone and too narrow on a
+ * desktop. This renders the plot once per size, and the wrapper's own container width shows the one that fits.
+ * The others are display: none, so screen readers and the keyboard only meet the one on show.
+ */
+export function StaticPlots({
+  plots,
+  className,
+  style,
+  children,
+}: {
+  /** The sizes to render, each with the container query classes that show it. STATIC_STEPS has four. */
+  plots: StaticPlot[]
+  /** Classes for the wrapper, which is the container the queries measure. */
+  className?: string
+  /** Inline styles for the wrapper. */
+  style?: CSSProperties
+  /** Renders the plot for one size; pass the class name on to the plot's root. */
+  children: (className: string) => ReactNode
+}) {
+  return (
+    <div className={cn('@container min-w-0', className)} style={style}>
+      {plots.map((p) => (
+        <StaticChartFrame.Provider key={p.width} value={{ width: p.width, height: p.height }}>
+          {children(p.className)}
+        </StaticChartFrame.Provider>
+      ))}
     </div>
   )
 }

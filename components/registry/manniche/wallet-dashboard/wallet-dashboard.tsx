@@ -70,26 +70,26 @@ export function WalletDashboard({ data, format = DEFAULT_FORMAT, title = 'Wallet
         <div className="@3xl:col-span-6 @6xl:col-span-12">
           <h1 className="text-[22px] leading-tight font-semibold tracking-tight">{title}</h1>
         </div>
-        <DataTile title={l.balance} className="@3xl:col-span-3 @6xl:col-span-4" footer={<span>{note}</span>}>
+        <DataTile headingLevel={2} title={l.balance} className="@3xl:col-span-3 @6xl:col-span-4" footer={<span>{note}</span>}>
           <BigNumber value={data.balance} format={format} size="lg" />
           <div className="mt-3">
             <DeltaPill value={data.change} format={{ decimals: 1, suffix: '%', sign: true }} />
           </div>
         </DataTile>
-        <DataTile title={l.cards} className="@3xl:col-span-3 @6xl:col-span-4">
+        <DataTile headingLevel={2} title={l.cards} className="@3xl:col-span-3 @6xl:col-span-4">
           <CardStack data={data.cards} label={l.cards} format={format} />
         </DataTile>
-        <DataTile
+        <DataTile headingLevel={2}
           title={l.cashFlow}
           className="@3xl:col-span-6 @6xl:col-span-4"
           action={<Pills label={l.period} options={data.periods.map(({ id, label }) => ({ id, label }))} value={periodId} onChange={setPeriodId} />}
         >
           {period && <BarChart data={period.flow} label={`${l.cashFlow}, ${period.long}`} format={{ ...format, decimals: 0 }} />}
         </DataTile>
-        <DataTile title={l.spending} className="@3xl:col-span-3 @6xl:col-span-6">
+        <DataTile headingLevel={2} title={l.spending} className="@3xl:col-span-3 @6xl:col-span-6">
           {period && <Donut data={period.spending} label={`${l.spending}, ${period.long}`} format={format} />}
         </DataTile>
-        <DataTile
+        <DataTile headingLevel={2}
           title={l.subscriptions}
           className="@3xl:col-span-3 @6xl:col-span-6"
           footer={

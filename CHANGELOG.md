@@ -15,10 +15,44 @@
 - Registry metadata: `npm run meta` writes `meta.tier`, `added`, `usedIn`, `props` and `extends` into `registry.json` from the code and git history, and `--check` fails when it is out of date. `meta.a11y` (keyboard, screen reader and motion notes) is written by hand; the six new components have it. `npm run lab` now carries these fields to the site.
 - `meta.parts` for kits: a file that exports several components without one main component (`chart-kit`) gets a props list per part, and `npm run lab` carries it to the site.
 - `meta.a11y` for every component and template: keyboard, screen reader, motion and other notes, written from the code and checked sentence by sentence against it. Gaps found on the way are listed for a later fix, not described as features.
+- Every visible and spoken string can be translated: `labels` on `tool-approval`, `code-block`, `marquee`, `toast`, `command-palette`, `sheet`, `hold-to-confirm`, `tag-picker`, `onboarding-checklist`, `card-swipe`, `deployment-card`, `shop-landing`, `pricing-page`, `store-dashboard` and `sign-in-page`, new keys on `signature-pad`, `event-reminders`, `ai-action-bar` and `trade-ticket`, and `savingLabel` on `save-toggle`.
+- `continuous-tabs`: `children` renders the active tab's content in a built-in tab panel wired to its tab, `id` sets the base for the tab and panel ids, and a tab's `panelId` points at a panel you render yourself.
+- `shop-landing`: `onAddToBag` is called with the product when its button is pressed.
+- `store-dashboard`: the sales bars are one Tab stop with arrow keys, Home and End, the bar in focus shows its tooltip and is read out, and `barsHint` tells screen readers how.
+- `StaticPlots` in `chart-kit` and `STATIC_STEPS` in `use-chart`: a chart in a static file is rendered at a phone, column, tablet and desktop width, and its own container shows the one that fits. `StaticChartFrame` takes an optional `height`.
+- `npm run deps` checks that every import in a registry file is declared as a dependency of its item.
+- `npm run meta` lists props that come in alternatives (a visible `label` or an `aria-label`), and reads defaults from a local function that takes the same props type when the component only passes its props on.
+- `meta.a11y` notes are complete for all 132 items, and every prop has a description.
+
+### Changed
+
+- `switch` must have a name: pass `label`, `aria-label` or both. The types refuse a switch with neither.
+- `continuous-tabs` and `marquee`: `label` is required, so the tab list and the region always have a name.
+- `marquee` has a pause button next to the strip, and `className` now goes on the outer region that holds both. Under reduced motion the button is gone.
+- `text-reveal`: unlit words are at 50% opacity (was 20%), so they keep enough contrast to read as large text.
+- `data-tile`: on an inverted tile, the success and destructive colours are pulled further towards the text colour, so a `DeltaPill` keeps 4.5:1 in light and dark.
 
 ### Fixed
 
 - `gallery-card` shows the drawn poster when a server-rendered image failed before React was listening, so `onError` never fired.
+- Tap targets of 44 px on small buttons and links across the free components and templates, with an invisible hit area where the visible size stays.
+- Ids come from `useId`, so two copies of a component on one page no longer share ids.
+- Reduced motion: the last colour, size and position transitions now stand still, and spinners stop.
+- Static template files: `area-chart` and `bubble-chart` fill their tile at every width instead of one fixed width.
+- `dot-matrix`: each dot sits in the middle of its column, over the column name, at every width.
+- `deployment-card`: each step is read as its name and status, without a stray space, and shows one focus outline.
+- `confirm-dialog` demo: the delete button keeps its contrast on hover.
+- `notification-stack`: a new notification is read out once, and the same words twice in a row are read again.
+- `tag-picker`: focus follows a tag when it moves between the lists, and the move is announced.
+- `tool-approval`: focus moves to the result after you approve or deny.
+- `integration-card`: Escape closes the open card, and focus moves into it only when it opens, not on every render. The connected chip keeps 4.5:1 on its green tint in light mode.
+- `account-home`, `business-finance`, `currency-wallet` and `wallet-dashboard`: the tiles under the h1 have h2 headings, and the transaction lists in them h3 day headings, so the outline skips no level.
+- `transaction-list`: each day is a group named by its heading, not a region, so two lists on a page no longer fill the landmark list.
+- `data-tile`: text on primary inside an inverted tile, such as the now pill in `week-schedule`, keeps 4.5:1 in light mode as well as dark.
+- `spend-control`: a frozen card is muted through its colours instead of 60% opacity, so its text keeps 4.5:1.
+- `bar-chart`: the label row has the card's colour behind it, so contrast checkers no longer read the hidden bars as its background.
+- `dot-matrix` and `lollipop` demos: the tiles have different titles, so their regions have different names.
+- `footer-status` demo: the second, narrowest footer sits in a section, so the page has one footer landmark.
 - Template HTML for the lab: a template with a demo is rendered through it, so `footer-slim` is no longer an empty shell. Charts inside a `StaticChartFrame` start at 640 px, count as drawn and scale with their viewBox, so `area-chart`, `bar-chart`, `bubble-chart` and `sparkline` are no longer empty in the static files. Classes with `'` or `&` (the dial's grid areas) are read unescaped, so `rental-portfolio`'s dial keeps its layout.
 
 ## 2026-10-06

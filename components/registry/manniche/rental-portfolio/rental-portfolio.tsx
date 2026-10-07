@@ -14,9 +14,19 @@ export type RentalPortfolioData = {
   transfers: { title: string; items: Transaction[]; today?: string; format?: ValueFormat }
 }
 
-export type RentalPortfolioLabels = { note?: string }
+export type RentalPortfolioLabels = {
+  /** The footer under the chart, dial and transfer tiles. Default "Example data." */
+  note?: string
+}
 
-export type RentalPortfolioProps = { data: RentalPortfolioData; labels?: RentalPortfolioLabels; className?: string }
+export type RentalPortfolioProps = {
+  /** The figures, the income chart, the rent collection dial and the transfers. */
+  data: RentalPortfolioData
+  /** Visible text with English defaults. */
+  labels?: RentalPortfolioLabels
+  /** Classes for the outer container. */
+  className?: string
+}
 
 export function RentalPortfolio({ data, labels, className }: RentalPortfolioProps) {
   const note = labels?.note ?? 'Example data.'

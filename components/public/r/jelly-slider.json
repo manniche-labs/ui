@@ -12,7 +12,7 @@
   "files": [
     {
       "path": "registry/manniche/jelly-slider/jelly-slider.tsx",
-      "content": "import { motion, useMotionValue, useSpring, useTransform, useVelocity } from 'motion/react'\nimport { useEffect, useRef, useState, type KeyboardEvent, type PointerEvent } from 'react'\nimport { useReducedMotion } from '@/registry/manniche/hooks/use-reduced-motion'\nimport { cn } from '@/lib/utils'\n\nexport type JellySliderProps = {\n  value?: number\n  defaultValue?: number\n  onValueChange?: (value: number) => void\n  min?: number\n  max?: number\n  step?: number\n  /** Read by screen readers. */\n  label: string\n  /** Turns the value into text for screen readers, e.g. “40 %”. */\n  format?: (value: number) => string\n  className?: string\n}\n\n/**\n * A slider with a soft thumb: it stretches in the direction you drag it, squashes to keep its volume,\n * and wobbles back into shape when you let go.\n */\nexport function JellySlider({ value, defaultValue = 50, onValueChange, min = 0, max = 100, step = 1, label, format, className }: JellySliderProps) {\n  const [inner, setInner] = useState(defaultValue)\n  const current = value ?? inner\n  const track = useRef<HTMLDivElement>(null)\n  const reduce = useReducedMotion()\n\n  const pct = (v: number) => ((v - min) / (max - min)) * 100\n  const target = useMotionValue(pct(current))\n  const pos = useSpring(target, { stiffness: 600, damping: 45 })\n  const speed = useVelocity(pos) // percent per second\n  // Faster means longer and flatter. Volume stays the same, so the squash is 1 / stretch.\n  const stretch = useSpring(\n    useTransform(speed, (v) => (reduce ? 1 : 1 + Math.min(0.7, Math.abs(v) / 350))),\n    { stiffness: 420, damping: 11 },\n  )\n  const squash = useTransform(stretch, (s) => 1 / s)\n  const fill = useTransform(pos, (p) => p / 100)\n  const width = useMotionValue(0)\n  const x = useTransform(() => (pos.get() / 100) * width.get())\n\n  // The thumb moves in px, measured from the track, so nothing sticks out past it while it travels.\n  useEffect(() => {\n    const el = track.current!\n    const ro = new ResizeObserver(() => width.set(el.clientWidth))\n    ro.observe(el)\n    return () => ro.disconnect()\n  }, [width])\n\n  useEffect(() => {\n    target.set(pct(current))\n    if (reduce) pos.jump(pct(current))\n  })\n\n  const set = (raw: number) => {\n    const snapped = Math.round((raw - min) / step) * step + min\n    const next = Math.min(max, Math.max(min, Number(snapped.toFixed(10))))\n    if (next === current) return\n    if (value === undefined) setInner(next)\n    onValueChange?.(next)\n  }\n\n  const fromPointer = (e: PointerEvent) => {\n    const r = track.current!.getBoundingClientRect()\n    set(min + ((e.clientX - r.left) / r.width) * (max - min))\n  }\n\n  const onKey = (e: KeyboardEvent) => {\n    const big = Math.max(step, (max - min) / 10)\n    const moves: Record<string, number> = {\n      ArrowRight: step,\n      ArrowUp: step,\n      ArrowLeft: -step,\n      ArrowDown: -step,\n      PageUp: big,\n      PageDown: -big,\n      Home: min - current,\n      End: max - current,\n    }\n    if (!(e.key in moves)) return\n    e.preventDefault()\n    set(current + moves[e.key])\n  }\n\n  return (\n    <div\n      role=\"slider\"\n      tabIndex={0}\n      aria-label={label}\n      aria-valuemin={min}\n      aria-valuemax={max}\n      aria-valuenow={current}\n      aria-valuetext={format?.(current)}\n      aria-orientation=\"horizontal\"\n      onKeyDown={onKey}\n      onPointerDown={(e) => {\n        e.currentTarget.setPointerCapture(e.pointerId)\n        fromPointer(e)\n      }}\n      onPointerMove={(e) => e.currentTarget.hasPointerCapture(e.pointerId) && fromPointer(e)}\n      className={cn('group relative flex h-11 w-full cursor-grab touch-none items-center rounded-full px-3.5 outline-none select-none active:cursor-grabbing', className)}\n    >\n      <div ref={track} className=\"relative h-2.5 w-full rounded-full bg-muted\">\n        <motion.span className=\"absolute inset-0 origin-left rounded-full bg-primary\" style={{ scaleX: fill }} />\n        <motion.span\n          aria-hidden\n          className=\"absolute top-1/2 left-0 -mt-3.5 -ml-3.5 size-7 rounded-full border bg-background shadow-[0_2px_8px_-2px_rgb(0_0_0/0.35)] ring-ring/50 transition-shadow duration-150 group-focus-visible:ring-4\"\n          style={{ x, scaleX: stretch, scaleY: squash }}\n        />\n      </div>\n    </div>\n  )\n}\n",
+      "content": "import { motion, useMotionValue, useSpring, useTransform, useVelocity } from 'motion/react'\nimport { useEffect, useRef, useState, type KeyboardEvent, type PointerEvent } from 'react'\nimport { useReducedMotion } from '@/registry/manniche/hooks/use-reduced-motion'\nimport { cn } from '@/lib/utils'\n\nexport type JellySliderProps = {\n  /** Controlled value. */\n  value?: number\n  /** Starting value when the slider is not controlled. */\n  defaultValue?: number\n  /** Called with the new value while it is dragged or moved with the keys. */\n  onValueChange?: (value: number) => void\n  /** Lowest value. */\n  min?: number\n  /** Highest value. */\n  max?: number\n  /** Size of one step. */\n  step?: number\n  /** Read by screen readers. */\n  label: string\n  /** Turns the value into text for screen readers, e.g. “40 %”. */\n  format?: (value: number) => string\n  /** Classes for the slider track. */\n  className?: string\n}\n\n/**\n * A slider with a soft thumb: it stretches in the direction you drag it, squashes to keep its volume,\n * and wobbles back into shape when you let go.\n */\nexport function JellySlider({ value, defaultValue = 50, onValueChange, min = 0, max = 100, step = 1, label, format, className }: JellySliderProps) {\n  const [inner, setInner] = useState(defaultValue)\n  const current = value ?? inner\n  const track = useRef<HTMLDivElement>(null)\n  const reduce = useReducedMotion()\n\n  const pct = (v: number) => ((v - min) / (max - min)) * 100\n  const target = useMotionValue(pct(current))\n  const pos = useSpring(target, { stiffness: 600, damping: 45 })\n  const speed = useVelocity(pos) // percent per second\n  // Faster means longer and flatter. Volume stays the same, so the squash is 1 / stretch.\n  const stretch = useSpring(\n    useTransform(speed, (v) => (reduce ? 1 : 1 + Math.min(0.7, Math.abs(v) / 350))),\n    { stiffness: 420, damping: 11 },\n  )\n  const squash = useTransform(stretch, (s) => 1 / s)\n  const fill = useTransform(pos, (p) => p / 100)\n  const width = useMotionValue(0)\n  const x = useTransform(() => (pos.get() / 100) * width.get())\n\n  // The thumb moves in px, measured from the track, so nothing sticks out past it while it travels.\n  useEffect(() => {\n    const el = track.current!\n    const ro = new ResizeObserver(() => width.set(el.clientWidth))\n    ro.observe(el)\n    return () => ro.disconnect()\n  }, [width])\n\n  useEffect(() => {\n    target.set(pct(current))\n    if (reduce) pos.jump(pct(current))\n  })\n\n  const set = (raw: number) => {\n    const snapped = Math.round((raw - min) / step) * step + min\n    const next = Math.min(max, Math.max(min, Number(snapped.toFixed(10))))\n    if (next === current) return\n    if (value === undefined) setInner(next)\n    onValueChange?.(next)\n  }\n\n  const fromPointer = (e: PointerEvent) => {\n    const r = track.current!.getBoundingClientRect()\n    set(min + ((e.clientX - r.left) / r.width) * (max - min))\n  }\n\n  const onKey = (e: KeyboardEvent) => {\n    const big = Math.max(step, (max - min) / 10)\n    const moves: Record<string, number> = {\n      ArrowRight: step,\n      ArrowUp: step,\n      ArrowLeft: -step,\n      ArrowDown: -step,\n      PageUp: big,\n      PageDown: -big,\n      Home: min - current,\n      End: max - current,\n    }\n    if (!(e.key in moves)) return\n    e.preventDefault()\n    set(current + moves[e.key])\n  }\n\n  return (\n    <div\n      role=\"slider\"\n      tabIndex={0}\n      aria-label={label}\n      aria-valuemin={min}\n      aria-valuemax={max}\n      aria-valuenow={current}\n      aria-valuetext={format?.(current)}\n      aria-orientation=\"horizontal\"\n      onKeyDown={onKey}\n      onPointerDown={(e) => {\n        e.currentTarget.setPointerCapture(e.pointerId)\n        fromPointer(e)\n      }}\n      onPointerMove={(e) => e.currentTarget.hasPointerCapture(e.pointerId) && fromPointer(e)}\n      className={cn('group relative flex h-11 w-full cursor-grab touch-none items-center rounded-full px-3.5 outline-none select-none active:cursor-grabbing', className)}\n    >\n      <div ref={track} className=\"relative h-2.5 w-full rounded-full bg-muted\">\n        <motion.span className=\"absolute inset-0 origin-left rounded-full bg-primary\" style={{ scaleX: fill }} />\n        <motion.span\n          aria-hidden\n          className=\"absolute top-1/2 left-0 -mt-3.5 -ml-3.5 size-7 rounded-full border bg-background shadow-[0_2px_8px_-2px_rgb(0_0_0/0.35)] ring-ring/50 transition-shadow duration-150 group-focus-visible:ring-4\"\n          style={{ x, scaleX: stretch, scaleY: squash }}\n        />\n      </div>\n    </div>\n  )\n}\n",
       "type": "registry:component"
     },
     {
@@ -31,42 +31,42 @@
         "type": "number",
         "default": null,
         "required": false,
-        "description": null
+        "description": "Controlled value."
       },
       {
         "name": "defaultValue",
         "type": "number",
         "default": "50",
         "required": false,
-        "description": null
+        "description": "Starting value when the slider is not controlled."
       },
       {
         "name": "onValueChange",
         "type": "(value: number) => void",
         "default": null,
         "required": false,
-        "description": null
+        "description": "Called with the new value while it is dragged or moved with the keys."
       },
       {
         "name": "min",
         "type": "number",
         "default": "0",
         "required": false,
-        "description": null
+        "description": "Lowest value."
       },
       {
         "name": "max",
         "type": "number",
         "default": "100",
         "required": false,
-        "description": null
+        "description": "Highest value."
       },
       {
         "name": "step",
         "type": "number",
         "default": "1",
         "required": false,
-        "description": null
+        "description": "Size of one step."
       },
       {
         "name": "label",
@@ -87,7 +87,7 @@
         "type": "string",
         "default": null,
         "required": false,
-        "description": null
+        "description": "Classes for the slider track."
       }
     ],
     "a11y": [

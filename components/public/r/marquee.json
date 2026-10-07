@@ -3,13 +3,16 @@
   "name": "marquee",
   "title": "Marquee",
   "description": "Items scroll sideways in an endless loop and pause on hover or focus. Static under reduced motion.",
+  "dependencies": [
+    "lucide-react"
+  ],
   "registryDependencies": [
     "utils"
   ],
   "files": [
     {
       "path": "registry/manniche/marquee/marquee.tsx",
-      "content": "import type { CSSProperties, ReactNode } from 'react'\nimport { cn } from '@/lib/utils'\n\nexport type MarqueeProps = {\n  children: ReactNode\n  /** Seconds for one full loop. */\n  duration?: number\n  /** Gap between items in pixels. */\n  gap?: number\n  reverse?: boolean\n  /** Accessible name for the list, e.g. \"Customers\". */\n  label?: string\n  className?: string\n}\n\n/**\n * Items scroll sideways in an endless loop with soft edges. It pauses while hovered or focused.\n * The items are rendered twice for a seamless loop; the copy is hidden from screen readers and the keyboard.\n * Under reduced motion the items wrap onto lines and stand still.\n */\nexport function Marquee({ children, duration = 30, gap = 14, reverse = false, label, className }: MarqueeProps) {\n  const vars = { '--mq-duration': `${duration}s`, '--mq-gap': `${gap}px` } as CSSProperties\n\n  return (\n    <div\n      role=\"region\"\n      aria-label={label}\n      style={vars}\n      className={cn(\n        'group/mq overflow-hidden mask-[linear-gradient(90deg,transparent,#000_8%,#000_92%,transparent)]',\n        'motion-reduce:mask-none',\n        className,\n      )}\n    >\n      <style href=\"manniche-marquee\" precedence=\"default\">\n        {'@keyframes manniche-marquee { to { transform: translateX(calc(-50% - var(--mq-gap) / 2)) } }'}\n      </style>\n      <div\n        className={cn(\n          'flex w-max gap-(--mq-gap) animate-[manniche-marquee_var(--mq-duration)_linear_infinite]',\n          reverse && '[animation-direction:reverse]',\n          'group-hover/mq:[animation-play-state:paused] group-focus-within/mq:[animation-play-state:paused]',\n          'motion-reduce:w-auto motion-reduce:flex-wrap motion-reduce:animate-none',\n        )}\n      >\n        <div className=\"flex shrink-0 gap-(--mq-gap) motion-reduce:shrink motion-reduce:flex-wrap\">{children}</div>\n        <div className=\"flex shrink-0 gap-(--mq-gap) motion-reduce:hidden\" aria-hidden inert>\n          {children}\n        </div>\n      </div>\n    </div>\n  )\n}\n",
+      "content": "import { Pause, Play } from 'lucide-react'\nimport { useState, type CSSProperties, type ReactNode } from 'react'\nimport { cn } from '@/lib/utils'\n\nexport type MarqueeProps = {\n  /** The items that scroll. Rendered twice for a seamless loop. */\n  children: ReactNode\n  /** Seconds for one full loop. */\n  duration?: number\n  /** Gap between items in pixels. */\n  gap?: number\n  /** Scrolls the other way. */\n  reverse?: boolean\n  /** Accessible name for the region, e.g. \"Customers\". */\n  label: string\n  /** Accessible name and tooltip of the pause button, with English defaults: `pause` while the strip moves, `play` while it is paused. */\n  labels?: { pause?: string; play?: string }\n  /** Classes for the outer region, which holds the strip and the pause button. */\n  className?: string\n}\n\n/**\n * Items scroll sideways in an endless loop with soft edges. A button next to the strip pauses and resumes it,\n * and it also pauses while hovered or focused.\n * The items are rendered twice for a seamless loop; the copy is hidden from screen readers and the keyboard.\n * Under reduced motion the items wrap onto lines and stand still, and the button is gone.\n */\nexport function Marquee({ children, duration = 30, gap = 14, reverse = false, label, labels = {}, className }: MarqueeProps) {\n  const { pause = 'Pause', play = 'Play' } = labels\n  const [paused, setPaused] = useState(false)\n  const vars = { '--mq-duration': `${duration}s`, '--mq-gap': `${gap}px` } as CSSProperties\n\n  return (\n    <div role=\"region\" aria-label={label} style={vars} className={cn('flex items-center gap-2', className)}>\n      <div\n        className={cn(\n          'group/mq min-w-0 flex-1 overflow-hidden mask-[linear-gradient(90deg,transparent,#000_8%,#000_92%,transparent)]',\n          'motion-reduce:mask-none',\n        )}\n      >\n        <style href=\"manniche-marquee\" precedence=\"default\">\n          {'@keyframes manniche-marquee { to { transform: translateX(calc(-50% - var(--mq-gap) / 2)) } }'}\n        </style>\n        <div\n          className={cn(\n            'flex w-max gap-(--mq-gap) animate-[manniche-marquee_var(--mq-duration)_linear_infinite]',\n            reverse && '[animation-direction:reverse]',\n            'group-hover/mq:[animation-play-state:paused] group-focus-within/mq:[animation-play-state:paused]',\n            paused && '[animation-play-state:paused]',\n            'motion-reduce:w-auto motion-reduce:flex-wrap motion-reduce:animate-none',\n          )}\n        >\n          <div className=\"flex shrink-0 gap-(--mq-gap) motion-reduce:shrink motion-reduce:flex-wrap\">{children}</div>\n          <div className=\"flex shrink-0 gap-(--mq-gap) motion-reduce:hidden\" aria-hidden inert>\n            {children}\n          </div>\n        </div>\n      </div>\n      <button\n        type=\"button\"\n        onClick={() => setPaused((p) => !p)}\n        aria-label={paused ? play : pause}\n        title={paused ? play : pause}\n        className=\"grid size-11 shrink-0 place-items-center rounded-full border bg-card text-foreground transition-colors duration-150 hover:bg-muted motion-reduce:hidden motion-reduce:transition-none\"\n      >\n        {paused ? <Play className=\"size-4\" aria-hidden /> : <Pause className=\"size-4\" aria-hidden />}\n      </button>\n    </div>\n  )\n}\n",
       "type": "registry:component"
     }
   ],
@@ -23,7 +26,7 @@
         "type": "ReactNode",
         "default": null,
         "required": true,
-        "description": null
+        "description": "The items that scroll. Rendered twice for a seamless loop."
       },
       {
         "name": "duration",
@@ -44,35 +47,47 @@
         "type": "boolean",
         "default": "false",
         "required": false,
-        "description": null
+        "description": "Scrolls the other way."
       },
       {
         "name": "label",
         "type": "string",
         "default": null,
+        "required": true,
+        "description": "Accessible name for the region, e.g. \"Customers\"."
+      },
+      {
+        "name": "labels",
+        "type": "{ pause?: string; play?: string }",
+        "default": "{}",
         "required": false,
-        "description": "Accessible name for the list, e.g. \"Customers\"."
+        "description": "Accessible name and tooltip of the pause button, with English defaults: `pause` while the strip moves, `play` while it is paused."
       },
       {
         "name": "className",
         "type": "string",
         "default": null,
         "required": false,
-        "description": null
+        "description": "Classes for the outer region, which holds the strip and the pause button."
       }
     ],
     "a11y": [
       {
         "topic": "keyboard",
-        "text": "The loop pauses while the pointer is over it or focus is inside it. The second copy of the items is inert and aria-hidden, so Tab never visits it twice."
+        "text": "A visible 44 pixel Pause and Play button, placed after the loop in tab order, stops and starts the scrolling. The loop also pauses while the pointer is over it or focus is inside it. The second copy of the items is inert and aria-hidden, so Tab never visits it twice.",
+        "keys": [
+          "Tab",
+          "Enter",
+          "Space"
+        ]
       },
       {
         "topic": "screen-reader",
-        "text": "The container is a region named by label (for example Customers). Only the first copy of the items is exposed to screen readers."
+        "text": "The container is a region named by label, which is required (for example Customers). The pause button is named by labels (Pause, Play) and its name changes with the state. Only the first copy of the items is exposed to screen readers."
       },
       {
         "topic": "motion",
-        "text": "Under reduced motion the loop stops, the second copy is hidden, the edge fade is removed and the items wrap onto lines."
+        "text": "Under reduced motion the loop stops, the second copy is hidden, the edge fade is removed, the items wrap onto lines and the pause button is hidden because nothing moves."
       }
     ]
   },

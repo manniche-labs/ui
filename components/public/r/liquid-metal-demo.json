@@ -3,6 +3,9 @@
   "name": "liquid-metal-demo",
   "title": "Liquid metal demo",
   "description": "How to use Liquid metal.",
+  "dependencies": [
+    "lucide-react"
+  ],
   "registryDependencies": [
     "@manniche/liquid-metal"
   ],

@@ -9,7 +9,7 @@
   "files": [
     {
       "path": "registry/manniche/number-ticker/number-ticker.tsx",
-      "content": "import { useEffect, useRef, useState } from 'react'\nimport { useReducedMotion } from '@/registry/manniche/hooks/use-reduced-motion'\nimport { cn } from '@/lib/utils'\n\nexport type NumberTickerProps = {\n  value: number\n  /** Where the count starts the first time. */\n  from?: number\n  /** Milliseconds for one count. */\n  duration?: number\n  /** Passed to Intl.NumberFormat, e.g. \"da-DK\". Defaults to the browser's language. */\n  locale?: string\n  format?: Intl.NumberFormatOptions\n  /** Start counting first when the number scrolls into view. */\n  startOnView?: boolean\n  className?: string\n}\n\nconst easeOut = (t: number) => 1 - Math.pow(1 - t, 4)\n\nexport function NumberTicker({\n  value,\n  from = 0,\n  duration = 1200,\n  locale,\n  format,\n  startOnView = true,\n  className,\n}: NumberTickerProps) {\n  const reduced = useReducedMotion()\n  const el = useRef<HTMLSpanElement>(null)\n  const shown = useRef(from)\n  const [display, setDisplay] = useState(from)\n  const [seen, setSeen] = useState(!startOnView)\n\n  useEffect(() => {\n    if (seen || !el.current) return\n    const io = new IntersectionObserver(([e]) => e.isIntersecting && setSeen(true), { threshold: 0.4 })\n    io.observe(el.current)\n    return () => io.disconnect()\n  }, [seen])\n\n  useEffect(() => {\n    // Under reduced motion the final number is shown at once, even before it is in view.\n    if (reduced) {\n      shown.current = value\n      setDisplay(value)\n      return\n    }\n    if (!seen) return\n    const start = shown.current\n    const t0 = performance.now()\n    let frame = 0\n    const tick = (now: number) => {\n      const t = Math.min(1, (now - t0) / duration)\n      const v = start + (value - start) * easeOut(t)\n      shown.current = v\n      setDisplay(v)\n      if (t < 1) frame = requestAnimationFrame(tick)\n    }\n    frame = requestAnimationFrame(tick)\n    return () => cancelAnimationFrame(frame)\n  }, [value, seen, reduced, duration])\n\n  const fmt = new Intl.NumberFormat(locale, { maximumFractionDigits: 0, ...format })\n\n  return (\n    <span ref={el} className={cn('tabular-nums', className)}>\n      {/* Screen readers get the final number, not every step on the way. */}\n      <span aria-hidden>{fmt.format(display)}</span>\n      <span className=\"sr-only\">{fmt.format(value)}</span>\n    </span>\n  )\n}\n",
+      "content": "import { useEffect, useRef, useState } from 'react'\nimport { useReducedMotion } from '@/registry/manniche/hooks/use-reduced-motion'\nimport { cn } from '@/lib/utils'\n\nexport type NumberTickerProps = {\n  /** The number it counts to. A new value counts on from the one shown. */\n  value: number\n  /** Where the count starts the first time. */\n  from?: number\n  /** Milliseconds for one count. */\n  duration?: number\n  /** Passed to Intl.NumberFormat, e.g. \"da-DK\". Defaults to the browser's language. */\n  locale?: string\n  /** Intl.NumberFormat options, e.g. a currency or a number of decimals. */\n  format?: Intl.NumberFormatOptions\n  /** Start counting first when the number scrolls into view. */\n  startOnView?: boolean\n  /** Classes for the outer span. */\n  className?: string\n}\n\nconst easeOut = (t: number) => 1 - Math.pow(1 - t, 4)\n\nexport function NumberTicker({\n  value,\n  from = 0,\n  duration = 1200,\n  locale,\n  format,\n  startOnView = true,\n  className,\n}: NumberTickerProps) {\n  const reduced = useReducedMotion()\n  const el = useRef<HTMLSpanElement>(null)\n  const shown = useRef(from)\n  const [display, setDisplay] = useState(from)\n  const [seen, setSeen] = useState(!startOnView)\n\n  useEffect(() => {\n    if (seen || !el.current) return\n    const io = new IntersectionObserver(([e]) => e.isIntersecting && setSeen(true), { threshold: 0.4 })\n    io.observe(el.current)\n    return () => io.disconnect()\n  }, [seen])\n\n  useEffect(() => {\n    // Under reduced motion the final number is shown at once, even before it is in view.\n    if (reduced) {\n      shown.current = value\n      setDisplay(value)\n      return\n    }\n    if (!seen) return\n    const start = shown.current\n    const t0 = performance.now()\n    let frame = 0\n    const tick = (now: number) => {\n      const t = Math.min(1, (now - t0) / duration)\n      const v = start + (value - start) * easeOut(t)\n      shown.current = v\n      setDisplay(v)\n      if (t < 1) frame = requestAnimationFrame(tick)\n    }\n    frame = requestAnimationFrame(tick)\n    return () => cancelAnimationFrame(frame)\n  }, [value, seen, reduced, duration])\n\n  const fmt = new Intl.NumberFormat(locale, { maximumFractionDigits: 0, ...format })\n\n  return (\n    <span ref={el} className={cn('tabular-nums', className)}>\n      {/* Screen readers get the final number, not every step on the way. */}\n      <span aria-hidden>{fmt.format(display)}</span>\n      <span className=\"sr-only\">{fmt.format(value)}</span>\n    </span>\n  )\n}\n",
       "type": "registry:component"
     },
     {
@@ -28,7 +28,7 @@
         "type": "number",
         "default": null,
         "required": true,
-        "description": null
+        "description": "The number it counts to. A new value counts on from the one shown."
       },
       {
         "name": "from",
@@ -56,7 +56,7 @@
         "type": "Intl.NumberFormatOptions",
         "default": null,
         "required": false,
-        "description": null
+        "description": "Intl.NumberFormat options, e.g. a currency or a number of decimals."
       },
       {
         "name": "startOnView",
@@ -70,7 +70,7 @@
         "type": "string",
         "default": null,
         "required": false,
-        "description": null
+        "description": "Classes for the outer span."
       }
     ],
     "a11y": [

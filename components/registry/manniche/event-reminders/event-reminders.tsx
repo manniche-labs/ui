@@ -99,9 +99,9 @@ export function EventReminders({
   };
 
   const pill =
-    "inline-flex min-h-10 items-center gap-1.5 rounded-full bg-muted px-3 text-sm font-medium transition-colors duration-150 hover:bg-accent";
+    "inline-flex min-h-10 relative after:inset-x-0 after:-inset-y-0.5 after:absolute after:content-[''] items-center gap-1.5 rounded-full bg-muted px-3 text-sm font-medium transition-colors duration-150 hover:bg-accent";
   const round =
-    "grid size-8 place-items-center rounded-full text-muted-foreground transition-colors duration-150 hover:bg-background hover:text-foreground disabled:opacity-30";
+    "grid size-8 relative after:-inset-1.5 after:absolute after:content-[''] place-items-center rounded-full text-muted-foreground transition-colors duration-150 hover:bg-background hover:text-foreground disabled:opacity-30";
 
   return (
     <MotionConfig

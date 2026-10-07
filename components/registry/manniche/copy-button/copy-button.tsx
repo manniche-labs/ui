@@ -46,8 +46,8 @@ export function CopyButton({ value, labels = {}, className }: CopyButtonProps) {
         onClick={run}
         whileTap={{ scale: 0.97 }}
         className={cn(
-          'inline-flex min-h-11 items-center gap-2 rounded-full px-4 text-sm font-medium transition-colors duration-300',
-          state === 'copied' ? 'bg-emerald-600 text-white' : state === 'failed' ? 'bg-destructive text-white' : 'bg-primary text-primary-foreground',
+          'inline-flex min-h-11 items-center gap-2 rounded-full px-4 text-sm font-medium transition-colors duration-300 motion-reduce:transition-none',
+          state === 'copied' ? 'bg-emerald-700 text-white' : state === 'failed' ? 'bg-destructive text-background' : 'bg-primary text-primary-foreground',
           className,
         )}
       >

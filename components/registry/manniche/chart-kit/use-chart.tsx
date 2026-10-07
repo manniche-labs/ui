@@ -6,9 +6,13 @@ import { useReducedMotion } from '@/registry/manniche/hooks/use-reduced-motion'
  * For a page that is rendered once to static HTML and never hydrated (the lab's template files). Charts measure
  * themselves in the browser, so without this they would draw at width 0, which is nothing. Inside this provider a
  * chart starts at `width` px (and its own default height), counts as drawn and sits at rest, and its SVG scales to
- * its box with the viewBox. In a live app, leave it out: the charts measure themselves as before.
+ * its box with the viewBox. `height`, when set, replaces the chart's default height. In a live app, leave it out:
+ * the charts measure themselves as before.
  */
-export const StaticChartFrame = createContext<{ width: number } | null>(null)
+export const StaticChartFrame = createContext<{ width: number; height?: number } | null>(null)
+
+/** Container query classes for four static sizes: a phone, a narrow column, a tablet and a desktop. */
+export const STATIC_STEPS = ['@min-[420px]:hidden', 'hidden @min-[420px]:block @min-[560px]:hidden', 'hidden @min-[560px]:block @min-[760px]:hidden', 'hidden @min-[760px]:block']
 
 /**
  * Watches an element's size and whether it has come into view. `drawn` turns true once, the first time a fifth of
@@ -18,7 +22,7 @@ export const StaticChartFrame = createContext<{ width: number } | null>(null)
 export function useChartFrame<T extends Element = HTMLDivElement>(fallback?: { height?: number }) {
   const still = useContext(StaticChartFrame)
   const [node, setNode] = useState<T | null>(null)
-  const [size, setSize] = useState({ width: still?.width ?? 0, height: still ? (fallback?.height ?? 0) : 0 })
+  const [size, setSize] = useState({ width: still?.width ?? 0, height: still ? (still.height ?? fallback?.height ?? 0) : 0 })
   const [seen, setSeen] = useState(false)
   const reduced = useReducedMotion()
 

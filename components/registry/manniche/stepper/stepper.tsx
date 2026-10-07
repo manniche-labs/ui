@@ -52,7 +52,7 @@ export function Stepper({ value, defaultValue = 0, min = 0, max = 99, step = 1, 
   }
 
   const btn =
-    'grid size-11 shrink-0 place-items-center rounded-xl bg-muted text-foreground transition-[background-color,transform] duration-150 hover:bg-accent active:scale-[0.94] disabled:pointer-events-none disabled:opacity-40'
+    'grid size-11 shrink-0 place-items-center rounded-xl bg-muted text-foreground transition-[background-color,transform] duration-150 hover:bg-accent active:scale-[0.94] disabled:pointer-events-none disabled:opacity-40 motion-reduce:transition-none'
 
   return (
     <div className={cn('inline-flex items-center gap-2 rounded-2xl border bg-card p-1.5 shadow-sm', className)}>

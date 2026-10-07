@@ -162,7 +162,7 @@
             "type": "string",
             "default": "'Ask anything'",
             "required": false,
-            "description": null
+            "description": "Placeholder in the text field."
           },
           {
             "name": "label",
@@ -190,7 +190,7 @@
             "type": "number",
             "default": "8",
             "required": false,
-            "description": null
+            "description": "How many lines the field grows to before it scrolls."
           },
           {
             "name": "halo",
@@ -204,7 +204,7 @@
             "type": "string",
             "default": null,
             "required": false,
-            "description": null
+            "description": "Classes for the form."
           }
         ],
         "a11y": [
@@ -223,7 +223,7 @@
           },
           {
             "topic": "motion",
-            "text": "With halo on, under reduced motion the ring stops spinning and stays at a fixed angle, and its fades and the arrow's shift have no transition."
+            "text": "With halo on, under reduced motion the ring stops spinning and stays at a fixed angle, and its fades and the arrow's shift have no transition. The buttons scale on press without a transition."
           },
           {
             "topic": "other",
@@ -297,27 +297,34 @@
             "type": "() => void",
             "default": null,
             "required": false,
-            "description": null
+            "description": "Called when the person approves the call."
           },
           {
             "name": "onDeny",
             "type": "() => void",
             "default": null,
             "required": false,
-            "description": null
+            "description": "Called when the person denies the call."
+          },
+          {
+            "name": "labels",
+            "type": "{ name?: string; wants?: string; arguments?: string; deny?: string; approve?: string; approveRisky?: string; approved?: string; denied?: string }",
+            "default": "{}",
+            "required": false,
+            "description": "Visible text and screen reader text; defaults to English. `name` comes before the tool name in the card's accessible name."
           },
           {
             "name": "className",
             "type": "string",
             "default": null,
             "required": false,
-            "description": null
+            "description": "Classes for the outer section."
           }
         ],
         "a11y": [
           {
             "topic": "keyboard",
-            "text": "Deny and Approve are native buttons, and Arguments is a native details element, so Tab, Enter and Space work without custom handlers.",
+            "text": "Deny and Approve are native buttons, and Arguments is a native details element, so Tab, Enter and Space work without custom handlers. After a choice the buttons leave the card, so focus moves to the card itself.",
             "keys": [
               "Tab",
               "Enter",
@@ -326,7 +333,11 @@
           },
           {
             "topic": "screen-reader",
-            "text": "The card is a section labelled Approve <tool>. The footer is aria-live polite, so the result (Approved, or Denied with the agent told not to run it) is announced when the buttons are replaced. The shield and check icons are aria-hidden. A risky call changes the button text to Approve anyway, not only its colour."
+            "text": "The card is a section labelled by labels.name and the tool, Approve <tool> by default. A hidden status paragraph is always in the page and is filled when you choose, so the approved or denied text is announced once. The visible result is aria-hidden to avoid a double reading, and no button sits inside a live region. The shield and check icons are aria-hidden. A risky call changes the button text to Approve anyway, not only its colour."
+          },
+          {
+            "topic": "motion",
+            "text": "Under reduced motion the chevron turn, the colour transitions and the press scale on the buttons are off."
           }
         ]
       }
@@ -361,21 +372,21 @@
             "type": "AgentStep[]",
             "default": null,
             "required": true,
-            "description": null
+            "description": "The steps, in order, each with an id, a label and a status."
           },
           {
             "name": "title",
             "type": "string",
             "default": "'Working'",
             "required": false,
-            "description": null
+            "description": "Heading of the card and name of the section."
           },
           {
             "name": "className",
             "type": "string",
             "default": null,
             "required": false,
-            "description": null
+            "description": "Classes for the outer section."
           }
         ],
         "a11y": [
@@ -431,13 +442,13 @@
             "type": "string",
             "default": null,
             "required": false,
-            "description": null
+            "description": "Classes for the outer element."
           }
         ],
         "a11y": [
           {
             "topic": "screen-reader",
-            "text": "The container sets aria-busy while streaming is true. The caret is aria-hidden. Words are plain text in spans, and paragraphs are split on blank lines."
+            "text": "The container is a polite live region (aria-live polite, relevant additions and text), so new words are read as they arrive without interrupting. It sets aria-busy while streaming is true. The caret is aria-hidden. Words are plain text in spans, and paragraphs are split on blank lines."
           },
           {
             "topic": "motion",
@@ -504,7 +515,7 @@
             "type": "string",
             "default": null,
             "required": false,
-            "description": null
+            "description": "Classes for the outer element."
           }
         ],
         "a11y": [
@@ -523,7 +534,7 @@
           },
           {
             "topic": "motion",
-            "text": "Under reduced motion the pulsing brain icon and the fade-in of the opened content are off."
+            "text": "Under reduced motion the pulsing brain icon, the chevron turn and the fade-in of the opened content are off."
           }
         ]
       }
@@ -589,11 +600,18 @@
             "description": "Number the lines."
           },
           {
+            "name": "labels",
+            "type": "{ copy?: string; copied?: string; code?: string }",
+            "default": "{}",
+            "required": false,
+            "description": "Visible text and screen reader text. Keys: `copy`, `copied` and `code` (the header and region name when there is no filename or language)."
+          },
+          {
             "name": "className",
             "type": "string",
             "default": null,
             "required": false,
-            "description": null
+            "description": "Classes for the outer figure."
           }
         ],
         "a11y": [
@@ -608,7 +626,11 @@
           },
           {
             "topic": "screen-reader",
-            "text": "The block is a figure with the file name, else the language, else Code as its caption. The button text lives in an aria-live polite span, so Copy becomes Copied, which resets after 1.8 seconds. Line numbers are aria-hidden and unselectable. If the clipboard is blocked, nothing changes and the code can still be selected by hand."
+            "text": "The block is a figure with the file name, else the language, else Code as its caption. The code area is a region with that same name, so a focused scroll area is announced with a name. The button text lives in an aria-live polite span, so Copy becomes Copied, which resets after 1.8 seconds. The words come from labels (copy, copied, code). Line numbers are aria-hidden and unselectable. If the clipboard is blocked, nothing changes and the code can still be selected by hand."
+          },
+          {
+            "topic": "motion",
+            "text": "Under reduced motion the colour transition on the copy button is off."
           }
         ]
       }
@@ -643,21 +665,21 @@
             "type": "Source[]",
             "default": null,
             "required": true,
-            "description": null
+            "description": "The sources, listed in order and numbered from 1."
           },
           {
             "name": "title",
             "type": "string",
             "default": "'Sources'",
             "required": false,
-            "description": null
+            "description": "Heading of the list and name of the section."
           },
           {
             "name": "className",
             "type": "string",
             "default": null,
             "required": false,
-            "description": null
+            "description": "Classes for the outer section."
           }
         ],
         "a11y": [
@@ -720,7 +742,7 @@
             "type": "string",
             "default": null,
             "required": false,
-            "description": null
+            "description": "Classes for the outer figure."
           }
         ],
         "a11y": [
@@ -769,7 +791,7 @@
             "type": "number",
             "default": null,
             "required": true,
-            "description": null
+            "description": "The number it counts to. A new value counts on from the one shown."
           },
           {
             "name": "from",
@@ -797,7 +819,7 @@
             "type": "Intl.NumberFormatOptions",
             "default": null,
             "required": false,
-            "description": null
+            "description": "Intl.NumberFormat options, e.g. a currency or a number of decimals."
           },
           {
             "name": "startOnView",
@@ -811,7 +833,7 @@
             "type": "string",
             "default": null,
             "required": false,
-            "description": null
+            "description": "Classes for the outer span."
           }
         ],
         "a11y": [
@@ -853,7 +875,7 @@
             "type": "ReactNode",
             "default": null,
             "required": true,
-            "description": null
+            "description": "The content that fades in."
           },
           {
             "name": "delay",
@@ -881,14 +903,14 @@
             "type": "'div' | 'section' | 'li' | 'span'",
             "default": "'div'",
             "required": false,
-            "description": null
+            "description": "The element it renders as."
           },
           {
             "name": "className",
             "type": "string",
             "default": null,
             "required": false,
-            "description": null
+            "description": "Classes for the rendered element."
           }
         ],
         "a11y": [
@@ -930,7 +952,7 @@
             "type": "ReactNode",
             "default": null,
             "required": true,
-            "description": null
+            "description": "The text to mark."
           },
           {
             "name": "delay",
@@ -944,7 +966,7 @@
             "type": "string",
             "default": null,
             "required": false,
-            "description": null
+            "description": "Classes for the mark element."
           }
         ],
         "a11y": [
@@ -997,7 +1019,7 @@
             "type": "string",
             "default": null,
             "required": false,
-            "description": null
+            "description": "Classes for the paragraph."
           }
         ],
         "a11y": [
@@ -1007,11 +1029,11 @@
           },
           {
             "topic": "motion",
-            "text": "Under reduced motion every word is at full strength from the start and the scroll listener is not attached."
+            "text": "Under reduced motion every word is at full strength from the start, the colour transition is off and the scroll listener is not attached."
           },
           {
             "topic": "other",
-            "text": "While the paragraph has not been scrolled to, unlit words sit at 20% opacity."
+            "text": "Words that are not yet lit sit at 50% opacity, which keeps the contrast needed for large text in both the light and the dark theme. Use it on large type only."
           }
         ]
       }
@@ -1076,6 +1098,9 @@
       "categories": [
         "motion"
       ],
+      "dependencies": [
+        "lucide-react"
+      ],
       "meta": {
         "tier": "free",
         "added": "2026-10-03",
@@ -1086,7 +1111,7 @@
             "type": "ReactNode",
             "default": null,
             "required": true,
-            "description": null
+            "description": "The items that scroll. Rendered twice for a seamless loop."
           },
           {
             "name": "duration",
@@ -1107,35 +1132,47 @@
             "type": "boolean",
             "default": "false",
             "required": false,
-            "description": null
+            "description": "Scrolls the other way."
           },
           {
             "name": "label",
             "type": "string",
             "default": null,
+            "required": true,
+            "description": "Accessible name for the region, e.g. \"Customers\"."
+          },
+          {
+            "name": "labels",
+            "type": "{ pause?: string; play?: string }",
+            "default": "{}",
             "required": false,
-            "description": "Accessible name for the list, e.g. \"Customers\"."
+            "description": "Accessible name and tooltip of the pause button, with English defaults: `pause` while the strip moves, `play` while it is paused."
           },
           {
             "name": "className",
             "type": "string",
             "default": null,
             "required": false,
-            "description": null
+            "description": "Classes for the outer region, which holds the strip and the pause button."
           }
         ],
         "a11y": [
           {
             "topic": "keyboard",
-            "text": "The loop pauses while the pointer is over it or focus is inside it. The second copy of the items is inert and aria-hidden, so Tab never visits it twice."
+            "text": "A visible 44 pixel Pause and Play button, placed after the loop in tab order, stops and starts the scrolling. The loop also pauses while the pointer is over it or focus is inside it. The second copy of the items is inert and aria-hidden, so Tab never visits it twice.",
+            "keys": [
+              "Tab",
+              "Enter",
+              "Space"
+            ]
           },
           {
             "topic": "screen-reader",
-            "text": "The container is a region named by label (for example Customers). Only the first copy of the items is exposed to screen readers."
+            "text": "The container is a region named by label, which is required (for example Customers). The pause button is named by labels (Pause, Play) and its name changes with the state. Only the first copy of the items is exposed to screen readers."
           },
           {
             "topic": "motion",
-            "text": "Under reduced motion the loop stops, the second copy is hidden, the edge fade is removed and the items wrap onto lines."
+            "text": "Under reduced motion the loop stops, the second copy is hidden, the edge fade is removed, the items wrap onto lines and the pause button is hidden because nothing moves."
           }
         ]
       }
@@ -1237,7 +1274,7 @@
           },
           {
             "topic": "motion",
-            "text": "The shimmer span is hidden under reduced motion. The magnetic lean is skipped under reduced motion and for any pointer that is not a mouse."
+            "text": "The shimmer span is hidden under reduced motion. The magnetic lean is skipped under reduced motion and for any pointer that is not a mouse. The press scale has no transition under reduced motion."
           }
         ]
       }
@@ -1272,7 +1309,14 @@
             "type": "string",
             "default": null,
             "required": false,
-            "description": null
+            "description": "Classes for the fixed region that holds the toasts."
+          },
+          {
+            "name": "labels",
+            "type": "ToasterLabels",
+            "default": "{}",
+            "required": false,
+            "description": "Screen reader text with English defaults. Keys: `notifications`, `close`, `success` and `error`."
           }
         ],
         "a11y": [
@@ -1287,7 +1331,7 @@
           },
           {
             "topic": "screen-reader",
-            "text": "Toasts sit in a section labelled Notifications, in an ordered list with aria-live polite. The close button is labelled Close, and the success and error icons are aria-hidden, so the tone is not read out: put it in the title or description. At most four toasts are kept."
+            "text": "Toasts sit in a section labelled Notifications, in an ordered list that is not itself live. Two hidden regions are always in the page: a polite status for success and info toasts, and an alert for errors, so errors are read at once. Only toasts added after the page loaded are announced, as the tone word, the title and the description. Each toast also carries the tone as hidden text before the title (Success or Error). The words come from labels (notifications, close, success, error). The close button is labelled Close, and the icons are aria-hidden. At most four toasts are kept."
           },
           {
             "topic": "motion",
@@ -1326,28 +1370,28 @@
             "type": "Command[]",
             "default": null,
             "required": true,
-            "description": null
+            "description": "The commands to list and search. Each has an id, a label and an onSelect, and can have a group, keywords, a hint and an icon."
           },
           {
             "name": "open",
             "type": "boolean",
             "default": null,
             "required": true,
-            "description": null
+            "description": "Whether the palette is open."
           },
           {
             "name": "onOpenChange",
             "type": "(open: boolean) => void",
             "default": null,
             "required": true,
-            "description": null
+            "description": "Called with the new open state when the palette should open or close, from the hotkey, Esc, a click outside or a chosen command."
           },
           {
             "name": "placeholder",
             "type": "string",
             "default": "'Type a command or search'",
             "required": false,
-            "description": null
+            "description": "Placeholder in the search field, also its accessible name."
           },
           {
             "name": "hotkey",
@@ -1357,11 +1401,18 @@
             "description": "Open and close with Cmd+K / Ctrl+K."
           },
           {
+            "name": "labels",
+            "type": "{ oneResult?: string; results?: string; noResults?: string }",
+            "default": "{}",
+            "required": false,
+            "description": "Visible text and screen reader text. Keys: `oneResult`, `results` (with `{count}`) and `noResults`, read out as the list changes."
+          },
+          {
             "name": "className",
             "type": "string",
             "default": null,
             "required": false,
-            "description": null
+            "description": "Classes for the dialog."
           }
         ],
         "a11y": [
@@ -1378,7 +1429,7 @@
           },
           {
             "topic": "screen-reader",
-            "text": "The dialog is labelled Command palette. The input is a combobox named by the placeholder text, with aria-controls, aria-autocomplete list and aria-activedescendant pointing at the active option, so focus stays in the field. The results are a listbox labelled Commands with role option and aria-selected, and each group is labelled with its heading text. When nothing matches, a No commands match message is shown. The search icon is aria-hidden."
+            "text": "The dialog is labelled Command palette. The input is a combobox named by the placeholder text, with aria-controls, aria-autocomplete list and aria-activedescendant pointing at the active option, so focus stays in the field. aria-expanded is true only while there are results. A hidden status announces the count as you type (1 result, N results, No results), and the words come from labels. The results are a listbox labelled Commands with role option and aria-selected, and each group is labelled with its heading text. When nothing matches, the listbox is hidden and a No commands match message is shown. The search icon is aria-hidden."
           },
           {
             "topic": "motion",
@@ -1404,6 +1455,9 @@
       "categories": [
         "overlays"
       ],
+      "dependencies": [
+        "lucide-react"
+      ],
       "meta": {
         "tier": "free",
         "added": "2026-10-03",
@@ -1414,14 +1468,14 @@
             "type": "boolean",
             "default": null,
             "required": true,
-            "description": null
+            "description": "Whether the sheet is open."
           },
           {
             "name": "onOpenChange",
             "type": "(open: boolean) => void",
             "default": null,
             "required": true,
-            "description": null
+            "description": "Called with the new open state when the sheet should close: the close button, Esc, a click outside or a drag down."
           },
           {
             "name": "title",
@@ -1435,36 +1489,45 @@
             "type": "ReactNode",
             "default": null,
             "required": true,
-            "description": null
+            "description": "The content below the title."
+          },
+          {
+            "name": "labels",
+            "type": "{ close?: string }",
+            "default": "{}",
+            "required": false,
+            "description": "Visible text and screen reader text. Key: `close` (the name of the close button)."
           },
           {
             "name": "className",
             "type": "string",
             "default": null,
             "required": false,
-            "description": null
+            "description": "Classes for the dialog."
           }
         ],
         "a11y": [
           {
             "topic": "keyboard",
-            "text": "Esc closes it, because it is a native modal dialog that traps focus and returns it to the opener on close. A click on the backdrop closes it too.",
+            "text": "Esc closes it, because it is a native modal dialog that traps focus and returns it to the opener on close. A visible 44 pixel Close button at the top right does the same with Enter or Space, and a click on the backdrop closes it too.",
             "keys": [
               "Escape",
-              "Tab"
+              "Tab",
+              "Enter",
+              "Space"
             ]
           },
           {
             "topic": "screen-reader",
-            "text": "The dialog is labelled by title, which is also the h2 at the top. The grab handle is aria-hidden."
+            "text": "The dialog is labelled by title, which is also the h2 at the top. The Close button is named by labels.close. The grab handle is aria-hidden."
           },
           {
             "topic": "motion",
-            "text": "Under reduced motion the slide-in animation is off."
+            "text": "Under reduced motion the slide-in animation and the button transition are off."
           },
           {
             "topic": "other",
-            "text": "Dragging the top area (handle and title) down by more than 30% of the sheet's height closes it, and a shorter drag springs back. The drag is pointer only; Esc and a click on the backdrop close it too."
+            "text": "Dragging the top area (handle and title) down by more than 30% of the sheet's height closes it, and a shorter drag springs back. The drag is an extra for pointer users: the Close button, Esc and a click on the backdrop do the same by keyboard."
           }
         ]
       }
@@ -1719,6 +1782,9 @@
       ],
       "categories": [
         "overlays"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -1842,7 +1908,7 @@
             "type": "number",
             "default": null,
             "required": true,
-            "description": null
+            "description": "The number shown. Each digit rolls when it changes."
           },
           {
             "name": "locale",
@@ -1856,7 +1922,7 @@
             "type": "string",
             "default": null,
             "required": false,
-            "description": null
+            "description": "Classes for the inner span that holds the digits."
           }
         ],
         "a11y": [
@@ -1932,28 +1998,28 @@
             "type": "number",
             "default": "0",
             "required": false,
-            "description": null
+            "description": "Starting value when the stepper is not controlled."
           },
           {
             "name": "min",
             "type": "number",
             "default": "0",
             "required": false,
-            "description": null
+            "description": "Lowest value; the minus button turns off there."
           },
           {
             "name": "max",
             "type": "number",
             "default": "99",
             "required": false,
-            "description": null
+            "description": "Highest value; the plus button turns off there."
           },
           {
             "name": "step",
             "type": "number",
             "default": "1",
             "required": false,
-            "description": null
+            "description": "Amount added or taken away per press."
           },
           {
             "name": "label",
@@ -1967,14 +2033,14 @@
             "type": "(value: number) => void",
             "default": null,
             "required": false,
-            "description": null
+            "description": "Called with the new value after each press."
           },
           {
             "name": "className",
             "type": "string",
             "default": null,
             "required": false,
-            "description": null
+            "description": "Classes for the outer box around the buttons and value."
           }
         ],
         "a11y": [
@@ -1994,6 +2060,10 @@
           {
             "topic": "screen-reader",
             "text": "The spinbutton is named by the required label and sets aria-valuenow, aria-valuemin and aria-valuemax. The two buttons are named Fewer: <label> and More: <label>, and each is disabled at its limit. The icons are aria-hidden."
+          },
+          {
+            "topic": "motion",
+            "text": "The buttons scale on press without a transition under reduced motion (motion-reduce), and the rolling number follows the system setting through Motion."
           }
         ]
       }
@@ -2053,42 +2123,42 @@
             "type": "boolean",
             "default": "false",
             "required": false,
-            "description": null
+            "description": "Starting state when the switch is not controlled."
           },
           {
             "name": "onChange",
             "type": "(checked: boolean) => void",
             "default": null,
             "required": false,
-            "description": null
-          },
-          {
-            "name": "label",
-            "type": "string",
-            "default": null,
-            "required": false,
-            "description": "Visible label. Leave it out and pass `aria-label` instead."
-          },
-          {
-            "name": "aria-label",
-            "type": "string",
-            "default": null,
-            "required": false,
-            "description": null
+            "description": "Called with the new state each time the switch is flipped."
           },
           {
             "name": "disabled",
             "type": "boolean",
             "default": null,
             "required": false,
-            "description": null
+            "description": "Turns the switch off for pointer and keyboard."
           },
           {
             "name": "className",
             "type": "string",
             "default": null,
             "required": false,
-            "description": null
+            "description": "Classes for the outer span that wraps the switch and its label."
+          },
+          {
+            "name": "label",
+            "type": "string",
+            "default": null,
+            "required": false,
+            "description": "Visible label, linked to the switch. Pass this, `aria-label` or both."
+          },
+          {
+            "name": "aria-label",
+            "type": "string",
+            "default": null,
+            "required": false,
+            "description": "Spoken name for screen readers. Required without a label; with one, it replaces the label when read aloud."
           }
         ],
         "a11y": [
@@ -2103,7 +2173,7 @@
           },
           {
             "topic": "screen-reader",
-            "text": "The button sets aria-checked. It is named by the visible label (a real label element tied to the button id) or by the aria-label prop when no label is given."
+            "text": "The button sets aria-checked. The props type requires a name: either a visible label (a real label element tied to the button id) or an aria-label."
           },
           {
             "topic": "motion",
@@ -2171,14 +2241,14 @@
             "type": "{ copy?: string; copied?: string; failed?: string }",
             "default": "{}",
             "required": false,
-            "description": null
+            "description": "Visible text and screen reader text for the idle, copied and failed states; defaults to English."
           },
           {
             "name": "className",
             "type": "string",
             "default": null,
             "required": false,
-            "description": null
+            "description": "Classes for the button."
           }
         ],
         "a11y": [
@@ -2259,14 +2329,14 @@
             "type": "string",
             "default": "'Delete'",
             "required": false,
-            "description": null
+            "description": "Text on the button before it is pressed."
           },
           {
             "name": "undoLabel",
             "type": "string",
             "default": "'Undo'",
             "required": false,
-            "description": null
+            "description": "Text on the button while the countdown runs."
           },
           {
             "name": "onConfirm",
@@ -2280,14 +2350,14 @@
             "type": "() => void",
             "default": null,
             "required": false,
-            "description": null
+            "description": "Called when the person undoes during the countdown."
           },
           {
             "name": "className",
             "type": "string",
             "default": null,
             "required": false,
-            "description": null
+            "description": "Classes for the button."
           }
         ],
         "a11y": [
@@ -2306,7 +2376,7 @@
           },
           {
             "topic": "motion",
-            "text": "The component is wrapped in MotionConfig with reducedMotion set to user, so Motion follows the system setting for the layout and fade animations."
+            "text": "The component is wrapped in MotionConfig with reducedMotion set to user, so Motion follows the system setting for the layout and fade animations. The colour change on the button is off under reduced motion."
           }
         ]
       }
@@ -2363,7 +2433,7 @@
             "type": "ReactNode",
             "default": null,
             "required": true,
-            "description": null
+            "description": "Button label shown before and while the button is held."
           },
           {
             "name": "duration",
@@ -2377,14 +2447,14 @@
             "type": "() => void",
             "default": null,
             "required": true,
-            "description": null
+            "description": "Called once when the button has been held long enough, or confirmed with a second click."
           },
           {
             "name": "doneLabel",
             "type": "ReactNode",
             "default": "'Done'",
             "required": false,
-            "description": null
+            "description": "Label shown on the button, and read aloud, once the action has fired."
           },
           {
             "name": "hint",
@@ -2394,25 +2464,36 @@
             "description": "Said to screen readers, since holding is not obvious."
           },
           {
+            "name": "labels",
+            "type": "Partial<{ armed: string }>",
+            "default": "{}",
+            "required": false,
+            "description": "Visible and spoken text; `armed` replaces the label after a single click, which waits for a second one."
+          },
+          {
             "name": "className",
             "type": "string",
             "default": null,
             "required": false,
-            "description": null
+            "description": "Classes for the button."
           }
         ],
         "a11y": [
           {
             "topic": "keyboard",
-            "text": "Space or Enter held down fills the button, and releasing early drains it at twice the speed. The key repeat is ignored. It fires onConfirm when full, shows doneLabel for 2 seconds, then resets. The pointer works the same way, and the context menu is blocked.",
+            "text": "Space or Enter held down fills the button, and releasing early drains it at twice the speed. The key repeat is ignored. It fires onConfirm when full, shows doneLabel for 2 seconds, then resets. The pointer works the same way, and the context menu is blocked. Losing focus stops the fill and empties it at once.",
             "keys": [
               "Space",
               "Enter"
             ]
           },
           {
+            "topic": "keyboard",
+            "text": "A click that no press or key came before it, as sent by some screen readers and switch controls, arms the button. The label changes to labels.armed (default Click again to confirm), and a second click within 4 seconds fires onConfirm. Otherwise the button disarms."
+          },
+          {
             "topic": "screen-reader",
-            "text": "The hint (default Press and hold to confirm) is set as aria-description on the button. The white copy of the label on the fill is aria-hidden, and doneLabel is announced through a polite live region."
+            "text": "The hint (default Press and hold to confirm) sits in a hidden element that the button points to with aria-describedby. The white copy of the label on the fill is aria-hidden. A persistent status region announces doneLabel and the armed text."
           },
           {
             "topic": "motion",
@@ -2467,28 +2548,28 @@
             "type": "boolean",
             "default": null,
             "required": true,
-            "description": null
+            "description": "Whether the dialog is shown."
           },
           {
             "name": "onOpenChange",
             "type": "(open: boolean) => void",
             "default": null,
             "required": true,
-            "description": null
+            "description": "Called with the new open state when the dialog closes, by cancel, Escape or a click outside."
           },
           {
             "name": "title",
             "type": "string",
             "default": null,
             "required": true,
-            "description": null
+            "description": "Heading of the dialog, also its accessible name."
           },
           {
             "name": "description",
             "type": "ReactNode",
             "default": null,
             "required": false,
-            "description": null
+            "description": "Text under the heading; it also describes the dialog."
           },
           {
             "name": "confirmLabel",
@@ -2509,7 +2590,7 @@
             "type": "() => void",
             "default": null,
             "required": true,
-            "description": null
+            "description": "Called when the confirm button is pressed, before the dialog closes."
           },
           {
             "name": "destructive",
@@ -2530,7 +2611,7 @@
             "type": "string",
             "default": null,
             "required": false,
-            "description": null
+            "description": "Classes for the dialog element."
           }
         ],
         "a11y": [
@@ -2602,21 +2683,21 @@
             "type": "string",
             "default": "'Danger zone'",
             "required": false,
-            "description": null
+            "description": "Heading of the section."
           },
           {
             "name": "actions",
             "type": "DangerZoneAction[]",
             "default": null,
             "required": true,
-            "description": null
+            "description": "The risky actions, each with a title, a description and the control that runs it."
           },
           {
             "name": "className",
             "type": "string",
             "default": null,
             "required": false,
-            "description": null
+            "description": "Classes for the outer section."
           }
         ],
         "a11y": [
@@ -2698,28 +2779,28 @@
             "type": "() => void",
             "default": null,
             "required": true,
-            "description": null
+            "description": "Called when the restore button is pressed."
           },
           {
             "name": "restoreLabel",
             "type": "string",
             "default": "'Restore'",
             "required": false,
-            "description": null
+            "description": "Text on the restore button."
           },
           {
             "name": "locale",
             "type": "string",
             "default": null,
             "required": false,
-            "description": null
+            "description": "Locale for the deletion date, such as \"da-DK\". Defaults to the browser locale."
           },
           {
             "name": "className",
             "type": "string",
             "default": null,
             "required": false,
-            "description": null
+            "description": "Classes for the outer status box."
           }
         ],
         "a11y": [
@@ -2730,6 +2811,10 @@
               "Tab",
               "Enter"
             ]
+          },
+          {
+            "topic": "motion",
+            "text": "The button scales on press, and under reduced motion (motion-reduce) it does so without a transition."
           }
         ]
       }
@@ -2784,7 +2869,7 @@
             "type": "TagOption[]",
             "default": null,
             "required": true,
-            "description": null
+            "description": "Every tag that can be picked."
           },
           {
             "name": "value",
@@ -2798,21 +2883,21 @@
             "type": "string[]",
             "default": "[]",
             "required": false,
-            "description": null
+            "description": "Ids picked at the start when the picker is not controlled."
           },
           {
             "name": "onChange",
             "type": "(ids: string[]) => void",
             "default": null,
             "required": false,
-            "description": null
+            "description": "Called with the new list of picked ids each time a tag is added or removed."
           },
           {
             "name": "label",
             "type": "string",
             "default": "'Tags'",
             "required": false,
-            "description": null
+            "description": "Heading above the picker, also the name of the group."
           },
           {
             "name": "placeholder",
@@ -2822,17 +2907,24 @@
             "description": "Shown in the empty box before anything is picked."
           },
           {
+            "name": "labels",
+            "type": "Partial<Record<'picked' | 'available' | 'remove' | 'added' | 'removed', string>>",
+            "default": "{}",
+            "required": false,
+            "description": "Visible text and screen reader text; defaults to English. `added` and `removed` follow the tag name in the live announcement."
+          },
+          {
             "name": "className",
             "type": "string",
             "default": null,
             "required": false,
-            "description": null
+            "description": "Classes for the outer group."
           }
         ],
         "a11y": [
           {
             "topic": "keyboard",
-            "text": "Every tag in the pool and every remove button is a native button, so Tab, Enter and Space pick and remove.",
+            "text": "Every tag in the pool and every remove button is a native button, so Tab, Enter and Space pick and remove. When a tag moves, focus follows it: picking a tag focuses its remove button in the box, and removing one focuses the tag in the pool.",
             "keys": [
               "Tab",
               "Enter",
@@ -2841,11 +2933,11 @@
           },
           {
             "topic": "screen-reader",
-            "text": "The picker is a group labelled by label (default Tags). The picked tags are a list labelled Picked and the pool a list labelled Available. Each remove button is named Remove <tag label>, and its icon is aria-hidden. The empty box shows placeholder text."
+            "text": "The picker is a group labelled by label (default Tags). The picked tags are a list labelled Picked and the pool a list labelled Available. Each remove button is named Remove <tag label>, and its icon is aria-hidden. The empty box shows placeholder text. A persistent status region says <tag> added or <tag> removed. All of these words come from labels."
           },
           {
             "topic": "motion",
-            "text": "The picker is wrapped in MotionConfig with reducedMotion set to user, so Motion follows the system setting for the flight between the lists."
+            "text": "The picker is wrapped in MotionConfig with reducedMotion set to user, so Motion follows the system setting for the flight between the lists. The colour transitions are off under reduced motion."
           }
         ]
       }
@@ -2900,21 +2992,21 @@
             "type": "(signature: Signature) => void",
             "default": null,
             "required": true,
-            "description": null
+            "description": "Called with the drawn PNG data URL or the typed name when Done is pressed."
           },
           {
             "name": "labels",
-            "type": "Partial<Record<'title' | 'clear' | 'done' | 'type' | 'draw' | 'typed' | 'signed' | 'pad', string>>",
+            "type": "Partial<Record<'title' | 'clear' | 'done' | 'type' | 'draw' | 'typed' | 'signed' | 'pad' | 'again', string>>",
             "default": "{}",
             "required": false,
-            "description": null
+            "description": "Visible text and screen reader text; defaults to English."
           },
           {
             "name": "className",
             "type": "string",
             "default": null,
             "required": false,
-            "description": null
+            "description": "Classes for the pad, and for the signed state that replaces it."
           }
         ],
         "a11y": [
@@ -2928,7 +3020,7 @@
           },
           {
             "topic": "screen-reader",
-            "text": "The pad is a section labelled by title. The canvas has role img and the label from labels.pad, which says to draw with a mouse, finger or pen. The typed field has a screen-reader-only label. After signing, a role status shows Signed."
+            "text": "The pad is a section labelled by title. The canvas has role img and the label from labels.pad, which says to draw with a mouse, finger or pen. The typed field has a screen-reader-only label. After signing, a persistent status region says Signed, and the button that reopens the pad is named by labels.again (default Sign again)."
           },
           {
             "topic": "other",
@@ -2936,7 +3028,7 @@
           },
           {
             "topic": "motion",
-            "text": "The pad is wrapped in MotionConfig with reducedMotion set to user, so Motion follows the system setting for the swap between pad and Signed."
+            "text": "The pad is wrapped in MotionConfig with reducedMotion set to user, so Motion follows the system setting for the swap between pad and Signed. The Done button scales on press without a transition under reduced motion."
           }
         ]
       }
@@ -2990,7 +3082,7 @@
             "type": "ContinuousTab[]",
             "default": null,
             "required": true,
-            "description": null
+            "description": "The tabs, in order."
           },
           {
             "name": "value",
@@ -3004,34 +3096,48 @@
             "type": "string",
             "default": null,
             "required": false,
-            "description": null
+            "description": "Tab that is active at the start when the tabs are not controlled."
           },
           {
             "name": "onChange",
             "type": "(id: string) => void",
             "default": null,
             "required": false,
-            "description": null
+            "description": "Called with the tab id each time the active tab changes, by click or arrow key."
           },
           {
             "name": "label",
             "type": "string",
             "default": null,
-            "required": false,
+            "required": true,
             "description": "Read aloud for the whole row, e.g. \"Sections\"."
+          },
+          {
+            "name": "id",
+            "type": "string",
+            "default": null,
+            "required": false,
+            "description": "Base for the tab and panel ids. Tab buttons get `<id>-tab-<tab id>` and the built-in panel `<id>-panel-<tab id>`; a generated id is used when left out."
+          },
+          {
+            "name": "children",
+            "type": "(active: string) => ReactNode",
+            "default": null,
+            "required": false,
+            "description": "Renders the content of the active tab inside a built-in tabpanel that is wired to its tab."
           },
           {
             "name": "className",
             "type": "string",
             "default": null,
             "required": false,
-            "description": null
+            "description": "Classes for the tab row."
           }
         ],
         "a11y": [
           {
             "topic": "keyboard",
-            "text": "The row has one Tab stop, on the active tab. ArrowRight and ArrowLeft wrap around, Home and End jump to the ends, and the tab that receives focus is selected at once.",
+            "text": "The row has one Tab stop, on the active tab. ArrowRight and ArrowLeft wrap around, Home and End jump to the ends, and the tab that receives focus is selected at once. The built-in panel is focusable.",
             "keys": [
               "ArrowLeft",
               "ArrowRight",
@@ -3042,11 +3148,11 @@
           },
           {
             "topic": "screen-reader",
-            "text": "The row is a tablist named by label, and each tab is a button with role tab and aria-selected."
+            "text": "The row is a tablist named by label, which is required. Each tab is a button with role tab, an id and aria-selected. With a children function, the active tab gets aria-controls pointing to a built-in tabpanel that is labelled by that tab. Without it, a tab's panelId becomes its aria-controls."
           },
           {
             "topic": "motion",
-            "text": "The component is wrapped in MotionConfig with reducedMotion set to user, so Motion follows the system setting for the sliding pill."
+            "text": "The component is wrapped in MotionConfig with reducedMotion set to user, so Motion follows the system setting for the sliding pill. The colour transition is off under reduced motion."
           }
         ]
       }
@@ -3105,7 +3211,7 @@
             "type": "number",
             "default": null,
             "required": true,
-            "description": null
+            "description": "Number of pages."
           },
           {
             "name": "page",
@@ -3119,14 +3225,14 @@
             "type": "number",
             "default": "1",
             "required": false,
-            "description": null
+            "description": "Starting page when the control is not controlled, counted from 1."
           },
           {
             "name": "onChange",
             "type": "(page: number) => void",
             "default": null,
             "required": false,
-            "description": null
+            "description": "Called with the new page number when previous or next is pressed."
           },
           {
             "name": "labels",
@@ -3140,7 +3246,7 @@
             "type": "string",
             "default": null,
             "required": false,
-            "description": null
+            "description": "Classes for the outer nav."
           }
         ],
         "a11y": [
@@ -3156,6 +3262,10 @@
           {
             "topic": "screen-reader",
             "text": "The control is a nav named by labels.nav (default Pages). The buttons are named Previous page and Next page, or your labels, with aria-hidden icons. The N of total text is aria-live polite, and the rolling number reads the whole number once."
+          },
+          {
+            "topic": "motion",
+            "text": "The buttons scale on press without a transition under reduced motion (motion-reduce), and the rolling number follows the system setting through Motion."
           }
         ]
       }
@@ -3210,28 +3320,35 @@
             "type": "ChecklistStep[]",
             "default": null,
             "required": true,
-            "description": null
+            "description": "The steps to list, in order. The first one not done is marked as next."
           },
           {
             "name": "title",
             "type": "string",
             "default": "'Getting started'",
             "required": false,
-            "description": null
+            "description": "The text on the button that opens and closes the list. Default “Getting started”."
           },
           {
             "name": "defaultOpen",
             "type": "boolean",
             "default": "false",
             "required": false,
-            "description": null
+            "description": "Start with the list open. Default false."
+          },
+          {
+            "name": "labels",
+            "type": "Partial<Record<'progress' | 'of' | 'done' | 'stepDone', string>>",
+            "default": "{}",
+            "required": false,
+            "description": "Words for the progress meter and finished steps: `progress` (meter name), `of`, `done` (read as “2 of 5 done”) and `stepDone` (read before a finished step)."
           },
           {
             "name": "className",
             "type": "string",
             "default": null,
             "required": false,
-            "description": null
+            "description": "Classes for the outer section."
           }
         ],
         "a11y": [
@@ -3246,11 +3363,11 @@
           },
           {
             "topic": "screen-reader",
-            "text": "The header button has aria-expanded and aria-controls. Progress is a progressbar named \"Progress\" with the number of finished steps as its value. Finished steps carry a hidden \"Done:\" prefix and the next step is marked aria-current=\"step\". The chevron is aria-hidden. Below 400 px the progressbar is hidden; its max is the number of steps."
+            "text": "The header button has aria-expanded and aria-controls. Progress is a progressbar named from labels (default \"Progress\") with the number of finished steps as its value and a text value like \"2 of 5 done\". The text value is also part of the header button's name. Finished steps carry a hidden \"Done:\" prefix and the next step is marked aria-current=\"step\". The chevron is aria-hidden. Below 400 px the meter is hidden from sight but stays available to screen readers."
           },
           {
             "topic": "motion",
-            "text": "The list uses Motion with reduced motion set to user."
+            "text": "The chevron and meter transitions stop under reduced motion, and the list uses Motion with reduced motion set to user."
           }
         ]
       }
@@ -3309,7 +3426,7 @@
             "type": "string",
             "default": null,
             "required": true,
-            "description": null
+            "description": "The name of the event, shown as the heading."
           },
           {
             "name": "when",
@@ -3330,14 +3447,14 @@
             "type": "Reminder[]",
             "default": "[]",
             "required": false,
-            "description": null
+            "description": "The reminders the card starts with when it is not controlled."
           },
           {
             "name": "onChange",
             "type": "(reminders: Reminder[]) => void",
             "default": null,
             "required": false,
-            "description": null
+            "description": "Called with the full new list whenever a reminder is added, changed or removed."
           },
           {
             "name": "max",
@@ -3348,17 +3465,17 @@
           },
           {
             "name": "labels",
-            "type": "Partial<Record<ReminderChannel | ReminderUnit | \"before\" | \"add\" | \"remove\" | \"more\" | \"fewer\", string>>",
+            "type": "Partial<Record<ReminderChannel | ReminderUnit | \"before\" | \"add\" | \"remove\" | \"more\" | \"fewer\" | \"changeChannel\" | \"changeUnit\", string>>",
             "default": "{}",
             "required": false,
-            "description": null
+            "description": "Visible text and screen reader text with English defaults, for channels, units, “before”, and the add, remove, more, less and change buttons."
           },
           {
             "name": "className",
             "type": "string",
             "default": null,
             "required": false,
-            "description": null
+            "description": "Classes for the outer section."
           }
         ],
         "a11y": [
@@ -3373,7 +3490,7 @@
           },
           {
             "topic": "screen-reader",
-            "text": "A section with an h2 title and a list of reminders. Minus, plus and remove are named from labels. The channel pill shows the channel name as text. Icons are aria-hidden."
+            "text": "A section with an h2 title and a list of reminders. The channel and unit pills are named by what they change plus their value, for example \"Change channel: Email\", set through labels. Minus, plus and remove are named from labels. A status region that stays in the page reads the new value after each change, for example \"Email, 30 minutes before\". Icons are aria-hidden."
           },
           {
             "topic": "motion",
@@ -3443,28 +3560,28 @@
             "type": "OpeningDay[]",
             "default": "[]",
             "required": false,
-            "description": null
+            "description": "Starting week when the control is not controlled."
           },
           {
             "name": "onChange",
             "type": "(days: OpeningDay[]) => void",
             "default": null,
             "required": false,
-            "description": null
+            "description": "Called with the whole updated week after any switch, time or range changes."
           },
           {
             "name": "labels",
             "type": "{ from?: string; to?: string; add?: string; remove?: string }",
             "default": "{}",
             "required": false,
-            "description": null
+            "description": "Visible text and screen reader text for the time fields and the add and remove buttons; defaults to English."
           },
           {
             "name": "className",
             "type": "string",
             "default": null,
             "required": false,
-            "description": null
+            "description": "Classes for the outer list of days."
           }
         ],
         "a11y": [
@@ -3537,7 +3654,7 @@
             "type": "AiBarTool[]",
             "default": null,
             "required": true,
-            "description": null
+            "description": "The tool buttons shown in tools mode, each with an id, a label, an icon and an optional onSelect."
           },
           {
             "name": "onAsk",
@@ -3551,46 +3668,52 @@
             "type": "string",
             "default": "'Ask AI to change it…'",
             "required": false,
-            "description": null
+            "description": "Placeholder in the prompt field."
           },
           {
             "name": "labels",
-            "type": "{ tools?: string; ask?: string; send?: string }",
+            "type": "{ tools?: string; ask?: string; send?: string; mode?: string }",
             "default": "{}",
             "required": false,
-            "description": null
+            "description": "Screen reader text with English defaults. Keys: `tools`, `ask`, `send` and `mode` (the name of the mode switch)."
           },
           {
             "name": "defaultMode",
             "type": "'tools' | 'ask'",
             "default": "'tools'",
             "required": false,
-            "description": null
+            "description": "Which mode it starts in: the tool buttons or the prompt field."
           },
           {
             "name": "className",
             "type": "string",
             "default": null,
             "required": false,
-            "description": null
+            "description": "Classes for the outer bar."
           }
         ],
         "a11y": [
           {
             "topic": "keyboard",
-            "text": "The mode switch and each tool are native buttons. Choosing Ask AI mounts the field with autoFocus. Enter in the field submits the form, and the send button is disabled while the field is empty.",
+            "text": "The mode switch is a radiogroup with a roving tab stop: Tab reaches only the selected radio. The arrow keys move to the next or previous mode and wrap, Home and End jump to the first and last, and the selection follows focus. Switching with the arrows keeps focus on the radio, while a click or tap on Ask AI moves focus into the field. Enter in the field submits the form, and the send button is disabled while the field is empty.",
             "keys": [
               "Tab",
+              "ArrowRight",
+              "ArrowLeft",
+              "ArrowDown",
+              "ArrowUp",
+              "Home",
+              "End",
               "Enter"
             ]
           },
           {
             "topic": "screen-reader",
-            "text": "The mode switch is a radiogroup labelled Mode with two role radio buttons that set aria-checked and take their name from labels (Tools, Ask AI). Tool buttons are named by their label, which also shows as a tooltip. The field is labelled by labels.ask and the send button by labels.send."
+            "text": "The mode switch is a radiogroup labelled by labels.mode (Mode) with two role radio buttons that set aria-checked and take their name from labels (Tools, Ask AI). Tool buttons are named by their label, which also shows as a tooltip, and the tool icon is aria-hidden. The field is labelled by labels.ask and the send button by labels.send."
           },
           {
             "topic": "motion",
-            "text": "The bar is wrapped in MotionConfig with reducedMotion set to user, so Motion follows the system setting for its layout and transform animations."
+            "text": "The bar is wrapped in MotionConfig with reducedMotion set to user, so Motion follows the system setting for its layout and transform animations. The colour and press transitions on the buttons are off under reduced motion."
           }
         ]
       }
@@ -3611,6 +3734,9 @@
       ],
       "categories": [
         "agent"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -3644,21 +3770,21 @@
             "type": "Task[]",
             "default": null,
             "required": true,
-            "description": null
+            "description": "The tasks, one row each, in order."
           },
           {
             "name": "labels",
             "type": "Partial<Record<TaskStatus, string>>",
             "default": "{}",
             "required": false,
-            "description": null
+            "description": "Visible status text with English defaults. Keys: `queued`, `running`, `done` and `failed`."
           },
           {
             "name": "className",
             "type": "string",
             "default": null,
             "required": false,
-            "description": null
+            "description": "Classes for the list."
           }
         ],
         "a11y": [
@@ -3677,7 +3803,7 @@
           },
           {
             "topic": "motion",
-            "text": "The spinner ring stops under reduced motion, and the list is wrapped in MotionConfig with reducedMotion set to user."
+            "text": "The spinner ring stops under reduced motion, the chevron turn and row colour transitions are off, and the list is wrapped in MotionConfig with reducedMotion set to user."
           }
         ]
       }
@@ -3745,7 +3871,7 @@
             "type": "string",
             "default": null,
             "required": false,
-            "description": null
+            "description": "The prompt that made the image. It names the image for screen readers once it is ready."
           },
           {
             "name": "size",
@@ -3759,14 +3885,14 @@
             "type": "Partial<Record<'working' | 'ready', string>>",
             "default": "{}",
             "required": false,
-            "description": null
+            "description": "Screen reader text with English defaults. Keys: `working` and `ready`."
           },
           {
             "name": "className",
             "type": "string",
             "default": null,
             "required": false,
-            "description": null
+            "description": "Classes for the outer figure."
           }
         ],
         "a11y": [
@@ -3797,6 +3923,9 @@
       ],
       "categories": [
         "agent"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -3829,7 +3958,7 @@
             "type": "VoiceOrbState",
             "default": null,
             "required": true,
-            "description": null
+            "description": "What the assistant is doing: idle, listening, thinking or speaking."
           },
           {
             "name": "level",
@@ -3850,14 +3979,14 @@
             "type": "Partial<Record<VoiceOrbState, string>>",
             "default": "{}",
             "required": false,
-            "description": null
+            "description": "Screen reader text per state, with English defaults. Keys: `idle`, `listening`, `thinking` and `speaking`."
           },
           {
             "name": "className",
             "type": "string",
             "default": null,
             "required": false,
-            "description": null
+            "description": "Classes for the status element that holds the orb."
           }
         ],
         "a11y": [
@@ -3934,35 +4063,35 @@
             "type": "string",
             "default": "'USD'",
             "required": false,
-            "description": null
+            "description": "The ISO currency code used to format money. Default “USD”."
           },
           {
             "name": "locale",
             "type": "string",
             "default": "'en-US'",
             "required": false,
-            "description": null
+            "description": "The language used to format money. Default “en-US”."
           },
           {
             "name": "onTrade",
             "type": "(order: TradeOrder) => void",
             "default": null,
             "required": true,
-            "description": null
+            "description": "Called with the side, the chosen outcome id, the amount and the share count when the form is submitted with an amount above zero."
           },
           {
             "name": "labels",
-            "type": "Partial<Record<'buy' | 'sell' | 'amount' | 'toWin' | 'toGet' | 'avg' | 'trade' | 'max', string>>",
+            "type": "Partial<Record<'buy' | 'sell' | 'amount' | 'toWin' | 'toGet' | 'avg' | 'trade' | 'max' | 'outcome', string>>",
             "default": "{}",
             "required": false,
-            "description": null
+            "description": "Visible text and screen reader text with English defaults, such as buy, sell, amount, outcome and trade."
           },
           {
             "name": "className",
             "type": "string",
             "default": null,
             "required": false,
-            "description": null
+            "description": "Classes for the form."
           }
         ],
         "a11y": [
@@ -3977,11 +4106,11 @@
           },
           {
             "topic": "screen-reader",
-            "text": "Buy and sell and the outcome choice are groups of buttons with aria-pressed. The amount has a label tied by htmlFor, inputMode decimal and no autocomplete, and the result is an output element. Outcome colours are paired with the label text."
+            "text": "Buy and sell and the outcome choice are groups of buttons with aria-pressed. The outcome group is named from labels (default \"Outcome\"). The amount has a label tied by htmlFor, inputMode decimal and no autocomplete, and the result is an output element. Outcome colours are paired with the label text."
           },
           {
             "topic": "motion",
-            "text": "The ticket uses Motion with reduced motion set to user."
+            "text": "The ticket uses Motion with reduced motion set to user. The chips and the submit button scale on press without a transition under reduced motion."
           }
         ]
       }
@@ -4035,14 +4164,14 @@
             "type": "string",
             "default": null,
             "required": true,
-            "description": null
+            "description": "The shop name, shown on the terminal and at the top of the receipt."
           },
           {
             "name": "lines",
             "type": "ReceiptLine[]",
             "default": null,
             "required": true,
-            "description": null
+            "description": "The items on the receipt, each with a label and an amount; the total is their sum."
           },
           {
             "name": "onPay",
@@ -4056,28 +4185,28 @@
             "type": "string",
             "default": "'EUR'",
             "required": false,
-            "description": null
+            "description": "The ISO currency code used to format money. Default “EUR”."
           },
           {
             "name": "locale",
             "type": "string",
             "default": "'en-IE'",
             "required": false,
-            "description": null
+            "description": "The language used to format money and the date. Default “en-IE”."
           },
           {
             "name": "labels",
             "type": "Partial<Record<'pay' | 'processing' | 'printing' | 'paid' | 'total' | 'again' | 'reference', string>>",
             "default": "{}",
             "required": false,
-            "description": null
+            "description": "Visible text and screen reader text with English defaults, for the pay button, the three statuses, the total, the new order button and the reference."
           },
           {
             "name": "className",
             "type": "string",
             "default": null,
             "required": false,
-            "description": null
+            "description": "Classes for the outer wrapper around the terminal and the receipt."
           }
         ],
         "a11y": [
@@ -4092,11 +4221,11 @@
           },
           {
             "topic": "screen-reader",
-            "text": "The status area is a polite live region: it reads \"Processing payment\", \"Printing your receipt\" and \"Paid\". The receipt is a list of lines. Icons and the barcode are aria-hidden."
+            "text": "A hidden status region that stays in the page reads \"Processing payment\", \"Printing your receipt\" and \"Paid\". It holds only the text; the buttons sit outside it. The visible status text is aria-hidden so it is not read twice. The receipt is a list of lines. Icons and the barcode are aria-hidden."
           },
           {
             "topic": "motion",
-            "text": "The spinner stops under reduced motion, and the receipt slide uses Motion with reduced motion set to user."
+            "text": "The spinner and the button press scale stop under reduced motion, and the receipt slide uses Motion with reduced motion set to user."
           }
         ]
       }
@@ -4164,20 +4293,20 @@
             "type": "Partial<Record<'previous' | 'next' | 'slide', string>>",
             "default": "{}",
             "required": false,
-            "description": null
+            "description": "Screen reader and button text with English defaults. Keys: `previous`, `next` and `slide`."
           },
           {
             "name": "className",
             "type": "string",
             "default": null,
             "required": false,
-            "description": null
+            "description": "Classes for the outer section."
           }
         ],
         "a11y": [
           {
             "topic": "keyboard",
-            "text": "ArrowLeft and ArrowRight turn the cube while focus is inside the carousel. The previous and next buttons are native buttons. A drag turns it past 40 px.",
+            "text": "The carousel takes focus with Tab and shows a focus ring. ArrowLeft and ArrowRight turn the cube while focus is on the carousel or on a button inside it. The previous and next buttons are native buttons. A drag turns it past 40 px.",
             "keys": [
               "Tab",
               "ArrowLeft",
@@ -4320,7 +4449,7 @@
             "type": "Partial<Record<'previous' | 'next' | 'slide' | 'of' | 'slides', string>>",
             "default": "{}",
             "required": false,
-            "description": null
+            "description": "Screen reader and button text with English defaults. Keys: `previous`, `next`, `slide`, `of` and `slides`."
           }
         ],
         "extends": "Omit<HTMLAttributes<HTMLElement>, 'onChange'>",
@@ -4443,7 +4572,7 @@
             "type": "Partial<Record<'previous' | 'next' | 'picture' | 'of' | 'pictures', string>>",
             "default": "{}",
             "required": false,
-            "description": null
+            "description": "Screen reader and button text with English defaults. Keys: `previous`, `next`, `picture`, `of` and `pictures`."
           }
         ],
         "extends": "Omit<HTMLAttributes<HTMLElement>, 'onChange'>",
@@ -4575,7 +4704,7 @@
             "type": "Partial<Record<'previous' | 'next' | 'picture' | 'of', string>>",
             "default": "{}",
             "required": false,
-            "description": null
+            "description": "Screen reader and button text with English defaults. Keys: `previous`, `next`, `picture` and `of`."
           }
         ],
         "extends": "Omit<HTMLAttributes<HTMLDivElement>, 'onChange'>",
@@ -4714,7 +4843,7 @@
             "type": "Partial<Record<'previous' | 'next' | 'picture' | 'of', string>>",
             "default": "{}",
             "required": false,
-            "description": null
+            "description": "Screen reader and button text with English defaults. Keys: `previous`, `next`, `picture` and `of`."
           }
         ],
         "extends": "Omit<HTMLAttributes<HTMLDivElement>, 'onChange'>",
@@ -4893,7 +5022,8 @@
       "title": "Curve carousel demo",
       "description": "How to use Curve carousel.",
       "registryDependencies": [
-        "@manniche/curve-carousel"
+        "@manniche/curve-carousel",
+        "utils"
       ],
       "files": [
         {
@@ -5035,7 +5165,7 @@
             "type": "string",
             "default": null,
             "required": false,
-            "description": null
+            "description": "Classes for the outer span."
           }
         ],
         "a11y": [
@@ -5102,42 +5232,42 @@
             "type": "number",
             "default": null,
             "required": false,
-            "description": null
+            "description": "Controlled value."
           },
           {
             "name": "defaultValue",
             "type": "number",
             "default": "50",
             "required": false,
-            "description": null
+            "description": "Starting value when the slider is not controlled."
           },
           {
             "name": "onValueChange",
             "type": "(value: number) => void",
             "default": null,
             "required": false,
-            "description": null
+            "description": "Called with the new value while it is dragged or moved with the keys."
           },
           {
             "name": "min",
             "type": "number",
             "default": "0",
             "required": false,
-            "description": null
+            "description": "Lowest value."
           },
           {
             "name": "max",
             "type": "number",
             "default": "100",
             "required": false,
-            "description": null
+            "description": "Highest value."
           },
           {
             "name": "step",
             "type": "number",
             "default": "1",
             "required": false,
-            "description": null
+            "description": "Size of one step."
           },
           {
             "name": "label",
@@ -5158,7 +5288,7 @@
             "type": "string",
             "default": null,
             "required": false,
-            "description": null
+            "description": "Classes for the slider track."
           }
         ],
         "a11y": [
@@ -5236,28 +5366,28 @@
             "type": "StackedNotification[]",
             "default": null,
             "required": true,
-            "description": null
+            "description": "The notifications, in order. The first one is the top card when the pile is folded."
           },
           {
             "name": "onDismiss",
             "type": "(id: string) => void",
             "default": null,
             "required": false,
-            "description": null
+            "description": "Called with the notification id when its dismiss button is pressed. Without it there are no dismiss buttons."
           },
           {
             "name": "labels",
             "type": "Partial<Record<'title' | 'show' | 'hide' | 'dismiss' | 'empty', string>>",
             "default": "{}",
             "required": false,
-            "description": null
+            "description": "Visible and screen reader text with English defaults. Keys: `title`, `show`, `hide`, `dismiss` and `empty`."
           },
           {
             "name": "className",
             "type": "string",
             "default": null,
             "required": false,
-            "description": null
+            "description": "Classes for the outer section."
           }
         ],
         "a11y": [
@@ -5272,11 +5402,11 @@
           },
           {
             "topic": "screen-reader",
-            "text": "The stack is a section labelled by labels.title, with an ordered list. The toggle sets aria-expanded and aria-controls. While folded, every card after the first is aria-hidden. Each dismiss button is named Dismiss: <title>, and the icons are aria-hidden."
+            "text": "The stack is a section labelled by labels.title, with an ordered list. A hidden status paragraph is always in the page and announces notifications that arrive after the first render (title and body). Each arrival writes a new text node, so two notifications with the same text are both read; dismissing one does not announce anything. The toggle sets aria-expanded and aria-controls. While folded, every card after the first is aria-hidden. Each dismiss button is named Dismiss: <title>, and the icons are aria-hidden."
           },
           {
             "topic": "motion",
-            "text": "The stack is wrapped in MotionConfig with reducedMotion set to user, so Motion follows the system setting for the fold and fan-out."
+            "text": "The stack is wrapped in MotionConfig with reducedMotion set to user, so Motion follows the system setting for the fold and fan-out. The chevron turn and button colour transitions are off under reduced motion."
           }
         ]
       }
@@ -5297,6 +5427,9 @@
       ],
       "categories": [
         "overlays"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -5359,7 +5492,7 @@
             "type": "string",
             "default": null,
             "required": false,
-            "description": null
+            "description": "Classes for the outer element."
           }
         ],
         "a11y": [
@@ -5438,7 +5571,7 @@
             "type": "string",
             "default": null,
             "required": false,
-            "description": null
+            "description": "Classes for the outer element."
           }
         ],
         "a11y": [
@@ -5541,7 +5674,7 @@
             "type": "string",
             "default": null,
             "required": false,
-            "description": null
+            "description": "Classes for the outer element."
           }
         ],
         "a11y": [
@@ -5630,7 +5763,7 @@
             "type": "string",
             "default": null,
             "required": false,
-            "description": null
+            "description": "Classes for the outer element."
           }
         ],
         "a11y": [
@@ -5661,6 +5794,9 @@
       ],
       "categories": [
         "surfaces"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -5679,6 +5815,9 @@
       ],
       "categories": [
         "surfaces"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -5986,14 +6125,14 @@
             "type": "ReactNode",
             "default": null,
             "required": true,
-            "description": null
+            "description": "The heading in the centre cell."
           },
           {
             "name": "description",
             "type": "ReactNode",
             "default": null,
             "required": false,
-            "description": null
+            "description": "A short line under the heading."
           },
           {
             "name": "action",
@@ -6007,7 +6146,7 @@
             "type": "string",
             "default": null,
             "required": false,
-            "description": null
+            "description": "Classes for the outer section."
           }
         ],
         "a11y": [
@@ -6034,6 +6173,9 @@
       ],
       "categories": [
         "surfaces"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -6068,35 +6210,35 @@
             "type": "string",
             "default": null,
             "required": true,
-            "description": null
+            "description": "Text on the main button."
           },
           {
             "name": "options",
             "type": "SplitButtonOption[]",
             "default": null,
             "required": true,
-            "description": null
+            "description": "The choices that open from the button, each with an id and a label."
           },
           {
             "name": "onSelect",
             "type": "(id: string) => void",
             "default": null,
             "required": true,
-            "description": null
+            "description": "Called with the option id when a choice is picked."
           },
           {
             "name": "backLabel",
             "type": "string",
             "default": "'Back'",
             "required": false,
-            "description": null
+            "description": "Name of the button that closes the choices."
           },
           {
             "name": "className",
             "type": "string",
             "default": null,
             "required": false,
-            "description": null
+            "description": "Classes for the button."
           }
         ],
         "a11y": [
@@ -6169,21 +6311,21 @@
             "type": "DockItem[]",
             "default": null,
             "required": true,
-            "description": null
+            "description": "The icons to show, each with an id, a label and an icon."
           },
           {
             "name": "value",
             "type": "string | null",
             "default": null,
             "required": true,
-            "description": null
+            "description": "Id of the open item, which gets the dot; null when none is open."
           },
           {
             "name": "onValueChange",
             "type": "(id: string) => void",
             "default": null,
             "required": true,
-            "description": null
+            "description": "Called with the item id when an icon is picked."
           },
           {
             "name": "label",
@@ -6197,7 +6339,7 @@
             "type": "string",
             "default": null,
             "required": false,
-            "description": null
+            "description": "Classes for the toolbar."
           }
         ],
         "a11y": [
@@ -6216,11 +6358,11 @@
           },
           {
             "topic": "screen-reader",
-            "text": "The dock is a toolbar named by label (default Dock). Each icon button is named by its label and sets aria-pressed for the open one. The dot under the open item is aria-hidden."
+            "text": "The dock is a toolbar named by label (default Dock). Each icon button is named by its label and sets aria-pressed for the open one. The tooltip text and the dot under the open item are aria-hidden, so the name is read once."
           },
           {
             "topic": "motion",
-            "text": "The component is wrapped in MotionConfig with reducedMotion set to user, so Motion follows the system setting for the lift and bounce."
+            "text": "The component is wrapped in MotionConfig with reducedMotion set to user, so Motion follows the system setting for the lift and bounce. The tooltip fade and colour transitions are off under reduced motion."
           }
         ]
       }
@@ -6241,6 +6383,9 @@
       ],
       "categories": [
         "navigation"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -6273,14 +6418,14 @@
             "type": "ReactNode",
             "default": null,
             "required": true,
-            "description": null
+            "description": "Logo or name at the start of the bar."
           },
           {
             "name": "links",
             "type": "GlassNavLink[]",
             "default": null,
             "required": true,
-            "description": null
+            "description": "The navigation links, shown in the bar from the sm breakpoint and in the menu below it."
           },
           {
             "name": "current",
@@ -6308,13 +6453,13 @@
             "type": "string",
             "default": null,
             "required": false,
-            "description": null
+            "description": "Classes for the sticky header element."
           }
         ],
         "a11y": [
           {
             "topic": "keyboard",
-            "text": "Below the sm breakpoint a menu button opens the links, and Esc closes the menu while it is open. Choosing a link closes it.",
+            "text": "Below the sm breakpoint a menu button opens the links, and Esc closes the menu while it is open. Opening moves focus to the first link, and closing, by the button, Esc or choosing a link, returns focus to the menu button.",
             "keys": [
               "Escape",
               "Tab",
@@ -6437,6 +6582,10 @@
         {
           "path": "registry/manniche/flip-words/flip-words.tsx",
           "type": "registry:component"
+        },
+        {
+          "path": "registry/manniche/hooks/use-reduced-motion.ts",
+          "type": "registry:hook"
         }
       ],
       "categories": [
@@ -6473,7 +6622,7 @@
             "type": "string",
             "default": null,
             "required": false,
-            "description": null
+            "description": "Classes for the outer inline element."
           }
         ],
         "a11y": [
@@ -6487,7 +6636,7 @@
           },
           {
             "topic": "motion",
-            "text": "Under reduced motion it shows the first word and never cycles. With rounds above 0 it stops on the last word after that many rounds, and with rounds set to 0 it keeps going."
+            "text": "Under reduced motion it shows the first word and never cycles. The setting is followed live, so switching it on or off while the page is open takes effect at once. With rounds above 0 it stops on the last word after that many rounds, and with rounds set to 0 it keeps going."
           }
         ]
       }
@@ -6619,14 +6768,14 @@
             "type": "HoverHighlightItem[]",
             "default": null,
             "required": true,
-            "description": null
+            "description": "The cards, each with a title, a text and an optional href that makes it a link."
           },
           {
             "name": "className",
             "type": "string",
             "default": null,
             "required": false,
-            "description": null
+            "description": "Classes for the list."
           }
         ],
         "a11y": [
@@ -6699,35 +6848,35 @@
             "type": "string",
             "default": null,
             "required": true,
-            "description": null
+            "description": "Name of the field, shown beside it and used in the edit button name."
           },
           {
             "name": "value",
             "type": "string",
             "default": null,
             "required": true,
-            "description": null
+            "description": "The saved text shown until editing starts."
           },
           {
             "name": "onSave",
             "type": "(value: string) => void",
             "default": null,
             "required": true,
-            "description": null
+            "description": "Called with the trimmed text when it is saved and differs from `value`."
           },
           {
             "name": "icon",
             "type": "ReactNode",
             "default": null,
             "required": false,
-            "description": null
+            "description": "Icon shown before the label."
           },
           {
             "name": "multiline",
             "type": "boolean",
             "default": "false",
             "required": false,
-            "description": null
+            "description": "Edits in a textarea; Enter adds a line and Ctrl or Cmd with Enter saves."
           },
           {
             "name": "placeholder",
@@ -6741,28 +6890,28 @@
             "type": "string",
             "default": "'Edit'",
             "required": false,
-            "description": null
+            "description": "Verb in the edit button name, followed by the field label."
           },
           {
             "name": "saveLabel",
             "type": "string",
             "default": "'Save'",
             "required": false,
-            "description": null
+            "description": "Name of the save button."
           },
           {
             "name": "cancelLabel",
             "type": "string",
             "default": "'Cancel'",
             "required": false,
-            "description": null
+            "description": "Name of the cancel button."
           },
           {
             "name": "className",
             "type": "string",
             "default": null,
             "required": false,
-            "description": null
+            "description": "Classes for the outer row of label and value."
           }
         ],
         "a11y": [
@@ -6778,11 +6927,11 @@
           },
           {
             "topic": "screen-reader",
-            "text": "While editing, the label is tied to the field with htmlFor. The pencil is named Edit <label in lower case>, and save and cancel are named by saveLabel and cancelLabel, with aria-hidden icons. An empty value shows placeholder (default Empty)."
+            "text": "While editing, the label is tied to the field with htmlFor. While viewing, the label is plain text and the pencil is described by the current value. The pencil is named Edit <label in lower case>, and save and cancel are named by saveLabel and cancelLabel, with aria-hidden icons. An empty value shows placeholder (default Empty)."
           },
           {
             "topic": "motion",
-            "text": "The component is wrapped in MotionConfig with reducedMotion set to user, so Motion follows the system setting for the swap between pencil and buttons."
+            "text": "The component is wrapped in MotionConfig with reducedMotion set to user, so Motion follows the system setting for the swap between pencil and buttons. The press scale and the colour transition are off under reduced motion."
           }
         ]
       }
@@ -6803,6 +6952,9 @@
       ],
       "categories": [
         "controls"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -6837,42 +6989,42 @@
             "type": "boolean",
             "default": null,
             "required": true,
-            "description": null
+            "description": "Whether the dialog is shown."
           },
           {
             "name": "onOpenChange",
             "type": "(open: boolean) => void",
             "default": null,
             "required": true,
-            "description": null
+            "description": "Called with the new open state when the dialog is closed."
           },
           {
             "name": "steps",
             "type": "DialogStackStep[]",
             "default": null,
             "required": true,
-            "description": null
+            "description": "The pages of the stack, each with an id, a title and a function that renders its content."
           },
           {
             "name": "closeLabel",
             "type": "string",
             "default": "'Close'",
             "required": false,
-            "description": null
+            "description": "Name of the close button."
           },
           {
             "name": "backLabel",
             "type": "string",
             "default": "'Back'",
             "required": false,
-            "description": null
+            "description": "Name of the back button."
           },
           {
             "name": "className",
             "type": "string",
             "default": null,
             "required": false,
-            "description": null
+            "description": "Classes for the dialog element."
           }
         ],
         "a11y": [
@@ -6911,6 +7063,9 @@
       ],
       "categories": [
         "overlays"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -6945,7 +7100,7 @@
             "type": "boolean",
             "default": null,
             "required": true,
-            "description": null
+            "description": "Whether the item is saved; the button shows `savedLabel` and is pressed."
           },
           {
             "name": "onSave",
@@ -6959,28 +7114,35 @@
             "type": "() => void",
             "default": null,
             "required": true,
-            "description": null
+            "description": "Called when the button is pressed while `saved` is true."
           },
           {
             "name": "label",
             "type": "string",
             "default": "'Save'",
             "required": false,
-            "description": null
+            "description": "Text on the button while the item is not saved."
           },
           {
             "name": "savedLabel",
             "type": "string",
             "default": "'Saved'",
             "required": false,
-            "description": null
+            "description": "Text on the button once saved; also announced when a save finishes."
+          },
+          {
+            "name": "savingLabel",
+            "type": "string",
+            "default": "'Saving'",
+            "required": false,
+            "description": "Spoken name of the button while the save runs and the spinner shows."
           },
           {
             "name": "className",
             "type": "string",
             "default": null,
             "required": false,
-            "description": null
+            "description": "Classes for the button."
           }
         ],
         "a11y": [
@@ -6995,11 +7157,11 @@
           },
           {
             "topic": "screen-reader",
-            "text": "The button sets aria-pressed from saved and aria-busy while saving. When the save finishes, a screen-reader-only polite live region says savedLabel. The spinner and check icons are aria-hidden."
+            "text": "The button sets aria-pressed from saved and aria-busy while saving. It always has a name: the spinner carries savingLabel (default Saving) and the check carries savedLabel as screen-reader-only text. When the save finishes, a persistent status region next to the button says savedLabel. The icons are aria-hidden."
           },
           {
             "topic": "motion",
-            "text": "The spinner stops under reduced motion, and the component is wrapped in MotionConfig with reducedMotion set to user."
+            "text": "The spinner stops under reduced motion, the press scale and colour transition are off, and the component is wrapped in MotionConfig with reducedMotion set to user."
           }
         ]
       }
@@ -7054,42 +7216,42 @@
             "type": "string",
             "default": "'Notify me'",
             "required": false,
-            "description": null
+            "description": "Text on the button before it opens."
           },
           {
             "name": "placeholder",
             "type": "string",
             "default": "'Your email'",
             "required": false,
-            "description": null
+            "description": "Placeholder of the email field."
           },
           {
             "name": "submitLabel",
             "type": "string",
             "default": "'Notify me'",
             "required": false,
-            "description": null
+            "description": "Name of the submit button."
           },
           {
             "name": "doneLabel",
             "type": "string",
             "default": "'You are on the list'",
             "required": false,
-            "description": null
+            "description": "Thank-you text shown after sending."
           },
           {
             "name": "onSubmit",
             "type": "(email: string) => void",
             "default": null,
             "required": true,
-            "description": null
+            "description": "Called with the trimmed email when the form is sent."
           },
           {
             "name": "className",
             "type": "string",
             "default": null,
             "required": false,
-            "description": null
+            "description": "Classes for the form that holds the button and the field."
           }
         ],
         "a11y": [
@@ -7163,84 +7325,84 @@
             "type": "(data: { rating: FeedbackRating; text: string }) => Promise<void> | void",
             "default": null,
             "required": true,
-            "description": null
+            "description": "Called with the rating and the trimmed text when the form is sent. The form closes once the returned promise resolves."
           },
           {
             "name": "title",
             "type": "string",
             "default": "'Share feedback'",
             "required": false,
-            "description": null
+            "description": "The heading of the form. Default “Share feedback”."
           },
           {
             "name": "upPrompt",
             "type": "string",
             "default": "'What did you like most?'",
             "required": false,
-            "description": null
+            "description": "The question above the field after a thumbs up."
           },
           {
             "name": "downPrompt",
             "type": "string",
             "default": "'What could be better?'",
             "required": false,
-            "description": null
+            "description": "The question above the field after a thumbs down."
           },
           {
             "name": "placeholder",
             "type": "string",
             "default": "'Optional'",
             "required": false,
-            "description": null
+            "description": "The placeholder text in the field. Default “Optional”."
           },
           {
             "name": "sendLabel",
             "type": "string",
             "default": "'Send'",
             "required": false,
-            "description": null
+            "description": "The text on the send button. Default “Send”."
           },
           {
             "name": "sendingLabel",
             "type": "string",
             "default": "'Sending…'",
             "required": false,
-            "description": null
+            "description": "The text on the send button while it is sending."
           },
           {
             "name": "thanksLabel",
             "type": "string",
             "default": "'Thanks for the feedback'",
             "required": false,
-            "description": null
+            "description": "The line shown under the thumbs after sending."
           },
           {
             "name": "upLabel",
             "type": "string",
             "default": "'Helpful'",
             "required": false,
-            "description": null
+            "description": "The accessible name of the thumbs up button. Default “Helpful”."
           },
           {
             "name": "downLabel",
             "type": "string",
             "default": "'Not helpful'",
             "required": false,
-            "description": null
+            "description": "The accessible name of the thumbs down button. Default “Not helpful”."
           },
           {
             "name": "closeLabel",
             "type": "string",
             "default": "'Close'",
             "required": false,
-            "description": null
+            "description": "The accessible name of the close button. Default “Close”."
           },
           {
             "name": "className",
             "type": "string",
             "default": null,
             "required": false,
-            "description": null
+            "description": "Classes for the outer wrapper."
           }
         ],
         "a11y": [
@@ -7259,7 +7421,7 @@
           },
           {
             "topic": "motion",
-            "text": "The pop uses Motion with reduced motion set to user."
+            "text": "The pop uses Motion with reduced motion set to user. Under reduced motion there is no pop and no wait: the form opens at once. The send button's press scale also stops."
           }
         ]
       }
@@ -7313,7 +7475,7 @@
             "type": "StepIndicatorStep[]",
             "default": null,
             "required": true,
-            "description": null
+            "description": "The steps, each with an id, a label and an optional icon."
           },
           {
             "name": "current",
@@ -7327,21 +7489,21 @@
             "type": "(index: number) => void",
             "default": null,
             "required": false,
-            "description": null
+            "description": "Called with the step index when a bar is pressed."
           },
           {
             "name": "label",
             "type": "string",
             "default": "'Progress'",
             "required": false,
-            "description": null
+            "description": "Accessible name for the navigation."
           },
           {
             "name": "className",
             "type": "string",
             "default": null,
             "required": false,
-            "description": null
+            "description": "Classes for the outer nav."
           }
         ],
         "a11y": [
@@ -7360,7 +7522,7 @@
           },
           {
             "topic": "motion",
-            "text": "The component is wrapped in MotionConfig with reducedMotion set to user, so Motion follows the system setting for the sliding name."
+            "text": "The component is wrapped in MotionConfig with reducedMotion set to user, so Motion follows the system setting for the sliding name. The bar colour transition is off under reduced motion."
           }
         ]
       }
@@ -7381,6 +7543,9 @@
       ],
       "categories": [
         "navigation"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -7412,14 +7577,14 @@
             "type": "string",
             "default": null,
             "required": true,
-            "description": null
+            "description": "Text of the label that floats from inside the field up into its border."
           },
           {
             "name": "hint",
             "type": "string",
             "default": null,
             "required": false,
-            "description": null
+            "description": "Quiet help text under the field; it is replaced by `error` while there is one."
           },
           {
             "name": "error",
@@ -7433,7 +7598,7 @@
         "a11y": [
           {
             "topic": "screen-reader",
-            "text": "The label is a real label tied to the input by htmlFor, using id or a generated one. The hint or error is linked with aria-describedby, and an error also sets aria-invalid. The label floats with CSS only, and all other input props pass through."
+            "text": "The label is a real label tied to the input by htmlFor, using id or a generated one. The hint is linked with aria-describedby while there is no error. The error lives in a persistent alert region, so one that appears while typing is announced, and aria-describedby then points to it and the input sets aria-invalid. The hint is not announced again. The label floats with CSS only, and all other input props pass through."
           },
           {
             "topic": "motion",
@@ -7491,28 +7656,28 @@
             "type": "ListStackItem[]",
             "default": null,
             "required": true,
-            "description": null
+            "description": "The rows to show, each with a title and optional detail, meta text and icon."
           },
           {
             "name": "showLabel",
             "type": "string",
             "default": "'Show all'",
             "required": false,
-            "description": null
+            "description": "Text on the button that opens the full list."
           },
           {
             "name": "hideLabel",
             "type": "string",
             "default": "'Hide'",
             "required": false,
-            "description": null
+            "description": "Text on the button that folds the list again."
           },
           {
             "name": "className",
             "type": "string",
             "default": null,
             "required": false,
-            "description": null
+            "description": "Classes for the outer column."
           }
         ],
         "a11y": [
@@ -7552,6 +7717,9 @@
       ],
       "categories": [
         "widgets"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -7593,34 +7761,41 @@
             "type": "string",
             "default": "'Cards'",
             "required": false,
-            "description": null
+            "description": "The name of the carousel, read by screen readers. Default “Cards”."
           },
           {
             "name": "previousLabel",
             "type": "string",
             "default": "'Previous'",
             "required": false,
-            "description": null
+            "description": "The accessible name of the previous button. Default “Previous”."
           },
           {
             "name": "nextLabel",
             "type": "string",
             "default": "'Next'",
             "required": false,
-            "description": null
+            "description": "The accessible name of the next button. Default “Next”."
+          },
+          {
+            "name": "labels",
+            "type": "Partial<Record<'slide' | 'of', string>>",
+            "default": "{}",
+            "required": false,
+            "description": "Words for slide names and the position announcement, e.g. “Card 2 of 5”. Keys: `slide`, `of`."
           },
           {
             "name": "className",
             "type": "string",
             "default": null,
             "required": false,
-            "description": null
+            "description": "Classes for the outer section."
           }
         ],
         "a11y": [
           {
             "topic": "keyboard",
-            "text": "Arrow keys step through the cards while focus is inside the carousel. The previous and next buttons are disabled at the ends. A drag moves on past 50 px or a velocity of 500.",
+            "text": "The carousel takes focus with Tab and shows a focus ring. Arrow keys step through the cards while focus is on the carousel or on a button inside it. The previous and next buttons are disabled at the ends. A drag moves on past 50 px or a velocity of 500.",
             "keys": [
               "Tab",
               "ArrowLeft",
@@ -7631,7 +7806,7 @@
           },
           {
             "topic": "screen-reader",
-            "text": "The section is a carousel labelled by label (default \"Cards\"). Each card is a slide group labelled \"i / total\"; cards that are not current are aria-hidden and inert. The buttons are named by previousLabel and nextLabel; the icons and dots are aria-hidden."
+            "text": "The section is a carousel labelled by label (default \"Cards\"). Each card is a slide group named like \"Card 2 of 5\", set through labels. Cards that are not current are aria-hidden and inert. A status region that stays in the page reads the new position after each step. The buttons are named by previousLabel and nextLabel; the icons and dots are aria-hidden."
           },
           {
             "topic": "motion",
@@ -7656,6 +7831,9 @@
       ],
       "categories": [
         "surfaces"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -7690,42 +7868,42 @@
             "type": "string",
             "default": null,
             "required": true,
-            "description": null
+            "description": "The name of the project, shown as the heading."
           },
           {
             "name": "environment",
             "type": "string",
             "default": null,
             "required": true,
-            "description": null
+            "description": "The small line above the title, such as the environment name."
           },
           {
             "name": "branch",
             "type": "string",
             "default": null,
             "required": true,
-            "description": null
+            "description": "The branch name, shown in monospace under the title."
           },
           {
             "name": "commit",
             "type": "string",
             "default": null,
             "required": true,
-            "description": null
+            "description": "The commit id, shown after the branch."
           },
           {
             "name": "message",
             "type": "string",
             "default": null,
             "required": true,
-            "description": null
+            "description": "The commit message, shown on one line under the branch."
           },
           {
             "name": "steps",
             "type": "DeploymentStep[]",
             "default": null,
             "required": true,
-            "description": null
+            "description": "The steps to list, in order; each gets a status, a bar and optional details."
           },
           {
             "name": "state",
@@ -7739,27 +7917,34 @@
             "type": "Record<DeploymentCardProps['state'], string>",
             "default": "{ building: 'Building', ready: 'Ready', failed: 'Failed' }",
             "required": false,
-            "description": null
+            "description": "The text shown for each overall state in the header, with English defaults."
+          },
+          {
+            "name": "labels",
+            "type": "Partial<Record<DeploymentStepStatus | 'progress', string>>",
+            "default": "{}",
+            "required": false,
+            "description": "Screen reader text for each step status, plus `progress`, the word added to each step's progress bar name."
           },
           {
             "name": "actions",
             "type": "ReactNode",
             "default": null,
             "required": false,
-            "description": null
+            "description": "Buttons for the footer, aligned to the right. The footer is left out without them."
           },
           {
             "name": "className",
             "type": "string",
             "default": null,
             "required": false,
-            "description": null
+            "description": "Classes for the outer article."
           }
         ],
         "a11y": [
           {
             "topic": "keyboard",
-            "text": "Each step is a button. A step without details is disabled; one with details toggles its details.",
+            "text": "Each step is a button. A step without details is disabled; one with details toggles its details. The whole row is the click target, and the focus ring wraps the row.",
             "keys": [
               "Tab",
               "Enter",
@@ -7768,11 +7953,11 @@
           },
           {
             "topic": "screen-reader",
-            "text": "The card is an article. The state chip has role status and its text comes from stateLabels. A step with details carries aria-expanded. The icons are aria-hidden."
+            "text": "The card is an article. The state chip has role status and its text comes from stateLabels. Each step button reads its label followed by its status in text (Pending, Running, Succeeded, Finished with warnings, Failed), set through labels. Each step's bar is a progressbar named after the step, with a value from 0 to 100. A step with details carries aria-expanded. The icons are aria-hidden."
           },
           {
             "topic": "motion",
-            "text": "The spin and ping animations stop under reduced motion, and the rest uses Motion with reduced motion set to user."
+            "text": "The spin and ping animations and the colour and chevron transitions stop under reduced motion, and the rest uses Motion with reduced motion set to user."
           }
         ]
       }
@@ -7827,76 +8012,76 @@
             "type": "string",
             "default": "'Integrations'",
             "required": false,
-            "description": null
+            "description": "The heading of the list, also the name of the card. Default “Integrations”."
           },
           {
             "name": "items",
             "type": "Integration[]",
             "default": null,
             "required": true,
-            "description": null
+            "description": "The integrations to list; each row opens into a detail dialog."
           },
           {
             "name": "onConnectChange",
             "type": "(id: string, connected: boolean) => Promise<void> | void",
             "default": null,
             "required": false,
-            "description": null
+            "description": "Called with the item id and the new state when the connect button is pressed. The state changes once the returned promise resolves."
           },
           {
             "name": "connectLabel",
             "type": "string",
             "default": "'Connect'",
             "required": false,
-            "description": null
+            "description": "The text on the button that connects an integration. Default “Connect”."
           },
           {
             "name": "connectedLabel",
             "type": "string",
             "default": "'Connected'",
             "required": false,
-            "description": null
+            "description": "The text on the badge of a connected row. Default “Connected”."
           },
           {
             "name": "disconnectLabel",
             "type": "string",
             "default": "'Disconnect'",
             "required": false,
-            "description": null
+            "description": "The text on the button that disconnects an integration. Default “Disconnect”."
           },
           {
             "name": "triggersLabel",
             "type": "string",
             "default": "'Triggers'",
             "required": false,
-            "description": null
+            "description": "The heading above the triggers list in the dialog. Default “Triggers”."
           },
           {
             "name": "actionsLabel",
             "type": "string",
             "default": "'Actions'",
             "required": false,
-            "description": null
+            "description": "The heading above the actions list in the dialog. Default “Actions”."
           },
           {
             "name": "closeLabel",
             "type": "string",
             "default": "'Close'",
             "required": false,
-            "description": null
+            "description": "The accessible name of the close button in the dialog. Default “Close”."
           },
           {
             "name": "className",
             "type": "string",
             "default": null,
             "required": false,
-            "description": null
+            "description": "Classes for the outer section."
           }
         ],
         "a11y": [
           {
             "topic": "keyboard",
-            "text": "Each row is a button. Escape closes the open view; focus moves to the close button on open and returns to the row on close. There is no focus trap.",
+            "text": "Each row is a button. The open view is a non-modal dialog inside the card, so Tab moves on to the rest of the page as usual. Escape closes it. Focus moves to the close button on open and returns to the row on close.",
             "keys": [
               "Tab",
               "Enter",
@@ -7930,6 +8115,9 @@
       ],
       "categories": [
         "widgets"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -7972,7 +8160,22 @@
         "tier": "free",
         "added": "2026-10-04",
         "usedIn": [],
-        "props": [],
+        "props": [
+          {
+            "name": "onAddToBag",
+            "type": "(product: { name: string; price: string }) => void",
+            "default": null,
+            "required": false,
+            "description": "Called with the product name and price when a product's \"Add to bag\" button is pressed. Without it the button does nothing."
+          },
+          {
+            "name": "labels",
+            "type": "ShopLandingLabels",
+            "default": "{}",
+            "required": false,
+            "description": "Visible text and screen reader text, with English defaults. Keys: addToBag, colours."
+          }
+        ],
         "a11y": [
           {
             "topic": "screen-reader",
@@ -7980,11 +8183,15 @@
           },
           {
             "topic": "screen-reader",
-            "text": "Icon links carry an aria-label (\"Search\", \"Bag, 2 items\") and their icons are aria-hidden. Colour dots sit in a p with aria-label \"{n} colours\". Review stars are aria-hidden and quotes are figure, blockquote and figcaption."
+            "text": "Icon links carry an aria-label (\"Search\", \"Bag, 2 items\") and their icons are aria-hidden. Each product lists its colours as a list with the colour name in screen-reader-only text, followed by a visible count (\"3 colours\", labels.colours). Review stars are aria-hidden and quotes are figure, blockquote and figcaption."
+          },
+          {
+            "topic": "screen-reader",
+            "text": "\"Add to bag\" on each product card is a button that sits beside the product link, not inside it. Its name is \"Add to bag: {product}\", and it calls onAddToBag with the name and price."
           },
           {
             "topic": "keyboard",
-            "text": "The mobile menu and the FAQ are native details/summary, so Enter and Space open them. The newsletter field has a label, type=email and required, with a visible focus outline.",
+            "text": "The mobile menu and the FAQ are native details/summary, so Enter and Space open them. \"Add to bag\" is a native button that appears on card hover and on keyboard focus within the card. The newsletter field has a label, type=email and required, with a visible focus outline.",
             "keys": [
               "Tab",
               "Enter",
@@ -7993,7 +8200,7 @@
           },
           {
             "topic": "motion",
-            "text": "The hero entry transitions are dropped under reduced motion (motion-reduce:transition-none)."
+            "text": "The hero entry transitions, the card lift, the image zoom, the \"Add to bag\" slide, the collection arrow nudge, the FAQ \"+\" rotation and the button press scale are dropped under reduced motion (motion-reduce)."
           }
         ]
       }
@@ -8052,15 +8259,23 @@
         "tier": "free",
         "added": "2026-10-04",
         "usedIn": [],
-        "props": [],
+        "props": [
+          {
+            "name": "labels",
+            "type": "PricingPageLabels",
+            "default": "{}",
+            "required": false,
+            "description": "Screen reader text with English defaults. Keys: compareTable."
+          }
+        ],
         "a11y": [
           {
             "topic": "screen-reader",
-            "text": "Header with nav \"Main\" (Pricing has aria-current=\"page\"), an h1, a list of plans with an h2 each, a comparison section named by its heading, an FAQ and a closing call to action. The comparison is a table with column, column group and row header scopes; included and not included cells carry the aria-labels \"Included\" and \"Not included\"."
+            "text": "Header with nav \"Main\" (Pricing has aria-current=\"page\"), an h1, a list of plans with an h2 each, a comparison section named by its heading, an FAQ and a closing call to action. The comparison is a table with column, column group and row header scopes, inside a focusable scroll region named \"Plan comparison table\" (labels.compareTable) so a narrow screen can scroll it by keyboard; included and not included cells carry the aria-labels \"Included\" and \"Not included\"."
           },
           {
             "topic": "screen-reader",
-            "text": "The billing switch is a fieldset with a screen-reader-only legend \"Billing period\" and two native radios, so the choice is read as a group. Both prices are in the markup; the radio state picks which one shows."
+            "text": "The billing switch is a fieldset with a screen-reader-only legend \"Billing period\" and two native radios, so the choice is read as a group. Both prices are in the markup; the radio state picks which one shows. The \"+\" in each FAQ summary is aria-hidden, so only the question is read."
           },
           {
             "topic": "keyboard",
@@ -8074,6 +8289,10 @@
               "Enter",
               "Space"
             ]
+          },
+          {
+            "topic": "motion",
+            "text": "The plan cards slide in, the buttons scale on press and the FAQ \"+\" rotates with transitions; under reduced motion (motion-reduce) they stay still."
           }
         ]
       }
@@ -8132,32 +8351,50 @@
         "tier": "free",
         "added": "2026-10-04",
         "usedIn": [],
-        "props": [],
+        "props": [
+          {
+            "name": "labels",
+            "type": "StoreDashboardLabels",
+            "default": "{}",
+            "required": false,
+            "description": "Visible text and screen reader text, with English defaults. Keys: search, up, down, better, worse, ordersTable, barsHint."
+          }
+        ],
         "a11y": [
           {
             "topic": "screen-reader",
-            "text": "Layout: an aside with nav \"Main\" (Overview has aria-current=\"page\"), a header with a search field and a \"Notifications, 3 new\" button, and main with the h1 \"Overview\". Below the lg breakpoint the aside is hidden and the same nav, also named \"Main\", sits in a details menu."
+            "text": "Layout: an aside with nav \"Main\" (Overview has aria-current=\"page\"), a header with a search field named by aria-label (default \"Search orders and products\") and a \"Notifications, 3 new\" button, and main with the h1 \"Overview\". Below the lg breakpoint the aside is hidden and the same nav, also named \"Main\", sits in a details menu."
           },
           {
             "topic": "screen-reader",
-            "text": "The period switch is a fieldset with a screen-reader-only legend \"Period\" and native radios; only the chosen period's chart is shown. KPI sparklines are aria-hidden, and the change pills read only the number because the direction arrow is aria-hidden. The revenue bars are an ordered list named \"Revenue by period, {period}\", and each bar holds its tooltip as real text."
+            "text": "The period switch is a fieldset with a screen-reader-only legend \"Period\" and native radios; only the chosen period's chart is shown. Each period is its own section named by its h2 (\"Revenue, 7 days\", \"Revenue, 30 days\" or \"Revenue, 12 months\"), so the name follows the chosen period."
           },
           {
             "topic": "screen-reader",
-            "text": "Top products are an ordered list, and the orders table has column headers; the status dot is aria-hidden and the status is written out. The charts are drawn inline here, not with bar-chart or sparkline."
+            "text": "Each KPI change reads its direction and verdict in words (\"Up 12.4%, better\", \"Down 0.6%, better\" for returns), set through labels. The arrow, sparklines and tooltip dots are aria-hidden. The revenue bars are an ordered list named \"Revenue by period, {period}\", and each bar holds its value as real text."
+          },
+          {
+            "topic": "screen-reader",
+            "text": "Top products are an ordered list. The orders table sits in a focusable scroll region named \"Orders table\" (labels.ordersTable) so a narrow screen can scroll it by keyboard, and it has column headers; the status dot is aria-hidden and the status is written out. The charts are drawn inline here, not with bar-chart or sparkline."
           },
           {
             "topic": "keyboard",
-            "text": "Each revenue bar is a Tab stop (tabIndex 0) and shows its tooltip on focus as on hover. The period radios and the mobile details menu use native keys.",
+            "text": "The period radios and the mobile details menu use native keys. Each revenue chart is one Tab stop. ArrowLeft and ArrowRight move between the bars, Home and End jump to the first and the last, and the active bar shows its tooltip. A hidden hint names the keys (labels.barsHint), and a status line reads the label and value of each bar you move to. The tooltip also shows on hover.",
             "keys": [
               "Tab",
               "ArrowLeft",
               "ArrowRight",
               "ArrowUp",
               "ArrowDown",
+              "Home",
+              "End",
               "Enter",
               "Space"
             ]
+          },
+          {
+            "topic": "motion",
+            "text": "The bars and the share bars grow in and the tooltip scales in with transitions; under reduced motion (motion-reduce) they appear in place without moving."
           }
         ]
       }
@@ -8216,7 +8453,15 @@
         "tier": "free",
         "added": "2026-10-04",
         "usedIn": [],
-        "props": [],
+        "props": [
+          {
+            "name": "labels",
+            "type": "SignInPageLabels",
+            "default": "{}",
+            "required": false,
+            "description": "Visible text and screen reader text, with English defaults. Keys: emailError, passwordError, rating."
+          }
+        ],
         "a11y": [
           {
             "topic": "screen-reader",
@@ -8228,7 +8473,7 @@
           },
           {
             "topic": "screen-reader",
-            "text": "Error text appears with CSS after the browser marks a field invalid (:user-invalid). The passkey button has an aria-hidden icon, and the stars sit in a span with aria-label \"5 out of 5\"."
+            "text": "Error text appears with CSS after the browser marks a field invalid (:user-invalid). At the same moment the field gets aria-invalid and aria-describedby pointing at its error text, and loses both when the value is valid again. The passkey button has an aria-hidden icon, and the five stars are a role=\"img\" named \"5 out of 5\" (labels.rating)."
           },
           {
             "topic": "keyboard",
@@ -8242,6 +8487,10 @@
               "Enter",
               "Space"
             ]
+          },
+          {
+            "topic": "motion",
+            "text": "The page entry, the stat cards, the button press scale and the arrow nudge stand still under reduced motion (motion-reduce)."
           }
         ]
       }
@@ -8325,6 +8574,10 @@
               "ArrowDown",
               "Enter"
             ]
+          },
+          {
+            "topic": "motion",
+            "text": "The highlighted card is tilted. It turns in on entry and straightens on hover, and the subscribe button scales on press; under reduced motion (motion-reduce) the tilt stays as it is and nothing moves."
           }
         ]
       }
@@ -8381,42 +8634,42 @@
             "type": "SpendControlData",
             "default": null,
             "required": true,
-            "description": null
+            "description": "The navigation items, spending bars, virtual cards, merchants and upsell tile to show."
           },
           {
             "name": "labels",
             "type": "SpendControlLabels",
             "default": null,
             "required": false,
-            "description": null
+            "description": "Visible text and screen reader text, with English defaults. Keys: title, cards, spending, merchants, limit, frozen, note, navLabel."
           },
           {
             "name": "now",
             "type": "Date",
             "default": null,
             "required": false,
-            "description": null
+            "description": "The current time. When given, its date is shown in the header."
           },
           {
             "name": "currency",
             "type": "string",
             "default": "'EUR'",
             "required": false,
-            "description": null
+            "description": "ISO 4217 currency code for all amounts. Default \"EUR\"."
           },
           {
             "name": "onUpsell",
             "type": "() => void",
             "default": null,
             "required": false,
-            "description": null
+            "description": "Called with no arguments when the upsell tile's button is pressed."
           },
           {
             "name": "className",
             "type": "string",
             "default": null,
             "required": false,
-            "description": null
+            "description": "Classes for the outer container."
           }
         ],
         "a11y": [
@@ -8436,6 +8689,14 @@
               "Enter",
               "Space"
             ]
+          },
+          {
+            "topic": "motion",
+            "text": "The button scales on press, and under reduced motion (motion-reduce) it does so without a transition."
+          },
+          {
+            "topic": "other",
+            "text": "A frozen card says \"Frozen\" in place of its number. It is muted through its colours, not opacity, so its text keeps its contrast."
           }
         ]
       }
@@ -8456,6 +8717,9 @@
       ],
       "categories": [
         "templates"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -8493,21 +8757,21 @@
             "type": "WidgetWallData",
             "default": null,
             "required": true,
-            "description": null
+            "description": "The highlight, KPIs, trades, matrix, profile, team, ranking and weekly widgets to show."
           },
           {
             "name": "labels",
             "type": "WidgetWallLabels",
             "default": null,
             "required": false,
-            "description": null
+            "description": "Visible text and screen reader text, with English defaults. Key: note, the footer text on the tiles."
           },
           {
             "name": "className",
             "type": "string",
             "default": null,
             "required": false,
-            "description": null
+            "description": "Classes for the outer container."
           }
         ],
         "a11y": [
@@ -8578,35 +8842,35 @@
             "type": "WorkspaceHomeData",
             "default": null,
             "required": true,
-            "description": null
+            "description": "The navigation items, offer tile, deals chart and schedule to show."
           },
           {
             "name": "labels",
             "type": "WorkspaceHomeLabels",
             "default": null,
             "required": false,
-            "description": null
+            "description": "Visible text and screen reader text, with English defaults. Keys: search, searchLabel, navLabel, note."
           },
           {
             "name": "onSearch",
             "type": "(query: string) => void",
             "default": null,
             "required": false,
-            "description": null
+            "description": "Called with the typed text when the search form is submitted."
           },
           {
             "name": "onOffer",
             "type": "() => void",
             "default": null,
             "required": false,
-            "description": null
+            "description": "Called with no arguments when the offer tile's button is pressed."
           },
           {
             "name": "className",
             "type": "string",
             "default": null,
             "required": false,
-            "description": null
+            "description": "Classes for the outer container."
           }
         ],
         "a11y": [
@@ -8622,6 +8886,10 @@
               "Enter",
               "Space"
             ]
+          },
+          {
+            "topic": "motion",
+            "text": "The button scales on press, and under reduced motion (motion-reduce) it does so without a transition."
           }
         ]
       }
@@ -8679,28 +8947,28 @@
             "type": "SalesFloorData",
             "default": null,
             "required": true,
-            "description": null
+            "description": "The target dial, current call, performance bars and lead sources to show."
           },
           {
             "name": "labels",
             "type": "SalesFloorLabels",
             "default": null,
             "required": false,
-            "description": null
+            "description": "Visible text and screen reader text, with English defaults. Key: note, the footer text on the tiles."
           },
           {
             "name": "onEndCall",
             "type": "() => void",
             "default": null,
             "required": false,
-            "description": null
+            "description": "Called with no arguments when the call tile's end-call button is pressed."
           },
           {
             "name": "className",
             "type": "string",
             "default": null,
             "required": false,
-            "description": null
+            "description": "Classes for the outer container."
           }
         ],
         "a11y": [
@@ -8716,6 +8984,10 @@
               "Enter",
               "Space"
             ]
+          },
+          {
+            "topic": "motion",
+            "text": "The button scales on press, and under reduced motion (motion-reduce) it does so without a transition."
           }
         ]
       }
@@ -9174,7 +9446,8 @@
       "title": "Bento steps demo",
       "description": "How to use Bento steps.",
       "registryDependencies": [
-        "@manniche/bento-steps"
+        "@manniche/bento-steps",
+        "@manniche/chart-kit"
       ],
       "files": [
         {
@@ -9444,21 +9717,21 @@
             "type": "RentalPortfolioData",
             "default": null,
             "required": true,
-            "description": null
+            "description": "The figures, the income chart, the rent collection dial and the transfers."
           },
           {
             "name": "labels",
             "type": "RentalPortfolioLabels",
             "default": null,
             "required": false,
-            "description": null
+            "description": "Visible text with English defaults."
           },
           {
             "name": "className",
             "type": "string",
             "default": null,
             "required": false,
-            "description": null
+            "description": "Classes for the outer container."
           }
         ],
         "a11y": [
@@ -9515,35 +9788,35 @@
             "type": "DeliveryBoardData",
             "default": null,
             "required": true,
-            "description": null
+            "description": "The clients, the days in the date strip, the roadmap lanes and the assistant tile to show."
           },
           {
             "name": "labels",
             "type": "DeliveryBoardLabels",
             "default": null,
             "required": false,
-            "description": null
+            "description": "Visible text and screen reader text, with English defaults. Keys: note, daysLabel."
           },
           {
             "name": "now",
             "type": "Date",
             "default": null,
             "required": false,
-            "description": null
+            "description": "The current time. When its day is in the date strip, that day is marked and opens first."
           },
           {
             "name": "onAssistant",
             "type": "() => void",
             "default": null,
             "required": false,
-            "description": null
+            "description": "Called with no arguments when the assistant tile's button is pressed."
           },
           {
             "name": "className",
             "type": "string",
             "default": null,
             "required": false,
-            "description": null
+            "description": "Classes for the outer container."
           }
         ],
         "a11y": [
@@ -9563,6 +9836,10 @@
               "Enter",
               "Space"
             ]
+          },
+          {
+            "topic": "motion",
+            "text": "The assistant button does not scale on press under reduced motion (motion-reduce)."
           }
         ]
       }
@@ -9617,21 +9894,21 @@
             "type": "PeopleOpsData",
             "default": null,
             "required": true,
-            "description": null
+            "description": "The hiring funnel, today's schedule, payroll list and attendance matrix to show."
           },
           {
             "name": "labels",
             "type": "PeopleOpsLabels",
             "default": null,
             "required": false,
-            "description": null
+            "description": "Visible text and screen reader text, with English defaults. Key: note, the footer text on the tiles."
           },
           {
             "name": "className",
             "type": "string",
             "default": null,
             "required": false,
-            "description": null
+            "description": "Classes for the outer container."
           }
         ],
         "a11y": [
@@ -9692,21 +9969,21 @@
             "type": "HealthOverviewData",
             "default": null,
             "required": true,
-            "description": null
+            "description": "The patient, vitals, score dial and calorie charts to show."
           },
           {
             "name": "labels",
             "type": "HealthOverviewLabels",
             "default": null,
             "required": false,
-            "description": null
+            "description": "Visible text and screen reader text, with English defaults. Key: note, the footer text on the tiles."
           },
           {
             "name": "className",
             "type": "string",
             "default": null,
             "required": false,
-            "description": null
+            "description": "Classes for the outer container."
           }
         ],
         "a11y": [
@@ -9764,27 +10041,27 @@
             "type": "GalleryShopData",
             "default": null,
             "required": true,
-            "description": null
+            "description": "The gallery menu, headline, counters, events and collections to show."
           },
           {
             "name": "labels",
             "type": "GalleryShopLabels",
             "default": null,
             "required": false,
-            "description": null
+            "description": "Visible text and screen reader text, with English defaults. Keys: note, menuLabel, works."
           },
           {
             "name": "className",
             "type": "string",
             "default": null,
             "required": false,
-            "description": null
+            "description": "Classes for the outer container."
           }
         ],
         "a11y": [
           {
             "topic": "screen-reader",
-            "text": "A nav (default label \"Gallery\") with buttons and aria-current=\"page\", an h2 headline, an events list, and a collections list. Collection images get alt=\"\" and the colour tile is aria-hidden; the name and the work count are text. Counter tiles show BigNumber from chart-kit in tiles named by their h3."
+            "text": "A nav (default label \"Gallery\") with toggle buttons that carry aria-pressed for the chosen entry, an h2 headline, an events list, and a collections list. Collection images get alt=\"\" and the colour tile is aria-hidden; the name and the work count are text. Counter tiles show BigNumber from chart-kit in tiles named by their h3."
           },
           {
             "topic": "keyboard",
@@ -9848,35 +10125,35 @@
             "type": "{ balance: number; change: number; cards: StackCard[]; periods: WalletPeriod[]; subscriptions: WalletSubscription[] }",
             "default": null,
             "required": true,
-            "description": null
+            "description": "The balance, cards, spending periods and subscriptions to show."
           },
           {
             "name": "format",
             "type": "ValueFormat",
             "default": "DEFAULT_FORMAT",
             "required": false,
-            "description": null
+            "description": "How amounts are formatted. Default euro with two decimals."
           },
           {
             "name": "title",
             "type": "string",
             "default": "'Wallet'",
             "required": false,
-            "description": null
+            "description": "The page heading (h1). Default \"Wallet\"."
           },
           {
             "name": "note",
             "type": "string",
             "default": "'Example data.'",
             "required": false,
-            "description": null
+            "description": "Footer text on the balance tile. Default \"Example data.\""
           },
           {
             "name": "labels",
             "type": "{ balance?: string; cards?: string; cashFlow?: string; spending?: string; subscriptions?: string; period?: string; perMonth?: string; renews?: (date: string) => string; monthlyTotal?: string }",
             "default": null,
             "required": false,
-            "description": null
+            "description": "Visible text and screen reader text, with English defaults."
           },
           {
             "name": "now",
@@ -9890,13 +10167,13 @@
             "type": "string",
             "default": null,
             "required": false,
-            "description": null
+            "description": "Classes for the outer container."
           }
         ],
         "a11y": [
           {
             "topic": "screen-reader",
-            "text": "An h1 title (default \"Wallet\") and tiles named by their h3. The cash flow tile has a period switch, Pills from chart-kit (label \"Period\"); the bar-chart and donut are labelled \"Cash flow, {period}\" and \"Spending, {period}\" with the period's long name. The subscriptions list has an aria-label, its initials are aria-hidden, and each amount ends with a screen-reader-only \" a month\". See card-stack and the chart notes."
+            "text": "An h1 title (default \"Wallet\") and tiles named by their h2. The cash flow tile has a period switch, Pills from chart-kit (label \"Period\"); the bar-chart and donut are labelled \"Cash flow, {period}\" and \"Spending, {period}\" with the period's long name. The subscriptions list has an aria-label, its initials are aria-hidden, and each amount ends with a screen-reader-only \" a month\". See card-stack and the chart notes."
           },
           {
             "topic": "keyboard",
@@ -9964,28 +10241,28 @@
             "type": "{ card: StackCard; balance: number; change: number; pace: number; budget: number; transactions: Transaction[]; categories?: Record<string, string> }",
             "default": null,
             "required": true,
-            "description": null
+            "description": "The card, balance, spending pace, budget, transactions and optional category names to show."
           },
           {
             "name": "format",
             "type": "ValueFormat",
             "default": "DEFAULT_FORMAT",
             "required": false,
-            "description": null
+            "description": "How amounts are formatted. Default euro with two decimals."
           },
           {
             "name": "title",
             "type": "string",
             "default": "'Account'",
             "required": false,
-            "description": null
+            "description": "The page heading (h1). Default \"Account\"."
           },
           {
             "name": "note",
             "type": "string",
             "default": "'Example data.'",
             "required": false,
-            "description": null
+            "description": "Footer text on the balance tile. Default \"Example data.\""
           },
           {
             "name": "today",
@@ -10006,20 +10283,20 @@
             "type": "{ card?: string; balance?: string; pace?: string; paceCaption?: string; transactions?: string; budget?: string; zones?: [string, string, string] }",
             "default": null,
             "required": false,
-            "description": null
+            "description": "Visible text and screen reader text, with English defaults."
           },
           {
             "name": "className",
             "type": "string",
             "default": null,
             "required": false,
-            "description": null
+            "description": "Classes for the outer container."
           }
         ],
         "a11y": [
           {
             "topic": "screen-reader",
-            "text": "An h1 title (default \"Account\") with tiles named by their h3: card-stack with one card and hideAmount set, an inverted balance tile with BigNumber and DeltaPill from chart-kit, a three-zone dial (default Under, On track, Over) that is a read-only meter, and transaction-list limited to 5. See their notes. Tab stops come from card-stack and from the transaction-list show more button when there are more than 5 transactions."
+            "text": "An h1 title (default \"Account\") with tiles named by their h2: card-stack with one card and hideAmount set, an inverted balance tile with BigNumber and DeltaPill from chart-kit, a three-zone dial (default Under, On track, Over) that is a read-only meter, and transaction-list limited to 5. See their notes. Tab stops come from card-stack and from the transaction-list show more button when there are more than 5 transactions."
           }
         ]
       }
@@ -10072,55 +10349,55 @@
             "type": "WalletCurrency[]",
             "default": null,
             "required": true,
-            "description": null
+            "description": "One entry per currency, each with its balance, rewards, spending and allocation."
           },
           {
             "name": "defaultCurrency",
             "type": "string",
             "default": null,
             "required": false,
-            "description": null
+            "description": "The currency code selected first. Default the first entry in `data`."
           },
           {
             "name": "title",
             "type": "string",
             "default": "'Currency wallet'",
             "required": false,
-            "description": null
+            "description": "The page heading (h1). Default \"Currency wallet\"."
           },
           {
             "name": "note",
             "type": "string",
             "default": "'Example data.'",
             "required": false,
-            "description": null
+            "description": "Footer text on the balance tile. Default \"Example data.\""
           },
           {
             "name": "now",
             "type": "Date",
             "default": null,
             "required": false,
-            "description": null
+            "description": "Not read yet; the screen does not depend on the date."
           },
           {
             "name": "labels",
             "type": "{ currency?: string; balance?: string; rewards?: string; spending?: string; allocation?: string; points?: string; toNext?: (n: number, tier: string) => string }",
             "default": null,
             "required": false,
-            "description": null
+            "description": "Visible text and screen reader text, with English defaults."
           },
           {
             "name": "className",
             "type": "string",
             "default": null,
             "required": false,
-            "description": null
+            "description": "Classes for the outer container."
           }
         ],
         "a11y": [
           {
             "topic": "screen-reader",
-            "text": "An h1 and a currency switch, Pills from chart-kit (default label \"Currency\"); every tile follows the chosen currency. The rewards progress bar is aria-hidden because the \"to next\" sentence says the same; allocation bars are aria-hidden and the share is written as text. The donut is described in its own note."
+            "text": "An h1, tiles named by their h2, and a currency switch, Pills from chart-kit (default label \"Currency\"); every tile follows the chosen currency. The rewards progress bar is aria-hidden because the \"to next\" sentence says the same; allocation bars are aria-hidden and the share is written as text. The donut is described in its own note."
           },
           {
             "topic": "keyboard",
@@ -10193,35 +10470,35 @@
             "type": "{ cashflow: AreaPoint[]; income: number; incomeChange: number; growth: number; growthTarget: string; stock: { label: string; value: number }[]; stockName: string; activity: Transaction[]; …",
             "default": null,
             "required": true,
-            "description": null
+            "description": "The cash flow, income, growth, stock, activity and verification steps to show."
           },
           {
             "name": "format",
             "type": "ValueFormat",
             "default": "DEFAULT_FORMAT",
             "required": false,
-            "description": null
+            "description": "How amounts are formatted. Default euro with no decimals."
           },
           {
             "name": "title",
             "type": "string",
             "default": "'Business finance'",
             "required": false,
-            "description": null
+            "description": "The page heading (h1). Default \"Business finance\"."
           },
           {
             "name": "note",
             "type": "string",
             "default": "'Example data.'",
             "required": false,
-            "description": null
+            "description": "Footer text on the cash flow tile. Default \"Example data.\""
           },
           {
             "name": "today",
             "type": "string",
             "default": null,
             "required": false,
-            "description": null
+            "description": "\"YYYY-MM-DD\" of today, so the activity list reads \"Today\" and \"Yesterday\". Default the day of `now`."
           },
           {
             "name": "now",
@@ -10235,20 +10512,20 @@
             "type": "{ income?: string; payments?: string; growth?: string; ofTarget?: string; stock?: string; activity?: string; verification?: string; stepsDone?: (done: number, total: number) => string; done?: …",
             "default": null,
             "required": false,
-            "description": null
+            "description": "Visible text and screen reader text, with English defaults."
           },
           {
             "name": "className",
             "type": "string",
             "default": null,
             "required": false,
-            "description": null
+            "description": "Classes for the outer container."
           }
         ],
         "a11y": [
           {
             "topic": "screen-reader",
-            "text": "An h1 and tiles named by their h3. The legend marks income with a square and payments with a dashed line, as in the chart; the marks are aria-hidden and the names are text. The growth donut is labelled \"Growth, {pct} percent of {target}\". The verification list writes each state \"(Done)\" or \"(To do)\" and the check mark is aria-hidden; the footer reads \"{d} of {t} steps done\". See BigNumber and DeltaPill from chart-kit, area-chart, donut, sparkline and transaction-list (limit 4)."
+            "text": "An h1 and tiles named by their h2. The legend marks income with a square and payments with a dashed line, as in the chart; the marks are aria-hidden and the names are text. The growth donut is labelled \"Growth, {pct} percent of {target}\". The verification list writes each state \"(Done)\" or \"(To do)\" and the check mark is aria-hidden; the footer reads \"{d} of {t} steps done\". See BigNumber and DeltaPill from chart-kit, area-chart, donut, sparkline and transaction-list (limit 4)."
           }
         ]
       }
@@ -10364,11 +10641,11 @@
         "a11y": [
           {
             "topic": "screen-reader",
-            "text": "A footer with a screen-reader-only h2, a nav (default \"Footer\") with an h3 and list per column, and a newsletter section named by its h3. The form has a label, aria-invalid and aria-describedby; the error has role=\"alert\" only when sending fails. A sent message sits in a role=\"status\" region. The region select has a screen-reader-only label, and external links carry a hidden new tab text."
+            "text": "A footer with a screen-reader-only h2, a nav (default \"Footer\") with an h3 and list per column, and a newsletter section named by its h3. The newsletter comes after the columns in the DOM. The form has a label, aria-invalid and aria-describedby; the error has role=\"alert\" only when sending fails. A sent message sits in a role=\"status\" region. The region select has a screen-reader-only label, and external links carry a hidden new tab text."
           },
           {
             "topic": "keyboard",
-            "text": "On an invalid submit focus moves to the email field. When sent, focus moves to the confirmation (tabIndex -1); \"Use another address\" returns focus to the field.",
+            "text": "On an invalid submit focus moves to the email field. When sent, focus moves to the confirmation (tabIndex -1); \"Use another address\" returns focus to the field. On a box narrower than 56rem the newsletter is shown first; browsers that support reading-flow then move Tab in step with that.",
             "keys": [
               "Tab",
               "Enter",
@@ -10520,6 +10797,10 @@
             ]
           },
           {
+            "topic": "motion",
+            "text": "The \"Book a call\" link does not scale on press under reduced motion (motion-reduce)."
+          },
+          {
             "topic": "other",
             "text": "The clock ticks on the minute; a fixed now is used as given. Until the clock is read the times show \"--:--\"."
           }
@@ -10532,7 +10813,8 @@
       "title": "Footer Desk demo",
       "description": "How to use Footer Desk.",
       "registryDependencies": [
-        "@manniche/footer-desk"
+        "@manniche/footer-desk",
+        "@manniche/chart-kit"
       ],
       "files": [
         {
@@ -10645,7 +10927,7 @@
           },
           {
             "topic": "motion",
-            "text": "Opening a group fades it in and lifts it 6 px over 240 ms; under reduced motion (MotionConfig reducedMotion=\"user\") the lift is dropped and the fade remains. The height changes at once."
+            "text": "Opening a group fades it in and lifts it 6 px over 240 ms, and the chevron turns over 200 ms. Under reduced motion (the system setting) the group just appears and the chevron flips at once. The height changes at once."
           },
           {
             "topic": "other",
@@ -10660,7 +10942,8 @@
       "title": "Footer Sitemap demo",
       "description": "How to use Footer Sitemap.",
       "registryDependencies": [
-        "@manniche/footer-sitemap"
+        "@manniche/footer-sitemap",
+        "@manniche/chart-kit"
       ],
       "files": [
         {
@@ -11023,7 +11306,8 @@
       "title": "Footer Status demo",
       "description": "How to use Footer Status.",
       "registryDependencies": [
-        "@manniche/footer-status"
+        "@manniche/footer-status",
+        "@manniche/chart-kit"
       ],
       "files": [
         {
@@ -11066,14 +11350,14 @@
             "type": "FooterTilesAddress",
             "default": null,
             "required": true,
-            "description": null
+            "description": "The address tile: place name, address lines and a directions link."
           },
           {
             "name": "hours",
             "type": "FooterTilesHours",
             "default": null,
             "required": true,
-            "description": null
+            "description": "The opening hours tile: the time zone and the weekly schedule behind \"open now\"."
           },
           {
             "name": "links",
@@ -11131,6 +11415,10 @@
               "Tab",
               "Enter"
             ]
+          },
+          {
+            "topic": "motion",
+            "text": "The link fade on hover is dropped under reduced motion (motion-reduce)."
           }
         ]
       }
@@ -11270,6 +11558,9 @@
       ],
       "categories": [
         "templates"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -11349,7 +11640,7 @@
             "type": "{ name?: string; email?: string; topic?: string; message?: string; send?: string; sending?: string; sentTitle?: string; sentText?: string; another?: string; errorText?: string; retry?: string; …",
             "default": "{}",
             "required": false,
-            "description": null
+            "description": "Visible text and screen reader text, with English defaults."
           }
         ],
         "extends": "Omit<HTMLAttributes<HTMLElement>, 'onSubmit' | 'title'>",
@@ -11432,21 +11723,21 @@
             "type": "ReactNode",
             "default": null,
             "required": true,
-            "description": null
+            "description": "The section heading (h2)."
           },
           {
             "name": "intro",
             "type": "ReactNode",
             "default": null,
             "required": false,
-            "description": null
+            "description": "One line under the heading."
           },
           {
             "name": "offices",
             "type": "ContactOffice[]",
             "default": null,
             "required": true,
-            "description": null
+            "description": "The offices to list, each with address, hours and time zone."
           },
           {
             "name": "now",
@@ -11460,7 +11751,7 @@
             "type": "{ open?: string; closed?: string; localTime?: string; copyAddress?: string; copied?: string; failed?: string; directions?: string; newTab?: string; hours?: string; day?: string; closesIn?: (min: …",
             "default": "{}",
             "required": false,
-            "description": null
+            "description": "Visible text and screen reader text, with English defaults."
           }
         ],
         "extends": "Omit<HTMLAttributes<HTMLElement>, 'title'>",
@@ -11545,21 +11836,21 @@
             "type": "ReactNode",
             "default": null,
             "required": false,
-            "description": null
+            "description": "One line under the heading."
           },
           {
             "name": "people",
             "type": "ContactPerson[]",
             "default": null,
             "required": true,
-            "description": null
+            "description": "The people to list, each with contact details."
           },
           {
             "name": "labels",
             "type": "{ all?: string; filter?: string; copy?: string; copied?: string; failed?: string; book?: string; languages?: string; shown?: (n: number) => string }",
             "default": "{}",
             "required": false,
-            "description": null
+            "description": "Visible text and screen reader text, with English defaults."
           }
         ],
         "extends": "Omit<HTMLAttributes<HTMLElement>, 'title'>",
@@ -11714,7 +12005,7 @@
                 "type": "boolean",
                 "default": null,
                 "required": true,
-                "description": null
+                "description": "Shows the tooltip. It fades and scales out when false."
               },
               {
                 "name": "x",
@@ -11728,7 +12019,7 @@
                 "type": "number",
                 "default": null,
                 "required": true,
-                "description": null
+                "description": "The vertical point in px inside the wrapper. The tooltip sits 12 px above it, or below with `below`."
               },
               {
                 "name": "bounds",
@@ -11763,7 +12054,7 @@
                 "type": "TooltipRow[]",
                 "default": "[]",
                 "required": false,
-                "description": null
+                "description": "Extra lines under the figure, each with a label, a value and an optional colour key."
               }
             ]
           },
@@ -11775,14 +12066,14 @@
                 "type": "number",
                 "default": null,
                 "required": true,
-                "description": null
+                "description": "The number to show. Screen readers get it whole and formatted."
               },
               {
                 "name": "format",
                 "type": "ValueFormat",
                 "default": null,
                 "required": false,
-                "description": null
+                "description": "Decimals, unit, suffix and sign, as in chart-utils `formatValue`."
               },
               {
                 "name": "size",
@@ -11803,7 +12094,7 @@
                 "type": "string",
                 "default": null,
                 "required": false,
-                "description": null
+                "description": "Classes for the outer span."
               }
             ]
           },
@@ -11815,14 +12106,14 @@
                 "type": "string",
                 "default": null,
                 "required": true,
-                "description": null
+                "description": "The digits as already formatted text. Each place rolls on its own."
               },
               {
                 "name": "roll",
                 "type": "boolean",
                 "default": "true",
                 "required": false,
-                "description": null
+                "description": "Roll the digits that change. Default true; never under reduced motion."
               }
             ]
           },
@@ -11834,28 +12125,35 @@
                 "type": "number",
                 "default": null,
                 "required": true,
-                "description": null
+                "description": "The change. Its sign sets the arrow; the figure is shown without a sign."
               },
               {
                 "name": "format",
                 "type": "ValueFormat",
                 "default": "{ decimals: 1, suffix: '%' }",
                 "required": false,
-                "description": null
+                "description": "How the figure is written. Default one decimal with a % suffix."
               },
               {
                 "name": "goodWhen",
                 "type": "'up' | 'down'",
                 "default": "'up'",
                 "required": false,
-                "description": null
+                "description": "Which way is good: green then, red the other way. Default \"up\"; use \"down\" for costs."
               },
               {
                 "name": "className",
                 "type": "string",
                 "default": null,
                 "required": false,
-                "description": null
+                "description": "Classes for the pill."
+              },
+              {
+                "name": "labels",
+                "type": "{ up?: string; down?: string; unchanged?: string }",
+                "default": "{}",
+                "required": false,
+                "description": "Screen reader text after the figure. Keys up, down and unchanged; English by default."
               }
             ]
           },
@@ -11867,21 +12165,21 @@
                 "type": "PillOption[]",
                 "default": null,
                 "required": true,
-                "description": null
+                "description": "The choices, each with an id and the visible label."
               },
               {
                 "name": "value",
                 "type": "string",
                 "default": null,
                 "required": true,
-                "description": null
+                "description": "The id of the picked option."
               },
               {
                 "name": "onChange",
                 "type": "(id: string) => void",
                 "default": null,
                 "required": true,
-                "description": null
+                "description": "Called with the option's id on click and on arrow keys, Home and End."
               },
               {
                 "name": "label",
@@ -11895,7 +12193,7 @@
                 "type": "string",
                 "default": null,
                 "required": false,
-                "description": null
+                "description": "Classes for the radio group."
               }
             ]
           },
@@ -11907,21 +12205,54 @@
                 "type": "string",
                 "default": null,
                 "required": true,
-                "description": null
+                "description": "The table's caption, read before the data."
               },
               {
                 "name": "head",
                 "type": "string[]",
                 "default": null,
                 "required": true,
-                "description": null
+                "description": "The column headings."
               },
               {
                 "name": "rows",
                 "type": "(string | number)[][]",
                 "default": null,
                 "required": true,
-                "description": null
+                "description": "One array per row; the first cell is the row heading."
+              }
+            ]
+          },
+          {
+            "name": "StaticPlots",
+            "props": [
+              {
+                "name": "plots",
+                "type": "StaticPlot[]",
+                "default": null,
+                "required": true,
+                "description": "The sizes to render, each with the container query classes that show it. STATIC_STEPS has four."
+              },
+              {
+                "name": "className",
+                "type": "string",
+                "default": null,
+                "required": false,
+                "description": "Classes for the wrapper, which is the container the queries measure."
+              },
+              {
+                "name": "style",
+                "type": "CSSProperties",
+                "default": null,
+                "required": false,
+                "description": "Inline styles for the wrapper."
+              },
+              {
+                "name": "children",
+                "type": "(className: string) => ReactNode",
+                "default": null,
+                "required": true,
+                "description": "Renders the plot for one size; pass the class name on to the plot's root."
               }
             ]
           }
@@ -11929,7 +12260,7 @@
         "a11y": [
           {
             "topic": "screen-reader",
-            "text": "BigNumber carries the full value in sr-only text and the visual is aria-hidden. DeltaPill adds \", up\", \", down\" or \", unchanged\". ChartTooltip is aria-hidden. SrTable is a visually hidden table with a caption and column headers with scope."
+            "text": "BigNumber carries the full value in sr-only text and the visual is aria-hidden. DeltaPill adds up, down or unchanged after the figure, from its labels. ChartTooltip is aria-hidden. SrTable is a visually hidden table with a caption and column headers with scope."
           },
           {
             "topic": "keyboard",
@@ -12044,20 +12375,24 @@
             "type": "string",
             "default": null,
             "required": false,
-            "description": null
+            "description": "Classes for the outer tile."
           },
           {
             "name": "children",
             "type": "ReactNode",
             "default": null,
             "required": false,
-            "description": null
+            "description": "The tile body, such as a figure, a chart or a list."
           }
         ],
         "a11y": [
           {
             "topic": "screen-reader",
             "text": "A section labelled by its heading when title is set; the level comes from headingLevel (default 3). The TileLegend export is a list with a visible text label per item, and the colour swatches are aria-hidden."
+          },
+          {
+            "topic": "other",
+            "text": "An inverted tile swaps every token and pulls the colours towards its text colour, so charts keep their contrast on the swapped surface. Text on primary inside it, such as a pill, keeps 4.5:1 in light and dark."
           }
         ]
       }
@@ -12273,7 +12608,8 @@
       "registryDependencies": [
         "@manniche/bar-chart",
         "@manniche/chart-kit",
-        "@manniche/data-tile"
+        "@manniche/data-tile",
+        "utils"
       ],
       "files": [
         {
@@ -13599,7 +13935,7 @@
             "type": "CardStackLabels",
             "default": null,
             "required": false,
-            "description": null
+            "description": "Text overrides for the readout, buttons, hints and announcements, with English defaults."
           }
         ],
         "extends": "Omit<HTMLAttributes<HTMLDivElement>, 'defaultValue' | 'onChange'>",
@@ -13769,7 +14105,7 @@
             "type": "TransactionListLabels",
             "default": null,
             "required": false,
-            "description": null
+            "description": "Text overrides for day names, statuses, buttons and the spoken row, with English defaults."
           }
         ],
         "extends": "Omit<HTMLAttributes<HTMLDivElement>, 'onSelect'>",
@@ -13785,7 +14121,7 @@
           },
           {
             "topic": "screen-reader",
-            "text": "Each day is a section labelled by its heading, with a hidden \"net\" before the day total. A row is read as one sentence through visually hidden text and its visuals are aria-hidden. Pending, failed and incoming are shown by chip, glyph or struck-through amount as well as colour. Show more has aria-expanded and announces how many rows were revealed. Loading is a status region named by labels.loading."
+            "text": "Each day is a group labelled by its heading, with a hidden \"net\" before the day total. A row is read as one sentence through visually hidden text and its visuals are aria-hidden. Pending, failed and incoming are shown by chip, glyph or struck-through amount as well as colour. Show more has aria-expanded and announces how many rows were revealed. Loading is a status region named by labels.loading."
           },
           {
             "topic": "motion",
@@ -13936,7 +14272,7 @@
             "type": "(day: number) => void",
             "default": null,
             "required": false,
-            "description": null
+            "description": "Called with the day index when another day tab is chosen."
           },
           {
             "name": "onSelect",
@@ -13964,7 +14300,7 @@
             "type": "WeekScheduleLabels",
             "default": null,
             "required": false,
-            "description": null
+            "description": "Text overrides for day names, counts, events and hints, with English defaults."
           }
         ],
         "extends": "Omit<HTMLAttributes<HTMLDivElement>, 'onSelect'>",
@@ -14059,7 +14395,7 @@
             "type": "string",
             "default": null,
             "required": false,
-            "description": null
+            "description": "Classes for the badge span."
           }
         ],
         "extends": "Omit<ComponentPropsWithoutRef<'span'>, 'children'>",
@@ -14208,7 +14544,7 @@
             "type": "string",
             "default": null,
             "required": false,
-            "description": null
+            "description": "Classes for the card element."
           }
         ],
         "a11y": [
@@ -14340,7 +14676,7 @@
             "type": "string",
             "default": null,
             "required": false,
-            "description": null
+            "description": "Classes for the outer wrapper."
           }
         ],
         "a11y": [
@@ -14469,7 +14805,7 @@
             "type": "(width: number) => void",
             "default": null,
             "required": false,
-            "description": null
+            "description": "Called with the new width when a width is chosen."
           },
           {
             "name": "theme",
@@ -14483,14 +14819,14 @@
             "type": "StageTheme",
             "default": "'dark'",
             "required": false,
-            "description": null
+            "description": "The starting theme when the theme is not controlled."
           },
           {
             "name": "onThemeChange",
             "type": "(theme: StageTheme) => void",
             "default": null,
             "required": false,
-            "description": null
+            "description": "Called with the new theme when it is switched."
           },
           {
             "name": "status",
@@ -14546,7 +14882,7 @@
             "type": "string",
             "default": null,
             "required": false,
-            "description": null
+            "description": "Classes for the outer group."
           }
         ],
         "a11y": [
@@ -14715,7 +15051,7 @@
             "type": "string",
             "default": null,
             "required": false,
-            "description": null
+            "description": "Classes for the outer section."
           }
         ],
         "a11y": [
@@ -14744,7 +15080,8 @@
       "title": "Locked code demo",
       "description": "How to use Locked code.",
       "registryDependencies": [
-        "@manniche/locked-code"
+        "@manniche/locked-code",
+        "utils"
       ],
       "files": [
         {
@@ -14854,14 +15191,14 @@
             "type": "boolean",
             "default": "false",
             "required": false,
-            "description": null
+            "description": "Whether the palette starts open when it is not controlled."
           },
           {
             "name": "onOpenChange",
             "type": "(open: boolean) => void",
             "default": null,
             "required": false,
-            "description": null
+            "description": "Called with the new open state when the palette opens or closes."
           },
           {
             "name": "query",
@@ -14882,7 +15219,7 @@
             "type": "(query: string) => void",
             "default": null,
             "required": false,
-            "description": null
+            "description": "Called with the text each time the query changes."
           },
           {
             "name": "action",

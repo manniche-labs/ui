@@ -33,7 +33,7 @@ export function Pagination({ total, page, defaultPage = 1, onChange, labels = {}
   }
 
   const btn =
-    'grid size-11 place-items-center rounded-xl bg-card text-foreground shadow-sm transition-[background-color,transform] duration-150 hover:bg-accent active:scale-[0.94] disabled:pointer-events-none disabled:opacity-40'
+    'grid size-11 place-items-center rounded-xl bg-card text-foreground shadow-sm transition-[background-color,transform] duration-150 hover:bg-accent active:scale-[0.94] disabled:pointer-events-none disabled:opacity-40 motion-reduce:transition-none'
 
   return (
     <nav aria-label={nav} className={cn('inline-flex items-center gap-3 rounded-2xl border bg-muted p-1.5', className)}>

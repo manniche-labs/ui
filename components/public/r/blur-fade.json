@@ -9,7 +9,7 @@
   "files": [
     {
       "path": "registry/manniche/blur-fade/blur-fade.tsx",
-      "content": "import { useEffect, useRef, useState, type CSSProperties, type ReactNode } from 'react'\nimport { cn } from '@/lib/utils'\n\nexport type BlurFadeProps = {\n  children: ReactNode\n  /** Delay in milliseconds. Use small steps (40 to 80 ms) to stagger a group. */\n  delay?: number\n  /** How far it rises, in pixels. */\n  offset?: number\n  /** Show at once instead of waiting for the element to scroll into view. */\n  immediate?: boolean\n  as?: 'div' | 'section' | 'li' | 'span'\n  className?: string\n}\n\n/**\n * Fades an element up out of a soft blur the first time it enters the view.\n * Under reduced motion it is simply there.\n */\nexport function BlurFade({ children, delay = 0, offset = 12, immediate = false, as: Tag = 'div', className }: BlurFadeProps) {\n  const el = useRef<HTMLElement>(null)\n  const [shown, setShown] = useState(immediate)\n\n  useEffect(() => {\n    if (shown || !el.current) return\n    const io = new IntersectionObserver(\n      ([e]) => {\n        if (e.isIntersecting) {\n          setShown(true)\n          io.disconnect()\n        }\n      },\n      { rootMargin: '0px 0px -10% 0px' },\n    )\n    io.observe(el.current)\n    return () => io.disconnect()\n  }, [shown])\n\n  return (\n    <Tag\n      ref={el as never}\n      data-shown={shown}\n      style={{ '--bf-delay': `${delay}ms`, '--bf-offset': `${offset}px` } as CSSProperties}\n      className={cn(\n        'transition-[opacity,filter,transform] delay-(--bf-delay) duration-700 ease-out-quint',\n        'data-[shown=false]:translate-y-(--bf-offset) data-[shown=false]:opacity-0 data-[shown=false]:blur-sm',\n        'motion-reduce:translate-y-0! motion-reduce:opacity-100! motion-reduce:blur-none! motion-reduce:transition-none',\n        className,\n      )}\n    >\n      {children}\n    </Tag>\n  )\n}\n",
+      "content": "import { useEffect, useRef, useState, type CSSProperties, type ReactNode } from 'react'\nimport { cn } from '@/lib/utils'\n\nexport type BlurFadeProps = {\n  /** The content that fades in. */\n  children: ReactNode\n  /** Delay in milliseconds. Use small steps (40 to 80 ms) to stagger a group. */\n  delay?: number\n  /** How far it rises, in pixels. */\n  offset?: number\n  /** Show at once instead of waiting for the element to scroll into view. */\n  immediate?: boolean\n  /** The element it renders as. */\n  as?: 'div' | 'section' | 'li' | 'span'\n  /** Classes for the rendered element. */\n  className?: string\n}\n\n/**\n * Fades an element up out of a soft blur the first time it enters the view.\n * Under reduced motion it is simply there.\n */\nexport function BlurFade({ children, delay = 0, offset = 12, immediate = false, as: Tag = 'div', className }: BlurFadeProps) {\n  const el = useRef<HTMLElement>(null)\n  const [shown, setShown] = useState(immediate)\n\n  useEffect(() => {\n    if (shown || !el.current) return\n    const io = new IntersectionObserver(\n      ([e]) => {\n        if (e.isIntersecting) {\n          setShown(true)\n          io.disconnect()\n        }\n      },\n      { rootMargin: '0px 0px -10% 0px' },\n    )\n    io.observe(el.current)\n    return () => io.disconnect()\n  }, [shown])\n\n  return (\n    <Tag\n      ref={el as never}\n      data-shown={shown}\n      style={{ '--bf-delay': `${delay}ms`, '--bf-offset': `${offset}px` } as CSSProperties}\n      className={cn(\n        'transition-[opacity,filter,transform] delay-(--bf-delay) duration-700 ease-out-quint',\n        'data-[shown=false]:translate-y-(--bf-offset) data-[shown=false]:opacity-0 data-[shown=false]:blur-sm',\n        'motion-reduce:translate-y-0! motion-reduce:opacity-100! motion-reduce:blur-none! motion-reduce:transition-none',\n        className,\n      )}\n    >\n      {children}\n    </Tag>\n  )\n}\n",
       "type": "registry:component"
     }
   ],
@@ -23,7 +23,7 @@
         "type": "ReactNode",
         "default": null,
         "required": true,
-        "description": null
+        "description": "The content that fades in."
       },
       {
         "name": "delay",
@@ -51,14 +51,14 @@
         "type": "'div' | 'section' | 'li' | 'span'",
         "default": "'div'",
         "required": false,
-        "description": null
+        "description": "The element it renders as."
       },
       {
         "name": "className",
         "type": "string",
         "default": null,
         "required": false,
-        "description": null
+        "description": "Classes for the rendered element."
       }
     ],
     "a11y": [

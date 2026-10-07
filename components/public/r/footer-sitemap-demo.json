@@ -4,7 +4,8 @@
   "title": "Footer Sitemap demo",
   "description": "How to use Footer Sitemap.",
   "registryDependencies": [
-    "@manniche/footer-sitemap"
+    "@manniche/footer-sitemap",
+    "@manniche/chart-kit"
   ],
   "files": [
     {
