@@ -170,7 +170,7 @@ export function HoldToConfirm({ children, duration = 1200, onConfirm, doneLabel 
       {/* A white copy of the label sits on the fill and is clipped to the filled part. */}
       <span
         aria-hidden
-        className="absolute inset-0 flex items-center justify-center gap-2 bg-destructive text-white"
+        className="absolute inset-0 flex items-center justify-center gap-2 bg-destructive text-background"
         style={{ clipPath: `inset(0 ${100 - fill * 100}% 0 0)` }}
       >
         {label}
