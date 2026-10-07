@@ -16,8 +16,11 @@ export type Task = {
 }
 
 export type TaskRowsProps = {
+  /** The tasks, one row each, in order. */
   tasks: Task[]
+  /** Visible status text with English defaults. Keys: `queued`, `running`, `done` and `failed`. */
   labels?: Partial<Record<TaskStatus, string>>
+  /** Classes for the list. */
   className?: string
 }
 
@@ -72,7 +75,7 @@ export function TaskRows({ tasks, labels = {}, className }: TaskRowsProps) {
                 aria-controls={panel}
                 disabled={!task.detail}
                 onClick={() => setOpen(isOpen ? null : task.id)}
-                className="flex min-h-12 w-full items-center gap-3 px-3 py-2.5 text-left transition-colors duration-150 hover:bg-muted/60 disabled:cursor-default disabled:hover:bg-transparent"
+                className="flex min-h-12 w-full items-center gap-3 px-3 py-2.5 text-left transition-colors duration-150 hover:bg-muted/60 motion-reduce:transition-none disabled:cursor-default disabled:hover:bg-transparent"
               >
                 <Marker status={task.status} n={i + 1} />
                 <span className={cn('min-w-0 flex-1 truncate text-sm font-medium', task.status === 'queued' && 'text-muted-foreground')}>{task.title}</span>
@@ -86,7 +89,7 @@ export function TaskRows({ tasks, labels = {}, className }: TaskRowsProps) {
                     className={cn(
                       'rounded-full px-2 py-0.5 text-xs font-medium',
                       task.status === 'done' && 'bg-success/15 text-success',
-                      task.status === 'failed' && 'bg-destructive/15 text-destructive',
+                      task.status === 'failed' && 'bg-destructive/10 text-destructive dark:bg-destructive/15',
                       task.status === 'running' && 'bg-muted text-foreground',
                       task.status === 'queued' && 'text-muted-foreground',
                     )}
@@ -95,7 +98,7 @@ export function TaskRows({ tasks, labels = {}, className }: TaskRowsProps) {
                   </motion.span>
                 </AnimatePresence>
                 {task.detail && (
-                  <ChevronDown className={cn('size-4 shrink-0 text-muted-foreground transition-transform duration-200', isOpen && 'rotate-180')} aria-hidden />
+                  <ChevronDown className={cn('size-4 shrink-0 text-muted-foreground transition-transform duration-200 motion-reduce:transition-none', isOpen && 'rotate-180')} aria-hidden />
                 )}
               </motion.button>
               {/* The row grows with a layout (transform) animation; the detail only fades. */}

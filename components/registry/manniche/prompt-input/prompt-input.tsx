@@ -9,6 +9,7 @@ export type PromptInputProps = {
   onStop?: () => void
   /** True while a reply is being written. The send button turns into a stop button. */
   busy?: boolean
+  /** Placeholder in the text field. */
   placeholder?: string
   /** Accessible name for the text field. */
   label?: string
@@ -16,9 +17,11 @@ export type PromptInputProps = {
   accept?: string
   /** Optional choices next to the buttons, e.g. a model picker. */
   footer?: ReactNode
+  /** How many lines the field grows to before it scrolls. */
   maxRows?: number
   /** Lights the border while there is something to send: a band of primary light runs round the ring. Off by default. */
   halo?: boolean
+  /** Classes for the form. */
   className?: string
 }
 

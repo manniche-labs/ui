@@ -5,11 +5,12 @@ import { cn } from '@/lib/utils'
 export type TextRevealProps = {
   /** Plain text. Each word lights up as the paragraph scrolls past. */
   children: string
+  /** Classes for the paragraph. */
   className?: string
 }
 
 /**
- * Words go from faint to full as the reader scrolls through the paragraph.
+ * Words go from half strength to full as the reader scrolls through the paragraph. The unlit words keep enough contrast to read as large text.
  * The text is always in the DOM in full, so screen readers and search engines read it normally.
  * Under reduced motion every word is at full strength from the start.
  */
@@ -53,7 +54,7 @@ export function TextReveal({ children, className }: TextRevealProps) {
         if (/^\s+$/.test(w)) return w
         const on = i++ < lit
         return (
-          <span key={j} className={cn('transition-opacity duration-200', on ? 'opacity-100' : 'opacity-20')}>
+          <span key={j} className={cn('transition-opacity duration-200 motion-reduce:transition-none', on ? 'opacity-100' : 'opacity-50')}>
             {w}
           </span>
         )

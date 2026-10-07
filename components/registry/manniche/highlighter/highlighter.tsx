@@ -2,9 +2,11 @@ import { useEffect, useRef, useState, type ReactNode } from 'react'
 import { cn } from '@/lib/utils'
 
 export type HighlighterProps = {
+  /** The text to mark. */
   children: ReactNode
   /** Delay in milliseconds after the phrase enters the view. */
   delay?: number
+  /** Classes for the mark element. */
   className?: string
 }
 
