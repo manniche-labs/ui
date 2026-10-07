@@ -93,6 +93,25 @@
         "required": false,
         "description": null
       }
+    ],
+    "a11y": [
+      {
+        "topic": "keyboard",
+        "text": "Each step is a button. A step without details is disabled; one with details toggles its details.",
+        "keys": [
+          "Tab",
+          "Enter",
+          "Space"
+        ]
+      },
+      {
+        "topic": "screen-reader",
+        "text": "The card is an article. The state chip has role status and its text comes from stateLabels. A step with details carries aria-expanded. The icons are aria-hidden."
+      },
+      {
+        "topic": "motion",
+        "text": "The spin and ping animations stop under reduced motion, and the rest uses Motion with reduced motion set to user."
+      }
     ]
   },
   "categories": [

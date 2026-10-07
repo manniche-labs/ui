@@ -42,6 +42,20 @@
         "required": false,
         "description": null
       }
+    ],
+    "a11y": [
+      {
+        "topic": "keyboard",
+        "text": "Citation is an anchor to #source-N, so Tab and Enter jump to the matching row in the list. Each source is a link with a 44 px minimum height.",
+        "keys": [
+          "Tab",
+          "Enter"
+        ]
+      },
+      {
+        "topic": "screen-reader",
+        "text": "The visible number in a Citation is aria-hidden; screen readers get Source N: title. The list is a section labelled by title with an ordered list, and every link adds a screen-reader-only (opens in a new tab). External links use target _blank with rel noreferrer. The row you jump to gets the :target background."
+      }
     ]
   },
   "categories": [

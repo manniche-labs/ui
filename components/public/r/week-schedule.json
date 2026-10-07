@@ -149,7 +149,31 @@
         "description": null
       }
     ],
-    "extends": "Omit<HTMLAttributes<HTMLDivElement>, 'onSelect'>"
+    "extends": "Omit<HTMLAttributes<HTMLDivElement>, 'onSelect'>",
+    "a11y": [
+      {
+        "topic": "keyboard",
+        "text": "The schedule is one Tab stop. ArrowUp and ArrowDown move within a day, ArrowLeft and ArrowRight go to the nearest event on the next day that has events, Home and End go to the first and last event (of the day in narrow mode), and Escape closes the tooltip and, without onSelect, clears the active event. With onSelect the events are buttons with roving focus. In narrow mode the day tabs use ArrowLeft and ArrowRight with wrapping, Home and End.",
+        "keys": [
+          "Tab",
+          "ArrowUp",
+          "ArrowDown",
+          "ArrowLeft",
+          "ArrowRight",
+          "Home",
+          "End",
+          "Escape"
+        ]
+      },
+      {
+        "topic": "screen-reader",
+        "text": "Without onSelect a visually hidden hint describes the schedule (default \"Use the arrow keys to move between events.\"). Each day is a list named by the day; events read like \"Team sync, 14:30 to 15:30, Work\". Without onSelect the active event is read through a polite live region; with onSelect focus moves to the event button. In narrow mode the days are tabs with a tabpanel. The hour rail, the week header row and the now line are aria-hidden."
+      },
+      {
+        "topic": "motion",
+        "text": "Under reduced motion events appear in place at once."
+      }
+    ]
   },
   "categories": [
     "widgets"

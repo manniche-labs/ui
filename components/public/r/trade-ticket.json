@@ -70,6 +70,25 @@
         "required": false,
         "description": null
       }
+    ],
+    "a11y": [
+      {
+        "topic": "keyboard",
+        "text": "A form: Enter in the amount field submits. Buy and sell, and the outcome choice, are buttons that toggle. The chips (+1, +5, +10, +100, Max, each with the currency symbol) are buttons. Submit is disabled while the amount is zero or less.",
+        "keys": [
+          "Tab",
+          "Enter",
+          "Space"
+        ]
+      },
+      {
+        "topic": "screen-reader",
+        "text": "Buy and sell and the outcome choice are groups of buttons with aria-pressed. The amount has a label tied by htmlFor, inputMode decimal and no autocomplete, and the result is an output element. Outcome colours are paired with the label text."
+      },
+      {
+        "topic": "motion",
+        "text": "The ticket uses Motion with reduced motion set to user."
+      }
     ]
   },
   "categories": [

@@ -93,6 +93,25 @@
         "required": false,
         "description": null
       }
+    ],
+    "a11y": [
+      {
+        "topic": "keyboard",
+        "text": "Each row is a button. Escape closes the open view; focus moves to the close button on open and returns to the row on close. There is no focus trap.",
+        "keys": [
+          "Tab",
+          "Enter",
+          "Escape"
+        ]
+      },
+      {
+        "topic": "screen-reader",
+        "text": "The section is labelled by title. Rows have aria-haspopup=\"dialog\" and a connected badge reads connectedLabel. The open view is a dialog labelled by its heading with aria-modal=\"false\". The connect button uses aria-disabled and aria-busy while the call runs. The close button is named by closeLabel."
+      },
+      {
+        "topic": "motion",
+        "text": "The open view uses Motion with reduced motion set to user."
+      }
     ]
   },
   "categories": [

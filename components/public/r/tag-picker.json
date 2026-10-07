@@ -72,6 +72,25 @@
         "required": false,
         "description": null
       }
+    ],
+    "a11y": [
+      {
+        "topic": "keyboard",
+        "text": "Every tag in the pool and every remove button is a native button, so Tab, Enter and Space pick and remove.",
+        "keys": [
+          "Tab",
+          "Enter",
+          "Space"
+        ]
+      },
+      {
+        "topic": "screen-reader",
+        "text": "The picker is a group labelled by label (default Tags). The picked tags are a list labelled Picked and the pool a list labelled Available. Each remove button is named Remove <tag label>, and its icon is aria-hidden. The empty box shows placeholder text."
+      },
+      {
+        "topic": "motion",
+        "text": "The picker is wrapped in MotionConfig with reducedMotion set to user, so Motion follows the system setting for the flight between the lists."
+      }
     ]
   },
   "categories": [

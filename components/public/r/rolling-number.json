@@ -43,6 +43,16 @@
         "required": false,
         "description": null
       }
+    ],
+    "a11y": [
+      {
+        "topic": "screen-reader",
+        "text": "The full number is in one screen-reader-only span and read once. The rolling digits are aria-hidden."
+      },
+      {
+        "topic": "motion",
+        "text": "The component is wrapped in MotionConfig with reducedMotion set to user, so Motion follows the system setting for the rolling digits."
+      }
     ]
   },
   "categories": [

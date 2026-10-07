@@ -72,6 +72,16 @@
         "required": false,
         "description": null
       }
+    ],
+    "a11y": [
+      {
+        "topic": "screen-reader",
+        "text": "Screen readers get the final value once, in a screen-reader-only span. The counting digits are aria-hidden, so the steps on the way are not read."
+      },
+      {
+        "topic": "motion",
+        "text": "Under reduced motion the final number shows at once, even before it is in view. Otherwise it counts when it is 40% in view, unless startOnView is false."
+      }
     ]
   },
   "categories": [

@@ -65,6 +65,25 @@
         "required": false,
         "description": null
       }
+    ],
+    "a11y": [
+      {
+        "topic": "keyboard",
+        "text": "One native button does both jobs. A press starts the countdown, and a second press during it undoes. onConfirm runs when the countdown reaches zero.",
+        "keys": [
+          "Tab",
+          "Enter",
+          "Space"
+        ]
+      },
+      {
+        "topic": "screen-reader",
+        "text": "Once, when the countdown starts, a screen-reader-only polite live region says <label> in N seconds. Press again to undo. The counting number is aria-hidden, so it is not read every second. The button text changes from the label to undoLabel."
+      },
+      {
+        "topic": "motion",
+        "text": "The component is wrapped in MotionConfig with reducedMotion set to user, so Motion follows the system setting for the layout and fade animations."
+      }
     ]
   },
   "categories": [

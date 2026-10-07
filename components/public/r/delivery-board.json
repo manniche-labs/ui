@@ -54,6 +54,25 @@
         "required": false,
         "description": null
       }
+    ],
+    "a11y": [
+      {
+        "topic": "screen-reader",
+        "text": "Client progress is a list where each item holds a role=\"progressbar\" named by the client, with the percent as value and written as text. Roadmap lanes are sections named by the lane title, with an h3 and a list; owner avatars are role=\"img\" with the name."
+      },
+      {
+        "topic": "screen-reader",
+        "text": "The day picker is role=\"group\" (default label \"Day\") of buttons with aria-pressed; when now is set, today carries aria-current=\"date\" and an aria-hidden dot. The assistant tile has a button."
+      },
+      {
+        "topic": "keyboard",
+        "text": "The day buttons and the assistant button are native with a focus-visible outline.",
+        "keys": [
+          "Tab",
+          "Enter",
+          "Space"
+        ]
+      }
     ]
   },
   "categories": [

@@ -89,6 +89,30 @@
         "required": false,
         "description": null
       }
+    ],
+    "a11y": [
+      {
+        "topic": "keyboard",
+        "text": "The slider takes one Tab stop. Arrow keys move by step, PageUp and PageDown by a tenth of the range (at least one step), and Home and End jump to min and max. Dragging with the pointer sets the value from the pointer position and snaps it to step.",
+        "keys": [
+          "ArrowLeft",
+          "ArrowRight",
+          "ArrowUp",
+          "ArrowDown",
+          "PageUp",
+          "PageDown",
+          "Home",
+          "End"
+        ]
+      },
+      {
+        "topic": "screen-reader",
+        "text": "It has role slider with the required label, aria-valuemin, aria-valuemax, aria-valuenow and a horizontal orientation. Pass format to give aria-valuetext, for example 40 %. The thumb is aria-hidden, and focus shows as a ring around it."
+      },
+      {
+        "topic": "motion",
+        "text": "Under reduced motion the thumb jumps to the value and does not stretch or squash."
+      }
     ]
   },
   "categories": [

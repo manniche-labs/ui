@@ -93,6 +93,26 @@
         "required": false,
         "description": null
       }
+    ],
+    "a11y": [
+      {
+        "topic": "keyboard",
+        "text": "The pencil starts editing and selects the text. Enter saves, and in a multiline field Cmd or Ctrl with Enter saves while plain Enter adds a line. Esc cancels and restores the value. Save and cancel are native buttons. Focus returns to the pencil afterwards. onSave only runs when the trimmed value changed.",
+        "keys": [
+          "Enter",
+          "Mod+Enter",
+          "Escape",
+          "Tab"
+        ]
+      },
+      {
+        "topic": "screen-reader",
+        "text": "While editing, the label is tied to the field with htmlFor. The pencil is named Edit <label in lower case>, and save and cancel are named by saveLabel and cancelLabel, with aria-hidden icons. An empty value shows placeholder (default Empty)."
+      },
+      {
+        "topic": "motion",
+        "text": "The component is wrapped in MotionConfig with reducedMotion set to user, so Motion follows the system setting for the swap between pencil and buttons."
+      }
     ]
   },
   "categories": [

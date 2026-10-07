@@ -33,7 +33,17 @@
         "description": "A soft glare that follows the pointer."
       }
     ],
-    "extends": "HTMLAttributes<HTMLDivElement>"
+    "extends": "HTMLAttributes<HTMLDivElement>",
+    "a11y": [
+      {
+        "topic": "screen-reader",
+        "text": "A plain card with no interactive parts of its own. The glare span is aria-hidden."
+      },
+      {
+        "topic": "motion",
+        "text": "The tilt follows a mouse only. Under reduced motion the card stays flat, the depth layers and transitions are off, and the glare is hidden."
+      }
+    ]
   },
   "categories": [
     "surfaces"

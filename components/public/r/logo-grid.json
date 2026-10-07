@@ -55,6 +55,12 @@
         "required": false,
         "description": null
       }
+    ],
+    "a11y": [
+      {
+        "topic": "screen-reader",
+        "text": "A section with an h2 title and a list of logos, each with its name as visible text. The decorative lines are aria-hidden."
+      }
     ]
   },
   "categories": [

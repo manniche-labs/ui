@@ -79,7 +79,21 @@
         "description": "UI strings, for translation."
       }
     ],
-    "extends": "Omit<ComponentPropsWithoutRef<'footer'>, 'children'>"
+    "extends": "Omit<ComponentPropsWithoutRef<'footer'>, 'children'>",
+    "a11y": [
+      {
+        "topic": "screen-reader",
+        "text": "A footer named by a screen-reader-only h2 with four tiles with an h3 each (Visit, Opening hours, Explore, Follow). Visit is an address element; directions and social links open in a new tab with hidden text and aria-hidden icons. The hours are a list with a \"Today\" marker in text and a status line (\"Open now\" or \"Closed, opens ...\") with an aria-hidden dot; it reads \"Opening hours\" until the time is known and refreshes every 30 s unless now is given."
+      },
+      {
+        "topic": "keyboard",
+        "text": "Native links.",
+        "keys": [
+          "Tab",
+          "Enter"
+        ]
+      }
+    ]
   },
   "categories": [
     "templates"

@@ -63,6 +63,29 @@
         "required": false,
         "description": null
       }
+    ],
+    "a11y": [
+      {
+        "topic": "keyboard",
+        "text": "Below the sm breakpoint a menu button opens the links, and Esc closes the menu while it is open. Choosing a link closes it.",
+        "keys": [
+          "Escape",
+          "Tab",
+          "Enter"
+        ]
+      },
+      {
+        "topic": "screen-reader",
+        "text": "The links are in a nav labelled Main, and the link whose href equals current gets aria-current page. The menu button is named Open menu or Close menu, sets aria-expanded and aria-controls, and the menu is hidden while closed."
+      },
+      {
+        "topic": "motion",
+        "text": "The background and blur transition is off under reduced motion."
+      },
+      {
+        "topic": "other",
+        "text": "The glass turns solid without backdrop-filter, with prefers-reduced-transparency and with more contrast asked for. The scroll variant keeps white text on a soft shade over the hero and turns to glass once the page has scrolled or the menu is open."
+      }
     ]
   },
   "categories": [

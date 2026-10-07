@@ -120,7 +120,31 @@
         "description": "The one primary action."
       }
     ],
-    "extends": "Omit<ComponentProps<'section'>, 'children' | 'title'>"
+    "extends": "Omit<ComponentProps<'section'>, 'children' | 'title'>",
+    "a11y": [
+      {
+        "topic": "screen-reader",
+        "text": "A section named by its h2. The product image is role=\"img\" with the variant mediaLabel (or label); the visible caption is aria-hidden. The variants are a Pills radio group from chart-kit, named by variantLabel; the price is read once in full, and the specs are a description list."
+      },
+      {
+        "topic": "keyboard",
+        "text": "Variants use the Pills arrow keys, with Home and End; the action is a link.",
+        "keys": [
+          "Tab",
+          "ArrowLeft",
+          "ArrowRight",
+          "ArrowUp",
+          "ArrowDown",
+          "Home",
+          "End",
+          "Enter"
+        ]
+      },
+      {
+        "topic": "motion",
+        "text": "Media layers cross-fade on a variant change; under reduced motion the media swaps at once and the price does not roll."
+      }
+    ]
   },
   "categories": [
     "templates"

@@ -43,6 +43,25 @@
         "required": false,
         "description": null
       }
+    ],
+    "a11y": [
+      {
+        "topic": "keyboard",
+        "text": "Each row header is a native button that toggles its detail. It is disabled when the task has no detail.",
+        "keys": [
+          "Tab",
+          "Enter",
+          "Space"
+        ]
+      },
+      {
+        "topic": "screen-reader",
+        "text": "The tasks are an ordered list. The button sets aria-expanded and aria-controls pointing at the detail panel. The status is written as text (Waiting, Working, Done, Failed, or your labels) next to the title, so it is not carried by colour alone. Check, cross and chevron icons and the spinner ring are aria-hidden. The row number is read as text."
+      },
+      {
+        "topic": "motion",
+        "text": "The spinner ring stops under reduced motion, and the list is wrapped in MotionConfig with reducedMotion set to user."
+      }
     ]
   },
   "categories": [

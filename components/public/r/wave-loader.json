@@ -45,6 +45,16 @@
         "required": false,
         "description": null
       }
+    ],
+    "a11y": [
+      {
+        "topic": "screen-reader",
+        "text": "The loader is a role status element named by label (default Loading). The bars and the ball are aria-hidden."
+      },
+      {
+        "topic": "motion",
+        "text": "Under reduced motion no animation frame loop runs. The bars rest in a still wave and the ball sits still at the left."
+      }
     ]
   },
   "categories": [

@@ -77,6 +77,21 @@
         "required": false,
         "description": null
       }
+    ],
+    "a11y": [
+      {
+        "topic": "keyboard",
+        "text": "Deny and Approve are native buttons, and Arguments is a native details element, so Tab, Enter and Space work without custom handlers.",
+        "keys": [
+          "Tab",
+          "Enter",
+          "Space"
+        ]
+      },
+      {
+        "topic": "screen-reader",
+        "text": "The card is a section labelled Approve <tool>. The footer is aria-live polite, so the result (Approved, or Denied with the agent told not to run it) is announced when the buttons are replaced. The shield and check icons are aria-hidden. A risky call changes the button text to Approve anyway, not only its colour."
+      }
     ]
   },
   "categories": [

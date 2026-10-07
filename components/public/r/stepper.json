@@ -84,6 +84,25 @@
         "required": false,
         "description": null
       }
+    ],
+    "a11y": [
+      {
+        "topic": "keyboard",
+        "text": "The number is a focusable spinbutton. ArrowUp and ArrowRight add step, ArrowDown and ArrowLeft subtract it, Home jumps to min and End to max. The values are clamped between min and max.",
+        "keys": [
+          "ArrowUp",
+          "ArrowDown",
+          "ArrowLeft",
+          "ArrowRight",
+          "Home",
+          "End",
+          "Tab"
+        ]
+      },
+      {
+        "topic": "screen-reader",
+        "text": "The spinbutton is named by the required label and sets aria-valuenow, aria-valuemin and aria-valuemax. The two buttons are named Fewer: <label> and More: <label>, and each is disabled at its limit. The icons are aria-hidden."
+      }
     ]
   },
   "categories": [

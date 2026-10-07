@@ -80,7 +80,30 @@
         "description": "Interface strings, for translation."
       }
     ],
-    "extends": "Omit<ComponentPropsWithoutRef<'footer'>, 'children'>"
+    "extends": "Omit<ComponentPropsWithoutRef<'footer'>, 'children'>",
+    "a11y": [
+      {
+        "topic": "screen-reader",
+        "text": "A footer with a screen-reader-only h2 and a group per h3. On a wide footer the groups are open lists. On a narrow footer the h3 holds a button with aria-expanded and aria-controls that opens a labelled region. The region nav (default \"Region and language\") marks the current one with aria-current=\"true\" and sets hrefLang and lang."
+      },
+      {
+        "topic": "keyboard",
+        "text": "On a narrow footer each group heading is a button.",
+        "keys": [
+          "Tab",
+          "Enter",
+          "Space"
+        ]
+      },
+      {
+        "topic": "motion",
+        "text": "Opening a group fades it in and lifts it 6 px over 240 ms; under reduced motion (MotionConfig reducedMotion=\"user\") the lift is dropped and the fade remains. The height changes at once."
+      },
+      {
+        "topic": "other",
+        "text": "Groups fold by the width of the footer itself (collapseBelow, default 640) and start open before it is measured."
+      }
+    ]
   },
   "categories": [
     "templates"

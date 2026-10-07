@@ -72,6 +72,25 @@
         "required": false,
         "description": null
       }
+    ],
+    "a11y": [
+      {
+        "topic": "screen-reader",
+        "text": "An h1 title (default \"Wallet\") and tiles named by their h3. The cash flow tile has a period switch, Pills from chart-kit (label \"Period\"); the bar-chart and donut are labelled \"Cash flow, {period}\" and \"Spending, {period}\" with the period's long name. The subscriptions list has an aria-label, its initials are aria-hidden, and each amount ends with a screen-reader-only \" a month\". See card-stack and the chart notes."
+      },
+      {
+        "topic": "keyboard",
+        "text": "The period switch is a radio group; arrows move between periods.",
+        "keys": [
+          "Tab",
+          "ArrowLeft",
+          "ArrowRight",
+          "ArrowUp",
+          "ArrowDown",
+          "Home",
+          "End"
+        ]
+      }
     ]
   },
   "categories": [

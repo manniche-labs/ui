@@ -71,7 +71,30 @@
         "description": "Text for the interface itself, for translation."
       }
     ],
-    "extends": "Omit<ComponentProps<'section'>, 'children' | 'title' | 'onSubmit'>"
+    "extends": "Omit<ComponentProps<'section'>, 'children' | 'title' | 'onSubmit'>",
+    "a11y": [
+      {
+        "topic": "screen-reader",
+        "text": "A section named by its h2 with a checklist (check icons are aria-hidden). The email field has a label and is described by the error and the consent text; aria-invalid is set once the problem shows (on blur with a value, and on submit)."
+      },
+      {
+        "topic": "screen-reader",
+        "text": "The error block gets role=\"alert\" only when the send fails. The button gets aria-disabled while sending with a screen-reader-only \"Sending\", and the form has aria-busy. The success message is a role=\"status\" region with aria-live=\"polite\"."
+      },
+      {
+        "topic": "keyboard",
+        "text": "The form has noValidate; on an invalid submit focus moves to the email field. After success focus moves to the reset button (\"Use a different address\"), which returns focus to the field.",
+        "keys": [
+          "Tab",
+          "Enter",
+          "Space"
+        ]
+      },
+      {
+        "topic": "motion",
+        "text": "The spinner and the transitions are switched off under reduced motion (motion-reduce)."
+      }
+    ]
   },
   "categories": [
     "templates"

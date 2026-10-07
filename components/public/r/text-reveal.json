@@ -37,6 +37,20 @@
         "required": false,
         "description": null
       }
+    ],
+    "a11y": [
+      {
+        "topic": "screen-reader",
+        "text": "The whole text is always in the DOM as a plain paragraph, with each word in a span, so screen readers read it normally. Nothing is hidden or relabelled."
+      },
+      {
+        "topic": "motion",
+        "text": "Under reduced motion every word is at full strength from the start and the scroll listener is not attached."
+      },
+      {
+        "topic": "other",
+        "text": "While the paragraph has not been scrolled to, unlit words sit at 20% opacity."
+      }
     ]
   },
   "categories": [

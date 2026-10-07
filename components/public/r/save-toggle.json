@@ -65,6 +65,25 @@
         "required": false,
         "description": null
       }
+    ],
+    "a11y": [
+      {
+        "topic": "keyboard",
+        "text": "It is a native button. A press while saving or just after is ignored, a press while saved calls onUnsave, and a rejected onSave puts it back to idle.",
+        "keys": [
+          "Tab",
+          "Enter",
+          "Space"
+        ]
+      },
+      {
+        "topic": "screen-reader",
+        "text": "The button sets aria-pressed from saved and aria-busy while saving. When the save finishes, a screen-reader-only polite live region says savedLabel. The spinner and check icons are aria-hidden."
+      },
+      {
+        "topic": "motion",
+        "text": "The spinner stops under reduced motion, and the component is wrapped in MotionConfig with reducedMotion set to user."
+      }
     ]
   },
   "categories": [
