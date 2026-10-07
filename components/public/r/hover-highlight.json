@@ -35,6 +35,24 @@
         "required": false,
         "description": null
       }
+    ],
+    "a11y": [
+      {
+        "topic": "keyboard",
+        "text": "Items are links when href is given, so each is a Tab stop with a visible focus ring. Focus moves the highlight like hover does.",
+        "keys": [
+          "Tab",
+          "Enter"
+        ]
+      },
+      {
+        "topic": "screen-reader",
+        "text": "A list of items; items without href are plain divs. The highlight is an aria-hidden span."
+      },
+      {
+        "topic": "motion",
+        "text": "The highlight uses Motion with reduced motion set to user, so its movement follows the system setting."
+      }
     ]
   },
   "categories": [

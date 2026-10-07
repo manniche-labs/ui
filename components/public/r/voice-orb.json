@@ -56,6 +56,16 @@
         "required": false,
         "description": null
       }
+    ],
+    "a11y": [
+      {
+        "topic": "screen-reader",
+        "text": "The orb is a role status element labelled by the current state: Voice assistant ready, Listening, Thinking or Speaking, or your labels. All the visual layers are aria-hidden, so only the state label is read."
+      },
+      {
+        "topic": "motion",
+        "text": "The two turning colour layers stop under reduced motion, and the orb is wrapped in MotionConfig with reducedMotion set to user."
+      }
     ]
   },
   "categories": [

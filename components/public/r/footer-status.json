@@ -79,7 +79,26 @@
         "description": "Interface strings, for translation."
       }
     ],
-    "extends": "Omit<ComponentPropsWithoutRef<'footer'>, 'children'>"
+    "extends": "Omit<ComponentPropsWithoutRef<'footer'>, 'children'>",
+    "a11y": [
+      {
+        "topic": "screen-reader",
+        "text": "A footer with a screen-reader-only h2. A role=\"status\" chip says the state in words with a shaped icon (aria-hidden), plus \"Updated {time}\" when updated is set; with statusHref it becomes a link. The nav is labelled \"Product links\"."
+      },
+      {
+        "topic": "keyboard",
+        "text": "\"Back to top\" scrolls and then moves focus to focusTarget, setting tabindex=\"-1\" if missing.",
+        "keys": [
+          "Tab",
+          "Enter",
+          "Space"
+        ]
+      },
+      {
+        "topic": "motion",
+        "text": "Back to top scrolls at once under reduced motion instead of smoothly, and the press scale is dropped."
+      }
+    ]
   },
   "categories": [
     "templates"

@@ -92,7 +92,25 @@
         "description": "Controlled: show the image in colour, e.g. for a selected card."
       }
     ],
-    "extends": "Omit<HTMLAttributes<HTMLDivElement>, 'title'>"
+    "extends": "Omit<HTMLAttributes<HTMLDivElement>, 'title'>",
+    "a11y": [
+      {
+        "topic": "keyboard",
+        "text": "One Tab stop per card when href is set: the title is the link and covers the card. The focus ring is drawn on the card outline, and the image turns from grey to colour on focus like it does on hover. An action in the notch is its own Tab stop.",
+        "keys": [
+          "Tab",
+          "Enter"
+        ]
+      },
+      {
+        "topic": "screen-reader",
+        "text": "The title is a heading with the link inside it; without href it is a plain heading. The arrow and the frame are aria-hidden."
+      },
+      {
+        "topic": "motion",
+        "text": "The image and arrow transitions are off under reduced motion."
+      }
+    ]
   },
   "categories": [
     "surfaces"

@@ -32,7 +32,34 @@
     "tier": "free",
     "added": "2026-10-04",
     "usedIn": [],
-    "props": []
+    "props": [],
+    "a11y": [
+      {
+        "topic": "screen-reader",
+        "text": "A two-pane page: main holds the h1 and the form, and from the lg breakpoint an aside holds the stats and a quote (figure, blockquote); its wave pattern is aria-hidden. The h1 text changes with the chosen mode."
+      },
+      {
+        "topic": "screen-reader",
+        "text": "The mode switch is a fieldset with a screen-reader-only legend \"Choose\" and two native radios. Shop name, email and password each have a label with htmlFor; email and password are required, password has minLength 8 and autoComplete=\"current-password\", and the shop name field is hidden until Create account is chosen."
+      },
+      {
+        "topic": "screen-reader",
+        "text": "Error text appears with CSS after the browser marks a field invalid (:user-invalid). The passkey button has an aria-hidden icon, and the stars sit in a span with aria-label \"5 out of 5\"."
+      },
+      {
+        "topic": "keyboard",
+        "text": "The mode radios are visually hidden and the label shows a focus ring on keyboard focus. Arrow keys switch mode; the form submits with Enter.",
+        "keys": [
+          "Tab",
+          "ArrowLeft",
+          "ArrowRight",
+          "ArrowUp",
+          "ArrowDown",
+          "Enter",
+          "Space"
+        ]
+      }
+    ]
   },
   "categories": [
     "templates"

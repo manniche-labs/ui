@@ -41,6 +41,21 @@
         "required": false,
         "description": null
       }
+    ],
+    "a11y": [
+      {
+        "topic": "screen-reader",
+        "text": "A nav (default label \"Gallery\") with buttons and aria-current=\"page\", an h2 headline, an events list, and a collections list. Collection images get alt=\"\" and the colour tile is aria-hidden; the name and the work count are text. Counter tiles show BigNumber from chart-kit in tiles named by their h3."
+      },
+      {
+        "topic": "keyboard",
+        "text": "Nav buttons are native with a focus-visible outline.",
+        "keys": [
+          "Tab",
+          "Enter",
+          "Space"
+        ]
+      }
     ]
   },
   "categories": [

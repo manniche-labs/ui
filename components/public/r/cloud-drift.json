@@ -59,6 +59,16 @@
         "required": false,
         "description": null
       }
+    ],
+    "a11y": [
+      {
+        "topic": "screen-reader",
+        "text": "Decorative only: the canvas is aria-hidden and has no interactive parts."
+      },
+      {
+        "topic": "motion",
+        "text": "Under reduced motion one still frame of the sky is drawn and nothing moves. Otherwise the canvas animates only while it is on screen."
+      }
     ]
   },
   "categories": [

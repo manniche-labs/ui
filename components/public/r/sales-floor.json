@@ -54,6 +54,21 @@
         "required": false,
         "description": null
       }
+    ],
+    "a11y": [
+      {
+        "topic": "screen-reader",
+        "text": "Tiles are sections named by their h3. The call tile shows the status and duration in a role=\"status\" span, its phone icon is aria-hidden, and the end call button is native. The target, performance and sources tiles use dial (a read-only meter), bar-chart and donut; see their notes."
+      },
+      {
+        "topic": "keyboard",
+        "text": "The end call button is native with a focus-visible style.",
+        "keys": [
+          "Tab",
+          "Enter",
+          "Space"
+        ]
+      }
     ]
   },
   "categories": [

@@ -48,7 +48,17 @@
         "description": "The features, lead first. Six fill the bento exactly; other counts reflow without holes at the ends."
       }
     ],
-    "extends": "Omit<ComponentProps<'section'>, 'children' | 'title'>"
+    "extends": "Omit<ComponentProps<'section'>, 'children' | 'title'>",
+    "a11y": [
+      {
+        "topic": "screen-reader",
+        "text": "A section named by its h2 with a list of tiles, each a data-tile with an h3. The lead tile is inverted. A tile visual is aria-hidden, unless visualLabel is passed: then it is role=\"img\" with that label."
+      },
+      {
+        "topic": "other",
+        "text": "No motion and no controls of its own."
+      }
+    ]
   },
   "categories": [
     "templates"

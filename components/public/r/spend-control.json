@@ -67,6 +67,25 @@
         "required": false,
         "description": null
       }
+    ],
+    "a11y": [
+      {
+        "topic": "screen-reader",
+        "text": "A component, not a page: it has no main. A nav (default label \"Sections\") holds icon links with aria-label, title and aria-current; a header holds the h2 title. Each tile is a section named by its h3 (see data-tile)."
+      },
+      {
+        "topic": "screen-reader",
+        "text": "Each card limit is a role=\"progressbar\" named by the card, with aria-valuenow as the percent (capped at 100) and 0 to 100 as range; the spent and limit amounts are written next to it. The figure uses BigNumber and DeltaPill from chart-kit, and the charts are bar-chart and bubble-chart; see their notes."
+      },
+      {
+        "topic": "keyboard",
+        "text": "Nav links and the upsell button are native, with a focus-visible outline.",
+        "keys": [
+          "Tab",
+          "Enter",
+          "Space"
+        ]
+      }
     ]
   },
   "categories": [

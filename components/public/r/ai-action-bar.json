@@ -65,6 +65,24 @@
         "required": false,
         "description": null
       }
+    ],
+    "a11y": [
+      {
+        "topic": "keyboard",
+        "text": "The mode switch and each tool are native buttons. Choosing Ask AI mounts the field with autoFocus. Enter in the field submits the form, and the send button is disabled while the field is empty.",
+        "keys": [
+          "Tab",
+          "Enter"
+        ]
+      },
+      {
+        "topic": "screen-reader",
+        "text": "The mode switch is a radiogroup labelled Mode with two role radio buttons that set aria-checked and take their name from labels (Tools, Ask AI). Tool buttons are named by their label, which also shows as a tooltip. The field is labelled by labels.ask and the send button by labels.send."
+      },
+      {
+        "topic": "motion",
+        "text": "The bar is wrapped in MotionConfig with reducedMotion set to user, so Motion follows the system setting for its layout and transform animations."
+      }
     ]
   },
   "categories": [

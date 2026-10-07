@@ -137,7 +137,32 @@
         "description": "\"compact\" draws a smaller dial. Inside a compact DataTile this happens on its own."
       }
     ],
-    "extends": "Omit<HTMLAttributes<HTMLDivElement>, 'children' | 'defaultValue' | 'onChange'>"
+    "extends": "Omit<HTMLAttributes<HTMLDivElement>, 'children' | 'defaultValue' | 'onChange'>",
+    "a11y": [
+      {
+        "topic": "keyboard",
+        "text": "When it has onValueChange or adjustable it is one Tab stop. ArrowRight and ArrowUp add a step, ArrowLeft and ArrowDown remove one, Page Up and Page Down move by ten steps, Home and End go to the ends. Dragging along the arc sets the value.",
+        "keys": [
+          "Tab",
+          "ArrowRight",
+          "ArrowLeft",
+          "ArrowUp",
+          "ArrowDown",
+          "PageUp",
+          "PageDown",
+          "Home",
+          "End"
+        ]
+      },
+      {
+        "topic": "screen-reader",
+        "text": "Read-only it is a meter; adjustable it is a slider. Both carry aria-label, aria-valuemin, aria-valuemax, aria-valuenow and aria-valuetext (from valueText, else the formatted value with the zone name). The figure, the ends and the zone chips are aria-hidden."
+      },
+      {
+        "topic": "motion",
+        "text": "Under reduced motion there are no transitions or delays."
+      }
+    ]
   },
   "categories": [
     "widgets"

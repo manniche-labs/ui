@@ -42,7 +42,17 @@
         "description": "Shown in red under the field, and marks the field invalid."
       }
     ],
-    "extends": "Omit<InputHTMLAttributes<HTMLInputElement>, 'placeholder'>"
+    "extends": "Omit<InputHTMLAttributes<HTMLInputElement>, 'placeholder'>",
+    "a11y": [
+      {
+        "topic": "screen-reader",
+        "text": "The label is a real label tied to the input by htmlFor, using id or a generated one. The hint or error is linked with aria-describedby, and an error also sets aria-invalid. The label floats with CSS only, and all other input props pass through."
+      },
+      {
+        "topic": "motion",
+        "text": "The label's float transition is off under reduced motion."
+      }
+    ]
   },
   "categories": [
     "controls"

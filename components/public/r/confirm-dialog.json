@@ -89,6 +89,25 @@
         "required": false,
         "description": null
       }
+    ],
+    "a11y": [
+      {
+        "topic": "keyboard",
+        "text": "It is a native modal dialog, so focus is trapped and Esc closes it. Focus goes to the safe cancel button on open, so a habitual Enter keeps the data. With typeToConfirm, the confirm button stays disabled until the exact text is typed. Enter in that field submits once it is right.",
+        "keys": [
+          "Escape",
+          "Enter",
+          "Tab"
+        ]
+      },
+      {
+        "topic": "screen-reader",
+        "text": "The dialog is labelled by the title and described by the description when there is one. The type-to-confirm field has a real label that shows the text to type. The two buttons take their text from confirmLabel and cancelLabel."
+      },
+      {
+        "topic": "motion",
+        "text": "Under reduced motion the opening transition is off."
+      }
     ]
   },
   "categories": [

@@ -70,6 +70,25 @@
         "required": false,
         "description": null
       }
+    ],
+    "a11y": [
+      {
+        "topic": "keyboard",
+        "text": "It is a native button with role switch, so Tab focuses it and Space or Enter flips it. It shows a focus ring and respects disabled.",
+        "keys": [
+          "Tab",
+          "Space",
+          "Enter"
+        ]
+      },
+      {
+        "topic": "screen-reader",
+        "text": "The button sets aria-checked. It is named by the visible label (a real label element tied to the button id) or by the aria-label prop when no label is given."
+      },
+      {
+        "topic": "motion",
+        "text": "The component is wrapped in MotionConfig with reducedMotion set to user, so Motion follows the system setting for the knob."
+      }
     ]
   },
   "categories": [

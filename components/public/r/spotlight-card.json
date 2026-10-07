@@ -26,7 +26,17 @@
         "description": "Radius of the light in pixels."
       }
     ],
-    "extends": "HTMLAttributes<HTMLDivElement>"
+    "extends": "HTMLAttributes<HTMLDivElement>",
+    "a11y": [
+      {
+        "topic": "screen-reader",
+        "text": "A plain div with no interactive parts. The light is a decorative span that is aria-hidden and ignores pointer events."
+      },
+      {
+        "topic": "motion",
+        "text": "The light follows a mouse pointer only. Under reduced motion the span is hidden (motion-reduce:hidden) and the card stays plain. Only a mouse pointer moves the light."
+      }
+    ]
   },
   "categories": [
     "surfaces"

@@ -57,6 +57,25 @@
         "required": false,
         "description": null
       }
+    ],
+    "a11y": [
+      {
+        "topic": "keyboard",
+        "text": "Each bar is a native button, so Tab visits them in order and Enter or Space calls onStepChange with its index. Focusing a bar shows its name above it, like hover.",
+        "keys": [
+          "Tab",
+          "Enter",
+          "Space"
+        ]
+      },
+      {
+        "topic": "screen-reader",
+        "text": "The bars sit in a nav named by label (default Progress). Each button is named N. <step label>, and the current one has aria-current step. The floating name is aria-hidden."
+      },
+      {
+        "topic": "motion",
+        "text": "The component is wrapped in MotionConfig with reducedMotion set to user, so Motion follows the system setting for the sliding name."
+      }
     ]
   },
   "categories": [

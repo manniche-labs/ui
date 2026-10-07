@@ -42,6 +42,12 @@
         "required": false,
         "description": null
       }
+    ],
+    "a11y": [
+      {
+        "topic": "screen-reader",
+        "text": "The frame is a section labelled by its heading (default Danger zone). Each action is a list item with its own h3 title and description, and the warning icon is aria-hidden. The action slot takes your own control, such as ConfirmDialog or HoldToConfirm, which carries its own keyboard behaviour."
+      }
     ]
   },
   "categories": [

@@ -87,6 +87,16 @@
         "required": false,
         "description": null
       }
+    ],
+    "a11y": [
+      {
+        "topic": "screen-reader",
+        "text": "Decorative only: the canvas is aria-hidden and ignores pointer events."
+      },
+      {
+        "topic": "motion",
+        "text": "Under reduced motion a still frame is drawn. The loop pauses off screen. Without WebGL, or after a lost context, a CSS gradient stands in."
+      }
     ]
   },
   "categories": [

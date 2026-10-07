@@ -64,6 +64,16 @@
         "required": false,
         "description": null
       }
+    ],
+    "a11y": [
+      {
+        "topic": "screen-reader",
+        "text": "The tile has role img. Its label is Creating image, N% while working, then the prompt (or Image ready) once progress reaches 1. The caption is aria-live polite and shows the state, while the percentage text in it is aria-hidden."
+      },
+      {
+        "topic": "motion",
+        "text": "The turning glow and the pulsing sparkle icon stop under reduced motion. The component is wrapped in MotionConfig with reducedMotion set to user."
+      }
     ]
   },
   "categories": [

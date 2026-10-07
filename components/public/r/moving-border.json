@@ -40,7 +40,21 @@
         "description": "`light`: one primary-coloured light runs round. `iridescent`: a thin-film ring whose hue shifts along the border, around the primary hue."
       }
     ],
-    "extends": "HTMLAttributes<HTMLDivElement>"
+    "extends": "HTMLAttributes<HTMLDivElement>",
+    "a11y": [
+      {
+        "topic": "screen-reader",
+        "text": "The moving light is an aria-hidden span that ignores pointer events. The content is read as it is."
+      },
+      {
+        "topic": "keyboard",
+        "text": "The iridescent variant draws the focus ring on the frame when something inside has keyboard focus."
+      },
+      {
+        "topic": "motion",
+        "text": "Under reduced motion the rotation stops and the light rests at a fixed angle."
+      }
+    ]
   },
   "categories": [
     "surfaces"

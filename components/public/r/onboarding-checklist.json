@@ -51,6 +51,25 @@
         "required": false,
         "description": null
       }
+    ],
+    "a11y": [
+      {
+        "topic": "keyboard",
+        "text": "The header is a button that opens and closes the list. Each step is a button; finished steps are disabled.",
+        "keys": [
+          "Tab",
+          "Enter",
+          "Space"
+        ]
+      },
+      {
+        "topic": "screen-reader",
+        "text": "The header button has aria-expanded and aria-controls. Progress is a progressbar named \"Progress\" with the number of finished steps as its value. Finished steps carry a hidden \"Done:\" prefix and the next step is marked aria-current=\"step\". The chevron is aria-hidden. Below 400 px the progressbar is hidden; its max is the number of steps."
+      },
+      {
+        "topic": "motion",
+        "text": "The list uses Motion with reduced motion set to user."
+      }
     ]
   },
   "categories": [

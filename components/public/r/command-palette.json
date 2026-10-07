@@ -63,6 +63,27 @@
         "required": false,
         "description": null
       }
+    ],
+    "a11y": [
+      {
+        "topic": "keyboard",
+        "text": "Cmd+K or Ctrl+K toggles it unless hotkey is false. The dialog is a native modal dialog, so Esc closes it and focus stays inside. In the search field ArrowDown and ArrowUp move through the commands and wrap around, and Enter runs the active one and closes the palette. The field takes focus when the palette opens.",
+        "keys": [
+          "Mod+K",
+          "ArrowDown",
+          "ArrowUp",
+          "Enter",
+          "Escape"
+        ]
+      },
+      {
+        "topic": "screen-reader",
+        "text": "The dialog is labelled Command palette. The input is a combobox named by the placeholder text, with aria-controls, aria-autocomplete list and aria-activedescendant pointing at the active option, so focus stays in the field. The results are a listbox labelled Commands with role option and aria-selected, and each group is labelled with its heading text. When nothing matches, a No commands match message is shown. The search icon is aria-hidden."
+      },
+      {
+        "topic": "motion",
+        "text": "Under reduced motion the opening animation is off."
+      }
     ]
   },
   "categories": [

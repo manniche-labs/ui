@@ -24,7 +24,13 @@
           "bento-metrics",
           "bento-product"
         ],
-        "props": []
+        "props": [],
+        "a11y": [
+          {
+            "topic": "motion",
+            "text": "Returns true while the system asks for less motion (prefers-reduced-motion: reduce) and re-renders when that setting changes. It returns false on the server."
+          }
+        ]
       }
     },
     {
@@ -49,7 +55,21 @@
         "tier": "free",
         "added": "2026-10-06",
         "usedIn": [],
-        "props": []
+        "props": [],
+        "a11y": [
+          {
+            "topic": "keyboard",
+            "text": "The hook binds no key handlers. Keys and buttons move the carousel through go(index) and move(by), which the component wires up. The wheel handler only reacts to sideways wheel and trackpad swipes, or Shift with the wheel, on axis x; a vertical wheel is left to the page."
+          },
+          {
+            "topic": "motion",
+            "text": "Under reduced motion every move jumps to its slide instead of gliding, and the speed passed to onFrame stays 0."
+          },
+          {
+            "topic": "other",
+            "text": "A drag ends with a click on whatever was under the pointer. The bound onClickCapture swallows that one click."
+          }
+        ]
       }
     },
     {
@@ -74,7 +94,21 @@
         "tier": "free",
         "added": "2026-10-06",
         "usedIn": [],
-        "props": []
+        "props": [],
+        "a11y": [
+          {
+            "topic": "screen-reader",
+            "text": "The canvas it creates is aria-hidden. The alt text on each GlImage is for the component to expose; the canvas itself is hidden from screen readers."
+          },
+          {
+            "topic": "motion",
+            "text": "With animate on, the frame loop runs only while the stage is on screen, and never under reduced motion. Without a loop the stage draws still frames at 4 seconds of animation time."
+          },
+          {
+            "topic": "other",
+            "text": "Without WebGL, or after the GPU drops the context, status becomes failed so the component can show its fallback."
+          }
+        ]
       }
     },
     {
@@ -172,6 +206,29 @@
             "required": false,
             "description": null
           }
+        ],
+        "a11y": [
+          {
+            "topic": "keyboard",
+            "text": "Enter sends and Shift+Enter makes a new line. Enter never sends while an IME is composing. After a send, focus goes back to the text field. Attach, remove, send and stop are native buttons.",
+            "keys": [
+              "Enter",
+              "Shift+Enter",
+              "Tab"
+            ]
+          },
+          {
+            "topic": "screen-reader",
+            "text": "The textarea is named by label (default Message) and described by a screen-reader-only hint: Enter sends. Shift and Enter makes a new line. Attach files, Send, Stop and each Remove <file name> button carry an aria-label, and their icons are aria-hidden. Attached files sit in a list labelled Attached files. The file input is aria-hidden and out of the tab order. Attach files shows only with accept. Send is disabled until there is text or a file."
+          },
+          {
+            "topic": "motion",
+            "text": "With halo on, under reduced motion the ring stops spinning and stays at a fixed angle, and its fades and the arrow's shift have no transition."
+          },
+          {
+            "topic": "other",
+            "text": "In forced colors mode the frame becomes a real border and the focus ring a real outline, because box-shadow is dropped there."
+          }
         ]
       }
     },
@@ -256,6 +313,21 @@
             "required": false,
             "description": null
           }
+        ],
+        "a11y": [
+          {
+            "topic": "keyboard",
+            "text": "Deny and Approve are native buttons, and Arguments is a native details element, so Tab, Enter and Space work without custom handlers.",
+            "keys": [
+              "Tab",
+              "Enter",
+              "Space"
+            ]
+          },
+          {
+            "topic": "screen-reader",
+            "text": "The card is a section labelled Approve <tool>. The footer is aria-live polite, so the result (Approved, or Denied with the agent told not to run it) is announced when the buttons are replaced. The shield and check icons are aria-hidden. A risky call changes the button text to Approve anyway, not only its colour."
+          }
         ]
       }
     },
@@ -305,6 +377,16 @@
             "required": false,
             "description": null
           }
+        ],
+        "a11y": [
+          {
+            "topic": "screen-reader",
+            "text": "The card is a section labelled by title, with the steps in an ordered list. Each step label is followed by a screen-reader-only status: waiting, in progress, done or failed. A screen-reader-only polite live region announces only the step in progress, or All steps done, so the reader is not flooded. Icons and the connector line are aria-hidden."
+          },
+          {
+            "topic": "motion",
+            "text": "The spinner on a running step stops under reduced motion."
+          }
         ]
       }
     },
@@ -350,6 +432,16 @@
             "default": null,
             "required": false,
             "description": null
+          }
+        ],
+        "a11y": [
+          {
+            "topic": "screen-reader",
+            "text": "The container sets aria-busy while streaming is true. The caret is aria-hidden. Words are plain text in spans, and paragraphs are split on blank lines."
+          },
+          {
+            "topic": "motion",
+            "text": "Under reduced motion the words appear without fading and the caret does not blink."
           }
         ]
       }
@@ -413,6 +505,25 @@
             "default": null,
             "required": false,
             "description": null
+          }
+        ],
+        "a11y": [
+          {
+            "topic": "keyboard",
+            "text": "The header is a native button, so Tab, Enter and Space toggle it. Once the reader has toggled it, their choice stands, even when streaming changes.",
+            "keys": [
+              "Tab",
+              "Enter",
+              "Space"
+            ]
+          },
+          {
+            "topic": "screen-reader",
+            "text": "The button sets aria-expanded and aria-controls pointing at the content, which is hidden while closed. Its label reads Thinking while streaming, Thought for N seconds when ms is given, otherwise Reasoning. The icons are aria-hidden."
+          },
+          {
+            "topic": "motion",
+            "text": "Under reduced motion the pulsing brain icon and the fade-in of the opened content are off."
           }
         ]
       }
@@ -484,6 +595,21 @@
             "required": false,
             "description": null
           }
+        ],
+        "a11y": [
+          {
+            "topic": "keyboard",
+            "text": "The copy button is a native button. The code area is a scrollable pre with tabIndex 0, so it can be focused and scrolled with the keyboard.",
+            "keys": [
+              "Tab",
+              "Enter",
+              "Space"
+            ]
+          },
+          {
+            "topic": "screen-reader",
+            "text": "The block is a figure with the file name, else the language, else Code as its caption. The button text lives in an aria-live polite span, so Copy becomes Copied, which resets after 1.8 seconds. Line numbers are aria-hidden and unselectable. If the clipboard is blocked, nothing changes and the code can still be selected by hand."
+          }
         ]
       }
     },
@@ -533,6 +659,20 @@
             "required": false,
             "description": null
           }
+        ],
+        "a11y": [
+          {
+            "topic": "keyboard",
+            "text": "Citation is an anchor to #source-N, so Tab and Enter jump to the matching row in the list. Each source is a link with a 44 px minimum height.",
+            "keys": [
+              "Tab",
+              "Enter"
+            ]
+          },
+          {
+            "topic": "screen-reader",
+            "text": "The visible number in a Citation is aria-hidden; screen readers get Source N: title. The list is a section labelled by title with an ordered list, and every link adds a screen-reader-only (opens in a new tab). External links use target _blank with rel noreferrer. The row you jump to gets the :target background."
+          }
         ]
       }
     },
@@ -581,6 +721,19 @@
             "default": null,
             "required": false,
             "description": null
+          }
+        ],
+        "a11y": [
+          {
+            "topic": "keyboard",
+            "text": "The diff area is a scrollable region with tabIndex 0, so it takes focus and scrolls with the arrow keys.",
+            "keys": [
+              "Tab"
+            ]
+          },
+          {
+            "topic": "screen-reader",
+            "text": "The scroll area has role region labelled Changes in <filename>, and the lines are table rows. The + or − sign is aria-hidden and replaced by a screen-reader-only added or removed. The counts read as N lines added, N removed. Line numbers are unselectable. Hunk lines span all columns. Added and removed lines differ by sign and text, not only by colour."
           }
         ]
       }
@@ -660,6 +813,16 @@
             "required": false,
             "description": null
           }
+        ],
+        "a11y": [
+          {
+            "topic": "screen-reader",
+            "text": "Screen readers get the final value once, in a screen-reader-only span. The counting digits are aria-hidden, so the steps on the way are not read."
+          },
+          {
+            "topic": "motion",
+            "text": "Under reduced motion the final number shows at once, even before it is in view. Otherwise it counts when it is 40% in view, unless startOnView is false."
+          }
         ]
       }
     },
@@ -727,6 +890,16 @@
             "required": false,
             "description": null
           }
+        ],
+        "a11y": [
+          {
+            "topic": "motion",
+            "text": "Under reduced motion the element is fully visible from the start, with no rise, blur or transition."
+          },
+          {
+            "topic": "other",
+            "text": "Pure presentation: it renders its children in a div, section, li or span (as) and adds no roles or labels."
+          }
         ]
       }
     },
@@ -773,6 +946,16 @@
             "required": false,
             "description": null
           }
+        ],
+        "a11y": [
+          {
+            "topic": "screen-reader",
+            "text": "The phrase is a native mark element, and its text is always in the DOM in full. The stroke is only a background image."
+          },
+          {
+            "topic": "motion",
+            "text": "Under reduced motion the stroke is already fully drawn, with no transition."
+          }
         ]
       }
     },
@@ -816,6 +999,20 @@
             "required": false,
             "description": null
           }
+        ],
+        "a11y": [
+          {
+            "topic": "screen-reader",
+            "text": "The whole text is always in the DOM as a plain paragraph, with each word in a span, so screen readers read it normally. Nothing is hidden or relabelled."
+          },
+          {
+            "topic": "motion",
+            "text": "Under reduced motion every word is at full strength from the start and the scroll listener is not attached."
+          },
+          {
+            "topic": "other",
+            "text": "While the paragraph has not been scrolled to, unlit words sit at 20% opacity."
+          }
         ]
       }
     },
@@ -849,7 +1046,17 @@
             "description": "Radius of the light in pixels."
           }
         ],
-        "extends": "HTMLAttributes<HTMLDivElement>"
+        "extends": "HTMLAttributes<HTMLDivElement>",
+        "a11y": [
+          {
+            "topic": "screen-reader",
+            "text": "A plain div with no interactive parts. The light is a decorative span that is aria-hidden and ignores pointer events."
+          },
+          {
+            "topic": "motion",
+            "text": "The light follows a mouse pointer only. Under reduced motion the span is hidden (motion-reduce:hidden) and the card stays plain. Only a mouse pointer moves the light."
+          }
+        ]
       }
     },
     {
@@ -916,6 +1123,20 @@
             "required": false,
             "description": null
           }
+        ],
+        "a11y": [
+          {
+            "topic": "keyboard",
+            "text": "The loop pauses while the pointer is over it or focus is inside it. The second copy of the items is inert and aria-hidden, so Tab never visits it twice."
+          },
+          {
+            "topic": "screen-reader",
+            "text": "The container is a region named by label (for example Customers). Only the first copy of the items is exposed to screen readers."
+          },
+          {
+            "topic": "motion",
+            "text": "Under reduced motion the loop stops, the second copy is hidden, the edge fade is removed and the items wrap onto lines."
+          }
         ]
       }
     },
@@ -956,7 +1177,13 @@
             "description": "Fade the dots out towards the edges."
           }
         ],
-        "extends": "HTMLAttributes<HTMLDivElement>"
+        "extends": "HTMLAttributes<HTMLDivElement>",
+        "a11y": [
+          {
+            "topic": "screen-reader",
+            "text": "Decorative only, with no interactive parts. The dots are a CSS background; the vignette span (vignette, default true) is aria-hidden."
+          }
+        ]
       }
     },
     {
@@ -993,7 +1220,26 @@
             "description": "Lean a few pixels towards the pointer."
           }
         ],
-        "extends": "ButtonHTMLAttributes<HTMLButtonElement>"
+        "extends": "ButtonHTMLAttributes<HTMLButtonElement>",
+        "a11y": [
+          {
+            "topic": "keyboard",
+            "text": "A native button, so Tab, Enter and Space work as usual. It accepts all button attributes and has a minimum height of 44 px.",
+            "keys": [
+              "Tab",
+              "Enter",
+              "Space"
+            ]
+          },
+          {
+            "topic": "screen-reader",
+            "text": "The shimmer is an aria-hidden span, so only the button label is read. A disabled button is dimmed."
+          },
+          {
+            "topic": "motion",
+            "text": "The shimmer span is hidden under reduced motion. The magnetic lean is skipped under reduced motion and for any pointer that is not a mouse."
+          }
+        ]
       }
     },
     {
@@ -1027,6 +1273,25 @@
             "default": null,
             "required": false,
             "description": null
+          }
+        ],
+        "a11y": [
+          {
+            "topic": "keyboard",
+            "text": "Close and the optional action are native buttons. The auto-dismiss timer pauses while the pointer is over a toast and while focus is inside it, and the Infinity duration keeps a toast until it is closed. An action runs its handler and then dismisses the toast.",
+            "keys": [
+              "Tab",
+              "Enter",
+              "Space"
+            ]
+          },
+          {
+            "topic": "screen-reader",
+            "text": "Toasts sit in a section labelled Notifications, in an ordered list with aria-live polite. The close button is labelled Close, and the success and error icons are aria-hidden, so the tone is not read out: put it in the title or description. At most four toasts are kept."
+          },
+          {
+            "topic": "motion",
+            "text": "Under reduced motion the enter and leave animations are off. A dismissed toast is removed 200 ms later."
           }
         ]
       }
@@ -1098,6 +1363,27 @@
             "required": false,
             "description": null
           }
+        ],
+        "a11y": [
+          {
+            "topic": "keyboard",
+            "text": "Cmd+K or Ctrl+K toggles it unless hotkey is false. The dialog is a native modal dialog, so Esc closes it and focus stays inside. In the search field ArrowDown and ArrowUp move through the commands and wrap around, and Enter runs the active one and closes the palette. The field takes focus when the palette opens.",
+            "keys": [
+              "Mod+K",
+              "ArrowDown",
+              "ArrowUp",
+              "Enter",
+              "Escape"
+            ]
+          },
+          {
+            "topic": "screen-reader",
+            "text": "The dialog is labelled Command palette. The input is a combobox named by the placeholder text, with aria-controls, aria-autocomplete list and aria-activedescendant pointing at the active option, so focus stays in the field. The results are a listbox labelled Commands with role option and aria-selected, and each group is labelled with its heading text. When nothing matches, a No commands match message is shown. The search icon is aria-hidden."
+          },
+          {
+            "topic": "motion",
+            "text": "Under reduced motion the opening animation is off."
+          }
         ]
       }
     },
@@ -1157,6 +1443,28 @@
             "default": null,
             "required": false,
             "description": null
+          }
+        ],
+        "a11y": [
+          {
+            "topic": "keyboard",
+            "text": "Esc closes it, because it is a native modal dialog that traps focus and returns it to the opener on close. A click on the backdrop closes it too.",
+            "keys": [
+              "Escape",
+              "Tab"
+            ]
+          },
+          {
+            "topic": "screen-reader",
+            "text": "The dialog is labelled by title, which is also the h2 at the top. The grab handle is aria-hidden."
+          },
+          {
+            "topic": "motion",
+            "text": "Under reduced motion the slide-in animation is off."
+          },
+          {
+            "topic": "other",
+            "text": "Dragging the top area (handle and title) down by more than 30% of the sheet's height closes it, and a shorter drag springs back. The drag is pointer only; Esc and a click on the backdrop close it too."
           }
         ]
       }
@@ -1550,6 +1858,16 @@
             "required": false,
             "description": null
           }
+        ],
+        "a11y": [
+          {
+            "topic": "screen-reader",
+            "text": "The full number is in one screen-reader-only span and read once. The rolling digits are aria-hidden."
+          },
+          {
+            "topic": "motion",
+            "text": "The component is wrapped in MotionConfig with reducedMotion set to user, so Motion follows the system setting for the rolling digits."
+          }
         ]
       }
     },
@@ -1658,6 +1976,25 @@
             "required": false,
             "description": null
           }
+        ],
+        "a11y": [
+          {
+            "topic": "keyboard",
+            "text": "The number is a focusable spinbutton. ArrowUp and ArrowRight add step, ArrowDown and ArrowLeft subtract it, Home jumps to min and End to max. The values are clamped between min and max.",
+            "keys": [
+              "ArrowUp",
+              "ArrowDown",
+              "ArrowLeft",
+              "ArrowRight",
+              "Home",
+              "End",
+              "Tab"
+            ]
+          },
+          {
+            "topic": "screen-reader",
+            "text": "The spinbutton is named by the required label and sets aria-valuenow, aria-valuemin and aria-valuemax. The two buttons are named Fewer: <label> and More: <label>, and each is disabled at its limit. The icons are aria-hidden."
+          }
         ]
       }
     },
@@ -1753,6 +2090,25 @@
             "required": false,
             "description": null
           }
+        ],
+        "a11y": [
+          {
+            "topic": "keyboard",
+            "text": "It is a native button with role switch, so Tab focuses it and Space or Enter flips it. It shows a focus ring and respects disabled.",
+            "keys": [
+              "Tab",
+              "Space",
+              "Enter"
+            ]
+          },
+          {
+            "topic": "screen-reader",
+            "text": "The button sets aria-checked. It is named by the visible label (a real label element tied to the button id) or by the aria-label prop when no label is given."
+          },
+          {
+            "topic": "motion",
+            "text": "The component is wrapped in MotionConfig with reducedMotion set to user, so Motion follows the system setting for the knob."
+          }
         ]
       }
     },
@@ -1823,6 +2179,25 @@
             "default": null,
             "required": false,
             "description": null
+          }
+        ],
+        "a11y": [
+          {
+            "topic": "keyboard",
+            "text": "It is a native button, so Tab focuses it and Enter or Space copies.",
+            "keys": [
+              "Tab",
+              "Enter",
+              "Space"
+            ]
+          },
+          {
+            "topic": "screen-reader",
+            "text": "The label sits in an aria-live polite span. It changes from Copy to Copied, or to Not copied when the browser refuses the clipboard, and returns after 1.8 seconds. The icons are aria-hidden. All three texts can be replaced with labels."
+          },
+          {
+            "topic": "motion",
+            "text": "The component is wrapped in MotionConfig with reducedMotion set to user, so Motion follows the system setting for the icon and letter animation."
           }
         ]
       }
@@ -1913,6 +2288,25 @@
             "default": null,
             "required": false,
             "description": null
+          }
+        ],
+        "a11y": [
+          {
+            "topic": "keyboard",
+            "text": "One native button does both jobs. A press starts the countdown, and a second press during it undoes. onConfirm runs when the countdown reaches zero.",
+            "keys": [
+              "Tab",
+              "Enter",
+              "Space"
+            ]
+          },
+          {
+            "topic": "screen-reader",
+            "text": "Once, when the countdown starts, a screen-reader-only polite live region says <label> in N seconds. Press again to undo. The counting number is aria-hidden, so it is not read every second. The button text changes from the label to undoLabel."
+          },
+          {
+            "topic": "motion",
+            "text": "The component is wrapped in MotionConfig with reducedMotion set to user, so Motion follows the system setting for the layout and fade animations."
           }
         ]
       }
@@ -2005,6 +2399,24 @@
             "default": null,
             "required": false,
             "description": null
+          }
+        ],
+        "a11y": [
+          {
+            "topic": "keyboard",
+            "text": "Space or Enter held down fills the button, and releasing early drains it at twice the speed. The key repeat is ignored. It fires onConfirm when full, shows doneLabel for 2 seconds, then resets. The pointer works the same way, and the context menu is blocked.",
+            "keys": [
+              "Space",
+              "Enter"
+            ]
+          },
+          {
+            "topic": "screen-reader",
+            "text": "The hint (default Press and hold to confirm) is set as aria-description on the button. The white copy of the label on the fill is aria-hidden, and doneLabel is announced through a polite live region."
+          },
+          {
+            "topic": "motion",
+            "text": "Under reduced motion the fill jumps in steps of a quarter instead of sliding."
           }
         ]
       }
@@ -2120,6 +2532,25 @@
             "required": false,
             "description": null
           }
+        ],
+        "a11y": [
+          {
+            "topic": "keyboard",
+            "text": "It is a native modal dialog, so focus is trapped and Esc closes it. Focus goes to the safe cancel button on open, so a habitual Enter keeps the data. With typeToConfirm, the confirm button stays disabled until the exact text is typed. Enter in that field submits once it is right.",
+            "keys": [
+              "Escape",
+              "Enter",
+              "Tab"
+            ]
+          },
+          {
+            "topic": "screen-reader",
+            "text": "The dialog is labelled by the title and described by the description when there is one. The type-to-confirm field has a real label that shows the text to type. The two buttons take their text from confirmLabel and cancelLabel."
+          },
+          {
+            "topic": "motion",
+            "text": "Under reduced motion the opening transition is off."
+          }
         ]
       }
     },
@@ -2186,6 +2617,12 @@
             "default": null,
             "required": false,
             "description": null
+          }
+        ],
+        "a11y": [
+          {
+            "topic": "screen-reader",
+            "text": "The frame is a section labelled by its heading (default Danger zone). Each action is a list item with its own h3 title and description, and the warning icon is aria-hidden. The action slot takes your own control, such as ConfirmDialog or HoldToConfirm, which carries its own keyboard behaviour."
           }
         ]
       }
@@ -2284,6 +2721,16 @@
             "required": false,
             "description": null
           }
+        ],
+        "a11y": [
+          {
+            "topic": "screen-reader",
+            "text": "The banner has role status. Its text gives the date it goes for good and the days left, or That is today. The restore button is a native button, and the clock icon and the progress strip are aria-hidden. The day count refreshes once an hour.",
+            "keys": [
+              "Tab",
+              "Enter"
+            ]
+          }
         ]
       }
     },
@@ -2381,6 +2828,25 @@
             "required": false,
             "description": null
           }
+        ],
+        "a11y": [
+          {
+            "topic": "keyboard",
+            "text": "Every tag in the pool and every remove button is a native button, so Tab, Enter and Space pick and remove.",
+            "keys": [
+              "Tab",
+              "Enter",
+              "Space"
+            ]
+          },
+          {
+            "topic": "screen-reader",
+            "text": "The picker is a group labelled by label (default Tags). The picked tags are a list labelled Picked and the pool a list labelled Available. Each remove button is named Remove <tag label>, and its icon is aria-hidden. The empty box shows placeholder text."
+          },
+          {
+            "topic": "motion",
+            "text": "The picker is wrapped in MotionConfig with reducedMotion set to user, so Motion follows the system setting for the flight between the lists."
+          }
         ]
       }
     },
@@ -2449,6 +2915,28 @@
             "default": null,
             "required": false,
             "description": null
+          }
+        ],
+        "a11y": [
+          {
+            "topic": "keyboard",
+            "text": "Drawing is pointer only (mouse, finger or pen). The Type instead button swaps the canvas for a text field that takes focus, so a keyboard user can sign by typing a name of at least two characters. Done stays disabled until there is ink or a name.",
+            "keys": [
+              "Tab",
+              "Enter"
+            ]
+          },
+          {
+            "topic": "screen-reader",
+            "text": "The pad is a section labelled by title. The canvas has role img and the label from labels.pad, which says to draw with a mouse, finger or pen. The typed field has a screen-reader-only label. After signing, a role status shows Signed."
+          },
+          {
+            "topic": "other",
+            "text": "The ink uses the current text colour, and the bitmap is sized by the pixel ratio."
+          },
+          {
+            "topic": "motion",
+            "text": "The pad is wrapped in MotionConfig with reducedMotion set to user, so Motion follows the system setting for the swap between pad and Signed."
           }
         ]
       }
@@ -2538,6 +3026,27 @@
             "default": null,
             "required": false,
             "description": null
+          }
+        ],
+        "a11y": [
+          {
+            "topic": "keyboard",
+            "text": "The row has one Tab stop, on the active tab. ArrowRight and ArrowLeft wrap around, Home and End jump to the ends, and the tab that receives focus is selected at once.",
+            "keys": [
+              "ArrowLeft",
+              "ArrowRight",
+              "Home",
+              "End",
+              "Tab"
+            ]
+          },
+          {
+            "topic": "screen-reader",
+            "text": "The row is a tablist named by label, and each tab is a button with role tab and aria-selected."
+          },
+          {
+            "topic": "motion",
+            "text": "The component is wrapped in MotionConfig with reducedMotion set to user, so Motion follows the system setting for the sliding pill."
           }
         ]
       }
@@ -2633,6 +3142,21 @@
             "required": false,
             "description": null
           }
+        ],
+        "a11y": [
+          {
+            "topic": "keyboard",
+            "text": "Previous and next are native buttons, disabled at the first and last page.",
+            "keys": [
+              "Tab",
+              "Enter",
+              "Space"
+            ]
+          },
+          {
+            "topic": "screen-reader",
+            "text": "The control is a nav named by labels.nav (default Pages). The buttons are named Previous page and Next page, or your labels, with aria-hidden icons. The N of total text is aria-live polite, and the rolling number reads the whole number once."
+          }
         ]
       }
     },
@@ -2708,6 +3232,25 @@
             "default": null,
             "required": false,
             "description": null
+          }
+        ],
+        "a11y": [
+          {
+            "topic": "keyboard",
+            "text": "The header is a button that opens and closes the list. Each step is a button; finished steps are disabled.",
+            "keys": [
+              "Tab",
+              "Enter",
+              "Space"
+            ]
+          },
+          {
+            "topic": "screen-reader",
+            "text": "The header button has aria-expanded and aria-controls. Progress is a progressbar named \"Progress\" with the number of finished steps as its value. Finished steps carry a hidden \"Done:\" prefix and the next step is marked aria-current=\"step\". The chevron is aria-hidden. Below 400 px the progressbar is hidden; its max is the number of steps."
+          },
+          {
+            "topic": "motion",
+            "text": "The list uses Motion with reduced motion set to user."
           }
         ]
       }
@@ -2817,6 +3360,25 @@
             "required": false,
             "description": null
           }
+        ],
+        "a11y": [
+          {
+            "topic": "keyboard",
+            "text": "Every control is a native button: the channel pill, the minus and plus buttons, the unit pill, remove and add. Minus and plus are disabled at their limits.",
+            "keys": [
+              "Tab",
+              "Enter",
+              "Space"
+            ]
+          },
+          {
+            "topic": "screen-reader",
+            "text": "A section with an h2 title and a list of reminders. Minus, plus and remove are named from labels. The channel pill shows the channel name as text. Icons are aria-hidden."
+          },
+          {
+            "topic": "motion",
+            "text": "The list uses Motion with reduced motion set to user."
+          }
         ]
       }
     },
@@ -2903,6 +3465,24 @@
             "default": null,
             "required": false,
             "description": null
+          }
+        ],
+        "a11y": [
+          {
+            "topic": "keyboard",
+            "text": "Each day has a switch and native time inputs, then remove and add buttons. The time inputs show a focus ring.",
+            "keys": [
+              "Tab",
+              "Space"
+            ]
+          },
+          {
+            "topic": "screen-reader",
+            "text": "Each day is a section labelled by its day name. The switch has role switch with aria-checked. Each time input is labelled with the day and \"from\" or \"to\" from labels. The dash between times is aria-hidden."
+          },
+          {
+            "topic": "motion",
+            "text": "The list uses Motion with reduced motion set to user."
           }
         ]
       }
@@ -2994,6 +3574,24 @@
             "required": false,
             "description": null
           }
+        ],
+        "a11y": [
+          {
+            "topic": "keyboard",
+            "text": "The mode switch and each tool are native buttons. Choosing Ask AI mounts the field with autoFocus. Enter in the field submits the form, and the send button is disabled while the field is empty.",
+            "keys": [
+              "Tab",
+              "Enter"
+            ]
+          },
+          {
+            "topic": "screen-reader",
+            "text": "The mode switch is a radiogroup labelled Mode with two role radio buttons that set aria-checked and take their name from labels (Tools, Ask AI). Tool buttons are named by their label, which also shows as a tooltip. The field is labelled by labels.ask and the send button by labels.send."
+          },
+          {
+            "topic": "motion",
+            "text": "The bar is wrapped in MotionConfig with reducedMotion set to user, so Motion follows the system setting for its layout and transform animations."
+          }
         ]
       }
     },
@@ -3061,6 +3659,25 @@
             "default": null,
             "required": false,
             "description": null
+          }
+        ],
+        "a11y": [
+          {
+            "topic": "keyboard",
+            "text": "Each row header is a native button that toggles its detail. It is disabled when the task has no detail.",
+            "keys": [
+              "Tab",
+              "Enter",
+              "Space"
+            ]
+          },
+          {
+            "topic": "screen-reader",
+            "text": "The tasks are an ordered list. The button sets aria-expanded and aria-controls pointing at the detail panel. The status is written as text (Waiting, Working, Done, Failed, or your labels) next to the title, so it is not carried by colour alone. Check, cross and chevron icons and the spinner ring are aria-hidden. The row number is read as text."
+          },
+          {
+            "topic": "motion",
+            "text": "The spinner ring stops under reduced motion, and the list is wrapped in MotionConfig with reducedMotion set to user."
           }
         ]
       }
@@ -3151,6 +3768,16 @@
             "required": false,
             "description": null
           }
+        ],
+        "a11y": [
+          {
+            "topic": "screen-reader",
+            "text": "The tile has role img. Its label is Creating image, N% while working, then the prompt (or Image ready) once progress reaches 1. The caption is aria-live polite and shows the state, while the percentage text in it is aria-hidden."
+          },
+          {
+            "topic": "motion",
+            "text": "The turning glow and the pulsing sparkle icon stop under reduced motion. The component is wrapped in MotionConfig with reducedMotion set to user."
+          }
         ]
       }
     },
@@ -3231,6 +3858,16 @@
             "default": null,
             "required": false,
             "description": null
+          }
+        ],
+        "a11y": [
+          {
+            "topic": "screen-reader",
+            "text": "The orb is a role status element labelled by the current state: Voice assistant ready, Listening, Thinking or Speaking, or your labels. All the visual layers are aria-hidden, so only the state label is read."
+          },
+          {
+            "topic": "motion",
+            "text": "The two turning colour layers stop under reduced motion, and the orb is wrapped in MotionConfig with reducedMotion set to user."
           }
         ]
       }
@@ -3326,6 +3963,25 @@
             "default": null,
             "required": false,
             "description": null
+          }
+        ],
+        "a11y": [
+          {
+            "topic": "keyboard",
+            "text": "A form: Enter in the amount field submits. Buy and sell, and the outcome choice, are buttons that toggle. The chips (+1, +5, +10, +100, Max, each with the currency symbol) are buttons. Submit is disabled while the amount is zero or less.",
+            "keys": [
+              "Tab",
+              "Enter",
+              "Space"
+            ]
+          },
+          {
+            "topic": "screen-reader",
+            "text": "Buy and sell and the outcome choice are groups of buttons with aria-pressed. The amount has a label tied by htmlFor, inputMode decimal and no autocomplete, and the result is an output element. Outcome colours are paired with the label text."
+          },
+          {
+            "topic": "motion",
+            "text": "The ticket uses Motion with reduced motion set to user."
           }
         ]
       }
@@ -3423,6 +4079,25 @@
             "required": false,
             "description": null
           }
+        ],
+        "a11y": [
+          {
+            "topic": "keyboard",
+            "text": "The Pay button starts the run; at the end a New order button appears.",
+            "keys": [
+              "Tab",
+              "Enter",
+              "Space"
+            ]
+          },
+          {
+            "topic": "screen-reader",
+            "text": "The status area is a polite live region: it reads \"Processing payment\", \"Printing your receipt\" and \"Paid\". The receipt is a list of lines. Icons and the barcode are aria-hidden."
+          },
+          {
+            "topic": "motion",
+            "text": "The spinner stops under reduced motion, and the receipt slide uses Motion with reduced motion set to user."
+          }
         ]
       }
     },
@@ -3497,6 +4172,27 @@
             "default": null,
             "required": false,
             "description": null
+          }
+        ],
+        "a11y": [
+          {
+            "topic": "keyboard",
+            "text": "ArrowLeft and ArrowRight turn the cube while focus is inside the carousel. The previous and next buttons are native buttons. A drag turns it past 40 px.",
+            "keys": [
+              "Tab",
+              "ArrowLeft",
+              "ArrowRight",
+              "Enter",
+              "Space"
+            ]
+          },
+          {
+            "topic": "screen-reader",
+            "text": "The section is a carousel labelled by label. Each face is a slide group labelled with the slide word and \"i / n\"; faces that are not at the front are aria-hidden and inert. The buttons are named by labels, and a polite live counter reads the position."
+          },
+          {
+            "topic": "motion",
+            "text": "Under reduced motion the turn has no duration and the cube jumps."
           }
         ]
       }
@@ -3627,7 +4323,30 @@
             "description": null
           }
         ],
-        "extends": "Omit<HTMLAttributes<HTMLElement>, 'onChange'>"
+        "extends": "Omit<HTMLAttributes<HTMLElement>, 'onChange'>",
+        "a11y": [
+          {
+            "topic": "keyboard",
+            "text": "The stage is one Tab stop. ArrowLeft and ArrowRight move through the slides; on the vertical layout ArrowUp and ArrowDown do instead. Home and End jump to the ends. Keys are skipped while an input has focus. A click on a side card brings it forward for a mouse. The buttons use aria-disabled at the ends, and controls={false} hides them.",
+            "keys": [
+              "Tab",
+              "ArrowLeft",
+              "ArrowRight",
+              "ArrowUp",
+              "ArrowDown",
+              "Home",
+              "End"
+            ]
+          },
+          {
+            "topic": "screen-reader",
+            "text": "A section with the carousel role description, named by label, with a stage group inside (named \"Slides\" by default). Each slide is a group labelled \"Slide i of n\"; slides that are not current are aria-hidden and inert. A polite live region reads the position. The rule and counter are aria-hidden."
+          },
+          {
+            "topic": "motion",
+            "text": "Under reduced motion every move jumps."
+          }
+        ]
       }
     },
     {
@@ -3727,7 +4446,28 @@
             "description": null
           }
         ],
-        "extends": "Omit<HTMLAttributes<HTMLElement>, 'onChange'>"
+        "extends": "Omit<HTMLAttributes<HTMLElement>, 'onChange'>",
+        "a11y": [
+          {
+            "topic": "keyboard",
+            "text": "The stage is one Tab stop. ArrowLeft and ArrowRight move between pictures, Home and End jump to the ends. The previous and next buttons use aria-disabled at the ends. They appear on hover or focus, and are always visible on touch screens. At an end a button fades out unless it has focus.",
+            "keys": [
+              "Tab",
+              "ArrowLeft",
+              "ArrowRight",
+              "Home",
+              "End"
+            ]
+          },
+          {
+            "topic": "screen-reader",
+            "text": "The post is an article labelled by label, with a carousel group inside. Each slide is labelled \"Picture i of n\"; the others are aria-hidden and inert. A polite live region reads the position. The counter badge and dots are aria-hidden."
+          },
+          {
+            "topic": "motion",
+            "text": "Under reduced motion every move jumps."
+          }
+        ]
       }
     },
     {
@@ -3838,7 +4578,28 @@
             "description": null
           }
         ],
-        "extends": "Omit<HTMLAttributes<HTMLDivElement>, 'onChange'>"
+        "extends": "Omit<HTMLAttributes<HTMLDivElement>, 'onChange'>",
+        "a11y": [
+          {
+            "topic": "keyboard",
+            "text": "The carousel is one Tab stop. ArrowLeft and ArrowRight move between pictures, Home and End jump to the ends. The focus ring is drawn around the stage.",
+            "keys": [
+              "Tab",
+              "ArrowLeft",
+              "ArrowRight",
+              "Home",
+              "End"
+            ]
+          },
+          {
+            "topic": "screen-reader",
+            "text": "The pictures are real images with alt text and are always in the DOM, also when WebGL is missing or lost. Slides that are not current are aria-hidden and inert. The visible caption is aria-hidden; a polite live region reads the title and the position."
+          },
+          {
+            "topic": "motion",
+            "text": "Under reduced motion every move jumps, the lens shows no motion smear, and the caption fade is skipped."
+          }
+        ]
       }
     },
     {
@@ -3956,7 +4717,28 @@
             "description": null
           }
         ],
-        "extends": "Omit<HTMLAttributes<HTMLDivElement>, 'onChange'>"
+        "extends": "Omit<HTMLAttributes<HTMLDivElement>, 'onChange'>",
+        "a11y": [
+          {
+            "topic": "keyboard",
+            "text": "The stage is one Tab stop. ArrowLeft and ArrowRight move between pictures, Home and End jump to the ends. A click on a side picture brings it forward.",
+            "keys": [
+              "Tab",
+              "ArrowLeft",
+              "ArrowRight",
+              "Home",
+              "End"
+            ]
+          },
+          {
+            "topic": "screen-reader",
+            "text": "The pictures are real images with alt text, also when WebGL is missing. Each slide is labelled \"Picture i of n\"; the others are aria-hidden and inert. The caption and rule are aria-hidden; a polite live region reads the position."
+          },
+          {
+            "topic": "motion",
+            "text": "Under reduced motion every move jumps and the eroded edges stand still. The shimmer prop (default false) adds grain shimmer and is off under reduced motion."
+          }
+        ]
       }
     },
     {
@@ -4081,7 +4863,28 @@
             "description": "The words on the buttons and for screen readers, to translate them, e.g. `{ picture: 'Bild', of: 'von' }`."
           }
         ],
-        "extends": "Omit<HTMLAttributes<HTMLDivElement>, 'onChange'>"
+        "extends": "Omit<HTMLAttributes<HTMLDivElement>, 'onChange'>",
+        "a11y": [
+          {
+            "topic": "keyboard",
+            "text": "The stage is one Tab stop. ArrowLeft and ArrowRight move between pictures, Home and End jump to the ends. loop needs at least three pictures, and controls shows the buttons.",
+            "keys": [
+              "Tab",
+              "ArrowLeft",
+              "ArrowRight",
+              "Home",
+              "End"
+            ]
+          },
+          {
+            "topic": "screen-reader",
+            "text": "The pictures are real images with alt text. Each slide is labelled \"Picture i of n\"; the others are aria-hidden and inert. A polite live region reads the position. The words for previous, next, picture and of can be translated through labels."
+          },
+          {
+            "topic": "motion",
+            "text": "Under reduced motion every move jumps and the ribbon holds still. The animate prop adds a slow drift that is off under reduced motion and off screen. Without WebGL the pictures stand flat on the wave in CSS 3D."
+          }
+        ]
       }
     },
     {
@@ -4234,6 +5037,16 @@
             "required": false,
             "description": null
           }
+        ],
+        "a11y": [
+          {
+            "topic": "screen-reader",
+            "text": "The loader is a role status element named by label (default Loading). The bars and the ball are aria-hidden."
+          },
+          {
+            "topic": "motion",
+            "text": "Under reduced motion no animation frame loop runs. The bars rest in a still wave and the ball sits still at the left."
+          }
         ]
       }
     },
@@ -4347,6 +5160,30 @@
             "required": false,
             "description": null
           }
+        ],
+        "a11y": [
+          {
+            "topic": "keyboard",
+            "text": "The slider takes one Tab stop. Arrow keys move by step, PageUp and PageDown by a tenth of the range (at least one step), and Home and End jump to min and max. Dragging with the pointer sets the value from the pointer position and snaps it to step.",
+            "keys": [
+              "ArrowLeft",
+              "ArrowRight",
+              "ArrowUp",
+              "ArrowDown",
+              "PageUp",
+              "PageDown",
+              "Home",
+              "End"
+            ]
+          },
+          {
+            "topic": "screen-reader",
+            "text": "It has role slider with the required label, aria-valuemin, aria-valuemax, aria-valuenow and a horizontal orientation. Pass format to give aria-valuetext, for example 40 %. The thumb is aria-hidden, and focus shows as a ring around it."
+          },
+          {
+            "topic": "motion",
+            "text": "Under reduced motion the thumb jumps to the value and does not stretch or squash."
+          }
         ]
       }
     },
@@ -4421,6 +5258,25 @@
             "default": null,
             "required": false,
             "description": null
+          }
+        ],
+        "a11y": [
+          {
+            "topic": "keyboard",
+            "text": "Show all and Show less is a native button, shown only with more than one item. Each Dismiss button is a native button. While the stack is folded only the first card has one.",
+            "keys": [
+              "Tab",
+              "Enter",
+              "Space"
+            ]
+          },
+          {
+            "topic": "screen-reader",
+            "text": "The stack is a section labelled by labels.title, with an ordered list. The toggle sets aria-expanded and aria-controls. While folded, every card after the first is aria-hidden. Each dismiss button is named Dismiss: <title>, and the icons are aria-hidden."
+          },
+          {
+            "topic": "motion",
+            "text": "The stack is wrapped in MotionConfig with reducedMotion set to user, so Motion follows the system setting for the fold and fan-out."
           }
         ]
       }
@@ -4505,6 +5361,16 @@
             "required": false,
             "description": null
           }
+        ],
+        "a11y": [
+          {
+            "topic": "screen-reader",
+            "text": "Decorative only: the canvas is aria-hidden and has no interactive parts."
+          },
+          {
+            "topic": "motion",
+            "text": "Under reduced motion one still frame of the sky is drawn and nothing moves. Otherwise the canvas animates only while it is on screen."
+          }
         ]
       }
     },
@@ -4573,6 +5439,16 @@
             "default": null,
             "required": false,
             "description": null
+          }
+        ],
+        "a11y": [
+          {
+            "topic": "screen-reader",
+            "text": "Decorative only: the canvas is aria-hidden and has no interactive parts."
+          },
+          {
+            "topic": "motion",
+            "text": "Under reduced motion one still frame is drawn and the loop never starts. Otherwise it runs only while visible, and without WebGL it falls back to still bands."
           }
         ]
       }
@@ -4667,6 +5543,16 @@
             "required": false,
             "description": null
           }
+        ],
+        "a11y": [
+          {
+            "topic": "screen-reader",
+            "text": "Decorative only: the canvas is aria-hidden and ignores pointer events."
+          },
+          {
+            "topic": "motion",
+            "text": "Under reduced motion a still frame is drawn. The loop pauses off screen. Without WebGL, or after a lost context, a CSS gradient stands in."
+          }
         ]
       }
     },
@@ -4745,6 +5631,16 @@
             "default": null,
             "required": false,
             "description": null
+          }
+        ],
+        "a11y": [
+          {
+            "topic": "screen-reader",
+            "text": "Decorative only: the canvas is aria-hidden and ignores pointer events."
+          },
+          {
+            "topic": "motion",
+            "text": "Under reduced motion the grid is drawn once and stays static. It redraws when the theme or the colour scheme changes."
           }
         ]
       }
@@ -4899,7 +5795,25 @@
             "description": "Controlled: show the image in colour, e.g. for a selected card."
           }
         ],
-        "extends": "Omit<HTMLAttributes<HTMLDivElement>, 'title'>"
+        "extends": "Omit<HTMLAttributes<HTMLDivElement>, 'title'>",
+        "a11y": [
+          {
+            "topic": "keyboard",
+            "text": "One Tab stop per card when href is set: the title is the link and covers the card. The focus ring is drawn on the card outline, and the image turns from grey to colour on focus like it does on hover. An action in the notch is its own Tab stop.",
+            "keys": [
+              "Tab",
+              "Enter"
+            ]
+          },
+          {
+            "topic": "screen-reader",
+            "text": "The title is a heading with the link inside it; without href it is a plain heading. The arrow and the frame are aria-hidden."
+          },
+          {
+            "topic": "motion",
+            "text": "The image and arrow transitions are off under reduced motion."
+          }
+        ]
       }
     },
     {
@@ -4974,7 +5888,30 @@
             "description": "`auto` stacks the modules vertically when the gallery is narrower than 520 px."
           }
         ],
-        "extends": "Omit<HTMLAttributes<HTMLDivElement>, 'onChange'>"
+        "extends": "Omit<HTMLAttributes<HTMLDivElement>, 'onChange'>",
+        "a11y": [
+          {
+            "topic": "keyboard",
+            "text": "Each module header is a button. Arrow keys move between headers and wrap around, Home and End jump to the first and last. Focus on a header opens its module. With openOnHover (default true), a mouse pointer opens a module after 70 ms.",
+            "keys": [
+              "Tab",
+              "ArrowRight",
+              "ArrowLeft",
+              "ArrowDown",
+              "ArrowUp",
+              "Home",
+              "End"
+            ]
+          },
+          {
+            "topic": "screen-reader",
+            "text": "Each header is a heading (level set by headingLevel, default 3) around a button with aria-expanded and aria-controls. The open header is aria-disabled because it cannot close. Panels are regions labelled by their header and are inert while closed. The number and dot are aria-hidden."
+          },
+          {
+            "topic": "motion",
+            "text": "Under reduced motion the slide, caption and dot transitions are off."
+          }
+        ]
       }
     },
     {
@@ -5072,6 +6009,12 @@
             "required": false,
             "description": null
           }
+        ],
+        "a11y": [
+          {
+            "topic": "screen-reader",
+            "text": "A section with an h2 title and a list of logos, each with its name as visible text. The decorative lines are aria-hidden."
+          }
         ]
       }
     },
@@ -5155,6 +6098,25 @@
             "required": false,
             "description": null
           }
+        ],
+        "a11y": [
+          {
+            "topic": "keyboard",
+            "text": "The main button opens the options and moves focus to the first option. Esc, or the back arrow, closes them and returns focus to the main button. Picking an option calls onSelect and closes. The part that is hidden is inert, so Tab never lands on it.",
+            "keys": [
+              "Escape",
+              "Tab",
+              "Enter"
+            ]
+          },
+          {
+            "topic": "screen-reader",
+            "text": "The main button sets aria-expanded. The options sit in a group labelled by label, and the back button is named by backLabel with an aria-hidden icon."
+          },
+          {
+            "topic": "motion",
+            "text": "The component is wrapped in MotionConfig with reducedMotion set to user, so Motion follows the system setting for the split."
+          }
         ]
       }
     },
@@ -5236,6 +6198,29 @@
             "default": null,
             "required": false,
             "description": null
+          }
+        ],
+        "a11y": [
+          {
+            "topic": "keyboard",
+            "text": "The dock has one Tab stop, on the open item (or the first item). ArrowRight and ArrowLeft wrap around, and Home and End jump to the ends. Enter or Space picks the item. The label shows as a tooltip on hover and on keyboard focus.",
+            "keys": [
+              "ArrowLeft",
+              "ArrowRight",
+              "Home",
+              "End",
+              "Tab",
+              "Enter",
+              "Space"
+            ]
+          },
+          {
+            "topic": "screen-reader",
+            "text": "The dock is a toolbar named by label (default Dock). Each icon button is named by its label and sets aria-pressed for the open one. The dot under the open item is aria-hidden."
+          },
+          {
+            "topic": "motion",
+            "text": "The component is wrapped in MotionConfig with reducedMotion set to user, so Motion follows the system setting for the lift and bounce."
           }
         ]
       }
@@ -5325,6 +6310,29 @@
             "required": false,
             "description": null
           }
+        ],
+        "a11y": [
+          {
+            "topic": "keyboard",
+            "text": "Below the sm breakpoint a menu button opens the links, and Esc closes the menu while it is open. Choosing a link closes it.",
+            "keys": [
+              "Escape",
+              "Tab",
+              "Enter"
+            ]
+          },
+          {
+            "topic": "screen-reader",
+            "text": "The links are in a nav labelled Main, and the link whose href equals current gets aria-current page. The menu button is named Open menu or Close menu, sets aria-expanded and aria-controls, and the menu is hidden while closed."
+          },
+          {
+            "topic": "motion",
+            "text": "The background and blur transition is off under reduced motion."
+          },
+          {
+            "topic": "other",
+            "text": "The glass turns solid without backdrop-filter, with prefers-reduced-transparency and with more contrast asked for. The scroll variant keeps white text on a soft shade over the hero and turns to glass once the page has scrolled or the menu is open."
+          }
         ]
       }
     },
@@ -5383,7 +6391,17 @@
             "description": "A soft glare that follows the pointer."
           }
         ],
-        "extends": "HTMLAttributes<HTMLDivElement>"
+        "extends": "HTMLAttributes<HTMLDivElement>",
+        "a11y": [
+          {
+            "topic": "screen-reader",
+            "text": "A plain card with no interactive parts of its own. The glare span is aria-hidden."
+          },
+          {
+            "topic": "motion",
+            "text": "The tilt follows a mouse only. Under reduced motion the card stays flat, the depth layers and transitions are off, and the glare is hidden."
+          }
+        ]
       }
     },
     {
@@ -5457,6 +6475,20 @@
             "required": false,
             "description": null
           }
+        ],
+        "a11y": [
+          {
+            "topic": "screen-reader",
+            "text": "A screen-reader-only span lists all the words joined with commas, and the visible swapping word is aria-hidden, so the words are heard once and not on each swap."
+          },
+          {
+            "topic": "keyboard",
+            "text": "The cycling pauses while the pointer is over it, and while focus is inside it (focus and blur on the wrapper)."
+          },
+          {
+            "topic": "motion",
+            "text": "Under reduced motion it shows the first word and never cycles. With rounds above 0 it stops on the last word after that many rounds, and with rounds set to 0 it keeps going."
+          }
         ]
       }
     },
@@ -5522,7 +6554,21 @@
             "description": "`light`: one primary-coloured light runs round. `iridescent`: a thin-film ring whose hue shifts along the border, around the primary hue."
           }
         ],
-        "extends": "HTMLAttributes<HTMLDivElement>"
+        "extends": "HTMLAttributes<HTMLDivElement>",
+        "a11y": [
+          {
+            "topic": "screen-reader",
+            "text": "The moving light is an aria-hidden span that ignores pointer events. The content is read as it is."
+          },
+          {
+            "topic": "keyboard",
+            "text": "The iridescent variant draws the focus ring on the frame when something inside has keyboard focus."
+          },
+          {
+            "topic": "motion",
+            "text": "Under reduced motion the rotation stops and the light rests at a fixed angle."
+          }
+        ]
       }
     },
     {
@@ -5581,6 +6627,24 @@
             "default": null,
             "required": false,
             "description": null
+          }
+        ],
+        "a11y": [
+          {
+            "topic": "keyboard",
+            "text": "Items are links when href is given, so each is a Tab stop with a visible focus ring. Focus moves the highlight like hover does.",
+            "keys": [
+              "Tab",
+              "Enter"
+            ]
+          },
+          {
+            "topic": "screen-reader",
+            "text": "A list of items; items without href are plain divs. The highlight is an aria-hidden span."
+          },
+          {
+            "topic": "motion",
+            "text": "The highlight uses Motion with reduced motion set to user, so its movement follows the system setting."
           }
         ]
       }
@@ -5700,6 +6764,26 @@
             "required": false,
             "description": null
           }
+        ],
+        "a11y": [
+          {
+            "topic": "keyboard",
+            "text": "The pencil starts editing and selects the text. Enter saves, and in a multiline field Cmd or Ctrl with Enter saves while plain Enter adds a line. Esc cancels and restores the value. Save and cancel are native buttons. Focus returns to the pencil afterwards. onSave only runs when the trimmed value changed.",
+            "keys": [
+              "Enter",
+              "Mod+Enter",
+              "Escape",
+              "Tab"
+            ]
+          },
+          {
+            "topic": "screen-reader",
+            "text": "While editing, the label is tied to the field with htmlFor. The pencil is named Edit <label in lower case>, and save and cancel are named by saveLabel and cancelLabel, with aria-hidden icons. An empty value shows placeholder (default Empty)."
+          },
+          {
+            "topic": "motion",
+            "text": "The component is wrapped in MotionConfig with reducedMotion set to user, so Motion follows the system setting for the swap between pencil and buttons."
+          }
         ]
       }
     },
@@ -5789,6 +6873,24 @@
             "default": null,
             "required": false,
             "description": null
+          }
+        ],
+        "a11y": [
+          {
+            "topic": "keyboard",
+            "text": "It is a native modal dialog, so focus is trapped. Esc steps back one step, and closes the dialog on the first step. The back arrow does the same step back, and a backdrop click closes. Each step gets next, back and close in its content function.",
+            "keys": [
+              "Escape",
+              "Tab"
+            ]
+          },
+          {
+            "topic": "screen-reader",
+            "text": "The dialog is labelled by the title of the current step. The step on top is the only one reachable: earlier steps behind it are inert and aria-hidden. Back (from the second step on) and Close are icon buttons named by backLabel and closeLabel, with aria-hidden icons."
+          },
+          {
+            "topic": "motion",
+            "text": "The content is wrapped in MotionConfig with reducedMotion set to user, so Motion follows the system setting for the step animation."
           }
         ]
       }
@@ -5880,6 +6982,25 @@
             "required": false,
             "description": null
           }
+        ],
+        "a11y": [
+          {
+            "topic": "keyboard",
+            "text": "It is a native button. A press while saving or just after is ignored, a press while saved calls onUnsave, and a rejected onSave puts it back to idle.",
+            "keys": [
+              "Tab",
+              "Enter",
+              "Space"
+            ]
+          },
+          {
+            "topic": "screen-reader",
+            "text": "The button sets aria-pressed from saved and aria-busy while saving. When the save finishes, a screen-reader-only polite live region says savedLabel. The spinner and check icons are aria-hidden."
+          },
+          {
+            "topic": "motion",
+            "text": "The spinner stops under reduced motion, and the component is wrapped in MotionConfig with reducedMotion set to user."
+          }
         ]
       }
     },
@@ -5969,6 +7090,25 @@
             "default": null,
             "required": false,
             "description": null
+          }
+        ],
+        "a11y": [
+          {
+            "topic": "keyboard",
+            "text": "The button opens an email field that takes focus. Enter submits, and the native email validation (type email, required) applies. Esc closes the field and returns focus to the button. A pointer press outside closes the field only while it is empty. After a submit it shows doneLabel for 2.2 seconds, then closes.",
+            "keys": [
+              "Enter",
+              "Escape",
+              "Tab"
+            ]
+          },
+          {
+            "topic": "screen-reader",
+            "text": "The button sets aria-expanded, and its text sits in an aria-live polite span, so the change to doneLabel is announced. The field has a label with screen-reader-only text from placeholder and autoComplete set to email. The bell and check icons are aria-hidden."
+          },
+          {
+            "topic": "motion",
+            "text": "The component is wrapped in MotionConfig with reducedMotion set to user, so Motion follows the system setting for the morph."
           }
         ]
       }
@@ -6102,6 +7242,25 @@
             "required": false,
             "description": null
           }
+        ],
+        "a11y": [
+          {
+            "topic": "keyboard",
+            "text": "The thumbs are buttons. After a pick the comment form opens and the textarea takes focus. Escape closes the form and focus returns to the thumb that was pressed.",
+            "keys": [
+              "Tab",
+              "Enter",
+              "Escape"
+            ]
+          },
+          {
+            "topic": "screen-reader",
+            "text": "The thumbs are named by upLabel and downLabel and carry aria-pressed. The thanks line is a polite live region that stays mounted. The form is labelled by its heading, the close button is named by closeLabel, and the textarea has a label. The sparkles are aria-hidden."
+          },
+          {
+            "topic": "motion",
+            "text": "The pop uses Motion with reduced motion set to user."
+          }
         ]
       }
     },
@@ -6184,6 +7343,25 @@
             "required": false,
             "description": null
           }
+        ],
+        "a11y": [
+          {
+            "topic": "keyboard",
+            "text": "Each bar is a native button, so Tab visits them in order and Enter or Space calls onStepChange with its index. Focusing a bar shows its name above it, like hover.",
+            "keys": [
+              "Tab",
+              "Enter",
+              "Space"
+            ]
+          },
+          {
+            "topic": "screen-reader",
+            "text": "The bars sit in a nav named by label (default Progress). Each button is named N. <step label>, and the current one has aria-current step. The floating name is aria-hidden."
+          },
+          {
+            "topic": "motion",
+            "text": "The component is wrapped in MotionConfig with reducedMotion set to user, so Motion follows the system setting for the sliding name."
+          }
         ]
       }
     },
@@ -6251,7 +7429,17 @@
             "description": "Shown in red under the field, and marks the field invalid."
           }
         ],
-        "extends": "Omit<InputHTMLAttributes<HTMLInputElement>, 'placeholder'>"
+        "extends": "Omit<InputHTMLAttributes<HTMLInputElement>, 'placeholder'>",
+        "a11y": [
+          {
+            "topic": "screen-reader",
+            "text": "The label is a real label tied to the input by htmlFor, using id or a generated one. The hint or error is linked with aria-describedby, and an error also sets aria-invalid. The label floats with CSS only, and all other input props pass through."
+          },
+          {
+            "topic": "motion",
+            "text": "The label's float transition is off under reduced motion."
+          }
+        ]
       }
     },
     {
@@ -6325,6 +7513,25 @@
             "default": null,
             "required": false,
             "description": null
+          }
+        ],
+        "a11y": [
+          {
+            "topic": "keyboard",
+            "text": "The toggle is a button that expands and collapses the list. Collapsed items after the first are aria-hidden.",
+            "keys": [
+              "Tab",
+              "Enter",
+              "Space"
+            ]
+          },
+          {
+            "topic": "screen-reader",
+            "text": "The list is a ul. The toggle has aria-expanded and aria-controls, and its label comes from showLabel and hideLabel (\"Show all (n)\" and \"Hide\")."
+          },
+          {
+            "topic": "motion",
+            "text": "The expand uses Motion with reduced motion set to user."
           }
         ]
       }
@@ -6408,6 +7615,27 @@
             "default": null,
             "required": false,
             "description": null
+          }
+        ],
+        "a11y": [
+          {
+            "topic": "keyboard",
+            "text": "Arrow keys step through the cards while focus is inside the carousel. The previous and next buttons are disabled at the ends. A drag moves on past 50 px or a velocity of 500.",
+            "keys": [
+              "Tab",
+              "ArrowLeft",
+              "ArrowRight",
+              "Enter",
+              "Space"
+            ]
+          },
+          {
+            "topic": "screen-reader",
+            "text": "The section is a carousel labelled by label (default \"Cards\"). Each card is a slide group labelled \"i / total\"; cards that are not current are aria-hidden and inert. The buttons are named by previousLabel and nextLabel; the icons and dots are aria-hidden."
+          },
+          {
+            "topic": "motion",
+            "text": "The slide movement uses Motion with reduced motion set to user."
           }
         ]
       }
@@ -6527,6 +7755,25 @@
             "required": false,
             "description": null
           }
+        ],
+        "a11y": [
+          {
+            "topic": "keyboard",
+            "text": "Each step is a button. A step without details is disabled; one with details toggles its details.",
+            "keys": [
+              "Tab",
+              "Enter",
+              "Space"
+            ]
+          },
+          {
+            "topic": "screen-reader",
+            "text": "The card is an article. The state chip has role status and its text comes from stateLabels. A step with details carries aria-expanded. The icons are aria-hidden."
+          },
+          {
+            "topic": "motion",
+            "text": "The spin and ping animations stop under reduced motion, and the rest uses Motion with reduced motion set to user."
+          }
         ]
       }
     },
@@ -6645,6 +7892,25 @@
             "required": false,
             "description": null
           }
+        ],
+        "a11y": [
+          {
+            "topic": "keyboard",
+            "text": "Each row is a button. Escape closes the open view; focus moves to the close button on open and returns to the row on close. There is no focus trap.",
+            "keys": [
+              "Tab",
+              "Enter",
+              "Escape"
+            ]
+          },
+          {
+            "topic": "screen-reader",
+            "text": "The section is labelled by title. Rows have aria-haspopup=\"dialog\" and a connected badge reads connectedLabel. The open view is a dialog labelled by its heading with aria-modal=\"false\". The connect button uses aria-disabled and aria-busy while the call runs. The close button is named by closeLabel."
+          },
+          {
+            "topic": "motion",
+            "text": "The open view uses Motion with reduced motion set to user."
+          }
         ]
       }
     },
@@ -6706,7 +7972,30 @@
         "tier": "free",
         "added": "2026-10-04",
         "usedIn": [],
-        "props": []
+        "props": [],
+        "a11y": [
+          {
+            "topic": "screen-reader",
+            "text": "A full page: a promo line, a header with nav \"Main\" and a \"Mobile\" nav inside a details/summary, then main with the h1 in the hero and h2 sections (favourites, collections, story, reviews, FAQ, newsletter). Product names are h3 links, each collection is a link holding its h3, and the footer columns use h3."
+          },
+          {
+            "topic": "screen-reader",
+            "text": "Icon links carry an aria-label (\"Search\", \"Bag, 2 items\") and their icons are aria-hidden. Colour dots sit in a p with aria-label \"{n} colours\". Review stars are aria-hidden and quotes are figure, blockquote and figcaption."
+          },
+          {
+            "topic": "keyboard",
+            "text": "The mobile menu and the FAQ are native details/summary, so Enter and Space open them. The newsletter field has a label, type=email and required, with a visible focus outline.",
+            "keys": [
+              "Tab",
+              "Enter",
+              "Space"
+            ]
+          },
+          {
+            "topic": "motion",
+            "text": "The hero entry transitions are dropped under reduced motion (motion-reduce:transition-none)."
+          }
+        ]
       }
     },
     {
@@ -6763,7 +8052,30 @@
         "tier": "free",
         "added": "2026-10-04",
         "usedIn": [],
-        "props": []
+        "props": [],
+        "a11y": [
+          {
+            "topic": "screen-reader",
+            "text": "Header with nav \"Main\" (Pricing has aria-current=\"page\"), an h1, a list of plans with an h2 each, a comparison section named by its heading, an FAQ and a closing call to action. The comparison is a table with column, column group and row header scopes; included and not included cells carry the aria-labels \"Included\" and \"Not included\"."
+          },
+          {
+            "topic": "screen-reader",
+            "text": "The billing switch is a fieldset with a screen-reader-only legend \"Billing period\" and two native radios, so the choice is read as a group. Both prices are in the markup; the radio state picks which one shows."
+          },
+          {
+            "topic": "keyboard",
+            "text": "The billing radios are visually hidden and the label shows a focus ring when a radio has keyboard focus. Arrow keys move between the two radios; the FAQ uses native details/summary.",
+            "keys": [
+              "Tab",
+              "ArrowLeft",
+              "ArrowRight",
+              "ArrowUp",
+              "ArrowDown",
+              "Enter",
+              "Space"
+            ]
+          }
+        ]
       }
     },
     {
@@ -6820,7 +8132,34 @@
         "tier": "free",
         "added": "2026-10-04",
         "usedIn": [],
-        "props": []
+        "props": [],
+        "a11y": [
+          {
+            "topic": "screen-reader",
+            "text": "Layout: an aside with nav \"Main\" (Overview has aria-current=\"page\"), a header with a search field and a \"Notifications, 3 new\" button, and main with the h1 \"Overview\". Below the lg breakpoint the aside is hidden and the same nav, also named \"Main\", sits in a details menu."
+          },
+          {
+            "topic": "screen-reader",
+            "text": "The period switch is a fieldset with a screen-reader-only legend \"Period\" and native radios; only the chosen period's chart is shown. KPI sparklines are aria-hidden, and the change pills read only the number because the direction arrow is aria-hidden. The revenue bars are an ordered list named \"Revenue by period, {period}\", and each bar holds its tooltip as real text."
+          },
+          {
+            "topic": "screen-reader",
+            "text": "Top products are an ordered list, and the orders table has column headers; the status dot is aria-hidden and the status is written out. The charts are drawn inline here, not with bar-chart or sparkline."
+          },
+          {
+            "topic": "keyboard",
+            "text": "Each revenue bar is a Tab stop (tabIndex 0) and shows its tooltip on focus as on hover. The period radios and the mobile details menu use native keys.",
+            "keys": [
+              "Tab",
+              "ArrowLeft",
+              "ArrowRight",
+              "ArrowUp",
+              "ArrowDown",
+              "Enter",
+              "Space"
+            ]
+          }
+        ]
       }
     },
     {
@@ -6877,7 +8216,34 @@
         "tier": "free",
         "added": "2026-10-04",
         "usedIn": [],
-        "props": []
+        "props": [],
+        "a11y": [
+          {
+            "topic": "screen-reader",
+            "text": "A two-pane page: main holds the h1 and the form, and from the lg breakpoint an aside holds the stats and a quote (figure, blockquote); its wave pattern is aria-hidden. The h1 text changes with the chosen mode."
+          },
+          {
+            "topic": "screen-reader",
+            "text": "The mode switch is a fieldset with a screen-reader-only legend \"Choose\" and two native radios. Shop name, email and password each have a label with htmlFor; email and password are required, password has minLength 8 and autoComplete=\"current-password\", and the shop name field is hidden until Create account is chosen."
+          },
+          {
+            "topic": "screen-reader",
+            "text": "Error text appears with CSS after the browser marks a field invalid (:user-invalid). The passkey button has an aria-hidden icon, and the stars sit in a span with aria-label \"5 out of 5\"."
+          },
+          {
+            "topic": "keyboard",
+            "text": "The mode radios are visually hidden and the label shows a focus ring on keyboard focus. Arrow keys switch mode; the form submits with Enter.",
+            "keys": [
+              "Tab",
+              "ArrowLeft",
+              "ArrowRight",
+              "ArrowUp",
+              "ArrowDown",
+              "Enter",
+              "Space"
+            ]
+          }
+        ]
       }
     },
     {
@@ -6934,7 +8300,33 @@
         "tier": "free",
         "added": "2026-10-04",
         "usedIn": [],
-        "props": []
+        "props": [],
+        "a11y": [
+          {
+            "topic": "screen-reader",
+            "text": "Header with a Subscribe link (its text shows from the sm breakpoint and stays screen-reader-only below, the icon is aria-hidden), main with the h1, and from the lg breakpoint an aside with nav \"Versions\" linking to each release by its #v anchor."
+          },
+          {
+            "topic": "screen-reader",
+            "text": "Releases are an ordered list; each has a time element with dateTime, an article and an h2, and its changes are a list with a text badge (New, Improved, Fixed). The timeline line and dots are aria-hidden."
+          },
+          {
+            "topic": "screen-reader",
+            "text": "The filter is a fieldset with a screen-reader-only legend \"Show\" and four native radios (Everything, New, Improved, Fixed). Changes of another type are hidden with CSS, and so are releases with none of the chosen type. The subscribe form has a screen-reader-only label, type=email and required."
+          },
+          {
+            "topic": "keyboard",
+            "text": "Native radios, so Arrow keys change the filter; the version links are plain anchors.",
+            "keys": [
+              "Tab",
+              "ArrowLeft",
+              "ArrowRight",
+              "ArrowUp",
+              "ArrowDown",
+              "Enter"
+            ]
+          }
+        ]
       }
     },
     {
@@ -7026,6 +8418,25 @@
             "required": false,
             "description": null
           }
+        ],
+        "a11y": [
+          {
+            "topic": "screen-reader",
+            "text": "A component, not a page: it has no main. A nav (default label \"Sections\") holds icon links with aria-label, title and aria-current; a header holds the h2 title. Each tile is a section named by its h3 (see data-tile)."
+          },
+          {
+            "topic": "screen-reader",
+            "text": "Each card limit is a role=\"progressbar\" named by the card, with aria-valuenow as the percent (capped at 100) and 0 to 100 as range; the spent and limit amounts are written next to it. The figure uses BigNumber and DeltaPill from chart-kit, and the charts are bar-chart and bubble-chart; see their notes."
+          },
+          {
+            "topic": "keyboard",
+            "text": "Nav links and the upsell button are native, with a focus-visible outline.",
+            "keys": [
+              "Tab",
+              "Enter",
+              "Space"
+            ]
+          }
         ]
       }
     },
@@ -7097,6 +8508,20 @@
             "default": null,
             "required": false,
             "description": null
+          }
+        ],
+        "a11y": [
+          {
+            "topic": "screen-reader",
+            "text": "A grid of data-tile sections, each named by its h3, with no h1 or main of its own. The tiles use BigNumber and DeltaPill from chart-kit, sparkline, transaction-list, dot-matrix, donut, lollipop and bar-chart; see their notes. The charts take a label, which names them."
+          },
+          {
+            "topic": "screen-reader",
+            "text": "The team list is a list with real names and roles; the initials are aria-hidden."
+          },
+          {
+            "topic": "other",
+            "text": "The wall adds no controls of its own; its Tab stops come from the charts (see their notes)."
           }
         ]
       }
@@ -7183,6 +8608,21 @@
             "required": false,
             "description": null
           }
+        ],
+        "a11y": [
+          {
+            "topic": "screen-reader",
+            "text": "A nav (default label \"Workspace\") with buttons; the current one has aria-current=\"page\". A search form has role=\"search\" and an input with an aria-label (default \"Search\"). Tiles are sections named by their h3; the charts are bar-chart and week-schedule, see their notes."
+          },
+          {
+            "topic": "keyboard",
+            "text": "Nav buttons and the offer button are native with a focus-visible outline; the search field has no outline of its own, and the search form draws one around it while it has focus. Enter in the search field submits it to onSearch.",
+            "keys": [
+              "Tab",
+              "Enter",
+              "Space"
+            ]
+          }
         ]
       }
     },
@@ -7262,6 +8702,21 @@
             "required": false,
             "description": null
           }
+        ],
+        "a11y": [
+          {
+            "topic": "screen-reader",
+            "text": "Tiles are sections named by their h3. The call tile shows the status and duration in a role=\"status\" span, its phone icon is aria-hidden, and the end call button is native. The target, performance and sources tiles use dial (a read-only meter), bar-chart and donut; see their notes."
+          },
+          {
+            "topic": "keyboard",
+            "text": "The end call button is native with a focus-visible style.",
+            "keys": [
+              "Tab",
+              "Enter",
+              "Space"
+            ]
+          }
         ]
       }
     },
@@ -7335,7 +8790,17 @@
             "description": "The features, lead first. Six fill the bento exactly; other counts reflow without holes at the ends."
           }
         ],
-        "extends": "Omit<ComponentProps<'section'>, 'children' | 'title'>"
+        "extends": "Omit<ComponentProps<'section'>, 'children' | 'title'>",
+        "a11y": [
+          {
+            "topic": "screen-reader",
+            "text": "A section named by its h2 with a list of tiles, each a data-tile with an h3. The lead tile is inverted. A tile visual is aria-hidden, unless visualLabel is passed: then it is role=\"img\" with that label."
+          },
+          {
+            "topic": "other",
+            "text": "No motion and no controls of its own."
+          }
+        ]
       }
     },
     {
@@ -7425,7 +8890,17 @@
             "description": "Roll the figures in when the section first comes into view. Never under reduced motion. Default true."
           }
         ],
-        "extends": "Omit<ComponentProps<'section'>, 'children' | 'title'>"
+        "extends": "Omit<ComponentProps<'section'>, 'children' | 'title'>",
+        "a11y": [
+          {
+            "topic": "screen-reader",
+            "text": "A section named by its h2 with a list of tiles with an h3 label each. The real value is in screen-reader-only text and the rolling digits are aria-hidden; DeltaPill from chart-kit reads the direction; the sparkline takes the metric label (or trendLabel) as its label."
+          },
+          {
+            "topic": "motion",
+            "text": "With roll (default true) the figures show 0 after mount and roll up once when they scroll into view; the server markup has the real values. Under reduced motion they never roll and show the real values."
+          }
+        ]
       }
     },
     {
@@ -7570,7 +9045,31 @@
             "description": "The one primary action."
           }
         ],
-        "extends": "Omit<ComponentProps<'section'>, 'children' | 'title'>"
+        "extends": "Omit<ComponentProps<'section'>, 'children' | 'title'>",
+        "a11y": [
+          {
+            "topic": "screen-reader",
+            "text": "A section named by its h2. The product image is role=\"img\" with the variant mediaLabel (or label); the visible caption is aria-hidden. The variants are a Pills radio group from chart-kit, named by variantLabel; the price is read once in full, and the specs are a description list."
+          },
+          {
+            "topic": "keyboard",
+            "text": "Variants use the Pills arrow keys, with Home and End; the action is a link.",
+            "keys": [
+              "Tab",
+              "ArrowLeft",
+              "ArrowRight",
+              "ArrowUp",
+              "ArrowDown",
+              "Home",
+              "End",
+              "Enter"
+            ]
+          },
+          {
+            "topic": "motion",
+            "text": "Media layers cross-fade on a variant change; under reduced motion the media swaps at once and the price does not roll."
+          }
+        ]
       }
     },
     {
@@ -7656,7 +9155,17 @@
             "description": "Every visible and spoken string that is not content."
           }
         ],
-        "extends": "Omit<ComponentProps<'section'>, 'children' | 'title'>"
+        "extends": "Omit<ComponentProps<'section'>, 'children' | 'title'>",
+        "a11y": [
+          {
+            "topic": "screen-reader",
+            "text": "A section named by its h2 with an ordered list; the current step has aria-current=\"step\". Each step has an h3 and a screen-reader-only \"Step\" before the number; when current is set, the state is said in words (Done, Now, and a screen-reader-only Up next). Checks and dots are aria-hidden, and the connecting line is a CSS pseudo-element with no content."
+          },
+          {
+            "topic": "other",
+            "text": "No motion and no controls."
+          }
+        ]
       }
     },
     {
@@ -7745,7 +9254,25 @@
             "description": "Text for the interface itself, for translation."
           }
         ],
-        "extends": "Omit<ComponentProps<'section'>, 'children' | 'title'>"
+        "extends": "Omit<ComponentProps<'section'>, 'children' | 'title'>",
+        "a11y": [
+          {
+            "topic": "screen-reader",
+            "text": "A section named by its h2 with two action links and a plain fact line. An external link opens in a new tab and carries a screen-reader-only \"(opens in a new tab)\"."
+          },
+          {
+            "topic": "keyboard",
+            "text": "Native links.",
+            "keys": [
+              "Tab",
+              "Enter"
+            ]
+          },
+          {
+            "topic": "motion",
+            "text": "The press feedback on the links is dropped under reduced motion."
+          }
+        ]
       }
     },
     {
@@ -7841,7 +9368,30 @@
             "description": "Text for the interface itself, for translation."
           }
         ],
-        "extends": "Omit<ComponentProps<'section'>, 'children' | 'title' | 'onSubmit'>"
+        "extends": "Omit<ComponentProps<'section'>, 'children' | 'title' | 'onSubmit'>",
+        "a11y": [
+          {
+            "topic": "screen-reader",
+            "text": "A section named by its h2 with a checklist (check icons are aria-hidden). The email field has a label and is described by the error and the consent text; aria-invalid is set once the problem shows (on blur with a value, and on submit)."
+          },
+          {
+            "topic": "screen-reader",
+            "text": "The error block gets role=\"alert\" only when the send fails. The button gets aria-disabled while sending with a screen-reader-only \"Sending\", and the form has aria-busy. The success message is a role=\"status\" region with aria-live=\"polite\"."
+          },
+          {
+            "topic": "keyboard",
+            "text": "The form has noValidate; on an invalid submit focus moves to the email field. After success focus moves to the reset button (\"Use a different address\"), which returns focus to the field.",
+            "keys": [
+              "Tab",
+              "Enter",
+              "Space"
+            ]
+          },
+          {
+            "topic": "motion",
+            "text": "The spinner and the transitions are switched off under reduced motion (motion-reduce)."
+          }
+        ]
       }
     },
     {
@@ -7909,6 +9459,12 @@
             "default": null,
             "required": false,
             "description": null
+          }
+        ],
+        "a11y": [
+          {
+            "topic": "screen-reader",
+            "text": "Tiles are sections named by their h3: BigNumber from chart-kit (the first tile is inverted), area-chart with a compare series, a dial from 0 to 100 with a percent suffix (a read-only meter), and transaction-list. See their notes. The screen adds no controls; area-chart is its only Tab stop."
           }
         ]
       }
@@ -7989,6 +9545,25 @@
             "required": false,
             "description": null
           }
+        ],
+        "a11y": [
+          {
+            "topic": "screen-reader",
+            "text": "Client progress is a list where each item holds a role=\"progressbar\" named by the client, with the percent as value and written as text. Roadmap lanes are sections named by the lane title, with an h3 and a list; owner avatars are role=\"img\" with the name."
+          },
+          {
+            "topic": "screen-reader",
+            "text": "The day picker is role=\"group\" (default label \"Day\") of buttons with aria-pressed; when now is set, today carries aria-current=\"date\" and an aria-hidden dot. The assistant tile has a button."
+          },
+          {
+            "topic": "keyboard",
+            "text": "The day buttons and the assistant button are native with a focus-visible outline.",
+            "keys": [
+              "Tab",
+              "Enter",
+              "Space"
+            ]
+          }
         ]
       }
     },
@@ -8057,6 +9632,12 @@
             "default": null,
             "required": false,
             "description": null
+          }
+        ],
+        "a11y": [
+          {
+            "topic": "screen-reader",
+            "text": "Tiles are sections named by their h3. The schedule sits in an inverted tile as an ordered list with time elements. The tiles use bar-chart (funnel), transaction-list (payroll) and dot-matrix (attendance); see their notes. The screen adds no controls; its Tab stops come from bar-chart and dot-matrix."
           }
         ]
       }
@@ -8127,6 +9708,12 @@
             "required": false,
             "description": null
           }
+        ],
+        "a11y": [
+          {
+            "topic": "screen-reader",
+            "text": "Tiles are sections named by their h3. Vitals use BigNumber from chart-kit with the unit as text after it; the patient tile is named by the patient's name and holds a description list; the rest are dial (score, a read-only meter), bar-chart (calories) and donut (macros); see their notes. The screen adds no controls; its Tab stops come from bar-chart and donut."
+          }
         ]
       }
     },
@@ -8192,6 +9779,21 @@
             "default": null,
             "required": false,
             "description": null
+          }
+        ],
+        "a11y": [
+          {
+            "topic": "screen-reader",
+            "text": "A nav (default label \"Gallery\") with buttons and aria-current=\"page\", an h2 headline, an events list, and a collections list. Collection images get alt=\"\" and the colour tile is aria-hidden; the name and the work count are text. Counter tiles show BigNumber from chart-kit in tiles named by their h3."
+          },
+          {
+            "topic": "keyboard",
+            "text": "Nav buttons are native with a focus-visible outline.",
+            "keys": [
+              "Tab",
+              "Enter",
+              "Space"
+            ]
           }
         ]
       }
@@ -8289,6 +9891,25 @@
             "default": null,
             "required": false,
             "description": null
+          }
+        ],
+        "a11y": [
+          {
+            "topic": "screen-reader",
+            "text": "An h1 title (default \"Wallet\") and tiles named by their h3. The cash flow tile has a period switch, Pills from chart-kit (label \"Period\"); the bar-chart and donut are labelled \"Cash flow, {period}\" and \"Spending, {period}\" with the period's long name. The subscriptions list has an aria-label, its initials are aria-hidden, and each amount ends with a screen-reader-only \" a month\". See card-stack and the chart notes."
+          },
+          {
+            "topic": "keyboard",
+            "text": "The period switch is a radio group; arrows move between periods.",
+            "keys": [
+              "Tab",
+              "ArrowLeft",
+              "ArrowRight",
+              "ArrowUp",
+              "ArrowDown",
+              "Home",
+              "End"
+            ]
           }
         ]
       }
@@ -8394,6 +10015,12 @@
             "required": false,
             "description": null
           }
+        ],
+        "a11y": [
+          {
+            "topic": "screen-reader",
+            "text": "An h1 title (default \"Account\") with tiles named by their h3: card-stack with one card and hideAmount set, an inverted balance tile with BigNumber and DeltaPill from chart-kit, a three-zone dial (default Under, On track, Over) that is a read-only meter, and transaction-list limited to 5. See their notes. Tab stops come from card-stack and from the transaction-list show more button when there are more than 5 transactions."
+          }
         ]
       }
     },
@@ -8488,6 +10115,29 @@
             "default": null,
             "required": false,
             "description": null
+          }
+        ],
+        "a11y": [
+          {
+            "topic": "screen-reader",
+            "text": "An h1 and a currency switch, Pills from chart-kit (default label \"Currency\"); every tile follows the chosen currency. The rewards progress bar is aria-hidden because the \"to next\" sentence says the same; allocation bars are aria-hidden and the share is written as text. The donut is described in its own note."
+          },
+          {
+            "topic": "keyboard",
+            "text": "Pills arrows switch currency, with Home and End.",
+            "keys": [
+              "Tab",
+              "ArrowLeft",
+              "ArrowRight",
+              "ArrowUp",
+              "ArrowDown",
+              "Home",
+              "End"
+            ]
+          },
+          {
+            "topic": "motion",
+            "text": "The bar transitions are dropped under reduced motion."
           }
         ]
       }
@@ -8593,6 +10243,12 @@
             "default": null,
             "required": false,
             "description": null
+          }
+        ],
+        "a11y": [
+          {
+            "topic": "screen-reader",
+            "text": "An h1 and tiles named by their h3. The legend marks income with a square and payments with a dashed line, as in the chart; the marks are aria-hidden and the names are text. The growth donut is labelled \"Growth, {pct} percent of {target}\". The verification list writes each state \"(Done)\" or \"(To do)\" and the check mark is aria-hidden; the footer reads \"{d} of {t} steps done\". See BigNumber and DeltaPill from chart-kit, area-chart, donut, sparkline and transaction-list (limit 4)."
           }
         ]
       }
@@ -8704,7 +10360,26 @@
             "description": "UI strings, for translation."
           }
         ],
-        "extends": "Omit<ComponentPropsWithoutRef<'footer'>, 'children'>"
+        "extends": "Omit<ComponentPropsWithoutRef<'footer'>, 'children'>",
+        "a11y": [
+          {
+            "topic": "screen-reader",
+            "text": "A footer with a screen-reader-only h2, a nav (default \"Footer\") with an h3 and list per column, and a newsletter section named by its h3. The form has a label, aria-invalid and aria-describedby; the error has role=\"alert\" only when sending fails. A sent message sits in a role=\"status\" region. The region select has a screen-reader-only label, and external links carry a hidden new tab text."
+          },
+          {
+            "topic": "keyboard",
+            "text": "On an invalid submit focus moves to the email field. When sent, focus moves to the confirmation (tabIndex -1); \"Use another address\" returns focus to the field.",
+            "keys": [
+              "Tab",
+              "Enter",
+              "Space"
+            ]
+          },
+          {
+            "topic": "motion",
+            "text": "The button transition is dropped under reduced motion."
+          }
+        ]
       }
     },
     {
@@ -8829,7 +10504,26 @@
             "description": "Interface strings, for translation."
           }
         ],
-        "extends": "Omit<ComponentPropsWithoutRef<'footer'>, 'children'>"
+        "extends": "Omit<ComponentPropsWithoutRef<'footer'>, 'children'>",
+        "a11y": [
+          {
+            "topic": "screen-reader",
+            "text": "A footer with an h2 and an h3 (default \"Local time\") for the offices list, where each office has a time element. The email is a mailto link next to a copy button with the screen-reader-only text \"Copy email\"; the result is announced in a role=\"status\" region. The avatar is aria-hidden unless you pass your own."
+          },
+          {
+            "topic": "keyboard",
+            "text": "Link, copy button and the \"Book a call\" link are native.",
+            "keys": [
+              "Tab",
+              "Enter",
+              "Space"
+            ]
+          },
+          {
+            "topic": "other",
+            "text": "The clock ticks on the minute; a fixed now is used as given. Until the clock is read the times show \"--:--\"."
+          }
+        ]
       }
     },
     {
@@ -8934,7 +10628,30 @@
             "description": "Interface strings, for translation."
           }
         ],
-        "extends": "Omit<ComponentPropsWithoutRef<'footer'>, 'children'>"
+        "extends": "Omit<ComponentPropsWithoutRef<'footer'>, 'children'>",
+        "a11y": [
+          {
+            "topic": "screen-reader",
+            "text": "A footer with a screen-reader-only h2 and a group per h3. On a wide footer the groups are open lists. On a narrow footer the h3 holds a button with aria-expanded and aria-controls that opens a labelled region. The region nav (default \"Region and language\") marks the current one with aria-current=\"true\" and sets hrefLang and lang."
+          },
+          {
+            "topic": "keyboard",
+            "text": "On a narrow footer each group heading is a button.",
+            "keys": [
+              "Tab",
+              "Enter",
+              "Space"
+            ]
+          },
+          {
+            "topic": "motion",
+            "text": "Opening a group fades it in and lifts it 6 px over 240 ms; under reduced motion (MotionConfig reducedMotion=\"user\") the lift is dropped and the fade remains. The height changes at once."
+          },
+          {
+            "topic": "other",
+            "text": "Groups fold by the width of the footer itself (collapseBelow, default 640) and start open before it is measured."
+          }
+        ]
       }
     },
     {
@@ -9028,7 +10745,30 @@
             "description": "UI strings, for translation."
           }
         ],
-        "extends": "Omit<ComponentPropsWithoutRef<'footer'>, 'children'>"
+        "extends": "Omit<ComponentPropsWithoutRef<'footer'>, 'children'>",
+        "a11y": [
+          {
+            "topic": "screen-reader",
+            "text": "A footer with a nav (default \"Footer\") list that shows only when there are links. The theme switch is Pills from chart-kit (label \"Theme\": Light, Dark, System) and only shows when both theme and onThemeChange are passed. External links carry a hidden new tab text."
+          },
+          {
+            "topic": "keyboard",
+            "text": "Pills arrows move between theme options, with Home and End.",
+            "keys": [
+              "Tab",
+              "ArrowLeft",
+              "ArrowRight",
+              "ArrowUp",
+              "ArrowDown",
+              "Home",
+              "End"
+            ]
+          },
+          {
+            "topic": "motion",
+            "text": "The switch's thumb slides between options; under reduced motion it jumps."
+          }
+        ]
       }
     },
     {
@@ -9132,7 +10872,26 @@
             "description": "UI strings, for translation."
           }
         ],
-        "extends": "Omit<ComponentPropsWithoutRef<'footer'>, 'children'>"
+        "extends": "Omit<ComponentPropsWithoutRef<'footer'>, 'children'>",
+        "a11y": [
+          {
+            "topic": "screen-reader",
+            "text": "A footer named by the h2 statement. It has an action link, a mailto link, and a copy button whose visible word is aria-hidden and whose name is \"{copy} {email}\". The copy result is a role=\"status\" region. Links are in a nav (default \"Footer\") and the legal links in a list."
+          },
+          {
+            "topic": "keyboard",
+            "text": "Native links and button.",
+            "keys": [
+              "Tab",
+              "Enter",
+              "Space"
+            ]
+          },
+          {
+            "topic": "motion",
+            "text": "The only motion is a 200 ms press feedback on the action and the copy button; its transition is dropped under reduced motion."
+          }
+        ]
       }
     },
     {
@@ -9236,7 +10995,26 @@
             "description": "Interface strings, for translation."
           }
         ],
-        "extends": "Omit<ComponentPropsWithoutRef<'footer'>, 'children'>"
+        "extends": "Omit<ComponentPropsWithoutRef<'footer'>, 'children'>",
+        "a11y": [
+          {
+            "topic": "screen-reader",
+            "text": "A footer with a screen-reader-only h2. A role=\"status\" chip says the state in words with a shaped icon (aria-hidden), plus \"Updated {time}\" when updated is set; with statusHref it becomes a link. The nav is labelled \"Product links\"."
+          },
+          {
+            "topic": "keyboard",
+            "text": "\"Back to top\" scrolls and then moves focus to focusTarget, setting tabindex=\"-1\" if missing.",
+            "keys": [
+              "Tab",
+              "Enter",
+              "Space"
+            ]
+          },
+          {
+            "topic": "motion",
+            "text": "Back to top scrolls at once under reduced motion instead of smoothly, and the press scale is dropped."
+          }
+        ]
       }
     },
     {
@@ -9340,7 +11118,21 @@
             "description": "UI strings, for translation."
           }
         ],
-        "extends": "Omit<ComponentPropsWithoutRef<'footer'>, 'children'>"
+        "extends": "Omit<ComponentPropsWithoutRef<'footer'>, 'children'>",
+        "a11y": [
+          {
+            "topic": "screen-reader",
+            "text": "A footer named by a screen-reader-only h2 with four tiles with an h3 each (Visit, Opening hours, Explore, Follow). Visit is an address element; directions and social links open in a new tab with hidden text and aria-hidden icons. The hours are a list with a \"Today\" marker in text and a status line (\"Open now\" or \"Closed, opens ...\") with an aria-hidden dot; it reads \"Opening hours\" until the time is known and refreshes every 30 s unless now is given."
+          },
+          {
+            "topic": "keyboard",
+            "text": "Native links.",
+            "keys": [
+              "Tab",
+              "Enter"
+            ]
+          }
+        ]
       }
     },
     {
@@ -9436,7 +11228,30 @@
             "description": "UI strings, for translation."
           }
         ],
-        "extends": "Omit<HTMLAttributes<HTMLElement>, 'title'>"
+        "extends": "Omit<HTMLAttributes<HTMLElement>, 'title'>",
+        "a11y": [
+          {
+            "topic": "screen-reader",
+            "text": "A section named by its h2 with a list of channels; each is an article with an h3, a detail, the answer time and one link. The recommended one is inverted and also says \"Recommended\" in text. Icons are aria-hidden; an external link opens a new tab with hidden text."
+          },
+          {
+            "topic": "screen-reader",
+            "text": "The FAQ is native details/summary under an h3; the +/- marks are aria-hidden."
+          },
+          {
+            "topic": "keyboard",
+            "text": "Links and the FAQ summaries are native.",
+            "keys": [
+              "Tab",
+              "Enter",
+              "Space"
+            ]
+          },
+          {
+            "topic": "motion",
+            "text": "The link press feedback is dropped under reduced motion; the FAQ answer appears without the animation."
+          }
+        ]
       }
     },
     {
@@ -9537,7 +11352,36 @@
             "description": null
           }
         ],
-        "extends": "Omit<HTMLAttributes<HTMLElement>, 'onSubmit' | 'title'>"
+        "extends": "Omit<HTMLAttributes<HTMLElement>, 'onSubmit' | 'title'>",
+        "a11y": [
+          {
+            "topic": "screen-reader",
+            "text": "A section named by its h2 with a form tile and an aside named by its h3 (default \"Other ways to reach us\") holding email, phone and address in a description list. Name, email and message have real labels; aria-invalid and aria-describedby point to the error; the message count (\"{n} / 800\", or \"{n} over\" past the limit) is also in its aria-describedby."
+          },
+          {
+            "topic": "screen-reader",
+            "text": "Sending, sent and error states are announced through a role=\"status\" region. With more than one topic, the topic is Pills from chart-kit when the form tile is at least 26rem wide and a native select when narrower, both named by \"Topic\". Consent is a checkbox in a label that only shows when consent is passed."
+          },
+          {
+            "topic": "keyboard",
+            "text": "On an invalid submit focus moves to the first invalid field. The send button uses aria-disabled while sending so it keeps focus. After sent, focus moves to the confirmation heading, and \"Write another\" moves it back to the name field.",
+            "keys": [
+              "Tab",
+              "ArrowLeft",
+              "ArrowRight",
+              "ArrowUp",
+              "ArrowDown",
+              "Home",
+              "End",
+              "Enter",
+              "Space"
+            ]
+          },
+          {
+            "topic": "motion",
+            "text": "The press feedback on the send button is dropped under reduced motion."
+          }
+        ]
       }
     },
     {
@@ -9619,7 +11463,30 @@
             "description": null
           }
         ],
-        "extends": "Omit<HTMLAttributes<HTMLElement>, 'title'>"
+        "extends": "Omit<HTMLAttributes<HTMLElement>, 'title'>",
+        "a11y": [
+          {
+            "topic": "screen-reader",
+            "text": "A section named by its h2 with a list of offices; each is an article with an h3 city, a status (Open now or Closed, in text with an aria-live region), local time, an address element with a tel link, and opening hours in a table with a caption and row headers."
+          },
+          {
+            "topic": "screen-reader",
+            "text": "A copy address button announces its result in a role=\"status\" region; the directions link opens a new tab and names the city in hidden text."
+          },
+          {
+            "topic": "keyboard",
+            "text": "Buttons and links are native.",
+            "keys": [
+              "Tab",
+              "Enter",
+              "Space"
+            ]
+          },
+          {
+            "topic": "other",
+            "text": "Without now, the clock is read after mount and updated each minute; the first render shows \"--:--\"."
+          }
+        ]
       }
     },
     {
@@ -9695,7 +11562,36 @@
             "description": null
           }
         ],
-        "extends": "Omit<HTMLAttributes<HTMLElement>, 'title'>"
+        "extends": "Omit<HTMLAttributes<HTMLElement>, 'title'>",
+        "a11y": [
+          {
+            "topic": "screen-reader",
+            "text": "A section named by its h2 with a list of people; each is an article with an h3 name and role. Languages are a list named \"Languages\". When there is more than one team a Pills radio group from chart-kit (label \"Team\") filters, and \"{n} people shown\" is announced in a role=\"status\" region."
+          },
+          {
+            "topic": "screen-reader",
+            "text": "The copy button shows a word that is aria-hidden and is named \"Copy email: {email}\"; the result is announced in a role=\"status\" region. The initials are aria-hidden unless an avatar is passed. \"Book a call\" adds the name in hidden text."
+          },
+          {
+            "topic": "keyboard",
+            "text": "Pills arrows move between teams, with Home and End; buttons and links are native.",
+            "keys": [
+              "Tab",
+              "ArrowLeft",
+              "ArrowRight",
+              "ArrowUp",
+              "ArrowDown",
+              "Home",
+              "End",
+              "Enter",
+              "Space"
+            ]
+          },
+          {
+            "topic": "motion",
+            "text": "The press feedback on the buttons is dropped under reduced motion."
+          }
+        ]
       }
     },
     {
@@ -10029,6 +11925,29 @@
               }
             ]
           }
+        ],
+        "a11y": [
+          {
+            "topic": "screen-reader",
+            "text": "BigNumber carries the full value in sr-only text and the visual is aria-hidden. DeltaPill adds \", up\", \", down\" or \", unchanged\". ChartTooltip is aria-hidden. SrTable is a visually hidden table with a caption and column headers with scope."
+          },
+          {
+            "topic": "keyboard",
+            "text": "Pills is a radio group with roving focus: arrows, Home and End move the choice, and up and down act like right and left. stepIndex in chart-utils moves by ArrowLeft, ArrowRight, Home and End, or ArrowUp and ArrowDown when vertical.",
+            "keys": [
+              "Tab",
+              "ArrowLeft",
+              "ArrowRight",
+              "ArrowUp",
+              "ArrowDown",
+              "Home",
+              "End"
+            ]
+          },
+          {
+            "topic": "motion",
+            "text": "Under reduced motion the digits do not roll and the tooltip transition is off. useChartFrame reports reduced and treats the chart as drawn at once."
+          }
         ]
       }
     },
@@ -10133,6 +12052,12 @@
             "default": null,
             "required": false,
             "description": null
+          }
+        ],
+        "a11y": [
+          {
+            "topic": "screen-reader",
+            "text": "A section labelled by its heading when title is set; the level comes from headingLevel (default 3). The TileLegend export is a list with a visible text label per item, and the colour swatches are aria-hidden."
           }
         ]
       }
@@ -10315,7 +12240,29 @@
             "description": "Every visible and spoken string that is not data."
           }
         ],
-        "extends": "Omit<ComponentProps<'div'>, 'children'>"
+        "extends": "Omit<ComponentProps<'div'>, 'children'>",
+        "a11y": [
+          {
+            "topic": "keyboard",
+            "text": "The plot is one Tab stop. ArrowLeft and ArrowRight, Home and End step through the bars without wrapping; Escape lets go. Hover and scrubbing show the same tooltip.",
+            "keys": [
+              "Tab",
+              "ArrowLeft",
+              "ArrowRight",
+              "Home",
+              "End",
+              "Escape"
+            ]
+          },
+          {
+            "topic": "screen-reader",
+            "text": "The plot is an image named by label and described by a hint (\"Use the arrow keys to read each bar.\"). Each step is read once through a polite live region. A hidden table holds the whole series, and the tooltip is aria-hidden. While loading it is aria-busy with visually hidden loading text. With no data the plot has no role and is not focusable. minBarWidth groups bars into buckets, and the announcements read the buckets."
+          },
+          {
+            "topic": "motion",
+            "text": "Under reduced motion the bars stand at full height at once."
+          }
+        ]
       }
     },
     {
@@ -10456,7 +12403,31 @@
             "description": "Every visible and spoken string that is not data."
           }
         ],
-        "extends": "Omit<ComponentProps<'div'>, 'children'>"
+        "extends": "Omit<ComponentProps<'div'>, 'children'>",
+        "a11y": [
+          {
+            "topic": "keyboard",
+            "text": "The plot is one Tab stop. ArrowLeft and ArrowRight, Home and End step through the points; Page Up and Page Down jump one label step (tickEvery); Escape lets go.",
+            "keys": [
+              "Tab",
+              "ArrowLeft",
+              "ArrowRight",
+              "Home",
+              "End",
+              "PageUp",
+              "PageDown",
+              "Escape"
+            ]
+          },
+          {
+            "topic": "screen-reader",
+            "text": "The plot is an image named by label and described by a hint (\"Use the arrow keys to read each point. Page Up and Page Down jump further.\"). Each step is read once through a polite live region, and a hidden table holds the data."
+          },
+          {
+            "topic": "motion",
+            "text": "Under reduced motion the whole chart stands at once and the crosshair jumps instead of gliding."
+          }
+        ]
       }
     },
     {
@@ -10612,7 +12583,29 @@
             "description": "Every visible and spoken string that is not data."
           }
         ],
-        "extends": "Omit<ComponentProps<'div'>, 'children'>"
+        "extends": "Omit<ComponentProps<'div'>, 'children'>",
+        "a11y": [
+          {
+            "topic": "keyboard",
+            "text": "With interactive (default true) the line is one Tab stop: ArrowLeft and ArrowRight, Home and End step through the points, and Escape lets go. The hit area is at least 44 px.",
+            "keys": [
+              "Tab",
+              "ArrowLeft",
+              "ArrowRight",
+              "Home",
+              "End",
+              "Escape"
+            ]
+          },
+          {
+            "topic": "screen-reader",
+            "text": "The line is an image named by label plus a summary from labels. In the interactive case it is described by a hint. The table prop (default true) adds a hidden table; turn it off inside a table row. The loading and empty states change the name."
+          },
+          {
+            "topic": "motion",
+            "text": "Under reduced motion the line is there at once."
+          }
+        ]
       }
     },
     {
@@ -10781,7 +12774,31 @@
             "description": "Every visible and spoken string that is not data."
           }
         ],
-        "extends": "Omit<ComponentProps<'div'>, 'children'>"
+        "extends": "Omit<ComponentProps<'div'>, 'children'>",
+        "a11y": [
+          {
+            "topic": "keyboard",
+            "text": "The grid is one Tab stop. Arrows move in both axes, Home and End go to the ends of a row, Ctrl+Home and Ctrl+End to the corners, and Escape lets go.",
+            "keys": [
+              "Tab",
+              "ArrowLeft",
+              "ArrowRight",
+              "ArrowUp",
+              "ArrowDown",
+              "Home",
+              "End",
+              "Escape"
+            ]
+          },
+          {
+            "topic": "screen-reader",
+            "text": "The grid is an image named by label with a hint. Each step is read once as row, column and value, with \"now\" (labels.current) on the current cell. A hidden table holds the data, and the dots differ in size and darkness so the pattern reads without colour."
+          },
+          {
+            "topic": "motion",
+            "text": "Under reduced motion every dot is at its size at once."
+          }
+        ]
       }
     },
     {
@@ -10926,7 +12943,31 @@
             "description": "\"compact\" draws a smaller ring and tighter gaps. Inside a compact DataTile this happens on its own."
           }
         ],
-        "extends": "Omit<HTMLAttributes<HTMLDivElement>, \"children\" | \"onSelect\">"
+        "extends": "Omit<HTMLAttributes<HTMLDivElement>, \"children\" | \"onSelect\">",
+        "a11y": [
+          {
+            "topic": "keyboard",
+            "text": "The legend is one Tab stop with roving focus. ArrowRight and ArrowDown go forward, ArrowLeft and ArrowUp back, Home and End to the ends, with no wrapping. Escape lets go. Rows and ring segments light each other.",
+            "keys": [
+              "Tab",
+              "ArrowRight",
+              "ArrowLeft",
+              "ArrowDown",
+              "ArrowUp",
+              "Home",
+              "End",
+              "Escape"
+            ]
+          },
+          {
+            "topic": "screen-reader",
+            "text": "The ring is an image named with the label, the total and the target if there is one. The legend is a list of buttons, each named like \"Groceries: €415, 30 percent\"."
+          },
+          {
+            "topic": "motion",
+            "text": "Under reduced motion the ring is drawn in place at once and nothing moves."
+          }
+        ]
       }
     },
     {
@@ -11090,7 +13131,32 @@
             "description": "\"compact\" draws a smaller dial. Inside a compact DataTile this happens on its own."
           }
         ],
-        "extends": "Omit<HTMLAttributes<HTMLDivElement>, 'children' | 'defaultValue' | 'onChange'>"
+        "extends": "Omit<HTMLAttributes<HTMLDivElement>, 'children' | 'defaultValue' | 'onChange'>",
+        "a11y": [
+          {
+            "topic": "keyboard",
+            "text": "When it has onValueChange or adjustable it is one Tab stop. ArrowRight and ArrowUp add a step, ArrowLeft and ArrowDown remove one, Page Up and Page Down move by ten steps, Home and End go to the ends. Dragging along the arc sets the value.",
+            "keys": [
+              "Tab",
+              "ArrowRight",
+              "ArrowLeft",
+              "ArrowUp",
+              "ArrowDown",
+              "PageUp",
+              "PageDown",
+              "Home",
+              "End"
+            ]
+          },
+          {
+            "topic": "screen-reader",
+            "text": "Read-only it is a meter; adjustable it is a slider. Both carry aria-label, aria-valuemin, aria-valuemax, aria-valuenow and aria-valuetext (from valueText, else the formatted value with the zone name). The figure, the ends and the zone chips are aria-hidden."
+          },
+          {
+            "topic": "motion",
+            "text": "Under reduced motion there are no transitions or delays."
+          }
+        ]
       }
     },
     {
@@ -11222,7 +13288,29 @@
             "description": "\"compact\" makes the plot shorter. Inside a DataTile it follows the tile's density on its own."
           }
         ],
-        "extends": "Omit<HTMLAttributes<HTMLDivElement>, 'children'>"
+        "extends": "Omit<HTMLAttributes<HTMLDivElement>, 'children'>",
+        "a11y": [
+          {
+            "topic": "keyboard",
+            "text": "The chart is one Tab stop. ArrowLeft and ArrowRight, Home and End step through the bubbles: left to right on axes, largest first when packed. Any arrow with nothing picked goes to the first bubble. Escape lets go and closes a hover tooltip.",
+            "keys": [
+              "Tab",
+              "ArrowLeft",
+              "ArrowRight",
+              "Home",
+              "End",
+              "Escape"
+            ]
+          },
+          {
+            "topic": "screen-reader",
+            "text": "The chart is an image named by label and described by a hint. Each step is read once, and a hidden table holds the data."
+          },
+          {
+            "topic": "motion",
+            "text": "Under reduced motion it is drawn in place and nothing moves."
+          }
+        ]
       }
     },
     {
@@ -11369,7 +13457,29 @@
             "description": "\"compact\" tightens the rows and columns. Inside a compact DataTile this happens on its own."
           }
         ],
-        "extends": "Omit<HTMLAttributes<HTMLDivElement>, 'children' | 'onSelect'>"
+        "extends": "Omit<HTMLAttributes<HTMLDivElement>, 'children' | 'onSelect'>",
+        "a11y": [
+          {
+            "topic": "keyboard",
+            "text": "The list is one Tab stop with roving focus. ArrowUp and ArrowDown, Home and End move between rows; Escape lets go.",
+            "keys": [
+              "Tab",
+              "ArrowUp",
+              "ArrowDown",
+              "Home",
+              "End",
+              "Escape"
+            ]
+          },
+          {
+            "topic": "screen-reader",
+            "text": "The list is named by label and each row is a button named like \"1. Harbour Market: €289.20, Visits 6\". The axis and tooltip are aria-hidden. While loading it is aria-busy with hidden loading text."
+          },
+          {
+            "topic": "motion",
+            "text": "Under reduced motion the stems are at full length at once and rows jump instead of sliding. The loading skeleton pulses only when motion is allowed."
+          }
+        ]
       }
     },
     {
@@ -11492,7 +13602,30 @@
             "description": null
           }
         ],
-        "extends": "Omit<HTMLAttributes<HTMLDivElement>, 'defaultValue' | 'onChange'>"
+        "extends": "Omit<HTMLAttributes<HTMLDivElement>, 'defaultValue' | 'onChange'>",
+        "a11y": [
+          {
+            "topic": "keyboard",
+            "text": "The stack group is a Tab stop, and so are the buttons and the radio dots. ArrowRight and ArrowDown go to the next card, ArrowLeft and ArrowUp to the previous, Home and End to the first and last. Keys count only when the stack itself has focus. The dots are a radio group with roving focus. A tap (under 4 px), a drag past a threshold or a flick flies the front card off; a short drag does not.",
+            "keys": [
+              "Tab",
+              "ArrowRight",
+              "ArrowLeft",
+              "ArrowDown",
+              "ArrowUp",
+              "Home",
+              "End"
+            ]
+          },
+          {
+            "topic": "screen-reader",
+            "text": "A carousel group described by a hidden hint. Only the front card is a slide; the others are aria-hidden and inert. A switch by key, button or swipe is announced through a polite live region; the dots are not announced. The amount readout is aria-hidden, and hideAmount removes it."
+          },
+          {
+            "topic": "motion",
+            "text": "Under reduced motion there is no fan-in, no flight and no rolling digits, and the button transitions are off."
+          }
+        ]
       }
     },
     {
@@ -11639,7 +13772,26 @@
             "description": null
           }
         ],
-        "extends": "Omit<HTMLAttributes<HTMLDivElement>, 'onSelect'>"
+        "extends": "Omit<HTMLAttributes<HTMLDivElement>, 'onSelect'>",
+        "a11y": [
+          {
+            "topic": "keyboard",
+            "text": "With onSelect each row is a button, so Tab and Enter work, and the selected row has aria-current. Without onSelect the rows are plain list items. Show more is a button, shown when limit hides rows.",
+            "keys": [
+              "Tab",
+              "Enter",
+              "Space"
+            ]
+          },
+          {
+            "topic": "screen-reader",
+            "text": "Each day is a section labelled by its heading, with a hidden \"net\" before the day total. A row is read as one sentence through visually hidden text and its visuals are aria-hidden. Pending, failed and incoming are shown by chip, glyph or struck-through amount as well as colour. Show more has aria-expanded and announces how many rows were revealed. Loading is a status region named by labels.loading."
+          },
+          {
+            "topic": "motion",
+            "text": "Under reduced motion new rows appear at once and row transitions are off. The skeleton pulses only when motion is allowed."
+          }
+        ]
       }
     },
     {
@@ -11815,7 +13967,31 @@
             "description": null
           }
         ],
-        "extends": "Omit<HTMLAttributes<HTMLDivElement>, 'onSelect'>"
+        "extends": "Omit<HTMLAttributes<HTMLDivElement>, 'onSelect'>",
+        "a11y": [
+          {
+            "topic": "keyboard",
+            "text": "The schedule is one Tab stop. ArrowUp and ArrowDown move within a day, ArrowLeft and ArrowRight go to the nearest event on the next day that has events, Home and End go to the first and last event (of the day in narrow mode), and Escape closes the tooltip and, without onSelect, clears the active event. With onSelect the events are buttons with roving focus. In narrow mode the day tabs use ArrowLeft and ArrowRight with wrapping, Home and End.",
+            "keys": [
+              "Tab",
+              "ArrowUp",
+              "ArrowDown",
+              "ArrowLeft",
+              "ArrowRight",
+              "Home",
+              "End",
+              "Escape"
+            ]
+          },
+          {
+            "topic": "screen-reader",
+            "text": "Without onSelect a visually hidden hint describes the schedule (default \"Use the arrow keys to move between events.\"). Each day is a list named by the day; events read like \"Team sync, 14:30 to 15:30, Work\". Without onSelect the active event is read through a polite live region; with onSelect focus moves to the event button. In narrow mode the days are tabs with a tabpanel. The hour rail, the week header row and the now line are aria-hidden."
+          },
+          {
+            "topic": "motion",
+            "text": "Under reduced motion events appear in place at once."
+          }
+        ]
       }
     },
     {

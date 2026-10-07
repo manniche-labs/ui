@@ -107,7 +107,28 @@
         "description": null
       }
     ],
-    "extends": "Omit<HTMLAttributes<HTMLDivElement>, 'onChange'>"
+    "extends": "Omit<HTMLAttributes<HTMLDivElement>, 'onChange'>",
+    "a11y": [
+      {
+        "topic": "keyboard",
+        "text": "The carousel is one Tab stop. ArrowLeft and ArrowRight move between pictures, Home and End jump to the ends. The focus ring is drawn around the stage.",
+        "keys": [
+          "Tab",
+          "ArrowLeft",
+          "ArrowRight",
+          "Home",
+          "End"
+        ]
+      },
+      {
+        "topic": "screen-reader",
+        "text": "The pictures are real images with alt text and are always in the DOM, also when WebGL is missing or lost. Slides that are not current are aria-hidden and inert. The visible caption is aria-hidden; a polite live region reads the title and the position."
+      },
+      {
+        "topic": "motion",
+        "text": "Under reduced motion every move jumps, the lens shows no motion smear, and the caption fade is skipped."
+      }
+    ]
   },
   "categories": [
     "widgets"

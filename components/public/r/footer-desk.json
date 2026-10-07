@@ -100,7 +100,26 @@
         "description": "Interface strings, for translation."
       }
     ],
-    "extends": "Omit<ComponentPropsWithoutRef<'footer'>, 'children'>"
+    "extends": "Omit<ComponentPropsWithoutRef<'footer'>, 'children'>",
+    "a11y": [
+      {
+        "topic": "screen-reader",
+        "text": "A footer with an h2 and an h3 (default \"Local time\") for the offices list, where each office has a time element. The email is a mailto link next to a copy button with the screen-reader-only text \"Copy email\"; the result is announced in a role=\"status\" region. The avatar is aria-hidden unless you pass your own."
+      },
+      {
+        "topic": "keyboard",
+        "text": "Link, copy button and the \"Book a call\" link are native.",
+        "keys": [
+          "Tab",
+          "Enter",
+          "Space"
+        ]
+      },
+      {
+        "topic": "other",
+        "text": "The clock ticks on the minute; a fixed now is used as given. Until the clock is read the times show \"--:--\"."
+      }
+    ]
   },
   "categories": [
     "templates"

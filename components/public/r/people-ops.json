@@ -44,6 +44,12 @@
         "required": false,
         "description": null
       }
+    ],
+    "a11y": [
+      {
+        "topic": "screen-reader",
+        "text": "Tiles are sections named by their h3. The schedule sits in an inverted tile as an ordered list with time elements. The tiles use bar-chart (funnel), transaction-list (payroll) and dot-matrix (attendance); see their notes. The screen adds no controls; its Tab stops come from bar-chart and dot-matrix."
+      }
     ]
   },
   "categories": [

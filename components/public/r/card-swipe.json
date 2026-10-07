@@ -58,6 +58,27 @@
         "required": false,
         "description": null
       }
+    ],
+    "a11y": [
+      {
+        "topic": "keyboard",
+        "text": "Arrow keys step through the cards while focus is inside the carousel. The previous and next buttons are disabled at the ends. A drag moves on past 50 px or a velocity of 500.",
+        "keys": [
+          "Tab",
+          "ArrowLeft",
+          "ArrowRight",
+          "Enter",
+          "Space"
+        ]
+      },
+      {
+        "topic": "screen-reader",
+        "text": "The section is a carousel labelled by label (default \"Cards\"). Each card is a slide group labelled \"i / total\"; cards that are not current are aria-hidden and inert. The buttons are named by previousLabel and nextLabel; the icons and dots are aria-hidden."
+      },
+      {
+        "topic": "motion",
+        "text": "The slide movement uses Motion with reduced motion set to user."
+      }
     ]
   },
   "categories": [

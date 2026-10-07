@@ -64,6 +64,27 @@
         "required": false,
         "description": null
       }
+    ],
+    "a11y": [
+      {
+        "topic": "keyboard",
+        "text": "The row has one Tab stop, on the active tab. ArrowRight and ArrowLeft wrap around, Home and End jump to the ends, and the tab that receives focus is selected at once.",
+        "keys": [
+          "ArrowLeft",
+          "ArrowRight",
+          "Home",
+          "End",
+          "Tab"
+        ]
+      },
+      {
+        "topic": "screen-reader",
+        "text": "The row is a tablist named by label, and each tab is a button with role tab and aria-selected."
+      },
+      {
+        "topic": "motion",
+        "text": "The component is wrapped in MotionConfig with reducedMotion set to user, so Motion follows the system setting for the sliding pill."
+      }
     ]
   },
   "categories": [

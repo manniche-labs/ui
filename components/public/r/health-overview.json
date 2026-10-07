@@ -44,6 +44,12 @@
         "required": false,
         "description": null
       }
+    ],
+    "a11y": [
+      {
+        "topic": "screen-reader",
+        "text": "Tiles are sections named by their h3. Vitals use BigNumber from chart-kit with the unit as text after it; the patient tile is named by the patient's name and holds a description list; the rest are dial (score, a read-only meter), bar-chart (calories) and donut (macros); see their notes. The screen adds no controls; its Tab stops come from bar-chart and donut."
+      }
     ]
   },
   "categories": [

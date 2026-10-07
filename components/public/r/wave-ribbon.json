@@ -121,7 +121,28 @@
         "description": "The words on the buttons and for screen readers, to translate them, e.g. `{ picture: 'Bild', of: 'von' }`."
       }
     ],
-    "extends": "Omit<HTMLAttributes<HTMLDivElement>, 'onChange'>"
+    "extends": "Omit<HTMLAttributes<HTMLDivElement>, 'onChange'>",
+    "a11y": [
+      {
+        "topic": "keyboard",
+        "text": "The stage is one Tab stop. ArrowLeft and ArrowRight move between pictures, Home and End jump to the ends. loop needs at least three pictures, and controls shows the buttons.",
+        "keys": [
+          "Tab",
+          "ArrowLeft",
+          "ArrowRight",
+          "Home",
+          "End"
+        ]
+      },
+      {
+        "topic": "screen-reader",
+        "text": "The pictures are real images with alt text. Each slide is labelled \"Picture i of n\"; the others are aria-hidden and inert. A polite live region reads the position. The words for previous, next, picture and of can be translated through labels."
+      },
+      {
+        "topic": "motion",
+        "text": "Under reduced motion every move jumps and the ribbon holds still. The animate prop adds a slow drift that is off under reduced motion and off screen. Without WebGL the pictures stand flat on the wave in CSS 3D."
+      }
+    ]
   },
   "categories": [
     "widgets"

@@ -39,6 +39,16 @@
         "required": false,
         "description": null
       }
+    ],
+    "a11y": [
+      {
+        "topic": "screen-reader",
+        "text": "The phrase is a native mark element, and its text is always in the DOM in full. The stroke is only a background image."
+      },
+      {
+        "topic": "motion",
+        "text": "Under reduced motion the stroke is already fully drawn, with no transition."
+      }
     ]
   },
   "categories": [

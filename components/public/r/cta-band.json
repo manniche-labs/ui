@@ -64,7 +64,25 @@
         "description": "Text for the interface itself, for translation."
       }
     ],
-    "extends": "Omit<ComponentProps<'section'>, 'children' | 'title'>"
+    "extends": "Omit<ComponentProps<'section'>, 'children' | 'title'>",
+    "a11y": [
+      {
+        "topic": "screen-reader",
+        "text": "A section named by its h2 with two action links and a plain fact line. An external link opens in a new tab and carries a screen-reader-only \"(opens in a new tab)\"."
+      },
+      {
+        "topic": "keyboard",
+        "text": "Native links.",
+        "keys": [
+          "Tab",
+          "Enter"
+        ]
+      },
+      {
+        "topic": "motion",
+        "text": "The press feedback on the links is dropped under reduced motion."
+      }
+    ]
   },
   "categories": [
     "templates"

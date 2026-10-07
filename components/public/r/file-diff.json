@@ -42,6 +42,19 @@
         "required": false,
         "description": null
       }
+    ],
+    "a11y": [
+      {
+        "topic": "keyboard",
+        "text": "The diff area is a scrollable region with tabIndex 0, so it takes focus and scrolls with the arrow keys.",
+        "keys": [
+          "Tab"
+        ]
+      },
+      {
+        "topic": "screen-reader",
+        "text": "The scroll area has role region labelled Changes in <filename>, and the lines are table rows. The + or − sign is aria-hidden and replaced by a screen-reader-only added or removed. The counts read as N lines added, N removed. Line numbers are unselectable. Hunk lines span all columns. Added and removed lines differ by sign and text, not only by colour."
+      }
     ]
   },
   "categories": [

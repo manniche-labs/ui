@@ -39,6 +39,16 @@
         "required": false,
         "description": null
       }
+    ],
+    "a11y": [
+      {
+        "topic": "screen-reader",
+        "text": "The container sets aria-busy while streaming is true. The caret is aria-hidden. Words are plain text in spans, and paragraphs are split on blank lines."
+      },
+      {
+        "topic": "motion",
+        "text": "Under reduced motion the words appear without fading and the caret does not blink."
+      }
     ]
   },
   "categories": [

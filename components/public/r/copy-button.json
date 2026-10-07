@@ -46,6 +46,25 @@
         "required": false,
         "description": null
       }
+    ],
+    "a11y": [
+      {
+        "topic": "keyboard",
+        "text": "It is a native button, so Tab focuses it and Enter or Space copies.",
+        "keys": [
+          "Tab",
+          "Enter",
+          "Space"
+        ]
+      },
+      {
+        "topic": "screen-reader",
+        "text": "The label sits in an aria-live polite span. It changes from Copy to Copied, or to Not copied when the browser refuses the clipboard, and returns after 1.8 seconds. The icons are aria-hidden. All three texts can be replaced with labels."
+      },
+      {
+        "topic": "motion",
+        "text": "The component is wrapped in MotionConfig with reducedMotion set to user, so Motion follows the system setting for the icon and letter animation."
+      }
     ]
   },
   "categories": [

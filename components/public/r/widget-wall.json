@@ -47,6 +47,20 @@
         "required": false,
         "description": null
       }
+    ],
+    "a11y": [
+      {
+        "topic": "screen-reader",
+        "text": "A grid of data-tile sections, each named by its h3, with no h1 or main of its own. The tiles use BigNumber and DeltaPill from chart-kit, sparkline, transaction-list, dot-matrix, donut, lollipop and bar-chart; see their notes. The charts take a label, which names them."
+      },
+      {
+        "topic": "screen-reader",
+        "text": "The team list is a list with real names and roles; the initials are aria-hidden."
+      },
+      {
+        "topic": "other",
+        "text": "The wall adds no controls of its own; its Tab stops come from the charts (see their notes)."
+      }
     ]
   },
   "categories": [

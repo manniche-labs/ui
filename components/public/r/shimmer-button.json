@@ -31,7 +31,26 @@
         "description": "Lean a few pixels towards the pointer."
       }
     ],
-    "extends": "ButtonHTMLAttributes<HTMLButtonElement>"
+    "extends": "ButtonHTMLAttributes<HTMLButtonElement>",
+    "a11y": [
+      {
+        "topic": "keyboard",
+        "text": "A native button, so Tab, Enter and Space work as usual. It accepts all button attributes and has a minimum height of 44 px.",
+        "keys": [
+          "Tab",
+          "Enter",
+          "Space"
+        ]
+      },
+      {
+        "topic": "screen-reader",
+        "text": "The shimmer is an aria-hidden span, so only the button label is read. A disabled button is dimmed."
+      },
+      {
+        "topic": "motion",
+        "text": "The shimmer span is hidden under reduced motion. The magnetic lean is skipped under reduced motion and for any pointer that is not a mouse."
+      }
+    ]
   },
   "categories": [
     "surfaces"

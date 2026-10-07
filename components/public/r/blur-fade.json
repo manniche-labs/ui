@@ -60,6 +60,16 @@
         "required": false,
         "description": null
       }
+    ],
+    "a11y": [
+      {
+        "topic": "motion",
+        "text": "Under reduced motion the element is fully visible from the start, with no rise, blur or transition."
+      },
+      {
+        "topic": "other",
+        "text": "Pure presentation: it renders its children in a div, section, li or span (as) and adds no roles or labels."
+      }
     ]
   },
   "categories": [

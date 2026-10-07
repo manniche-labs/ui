@@ -80,6 +80,12 @@
         "required": false,
         "description": null
       }
+    ],
+    "a11y": [
+      {
+        "topic": "screen-reader",
+        "text": "An h1 and tiles named by their h3. The legend marks income with a square and payments with a dashed line, as in the chart; the marks are aria-hidden and the names are text. The growth donut is labelled \"Growth, {pct} percent of {target}\". The verification list writes each state \"(Done)\" or \"(To do)\" and the check mark is aria-hidden; the footer reads \"{d} of {t} steps done\". See BigNumber and DeltaPill from chart-kit, area-chart, donut, sparkline and transaction-list (limit 4)."
+      }
     ]
   },
   "categories": [

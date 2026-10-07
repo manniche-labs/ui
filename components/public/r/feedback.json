@@ -107,6 +107,25 @@
         "required": false,
         "description": null
       }
+    ],
+    "a11y": [
+      {
+        "topic": "keyboard",
+        "text": "The thumbs are buttons. After a pick the comment form opens and the textarea takes focus. Escape closes the form and focus returns to the thumb that was pressed.",
+        "keys": [
+          "Tab",
+          "Enter",
+          "Escape"
+        ]
+      },
+      {
+        "topic": "screen-reader",
+        "text": "The thumbs are named by upLabel and downLabel and carry aria-pressed. The thanks line is a polite live region that stays mounted. The form is labelled by its heading, the close button is named by closeLabel, and the textarea has a label. The sparkles are aria-hidden."
+      },
+      {
+        "topic": "motion",
+        "text": "The pop uses Motion with reduced motion set to user."
+      }
     ]
   },
   "categories": [

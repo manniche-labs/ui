@@ -63,6 +63,21 @@
         "required": false,
         "description": null
       }
+    ],
+    "a11y": [
+      {
+        "topic": "keyboard",
+        "text": "The copy button is a native button. The code area is a scrollable pre with tabIndex 0, so it can be focused and scrolled with the keyboard.",
+        "keys": [
+          "Tab",
+          "Enter",
+          "Space"
+        ]
+      },
+      {
+        "topic": "screen-reader",
+        "text": "The block is a figure with the file name, else the language, else Code as its caption. The button text lives in an aria-live polite span, so Copy becomes Copied, which resets after 1.8 seconds. Line numbers are aria-hidden and unselectable. If the clipboard is blocked, nothing changes and the code can still be selected by hand."
+      }
     ]
   },
   "categories": [
