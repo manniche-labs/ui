@@ -6,6 +6,7 @@ export type FileDiffProps = {
   filename: string
   /** A unified diff, as `git diff` writes it. Header lines (diff, index, ---, +++) are skipped. */
   diff: string
+  /** Classes for the outer figure. */
   className?: string
 }
 

@@ -20,7 +20,9 @@ function host(href: string) {
 export type CitationProps = {
   /** The source's number, counted from 1. It matches its place in <Sources>. */
   n: number
+  /** The source the number points to. */
   source: Source
+  /** Classes for the link. */
   className?: string
 }
 
@@ -44,8 +46,11 @@ export function Citation({ n, source, className }: CitationProps) {
 }
 
 export type SourcesProps = {
+  /** The sources, listed in order and numbered from 1. */
   sources: Source[]
+  /** Heading of the list and name of the section. */
   title?: string
+  /** Classes for the outer section. */
   className?: string
 }
 

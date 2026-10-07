@@ -3,6 +3,7 @@ import { useReducedMotion } from '@/registry/manniche/hooks/use-reduced-motion'
 import { cn } from '@/lib/utils'
 
 export type NumberTickerProps = {
+  /** The number it counts to. A new value counts on from the one shown. */
   value: number
   /** Where the count starts the first time. */
   from?: number
@@ -10,9 +11,11 @@ export type NumberTickerProps = {
   duration?: number
   /** Passed to Intl.NumberFormat, e.g. "da-DK". Defaults to the browser's language. */
   locale?: string
+  /** Intl.NumberFormat options, e.g. a currency or a number of decimals. */
   format?: Intl.NumberFormatOptions
   /** Start counting first when the number scrolls into view. */
   startOnView?: boolean
+  /** Classes for the outer span. */
   className?: string
 }
 

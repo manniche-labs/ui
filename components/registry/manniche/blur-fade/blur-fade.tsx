@@ -2,6 +2,7 @@ import { useEffect, useRef, useState, type CSSProperties, type ReactNode } from 
 import { cn } from '@/lib/utils'
 
 export type BlurFadeProps = {
+  /** The content that fades in. */
   children: ReactNode
   /** Delay in milliseconds. Use small steps (40 to 80 ms) to stagger a group. */
   delay?: number
@@ -9,7 +10,9 @@ export type BlurFadeProps = {
   offset?: number
   /** Show at once instead of waiting for the element to scroll into view. */
   immediate?: boolean
+  /** The element it renders as. */
   as?: 'div' | 'section' | 'li' | 'span'
+  /** Classes for the rendered element. */
   className?: string
 }
 

@@ -5,9 +5,11 @@ import { useState } from 'react'
 import { cn } from '@/lib/utils'
 
 export type RollingNumberProps = {
+  /** The number shown. Each digit rolls when it changes. */
   value: number
   /** Passed to Intl.NumberFormat, e.g. "da-DK". Leave it out for plain digits. */
   locale?: string
+  /** Classes for the inner span that holds the digits. */
   className?: string
 }
 
