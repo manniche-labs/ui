@@ -8,10 +8,15 @@ import { cn } from '@/lib/utils'
 export type SplitButtonOption = { id: string; label: string }
 
 export type SplitButtonProps = {
+  /** Text on the main button. */
   label: string
+  /** The choices that open from the button, each with an id and a label. */
   options: SplitButtonOption[]
+  /** Called with the option id when a choice is picked. */
   onSelect: (id: string) => void
+  /** Name of the button that closes the choices. */
   backLabel?: string
+  /** Classes for the button. */
   className?: string
 }
 

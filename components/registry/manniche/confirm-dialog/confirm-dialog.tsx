@@ -2,19 +2,25 @@ import { useEffect, useId, useRef, useState, type ReactNode } from 'react'
 import { cn } from '@/lib/utils'
 
 export type ConfirmDialogProps = {
+  /** Whether the dialog is shown. */
   open: boolean
+  /** Called with the new open state when the dialog closes, by cancel, Escape or a click outside. */
   onOpenChange: (open: boolean) => void
+  /** Heading of the dialog, also its accessible name. */
   title: string
+  /** Text under the heading; it also describes the dialog. */
   description?: ReactNode
   /** The verb and the thing, e.g. “Delete project”. Never “Yes” or “OK”. */
   confirmLabel: string
   /** What happens if they back out, e.g. “Keep project”. Never “No” or “Cancel” alone. */
   cancelLabel: string
+  /** Called when the confirm button is pressed, before the dialog closes. */
   onConfirm: () => void
   /** Red, for actions that destroy something. Leave it off for everything else. */
   destructive?: boolean
   /** When set, the confirm button stays off until this exact text is typed, e.g. the project name. */
   typeToConfirm?: string
+  /** Classes for the dialog element. */
   className?: string
 }
 

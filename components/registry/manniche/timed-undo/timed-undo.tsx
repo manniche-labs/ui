@@ -8,11 +8,15 @@ import { cn } from '@/lib/utils'
 export type TimedUndoProps = {
   /** Seconds the person has to change their mind. */
   seconds?: number
+  /** Text on the button before it is pressed. */
   label?: string
+  /** Text on the button while the countdown runs. */
   undoLabel?: string
   /** Runs when the countdown reaches zero without an undo. */
   onConfirm: () => void
+  /** Called when the person undoes during the countdown. */
   onUndo?: () => void
+  /** Classes for the button. */
   className?: string
 }
 
@@ -52,7 +56,7 @@ export function TimedUndo({ seconds = 5, label = 'Delete', undoLabel = 'Undo', o
         onClick={toggle}
         style={{ borderRadius: 14 }}
         className={cn(
-          'inline-flex min-h-11 items-center gap-2 overflow-hidden px-1.5 font-medium transition-colors duration-300',
+          'inline-flex min-h-11 items-center gap-2 overflow-hidden px-1.5 font-medium transition-colors duration-300 motion-reduce:transition-none',
           waiting ? 'bg-destructive/10 text-destructive' : 'bg-destructive px-5 text-white',
           className,
         )}

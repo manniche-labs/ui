@@ -6,11 +6,17 @@ import { useEffect, useRef, useState } from 'react'
 import { cn } from '@/lib/utils'
 
 export type MorphingButtonProps = {
+  /** Text on the button before it opens. */
   label?: string
+  /** Placeholder of the email field. */
   placeholder?: string
+  /** Name of the submit button. */
   submitLabel?: string
+  /** Thank-you text shown after sending. */
   doneLabel?: string
+  /** Called with the trimmed email when the form is sent. */
   onSubmit: (email: string) => void
+  /** Classes for the form that holds the button and the field. */
   className?: string
 }
 
