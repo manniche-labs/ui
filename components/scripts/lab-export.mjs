@@ -65,6 +65,7 @@ for (const item of registry.items) {
     usedIn: item.meta?.usedIn ?? [],
     props: item.meta?.props ?? [],
     extends: item.meta?.extends ?? null,
+    parts: item.meta?.parts ?? [],
     a11y: item.meta?.a11y ?? [],
     files,
     demo: demoCode && { code: demoCode, html: await html(demoCode, 'tsx') },

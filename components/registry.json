@@ -9808,7 +9808,228 @@
           "widget-wall",
           "workspace-home"
         ],
-        "props": []
+        "props": [],
+        "parts": [
+          {
+            "name": "ChartTooltip",
+            "props": [
+              {
+                "name": "open",
+                "type": "boolean",
+                "default": null,
+                "required": true,
+                "description": null
+              },
+              {
+                "name": "x",
+                "type": "number",
+                "default": null,
+                "required": true,
+                "description": "Where the tooltip points, in px inside the chart's positioned wrapper."
+              },
+              {
+                "name": "y",
+                "type": "number",
+                "default": null,
+                "required": true,
+                "description": null
+              },
+              {
+                "name": "bounds",
+                "type": "number",
+                "default": null,
+                "required": true,
+                "description": "The wrapper's width, so the tooltip stays inside it."
+              },
+              {
+                "name": "below",
+                "type": "boolean",
+                "default": "false",
+                "required": false,
+                "description": "Above the point by default; below when the point sits near the top."
+              },
+              {
+                "name": "title",
+                "type": "string",
+                "default": null,
+                "required": true,
+                "description": "The small label on top, such as the date."
+              },
+              {
+                "name": "value",
+                "type": "ReactNode",
+                "default": null,
+                "required": true,
+                "description": "The figure itself."
+              },
+              {
+                "name": "rows",
+                "type": "TooltipRow[]",
+                "default": "[]",
+                "required": false,
+                "description": null
+              }
+            ]
+          },
+          {
+            "name": "BigNumber",
+            "props": [
+              {
+                "name": "value",
+                "type": "number",
+                "default": null,
+                "required": true,
+                "description": null
+              },
+              {
+                "name": "format",
+                "type": "ValueFormat",
+                "default": null,
+                "required": false,
+                "description": null
+              },
+              {
+                "name": "size",
+                "type": "'xl' | 'lg' | 'md' | 'sm'",
+                "default": "'lg'",
+                "required": false,
+                "description": "xl for the one figure a tile is about, sm for a figure inside a chart. Default \"lg\"."
+              },
+              {
+                "name": "roll",
+                "type": "boolean",
+                "default": "true",
+                "required": false,
+                "description": "Roll the digits that change. Default true; never under reduced motion."
+              },
+              {
+                "name": "className",
+                "type": "string",
+                "default": null,
+                "required": false,
+                "description": null
+              }
+            ]
+          },
+          {
+            "name": "Digits",
+            "props": [
+              {
+                "name": "text",
+                "type": "string",
+                "default": null,
+                "required": true,
+                "description": null
+              },
+              {
+                "name": "roll",
+                "type": "boolean",
+                "default": "true",
+                "required": false,
+                "description": null
+              }
+            ]
+          },
+          {
+            "name": "DeltaPill",
+            "props": [
+              {
+                "name": "value",
+                "type": "number",
+                "default": null,
+                "required": true,
+                "description": null
+              },
+              {
+                "name": "format",
+                "type": "ValueFormat",
+                "default": "{ decimals: 1, suffix: '%' }",
+                "required": false,
+                "description": null
+              },
+              {
+                "name": "goodWhen",
+                "type": "'up' | 'down'",
+                "default": "'up'",
+                "required": false,
+                "description": null
+              },
+              {
+                "name": "className",
+                "type": "string",
+                "default": null,
+                "required": false,
+                "description": null
+              }
+            ]
+          },
+          {
+            "name": "Pills",
+            "props": [
+              {
+                "name": "options",
+                "type": "PillOption[]",
+                "default": null,
+                "required": true,
+                "description": null
+              },
+              {
+                "name": "value",
+                "type": "string",
+                "default": null,
+                "required": true,
+                "description": null
+              },
+              {
+                "name": "onChange",
+                "type": "(id: string) => void",
+                "default": null,
+                "required": true,
+                "description": null
+              },
+              {
+                "name": "label",
+                "type": "string",
+                "default": null,
+                "required": true,
+                "description": "Read aloud for the group, e.g. \"Period\"."
+              },
+              {
+                "name": "className",
+                "type": "string",
+                "default": null,
+                "required": false,
+                "description": null
+              }
+            ]
+          },
+          {
+            "name": "SrTable",
+            "props": [
+              {
+                "name": "caption",
+                "type": "string",
+                "default": null,
+                "required": true,
+                "description": null
+              },
+              {
+                "name": "head",
+                "type": "string[]",
+                "default": null,
+                "required": true,
+                "description": null
+              },
+              {
+                "name": "rows",
+                "type": "(string | number)[][]",
+                "default": null,
+                "required": true,
+                "description": null
+              }
+            ]
+          }
+        ]
       }
     },
     {
