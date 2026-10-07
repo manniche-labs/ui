@@ -34,6 +34,7 @@
 
 ### Fixed
 
+- `command-search` counts one hit in the singular: "1 hit of 7" in the footer and "1 of 1 hit" on a group, with the new labels `hitOf` and `groupHit`.
 - `gallery-card` shows the drawn poster when a server-rendered image failed before React was listening, so `onError` never fired.
 - Tap targets of 44 px on small buttons and links across the free components and templates, with an invisible hit area where the visible size stays.
 - Ids come from `useId`, so two copies of a component on one page no longer share ids.
