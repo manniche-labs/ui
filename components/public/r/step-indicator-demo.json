@@ -3,6 +3,9 @@
   "name": "step-indicator-demo",
   "title": "Step indicator demo",
   "description": "How to use Step indicator.",
+  "dependencies": [
+    "lucide-react"
+  ],
   "registryDependencies": [
     "@manniche/step-indicator"
   ],

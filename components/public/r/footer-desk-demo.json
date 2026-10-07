@@ -4,7 +4,8 @@
   "title": "Footer Desk demo",
   "description": "How to use Footer Desk.",
   "registryDependencies": [
-    "@manniche/footer-desk"
+    "@manniche/footer-desk",
+    "@manniche/chart-kit"
   ],
   "files": [
     {

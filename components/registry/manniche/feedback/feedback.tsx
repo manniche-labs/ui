@@ -164,7 +164,7 @@ export function Feedback({
                     type="button"
                     aria-label={closeLabel}
                     onClick={close}
-                    className="absolute top-4 right-4 grid size-8 place-items-center rounded-full bg-muted text-muted-foreground hover:text-foreground"
+                    className="absolute top-4 right-4 grid size-8 after:-inset-1.5 after:absolute after:content-[''] place-items-center rounded-full bg-muted text-muted-foreground hover:text-foreground"
                   >
                     <X className="size-4" strokeWidth={2.5} aria-hidden />
                   </button>

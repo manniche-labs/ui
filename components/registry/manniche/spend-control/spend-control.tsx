@@ -74,7 +74,7 @@ export function SpendControl({ data, labels, now, currency = 'EUR', onUpsell, cl
               title={item.label}
               aria-current={item.current ? 'page' : undefined}
               className={cn(
-                'grid size-10 place-items-center rounded-lg text-muted-foreground hover:bg-muted hover:text-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring',
+                'grid size-10 relative after:-inset-0.5 after:absolute after:content-[""] place-items-center rounded-lg text-muted-foreground hover:bg-muted hover:text-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring',
                 item.current && 'bg-foreground text-background hover:bg-foreground hover:text-background',
               )}
             >
@@ -101,7 +101,7 @@ export function SpendControl({ data, labels, now, currency = 'EUR', onUpsell, cl
               <button
                 type="button"
                 onClick={onUpsell}
-                className="mt-4 rounded-full bg-foreground px-4 py-2 text-sm font-medium text-background transition-transform active:scale-[0.97] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
+                className="mt-4 rounded-full bg-foreground px-4 py-2 text-sm font-medium text-background transition-transform active:scale-[0.97] motion-reduce:transition-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
               >
                 {data.upsell.action}
               </button>
@@ -113,9 +113,10 @@ export function SpendControl({ data, labels, now, currency = 'EUR', onUpsell, cl
                 {data.cards.map((c) => {
                   const pct = c.limit > 0 ? Math.min(100, Math.round((c.spent / c.limit) * 100)) : 0
                   return (
-                    <li key={c.id} className={cn('flex flex-col gap-1.5', c.frozen && 'opacity-60')}>
+                    // A frozen card is muted through its colours, not opacity, so its text keeps 4.5:1.
+                    <li key={c.id} className="flex flex-col gap-1.5">
                       <div className="flex items-baseline justify-between gap-2 text-sm">
-                        <span className="truncate font-medium">{c.name}</span>
+                        <span className={cn('truncate font-medium', c.frozen && 'text-muted-foreground')}>{c.name}</span>
                         <span className="tabular-nums text-xs text-muted-foreground">
                           {c.frozen ? t.frozen : `•••• ${c.last4}`}
                         </span>
@@ -128,7 +129,7 @@ export function SpendControl({ data, labels, now, currency = 'EUR', onUpsell, cl
                         aria-valuemax={100}
                         className="h-1.5 overflow-hidden rounded-full bg-muted"
                       >
-                        <div className="h-full rounded-full bg-foreground" style={{ width: `${pct}%` }} />
+                        <div className={cn('h-full rounded-full', c.frozen ? 'bg-muted-foreground' : 'bg-foreground')} style={{ width: `${pct}%` }} />
                       </div>
                       <p className="text-xs tabular-nums text-muted-foreground">
                         {c.spent.toLocaleString('en-GB', { style: 'currency', currency, maximumFractionDigits: 0 })} {t.limit}{' '}

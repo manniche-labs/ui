@@ -37,7 +37,8 @@ const INVERT_OUTER = {
   '--tile-chart-5': 'var(--chart-5)',
 } as CSSProperties
 
-// Colours are pulled a little towards the tile's text colour, so they keep their contrast on the swapped surface.
+// Colours are pulled towards the tile's text colour, so they keep their contrast on the swapped surface. Success and
+// destructive are pulled further, since they colour text such as a DeltaPill, which needs 4.5:1 in both modes.
 const toward = (name: string, amount: number) => `color-mix(in oklab, var(--tile-${name}) ${amount}%, var(--tile-fg))`
 const INVERT_INNER = {
   '--card': 'var(--tile-bg)',
@@ -49,8 +50,8 @@ const INVERT_INNER = {
   '--border': 'color-mix(in oklab, var(--tile-fg) 15%, var(--tile-bg))',
   '--primary': toward('primary', 80),
   '--ring': toward('primary', 80),
-  '--success': toward('success', 80),
-  '--destructive': toward('destructive', 80),
+  '--success': toward('success', 60),
+  '--destructive': toward('destructive', 60),
   '--chart-1': toward('chart-1', 85),
   '--chart-2': toward('chart-2', 85),
   '--chart-3': toward('chart-3', 85),
@@ -82,7 +83,14 @@ export function DataTile({ title, headingLevel = 3, action, footer, inverted = f
       style={inverted ? INVERT_OUTER : undefined}
     >
       <div
-        className={cn('flex min-w-0 flex-1 flex-col', d.tile, !footer && d.end)}
+        className={cn(
+          'flex min-w-0 flex-1 flex-col',
+          d.tile,
+          !footer && d.end,
+          // Primary is pulled towards the tile's text, so it is lighter on a dark tile and darker on a light one. Text on
+          // it takes the darker of the two tile colours, which keeps 4.5:1 in both modes.
+          inverted && '[--primary-foreground:var(--tile-bg)] dark:[--primary-foreground:var(--tile-fg)]',
+        )}
         style={inverted ? INVERT_INNER : undefined}
       >
         {(title || action) && (

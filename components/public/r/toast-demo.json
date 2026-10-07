@@ -9,7 +9,7 @@
   "files": [
     {
       "path": "registry/manniche/examples/toast-demo.tsx",
-      "content": "import { toast, Toaster } from '@/registry/manniche/toast/toast'\n\n// Put <Toaster /> once near the root of the app. toast() works from anywhere after that.\nexport default function ToastDemo() {\n  return (\n    <>\n      <button\n        type=\"button\"\n        className=\"min-h-11 rounded-xl border bg-card px-4 text-sm font-medium\"\n        onClick={() => toast('Order archived', { action: { label: 'Undo', onClick: () => toast('Order restored') } })}\n      >\n        Archive order\n      </button>\n      <Toaster />\n    </>\n  )\n}\n",
+      "content": "import { toast, Toaster } from '@/registry/manniche/toast/toast'\n\n// Put <Toaster /> once near the root of the app. toast() works from anywhere after that.\nexport default function ToastDemo() {\n  return (\n    <>\n      <button\n        type=\"button\"\n        className=\"min-h-11 rounded-xl border bg-card px-4 text-sm font-medium\"\n        onClick={() => toast('Order archived', { action: { label: 'Undo', onClick: () => toast('Order restored') } })}\n      >\n        Archive order\n      </button>\n      <button\n        type=\"button\"\n        className=\"ml-2 min-h-11 rounded-xl border bg-card px-4 text-sm font-medium\"\n        onClick={() => toast('Payment failed', { tone: 'error', description: 'Check the card number and try again.' })}\n      >\n        Show an error\n      </button>\n      <Toaster />\n    </>\n  )\n}\n",
       "type": "registry:example"
     }
   ],

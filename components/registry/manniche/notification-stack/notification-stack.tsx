@@ -33,20 +33,21 @@ export function NotificationStack({ items, onDismiss, labels = {}, className }: 
   const list = useId()
   const folded = !open && items.length > 1
   const known = useRef(new Set(items.map((n) => n.id)))
-  const [announced, setAnnounced] = useState('')
+  // The count keys the text, so the same words twice in a row are still read out the second time.
+  const [announced, setAnnounced] = useState({ n: 0, text: '' })
 
   // A new notification is read out once, by a hidden status that is in the DOM from the first render.
   useEffect(() => {
     const fresh = items.filter((n) => !known.current.has(n.id))
     known.current = new Set(items.map((n) => n.id))
-    if (fresh.length) setAnnounced(fresh.map((n) => [n.title, n.body].filter(Boolean).join('. ')).join('. '))
+    if (fresh.length) setAnnounced((a) => ({ n: a.n + 1, text: fresh.map((n) => [n.title, n.body].filter(Boolean).join('. ')).join('. ') }))
   }, [items])
 
   return (
     <MotionConfig reducedMotion="user" transition={{ type: 'spring', stiffness: 380, damping: 38 }}>
       <section aria-label={t.title} className={cn('w-full min-w-0 max-w-sm', className)}>
         <p role="status" className="sr-only">
-          {announced}
+          <span key={announced.n}>{announced.text}</span>
         </p>
         <header className="mb-2 flex min-h-11 items-center justify-between px-1">
           <h2 className="text-sm font-semibold">
@@ -58,7 +59,7 @@ export function NotificationStack({ items, onDismiss, labels = {}, className }: 
               aria-expanded={open}
               aria-controls={list}
               onClick={() => setOpen(!open)}
-              className="inline-flex min-h-10 items-center gap-1 rounded-full px-3 text-sm text-muted-foreground transition-colors duration-150 hover:bg-muted hover:text-foreground motion-reduce:transition-none"
+              className="inline-flex min-h-10 relative after:inset-x-0 after:-inset-y-0.5 after:absolute after:content-[''] items-center gap-1 rounded-full px-3 text-sm text-muted-foreground transition-colors duration-150 hover:bg-muted hover:text-foreground motion-reduce:transition-none"
             >
               {open ? t.hide : t.show}
               <ChevronDown className={cn('size-4 transition-transform duration-200 motion-reduce:transition-none', open && 'rotate-180')} aria-hidden />
@@ -98,7 +99,7 @@ export function NotificationStack({ items, onDismiss, labels = {}, className }: 
                         type="button"
                         aria-label={`${t.dismiss}: ${n.title}`}
                         onClick={() => onDismiss(n.id)}
-                        className="-mt-1 -mr-1 grid size-9 shrink-0 place-items-center rounded-lg text-muted-foreground transition-colors duration-150 hover:bg-muted hover:text-foreground motion-reduce:transition-none"
+                        className="-mt-1 -mr-1 grid size-9 relative after:-inset-1 after:absolute after:content-[''] shrink-0 place-items-center rounded-lg text-muted-foreground transition-colors duration-150 hover:bg-muted hover:text-foreground motion-reduce:transition-none"
                       >
                         <X className="size-4" aria-hidden />
                       </button>

@@ -3,6 +3,9 @@
   "name": "integration-card-demo",
   "title": "Integration card demo",
   "description": "How to use Integration card.",
+  "dependencies": [
+    "lucide-react"
+  ],
   "registryDependencies": [
     "@manniche/integration-card"
   ],

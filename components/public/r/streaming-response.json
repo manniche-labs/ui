@@ -9,7 +9,7 @@
   "files": [
     {
       "path": "registry/manniche/streaming-response/streaming-response.tsx",
-      "content": "import { cn } from '@/lib/utils'\n\nexport type StreamingResponseProps = {\n  /** The text so far. Append to it as tokens arrive. */\n  text: string\n  /** True while more text is coming. Shows the caret. */\n  streaming?: boolean\n  className?: string\n}\n\n/**\n * Shows a reply as it is written. New words fade in; the caret blinks at the end while streaming.\n * Paragraphs are split on blank lines. Under reduced motion the words appear without fading.\n */\nexport function StreamingResponse({ text, streaming = false, className }: StreamingResponseProps) {\n  const paragraphs = text.split(/\\n{2,}/)\n\n  return (\n    <div className={cn('max-w-[65ch] text-base leading-7 text-pretty', className)} aria-busy={streaming}>\n      {paragraphs.map((p, i) => {\n        const last = i === paragraphs.length - 1\n        return (\n          <p key={i} className=\"mb-4 last:mb-0\">\n            {p.split(/(\\s+)/).map((word, j) =>\n              /^\\s+$/.test(word) ? (\n                word\n              ) : (\n                // A stable key per position: a word only animates the first time it renders.\n                <span key={j} className=\"animate-[stream-in_240ms_cubic-bezier(0.23,1,0.32,1)_both] motion-reduce:animate-none\">\n                  {word}\n                </span>\n              ),\n            )}\n            {last && streaming && (\n              <span\n                className=\"ml-0.5 inline-block h-[1.1em] w-[2px] translate-y-[0.2em] animate-[stream-caret_1s_steps(1)_infinite] bg-foreground motion-reduce:animate-none\"\n                aria-hidden\n              />\n            )}\n          </p>\n        )\n      })}\n      <style href=\"manniche-streaming\" precedence=\"default\">{`\n        @keyframes stream-in { from { opacity: 0 } }\n        @keyframes stream-caret { 50% { opacity: 0 } }\n      `}</style>\n    </div>\n  )\n}\n",
+      "content": "import { cn } from '@/lib/utils'\n\nexport type StreamingResponseProps = {\n  /** The text so far. Append to it as tokens arrive. */\n  text: string\n  /** True while more text is coming. Shows the caret. */\n  streaming?: boolean\n  /** Classes for the outer element. */\n  className?: string\n}\n\n/**\n * Shows a reply as it is written. New words fade in; the caret blinks at the end while streaming.\n * Paragraphs are split on blank lines. Under reduced motion the words appear without fading.\n */\nexport function StreamingResponse({ text, streaming = false, className }: StreamingResponseProps) {\n  const paragraphs = text.split(/\\n{2,}/)\n\n  return (\n    <div className={cn('max-w-[65ch] text-base leading-7 text-pretty', className)} aria-live=\"polite\" aria-relevant=\"additions text\" aria-busy={streaming}>\n      {paragraphs.map((p, i) => {\n        const last = i === paragraphs.length - 1\n        return (\n          <p key={i} className=\"mb-4 last:mb-0\">\n            {p.split(/(\\s+)/).map((word, j) =>\n              /^\\s+$/.test(word) ? (\n                word\n              ) : (\n                // A stable key per position: a word only animates the first time it renders.\n                <span key={j} className=\"animate-[stream-in_240ms_cubic-bezier(0.23,1,0.32,1)_both] motion-reduce:animate-none\">\n                  {word}\n                </span>\n              ),\n            )}\n            {last && streaming && (\n              <span\n                className=\"ml-0.5 inline-block h-[1.1em] w-[2px] translate-y-[0.2em] animate-[stream-caret_1s_steps(1)_infinite] bg-foreground motion-reduce:animate-none\"\n                aria-hidden\n              />\n            )}\n          </p>\n        )\n      })}\n      <style href=\"manniche-streaming\" precedence=\"default\">{`\n        @keyframes stream-in { from { opacity: 0 } }\n        @keyframes stream-caret { 50% { opacity: 0 } }\n      `}</style>\n    </div>\n  )\n}\n",
       "type": "registry:component"
     }
   ],
@@ -37,13 +37,13 @@
         "type": "string",
         "default": null,
         "required": false,
-        "description": null
+        "description": "Classes for the outer element."
       }
     ],
     "a11y": [
       {
         "topic": "screen-reader",
-        "text": "The container sets aria-busy while streaming is true. The caret is aria-hidden. Words are plain text in spans, and paragraphs are split on blank lines."
+        "text": "The container is a polite live region (aria-live polite, relevant additions and text), so new words are read as they arrive without interrupting. It sets aria-busy while streaming is true. The caret is aria-hidden. Words are plain text in spans, and paragraphs are split on blank lines."
       },
       {
         "topic": "motion",

@@ -36,7 +36,7 @@ export function TagPicker({ options, value, defaultValue = [], onChange, label =
   const { picked: pickedLabel = 'Picked', available: availableLabel = 'Available', remove = 'Remove', added = 'added', removed = 'removed' } = labels
   const [own, setOwn] = useState(defaultValue)
   const [message, setMessage] = useState('')
-  const refs = useRef<{ target: 'remove' | 'add'; id: string } | null>(null)
+  const refs = useRef<{ target: 'remove' | 'add'; id: string; text: string } | null>(null)
   const removeBtns = useRef(new Map<string, HTMLButtonElement>())
   const addBtns = useRef(new Map<string, HTMLButtonElement>())
   const picked = value ?? own
@@ -49,22 +49,24 @@ export function TagPicker({ options, value, defaultValue = [], onChange, label =
   }
 
   // The button that was pressed unmounts as the tag moves, so focus goes to the same tag in its new place.
+  // `own` changes on every press, even when a controlling parent turns the change down. The request is then
+  // forgotten, so it moves no focus later and is not announced.
   useEffect(() => {
     const next = refs.current
-    if (!next) return
     refs.current = null
+    if (!next) return
     const el = (next.target === 'remove' ? removeBtns : addBtns).current.get(next.id)
-    el?.focus()
-  }, [picked])
+    if (!el) return
+    el.focus()
+    setMessage(next.text)
+  }, [picked, own])
 
   const add = (tag: TagOption) => {
-    refs.current = { target: 'remove', id: tag.id }
-    setMessage(`${tag.label} ${added}`)
+    refs.current = { target: 'remove', id: tag.id, text: `${tag.label} ${added}` }
     set([...picked, tag.id])
   }
   const drop = (tag: TagOption) => {
-    refs.current = { target: 'add', id: tag.id }
-    setMessage(`${tag.label} ${removed}`)
+    refs.current = { target: 'add', id: tag.id, text: `${tag.label} ${removed}` }
     set(picked.filter((p) => p !== tag.id))
   }
 
@@ -94,7 +96,7 @@ export function TagPicker({ options, value, defaultValue = [], onChange, label =
                     }}
                     onClick={() => drop(tag)}
                     aria-label={`${remove} ${tag.label}`}
-                    className="grid size-9 place-items-center rounded-[10px] text-muted-foreground transition-colors duration-150 hover:bg-muted hover:text-foreground motion-reduce:transition-none"
+                    className="grid size-9 relative after:-inset-1 after:absolute after:content-[''] place-items-center rounded-[10px] text-muted-foreground transition-colors duration-150 hover:bg-muted hover:text-foreground motion-reduce:transition-none"
                   >
                     <X className="size-4" aria-hidden />
                   </button>
@@ -113,7 +115,7 @@ export function TagPicker({ options, value, defaultValue = [], onChange, label =
                       else addBtns.current.delete(tag.id)
                     }}
                     onClick={() => add(tag)}
-                    className="min-h-10 px-4 text-sm font-medium text-muted-foreground transition-colors duration-150 hover:text-foreground motion-reduce:transition-none"
+                    className="min-h-10 relative after:inset-x-0 after:-inset-y-0.5 after:absolute after:content-[''] px-4 text-sm font-medium text-muted-foreground transition-colors duration-150 hover:text-foreground motion-reduce:transition-none"
                   >
                     <motion.span layout="position" className="inline-block">
                       {tag.label}

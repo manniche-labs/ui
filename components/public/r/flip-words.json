@@ -12,8 +12,13 @@
   "files": [
     {
       "path": "registry/manniche/flip-words/flip-words.tsx",
-      "content": "import { AnimatePresence, MotionConfig, motion } from 'motion/react'\nimport { useEffect, useState } from 'react'\nimport { cn } from '@/lib/utils'\n\nexport type FlipWordsProps = {\n  /** The words to cycle through. The first one is shown under reduced motion. */\n  words: string[]\n  /** Milliseconds each word stays. */\n  interval?: number\n  /** How many rounds before it stops on the last word, so it never moves forever. 0 keeps going. */\n  rounds?: number\n  className?: string\n}\n\n/**\n * One word in a sentence that swaps for the next with a soft lift and blur.\n * It pauses while the pointer or focus is on it. Screen readers hear all the words once, not each swap.\n * Under reduced motion it shows the first word and stays still.\n */\nexport function FlipWords({ words, interval = 2600, rounds = 3, className }: FlipWordsProps) {\n  const [i, setI] = useState(0)\n  const [paused, setPaused] = useState(false)\n  const [still] = useState(() => typeof matchMedia !== 'undefined' && matchMedia('(prefers-reduced-motion: reduce)').matches)\n  const done = rounds > 0 && i >= words.length * rounds - 1\n\n  useEffect(() => {\n    if (still || paused || done || words.length < 2) return\n    const t = setTimeout(() => setI((n) => n + 1), interval)\n    return () => clearTimeout(t)\n  }, [i, still, paused, done, interval, words.length])\n\n  const word = words[i % words.length] ?? ''\n\n  return (\n    <MotionConfig reducedMotion=\"user\">\n      <span\n        className={cn('relative inline-grid align-baseline', className)}\n        onPointerEnter={() => setPaused(true)}\n        onPointerLeave={() => setPaused(false)}\n        onFocus={() => setPaused(true)}\n        onBlur={() => setPaused(false)}\n      >\n        <span className=\"sr-only\">{words.join(', ')}</span>\n        <AnimatePresence mode=\"popLayout\" initial={false}>\n          <motion.span\n            key={i}\n            aria-hidden\n            initial={{ opacity: 0, y: '0.4em', filter: 'blur(6px)' }}\n            animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}\n            exit={{ opacity: 0, y: '-0.4em', filter: 'blur(6px)' }}\n            transition={{ duration: 0.35, ease: [0.23, 1, 0.32, 1] }}\n            className=\"col-start-1 row-start-1 whitespace-nowrap\"\n          >\n            {word}\n          </motion.span>\n        </AnimatePresence>\n      </span>\n    </MotionConfig>\n  )\n}\n",
+      "content": "import { AnimatePresence, MotionConfig, motion } from 'motion/react'\nimport { useEffect, useState } from 'react'\nimport { useReducedMotion } from '@/registry/manniche/hooks/use-reduced-motion'\nimport { cn } from '@/lib/utils'\n\nexport type FlipWordsProps = {\n  /** The words to cycle through. The first one is shown under reduced motion. */\n  words: string[]\n  /** Milliseconds each word stays. */\n  interval?: number\n  /** How many rounds before it stops on the last word, so it never moves forever. 0 keeps going. */\n  rounds?: number\n  /** Classes for the outer inline element. */\n  className?: string\n}\n\n/**\n * One word in a sentence that swaps for the next with a soft lift and blur.\n * It pauses while the pointer or focus is on it. Screen readers hear all the words once, not each swap.\n * Under reduced motion it shows the first word and stays still.\n */\nexport function FlipWords({ words, interval = 2600, rounds = 3, className }: FlipWordsProps) {\n  const [i, setI] = useState(0)\n  const [paused, setPaused] = useState(false)\n  // Follows the system setting live; motion's own hook reads it once at mount and never updates.\n  const still = useReducedMotion()\n  const done = rounds > 0 && i >= words.length * rounds - 1\n\n  useEffect(() => {\n    if (still || paused || done || words.length < 2) return\n    const t = setTimeout(() => setI((n) => n + 1), interval)\n    return () => clearTimeout(t)\n  }, [i, still, paused, done, interval, words.length])\n\n  const word = words[i % words.length] ?? ''\n\n  return (\n    <MotionConfig reducedMotion=\"user\">\n      <span\n        className={cn('relative inline-grid align-baseline', className)}\n        onPointerEnter={() => setPaused(true)}\n        onPointerLeave={() => setPaused(false)}\n        onFocus={() => setPaused(true)}\n        onBlur={() => setPaused(false)}\n      >\n        <span className=\"sr-only\">{words.join(', ')}</span>\n        <AnimatePresence mode=\"popLayout\" initial={false}>\n          <motion.span\n            key={i}\n            aria-hidden\n            initial={{ opacity: 0, y: '0.4em', filter: 'blur(6px)' }}\n            animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}\n            exit={{ opacity: 0, y: '-0.4em', filter: 'blur(6px)' }}\n            transition={{ duration: 0.35, ease: [0.23, 1, 0.32, 1] }}\n            className=\"col-start-1 row-start-1 whitespace-nowrap\"\n          >\n            {word}\n          </motion.span>\n        </AnimatePresence>\n      </span>\n    </MotionConfig>\n  )\n}\n",
       "type": "registry:component"
+    },
+    {
+      "path": "registry/manniche/hooks/use-reduced-motion.ts",
+      "content": "import { useSyncExternalStore } from 'react'\n\nconst QUERY = '(prefers-reduced-motion: reduce)'\n\nfunction subscribe(onChange: () => void) {\n  const mq = window.matchMedia(QUERY)\n  mq.addEventListener('change', onChange)\n  return () => mq.removeEventListener('change', onChange)\n}\n\n/** True when the visitor has asked the system for less motion. */\nexport function useReducedMotion() {\n  return useSyncExternalStore(\n    subscribe,\n    () => window.matchMedia(QUERY).matches,\n    () => false,\n  )\n}\n",
+      "type": "registry:hook"
     }
   ],
   "meta": {
@@ -47,7 +52,7 @@
         "type": "string",
         "default": null,
         "required": false,
-        "description": null
+        "description": "Classes for the outer inline element."
       }
     ],
     "a11y": [
@@ -61,7 +66,7 @@
       },
       {
         "topic": "motion",
-        "text": "Under reduced motion it shows the first word and never cycles. With rounds above 0 it stops on the last word after that many rounds, and with rounds set to 0 it keeps going."
+        "text": "Under reduced motion it shows the first word and never cycles. The setting is followed live, so switching it on or off while the page is open takes effect at once. With rounds above 0 it stops on the last word after that many rounds, and with rounds set to 0 it keeps going."
       }
     ]
   },

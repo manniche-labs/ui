@@ -113,8 +113,8 @@ export function ConfirmDialog({
             type="submit"
             disabled={!ready}
             className={cn(
-              'inline-flex min-h-11 items-center rounded-xl px-4 text-sm font-medium transition-[background-color,opacity,transform] duration-150 ease-out-quint active:scale-[0.97] disabled:pointer-events-none disabled:opacity-40',
-              destructive ? 'bg-destructive text-white hover:bg-destructive/90' : 'bg-primary text-primary-foreground hover:bg-primary/90',
+              'inline-flex min-h-11 items-center rounded-xl px-4 text-sm font-medium transition-[background-color,opacity,transform] duration-150 ease-out-quint active:scale-[0.97] disabled:pointer-events-none disabled:opacity-40 motion-reduce:transition-none motion-reduce:active:scale-100',
+              destructive ? 'bg-destructive text-background hover:bg-destructive/90' : 'bg-primary text-primary-foreground hover:bg-primary/90',
             )}
           >
             {confirmLabel}
@@ -123,7 +123,7 @@ export function ConfirmDialog({
             ref={keep}
             type="button"
             onClick={close}
-            className="inline-flex min-h-11 items-center rounded-xl border bg-card px-4 text-sm font-medium transition-[background-color,transform] duration-150 ease-out-quint hover:bg-muted active:scale-[0.97]"
+            className="inline-flex min-h-11 items-center rounded-xl border bg-card px-4 text-sm font-medium transition-[background-color,transform] duration-150 ease-out-quint hover:bg-muted active:scale-[0.97] motion-reduce:transition-none motion-reduce:active:scale-100"
           >
             {cancelLabel}
           </button>

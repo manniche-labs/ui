@@ -3,6 +3,9 @@
   "name": "image-generation-demo",
   "title": "Image generation demo",
   "description": "How to use Image generation.",
+  "dependencies": [
+    "lucide-react"
+  ],
   "registryDependencies": [
     "@manniche/image-generation"
   ],

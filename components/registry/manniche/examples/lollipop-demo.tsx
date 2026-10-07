@@ -41,7 +41,7 @@ export default function LollipopDemo() {
         <Lollipop className="mt-4" data={DATA} label="Top merchants by spend, last 30 days" format={EUR} sort={sort} limit={6} />
       </DataTile>
       <div className="grid gap-4 sm:grid-cols-2">
-        <DataTile title="Top merchants" density="compact" footer={<span>Example data.</span>}>
+        <DataTile title="Top four" density="compact" footer={<span>Example data.</span>}>
           <Lollipop data={DATA} label="Top merchants, last 30 days" format={EUR} limit={4} axis={false} />
         </DataTile>
         <DataTile title="Most visits" density="compact" inverted footer={<span>Visits in 30 days. Example data.</span>}>

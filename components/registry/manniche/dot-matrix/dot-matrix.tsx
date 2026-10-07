@@ -276,8 +276,9 @@ export function DotMatrix({
 
   const cols = compact ? COMPACT_COLS : cn(GRID_COLS, 'group-data-[density=compact]/tile:grid-cols-[24px_repeat(var(--dm-cols),minmax(0,1fr))]')
   const cellClass = cn(
-    // The height is capped so a wide tile keeps a compact grid instead of growing square cells.
-    'relative grid place-items-center min-h-3.5',
+    // The height is capped so a wide tile keeps a compact grid instead of growing square cells. The cell fills its
+    // column even then, so the dot sits in the middle, over the column name.
+    'relative grid w-full place-items-center min-h-3.5',
     compact ? 'aspect-[5/4] max-h-9' : 'aspect-square max-h-12 group-data-[density=compact]/tile:aspect-[5/4] group-data-[density=compact]/tile:max-h-9',
   )
   const dotClass = cn(

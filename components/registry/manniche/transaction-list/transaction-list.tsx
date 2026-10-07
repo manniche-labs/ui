@@ -244,7 +244,8 @@ export function TransactionList({
         const offset = todayN === null ? null : todayN - dayNumber(g.date)
         const headId = `${baseId}-d${gi}`
         return (
-          <section key={g.date} aria-labelledby={headId} className="min-w-0">
+          // A named group, not a section: a region per day would fill the landmark list, twice over with two lists.
+          <div key={g.date} role="group" aria-labelledby={headId} className="min-w-0">
             <H
               id={headId}
               className={cn(
@@ -284,7 +285,7 @@ export function TransactionList({
                 )
               })}
             </ul>
-          </section>
+          </div>
         )
       })}
       {limit !== undefined && limit < total && (

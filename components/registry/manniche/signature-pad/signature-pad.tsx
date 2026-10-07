@@ -102,7 +102,7 @@ export function SignaturePad({ onSign, labels = {}, className }: SignaturePadPro
   }
 
   const ready = mode === 'draw' ? !empty : name.trim().length > 1
-  const ghost = 'inline-flex min-h-10 items-center gap-1.5 rounded-xl px-3 text-sm text-muted-foreground transition-colors duration-150 hover:bg-muted hover:text-foreground'
+  const ghost = 'inline-flex min-h-10 relative after:inset-x-0 after:-inset-y-0.5 after:absolute after:content-[""] items-center gap-1.5 rounded-xl px-3 text-sm text-muted-foreground transition-colors duration-150 hover:bg-muted hover:text-foreground'
 
   return (
     <MotionConfig reducedMotion="user" transition={{ type: 'spring', bounce: 0, duration: 0.5 }}>
@@ -181,7 +181,7 @@ export function SignaturePad({ onSign, labels = {}, className }: SignaturePadPro
                 type="button"
                 disabled={!ready}
                 onClick={done}
-                className="inline-flex min-h-11 items-center gap-2 rounded-full bg-foreground px-5 text-sm font-medium text-background transition-[opacity,transform] duration-150 active:scale-[0.97] disabled:opacity-30"
+                className="inline-flex min-h-11 items-center gap-2 rounded-full bg-foreground px-5 text-sm font-medium text-background transition-[opacity,transform] duration-150 active:scale-[0.97] disabled:opacity-30 motion-reduce:transition-none"
               >
                 <Check className="size-4" aria-hidden />
                 {t.done}

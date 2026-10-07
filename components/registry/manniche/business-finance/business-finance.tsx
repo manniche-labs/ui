@@ -69,7 +69,7 @@ export function BusinessFinance({ data, format = DEFAULT_FORMAT, title = 'Busine
     <div className={cn('@container w-full font-sans text-foreground', className)}>
       <div className="grid gap-4 @3xl:grid-cols-6 @6xl:grid-cols-12">
         <h1 className="text-[22px] leading-tight font-semibold tracking-tight @3xl:col-span-6 @6xl:col-span-12">{title}</h1>
-        <DataTile
+        <DataTile headingLevel={2}
           title={`${l.income} / ${l.payments}`}
           className="@3xl:col-span-6 @6xl:col-span-8"
           footer={<span>{note}</span>}
@@ -81,7 +81,7 @@ export function BusinessFinance({ data, format = DEFAULT_FORMAT, title = 'Busine
           </div>
           <AreaChart className="mt-4" data={data.cashflow} label={`${l.income} and ${l.payments}`} format={format} compare labels={{ previous: l.payments }} />
         </DataTile>
-        <DataTile title={l.growth} inverted className="@3xl:col-span-3 @6xl:col-span-4">
+        <DataTile headingLevel={2} title={l.growth} inverted className="@3xl:col-span-3 @6xl:col-span-4">
           {/* One segment against a whole of 100, held highlighted so the centre reads the share of the target rather
               than "Total 100%". */}
           <Donut
@@ -93,11 +93,11 @@ export function BusinessFinance({ data, format = DEFAULT_FORMAT, title = 'Busine
             labels={{ ofTotal: l.ofTarget }}
           />
         </DataTile>
-        <DataTile title={l.stock} className="@3xl:col-span-3 @6xl:col-span-4">
+        <DataTile headingLevel={2} title={l.stock} className="@3xl:col-span-3 @6xl:col-span-4">
           <p className="text-sm font-medium text-muted-foreground">{data.stockName}</p>
           <Sparkline className="mt-3" data={data.stock} label={`${l.stock}, ${data.stockName}`} height={72} />
         </DataTile>
-        <DataTile title={l.verification} className="@3xl:col-span-3 @6xl:col-span-4" footer={<span>{l.stepsDone(doneCount, data.verification.length)}</span>}>
+        <DataTile headingLevel={2} title={l.verification} className="@3xl:col-span-3 @6xl:col-span-4" footer={<span>{l.stepsDone(doneCount, data.verification.length)}</span>}>
           <ol className="space-y-3">
             {data.verification.map((s) => (
               <li key={s.id} className="flex items-start gap-3 text-sm">
@@ -116,8 +116,8 @@ export function BusinessFinance({ data, format = DEFAULT_FORMAT, title = 'Busine
             ))}
           </ol>
         </DataTile>
-        <DataTile title={l.activity} className="@3xl:col-span-6 @6xl:col-span-4">
-          <TransactionList data={data.activity} label={l.activity} today={day} format={{ ...format, decimals: 2 }} limit={4} />
+        <DataTile headingLevel={2} title={l.activity} className="@3xl:col-span-6 @6xl:col-span-4">
+          <TransactionList headingLevel={3} data={data.activity} label={l.activity} today={day} format={{ ...format, decimals: 2 }} limit={4} />
         </DataTile>
       </div>
     </div>

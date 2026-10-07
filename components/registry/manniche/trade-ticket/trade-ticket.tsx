@@ -120,12 +120,12 @@ export function TradeTicket({ outcomes, balance, currency = 'USD', locale = 'en-
             </div>
             <div className="mt-4 flex flex-wrap justify-center gap-1.5">
               {CHIPS.map((n) => (
-                <button key={n} type="button" onClick={() => add(n)} className="min-h-10 rounded-xl bg-background px-3 text-sm font-semibold transition-[background-color,transform] duration-150 hover:bg-accent active:scale-[0.96]">
+                <button key={n} type="button" onClick={() => add(n)} className="min-h-10 relative after:inset-x-0 after:-inset-y-0.5 after:absolute after:content-[''] rounded-xl bg-background px-3 text-sm font-semibold transition-[background-color,transform] duration-150 hover:bg-accent active:scale-[0.96] motion-reduce:transition-none">
                   +{symbol}
                   {n}
                 </button>
               ))}
-              <button type="button" onClick={() => setRaw(String(balance))} className="min-h-10 rounded-xl bg-background px-3 text-sm font-semibold transition-[background-color,transform] duration-150 hover:bg-accent active:scale-[0.96]">
+              <button type="button" onClick={() => setRaw(String(balance))} className="min-h-10 relative after:inset-x-0 after:-inset-y-0.5 after:absolute after:content-[''] rounded-xl bg-background px-3 text-sm font-semibold transition-[background-color,transform] duration-150 hover:bg-accent active:scale-[0.96] motion-reduce:transition-none">
                 {t.max}
               </button>
             </div>
@@ -147,7 +147,7 @@ export function TradeTicket({ outcomes, balance, currency = 'USD', locale = 'en-
           <button
             type="submit"
             disabled={amount <= 0}
-            className="min-h-12 w-full rounded-2xl bg-foreground font-semibold text-background transition-[opacity,transform] duration-150 active:scale-[0.98] disabled:opacity-40"
+            className="min-h-12 w-full rounded-2xl bg-foreground font-semibold text-background transition-[opacity,transform] duration-150 active:scale-[0.98] disabled:opacity-40 motion-reduce:transition-none"
           >
             {t.trade}
           </button>

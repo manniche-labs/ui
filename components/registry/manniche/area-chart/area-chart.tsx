@@ -10,9 +10,9 @@
 // Only transform and opacity move. On first view, and when the data changes, a clip wipes the lines in from the left
 // (300 ms), the tint fades up behind them and the end dot settles last (all done in 600 ms). Under reduced motion the
 // whole chart stands at once and the crosshair jumps instead of gliding.
-import { useCallback, useEffect, useId, useMemo, useState, type ComponentProps, type KeyboardEvent, type PointerEvent, type ReactNode } from 'react'
+import { useCallback, useContext, useEffect, useId, useMemo, useState, type ComponentProps, type KeyboardEvent, type PointerEvent, type ReactNode } from 'react'
 import { cn } from '@/lib/utils'
-import { ChartTooltip, SrTable, type TooltipRow } from '@/registry/manniche/chart-kit/chart-kit'
+import { ChartTooltip, SrTable, StaticPlots, type TooltipRow } from '@/registry/manniche/chart-kit/chart-kit'
 import {
   BASE,
   EASE_CSS,
@@ -26,7 +26,7 @@ import {
   valueParts,
   type ValueFormat,
 } from '@/registry/manniche/chart-kit/chart-utils'
-import { useAnnounce, useChartFrame, useSvgId } from '@/registry/manniche/chart-kit/use-chart'
+import { STATIC_STEPS, StaticChartFrame, useAnnounce, useChartFrame, useSvgId } from '@/registry/manniche/chart-kit/use-chart'
 
 export type AreaPoint = {
   /** The short name on the axis: "14 Sep", "Today". */
@@ -120,7 +120,19 @@ function useControllable(controlled: number | null | undefined, initial: number 
 }
 
 /** A smooth line chart with a soft fill, a dashed comparison line, a crosshair and the current point marked. */
-export function AreaChart({
+export function AreaChart({ className, style, ...props }: AreaChartProps) {
+  const still = useContext(StaticChartFrame)
+  if (!still || still.height !== undefined) return <AreaChartPlot className={className} style={style} {...props} />
+  // A static file: the plot at a phone, column, tablet and desktop width, at the heights the CSS gives each.
+  const plots = [300, 460, 640, 880].map((width, i) => ({ width, height: props.height ?? (i < 2 ? 200 : 300), className: STATIC_STEPS[i] }))
+  return (
+    <StaticPlots plots={plots} className={className} style={style}>
+      {(c) => <AreaChartPlot {...props} className={c} />}
+    </StaticPlots>
+  )
+}
+
+function AreaChartPlot({
   data,
   label,
   format,

@@ -89,7 +89,7 @@ export function AiActionBar({ tools, onAsk, placeholder = 'Ask AI to change itâ€
                   setMode(id)
                 }}
                 onKeyDown={(e) => onRadioKey(e, index)}
-                className="relative grid size-10 place-items-center rounded-full outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                className="relative grid size-10 after:-inset-0.5 after:absolute after:content-[''] place-items-center rounded-full outline-none focus-visible:ring-2 focus-visible:ring-ring"
               >
                 {mode === id && <motion.span layoutId="mode" className="absolute inset-0 rounded-full bg-muted" />}
                 <Icon className="relative size-[18px]" aria-hidden />
@@ -113,7 +113,7 @@ export function AiActionBar({ tools, onAsk, placeholder = 'Ask AI to change itâ€
                     onClick={onSelect}
                     aria-label={label}
                     title={label}
-                    className="grid size-10 place-items-center rounded-full text-foreground transition-[background-color,transform] duration-150 hover:bg-muted active:scale-[0.92] motion-reduce:transition-none motion-reduce:active:scale-100"
+                    className="grid size-10 relative after:-inset-0.5 after:absolute after:content-[''] place-items-center rounded-full text-foreground transition-[background-color,transform] duration-150 hover:bg-muted active:scale-[0.92] motion-reduce:transition-none motion-reduce:active:scale-100"
                   >
                     <span aria-hidden className="contents">
                       <Icon className="size-[18px]" />
@@ -142,7 +142,7 @@ export function AiActionBar({ tools, onAsk, placeholder = 'Ask AI to change itâ€
                   type="submit"
                   aria-label={send}
                   disabled={!text.trim()}
-                  className="grid size-10 shrink-0 place-items-center rounded-full bg-foreground text-background transition-[opacity,transform] duration-150 active:scale-[0.92] motion-reduce:transition-none motion-reduce:active:scale-100 disabled:opacity-30"
+                  className="grid size-10 relative after:-inset-0.5 after:absolute after:content-[''] shrink-0 place-items-center rounded-full bg-foreground text-background transition-[opacity,transform] duration-150 active:scale-[0.92] motion-reduce:transition-none motion-reduce:active:scale-100 disabled:opacity-30"
                 >
                   <ArrowUp className="size-[18px]" aria-hidden />
                 </button>

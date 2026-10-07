@@ -103,7 +103,7 @@ function Item({ t, labels }: { t: Toast; labels: ToasterLabels }) {
             t.action!.onClick()
             dismiss(t.id)
           }}
-          className="min-h-9 shrink-0 rounded-lg bg-muted px-3 text-sm font-medium transition-colors duration-150 hover:bg-accent motion-reduce:transition-none"
+          className="min-h-9 relative after:inset-x-0 after:-inset-y-1 after:absolute after:content-[''] shrink-0 rounded-lg bg-muted px-3 text-sm font-medium transition-colors duration-150 hover:bg-accent motion-reduce:transition-none"
         >
           {t.action.label}
         </button>
@@ -111,7 +111,7 @@ function Item({ t, labels }: { t: Toast; labels: ToasterLabels }) {
       <button
         type="button"
         onClick={() => dismiss(t.id)}
-        className="-my-1 grid size-9 shrink-0 place-items-center rounded-lg text-muted-foreground transition-colors duration-150 hover:bg-muted hover:text-foreground motion-reduce:transition-none"
+        className="-my-1 grid size-9 relative after:-inset-1 after:absolute after:content-[''] shrink-0 place-items-center rounded-lg text-muted-foreground transition-colors duration-150 hover:bg-muted hover:text-foreground motion-reduce:transition-none"
         aria-label={close}
       >
         <X className="size-4" aria-hidden />

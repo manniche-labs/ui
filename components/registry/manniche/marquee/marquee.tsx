@@ -13,7 +13,7 @@ export type MarqueeProps = {
   reverse?: boolean
   /** Accessible name for the region, e.g. "Customers". */
   label: string
-  /** Visible button text and screen reader text. Keys: `pause` and `play` (the name of the pause button). */
+  /** Accessible name and tooltip of the pause button, with English defaults: `pause` while the strip moves, `play` while it is paused. */
   labels?: { pause?: string; play?: string }
   /** Classes for the outer region, which holds the strip and the pause button. */
   className?: string

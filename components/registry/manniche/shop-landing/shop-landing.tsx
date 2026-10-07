@@ -1,6 +1,7 @@
 // A full landing page for a small shop. Every interaction is plain HTML and CSS (details, :hover, :focus-within),
 // so the same markup works as React and as a static page. Colours come from the theme tokens.
 import { ArrowRight, Leaf, Menu, RotateCcw, Search, ShieldCheck, ShoppingBag, Star, Truck, X } from 'lucide-react'
+import { useId } from 'react'
 import { cn } from '@/lib/utils'
 import { ProductArt, type ProductArtKind } from './product-art'
 
@@ -72,6 +73,8 @@ export type ShopLandingProps = {
 /** Landing page for a homeware shop: hero, promises, products, collections, story, reviews, FAQ and newsletter. */
 export function ShopLanding({ onAddToBag, labels = {} }: ShopLandingProps) {
   const { addToBag = 'Add to bag', colours = (n: number) => (n === 1 ? '1 colour' : `${n} colours`) } = labels
+  // Prefix for the newsletter field id, so two of these on one page never share it.
+  const uid = useId()
   return (
     <div id="top" className="min-h-dvh bg-background font-sans text-foreground antialiased">
       <p className="bg-foreground px-4 py-2 text-center text-xs text-background sm:text-sm">Free delivery over €60 · Returns within 30 days</p>
@@ -368,11 +371,11 @@ export function ShopLanding({ onAddToBag, labels = {} }: ShopLandingProps) {
             <h2 className="relative font-serif text-3xl tracking-tight sm:text-4xl">10% off your first order</h2>
             <p className="relative mx-auto mt-3 max-w-md opacity-85">One letter a month with new pieces and the stories behind them. No spam.</p>
             <form className="relative mx-auto mt-8 flex max-w-md flex-col gap-2 sm:flex-row" action="#">
-              <label htmlFor="nl-email" className="sr-only">
+              <label htmlFor={`${uid}nl-email`} className="sr-only">
                 Email
               </label>
               <input
-                id="nl-email"
+                id={`${uid}nl-email`}
                 type="email"
                 required
                 placeholder="you@example.com"

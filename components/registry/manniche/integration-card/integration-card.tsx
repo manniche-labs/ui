@@ -59,40 +59,18 @@ export function IntegrationCard({
   const base = useId()
   const rows = useRef<Record<string, HTMLButtonElement | null>>({})
   const closeRef = useRef<HTMLButtonElement>(null)
-  const dialogRef = useRef<HTMLDivElement>(null)
   const open = items.find((i) => i.id === openId)
 
+  // Focus moves into the card when it opens. It depends on the id, so a parent re-render never pulls focus back.
   useEffect(() => {
-    if (!open) return
-    closeRef.current?.focus()
-    // The dialog is modal: if focus lands anywhere outside it (a click, a script), pull it back in.
-    const back = (e: FocusEvent) => {
-      if (dialogRef.current && e.target instanceof Node && !dialogRef.current.contains(e.target)) closeRef.current?.focus()
-    }
-    document.addEventListener('focusin', back)
-    return () => document.removeEventListener('focusin', back)
-  }, [open])
+    if (openId) closeRef.current?.focus()
+  }, [openId])
 
-  // Keeps Tab and Shift+Tab inside the open dialog, and Escape closes it.
-  const trap = (e: ReactKeyboardEvent<HTMLDivElement>) => {
-    if (e.key === 'Escape') {
-      e.stopPropagation()
-      close()
-      return
-    }
-    if (e.key !== 'Tab') return
-    const items = Array.from(e.currentTarget.querySelectorAll<HTMLElement>('button:not([disabled]), [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'))
-    if (!items.length) return
-    const first = items[0]
-    const lastItem = items[items.length - 1]
-    const active = document.activeElement
-    if (e.shiftKey && (active === first || !e.currentTarget.contains(active))) {
-      e.preventDefault()
-      lastItem.focus()
-    } else if (!e.shiftKey && (active === lastItem || !e.currentTarget.contains(active))) {
-      e.preventDefault()
-      first.focus()
-    }
+  // The card sits inline with the page, so it is a non-modal dialog: Tab moves on as usual, and Escape closes it.
+  const onKey = (e: ReactKeyboardEvent<HTMLDivElement>) => {
+    if (e.key !== 'Escape') return
+    e.stopPropagation()
+    close()
   }
 
   const close = () => {
@@ -148,7 +126,8 @@ export function IntegrationCard({
                         <span className="block truncate text-xs text-muted-foreground">{it.description}</span>
                       </span>
                       {state[it.id] && (
-                        <span className="inline-flex items-center gap-1 rounded-full bg-success/10 px-2 py-0.5 text-xs font-medium text-success">
+                        // The text is pulled towards the text colour, so it keeps 4.5:1 on the green tint in light and dark.
+                        <span className="inline-flex items-center gap-1 rounded-full bg-success/10 px-2 py-0.5 text-xs font-medium text-[color-mix(in_oklab,var(--success)_75%,var(--foreground))]">
                           <Check className="size-3" strokeWidth={3} aria-hidden />
                           {connectedLabel}
                         </span>
@@ -162,11 +141,10 @@ export function IntegrationCard({
             <motion.div
               key={open.id}
               layout="position"
-              ref={dialogRef}
               role="dialog"
-              aria-modal="true"
+              aria-modal="false"
               aria-labelledby={`${base}-title`}
-              onKeyDown={trap}
+              onKeyDown={onKey}
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
@@ -190,7 +168,7 @@ export function IntegrationCard({
                   type="button"
                   onClick={close}
                   aria-label={closeLabel}
-                  className="grid size-9 shrink-0 place-items-center rounded-full hover:bg-muted"
+                  className="grid size-9 relative after:-inset-1 after:absolute after:content-[''] shrink-0 place-items-center rounded-full hover:bg-muted"
                 >
                   <X className="size-4" aria-hidden />
                 </button>

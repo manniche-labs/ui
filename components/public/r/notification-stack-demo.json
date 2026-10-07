@@ -3,6 +3,9 @@
   "name": "notification-stack-demo",
   "title": "Notification stack demo",
   "description": "How to use Notification stack.",
+  "dependencies": [
+    "lucide-react"
+  ],
   "registryDependencies": [
     "@manniche/notification-stack"
   ],

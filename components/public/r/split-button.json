@@ -13,7 +13,7 @@
   "files": [
     {
       "path": "registry/manniche/split-button/split-button.tsx",
-      "content": "// Based on Watermelon UI's “Split button” (MIT, © 2026 Watermelon Platform Contributors,\n// github.com/WatermelonCorp/watermelon-platform). Rewritten with keyboard support, focus handling and a choice callback.\nimport { ChevronLeft } from 'lucide-react'\nimport { MotionConfig, motion } from 'motion/react'\nimport { useEffect, useRef, useState } from 'react'\nimport { cn } from '@/lib/utils'\n\nexport type SplitButtonOption = { id: string; label: string }\n\nexport type SplitButtonProps = {\n  label: string\n  options: SplitButtonOption[]\n  onSelect: (id: string) => void\n  backLabel?: string\n  className?: string\n}\n\n/** A button that splits into its options. Pick one, or go back with the arrow or Esc. */\nexport function SplitButton({ label, options, onSelect, backLabel = 'Back', className }: SplitButtonProps) {\n  const [open, setOpen] = useState(false)\n  const main = useRef<HTMLButtonElement>(null)\n  const row = useRef<HTMLDivElement>(null)\n  const moved = useRef(false)\n\n  // Focus follows the buttons, so a keyboard user never lands on one that just faded out.\n  useEffect(() => {\n    if (!moved.current) return\n    if (open) row.current?.querySelector<HTMLButtonElement>('[data-option]')?.focus()\n    else main.current?.focus()\n  }, [open])\n\n  const toggle = (next: boolean) => {\n    moved.current = true\n    setOpen(next)\n  }\n\n  const swap = (shown: boolean) => ({\n    opacity: shown ? 1 : 0,\n    filter: shown ? 'blur(0px)' : 'blur(8px)',\n  })\n\n  return (\n    <MotionConfig reducedMotion=\"user\" transition={{ type: 'spring', bounce: 0.45, duration: 0.8 }}>\n      <div\n        className={cn('relative grid min-h-14 place-items-center font-medium', className)}\n        onKeyDown={(e) => e.key === 'Escape' && open && toggle(false)}\n      >\n        <motion.button\n          ref={main}\n          type=\"button\"\n          aria-expanded={open}\n          inert={open}\n          onClick={() => toggle(true)}\n          initial={false}\n          animate={{ ...swap(!open), scaleX: open ? 1.5 : 1, scaleY: open ? 0.9 : 1 }}\n          whileTap={{ scale: 1.08 }}\n          className=\"col-start-1 row-start-1 min-h-11 rounded-full bg-primary px-7 text-primary-foreground\"\n        >\n          {label}\n        </motion.button>\n        <motion.div\n          ref={row}\n          role=\"group\"\n          aria-label={label}\n          inert={!open}\n          initial={false}\n          animate={{ ...swap(open), scaleX: open ? 1 : 0.3, scaleY: open ? 1 : 0.9 }}\n          className=\"col-start-1 row-start-1 flex flex-wrap items-center justify-center gap-2\"\n        >\n          <motion.button\n            type=\"button\"\n            aria-label={backLabel}\n            onClick={() => toggle(false)}\n            whileTap={{ scale: 1.1 }}\n            className=\"grid size-11 place-items-center rounded-full bg-muted text-foreground\"\n          >\n            <ChevronLeft className=\"size-5\" aria-hidden />\n          </motion.button>\n          {options.map((o) => (\n            <motion.button\n              key={o.id}\n              data-option\n              type=\"button\"\n              onClick={() => {\n                onSelect(o.id)\n                toggle(false)\n              }}\n              whileTap={{ scale: 1.06 }}\n              className=\"min-h-11 rounded-full bg-muted px-5 text-foreground transition-colors duration-150 hover:bg-accent hover:text-accent-foreground\"\n            >\n              {o.label}\n            </motion.button>\n          ))}\n        </motion.div>\n      </div>\n    </MotionConfig>\n  )\n}\n",
+      "content": "// Based on Watermelon UI's “Split button” (MIT, © 2026 Watermelon Platform Contributors,\n// github.com/WatermelonCorp/watermelon-platform). Rewritten with keyboard support, focus handling and a choice callback.\nimport { ChevronLeft } from 'lucide-react'\nimport { MotionConfig, motion } from 'motion/react'\nimport { useEffect, useRef, useState } from 'react'\nimport { cn } from '@/lib/utils'\n\nexport type SplitButtonOption = { id: string; label: string }\n\nexport type SplitButtonProps = {\n  /** Text on the main button. */\n  label: string\n  /** The choices that open from the button, each with an id and a label. */\n  options: SplitButtonOption[]\n  /** Called with the option id when a choice is picked. */\n  onSelect: (id: string) => void\n  /** Name of the button that closes the choices. */\n  backLabel?: string\n  /** Classes for the button. */\n  className?: string\n}\n\n/** A button that splits into its options. Pick one, or go back with the arrow or Esc. */\nexport function SplitButton({ label, options, onSelect, backLabel = 'Back', className }: SplitButtonProps) {\n  const [open, setOpen] = useState(false)\n  const main = useRef<HTMLButtonElement>(null)\n  const row = useRef<HTMLDivElement>(null)\n  const moved = useRef(false)\n\n  // Focus follows the buttons, so a keyboard user never lands on one that just faded out.\n  useEffect(() => {\n    if (!moved.current) return\n    if (open) row.current?.querySelector<HTMLButtonElement>('[data-option]')?.focus()\n    else main.current?.focus()\n  }, [open])\n\n  const toggle = (next: boolean) => {\n    moved.current = true\n    setOpen(next)\n  }\n\n  const swap = (shown: boolean) => ({\n    opacity: shown ? 1 : 0,\n    filter: shown ? 'blur(0px)' : 'blur(8px)',\n  })\n\n  return (\n    <MotionConfig reducedMotion=\"user\" transition={{ type: 'spring', bounce: 0.45, duration: 0.8 }}>\n      <div\n        className={cn('relative grid min-h-14 place-items-center font-medium', className)}\n        onKeyDown={(e) => e.key === 'Escape' && open && toggle(false)}\n      >\n        <motion.button\n          ref={main}\n          type=\"button\"\n          aria-expanded={open}\n          inert={open}\n          onClick={() => toggle(true)}\n          initial={false}\n          animate={{ ...swap(!open), scaleX: open ? 1.5 : 1, scaleY: open ? 0.9 : 1 }}\n          whileTap={{ scale: 1.08 }}\n          className=\"col-start-1 row-start-1 min-h-11 rounded-full bg-primary px-7 text-primary-foreground\"\n        >\n          {label}\n        </motion.button>\n        <motion.div\n          ref={row}\n          role=\"group\"\n          aria-label={label}\n          inert={!open}\n          initial={false}\n          animate={{ ...swap(open), scaleX: open ? 1 : 0.3, scaleY: open ? 1 : 0.9 }}\n          className=\"col-start-1 row-start-1 flex flex-wrap items-center justify-center gap-2\"\n        >\n          <motion.button\n            type=\"button\"\n            aria-label={backLabel}\n            onClick={() => toggle(false)}\n            whileTap={{ scale: 1.1 }}\n            className=\"grid size-11 place-items-center rounded-full bg-muted text-foreground\"\n          >\n            <ChevronLeft className=\"size-5\" aria-hidden />\n          </motion.button>\n          {options.map((o) => (\n            <motion.button\n              key={o.id}\n              data-option\n              type=\"button\"\n              onClick={() => {\n                onSelect(o.id)\n                toggle(false)\n              }}\n              whileTap={{ scale: 1.06 }}\n              className=\"min-h-11 rounded-full bg-muted px-5 text-foreground transition-colors duration-150 hover:bg-accent hover:text-accent-foreground\"\n            >\n              {o.label}\n            </motion.button>\n          ))}\n        </motion.div>\n      </div>\n    </MotionConfig>\n  )\n}\n",
       "type": "registry:component"
     }
   ],
@@ -28,35 +28,35 @@
         "type": "string",
         "default": null,
         "required": true,
-        "description": null
+        "description": "Text on the main button."
       },
       {
         "name": "options",
         "type": "SplitButtonOption[]",
         "default": null,
         "required": true,
-        "description": null
+        "description": "The choices that open from the button, each with an id and a label."
       },
       {
         "name": "onSelect",
         "type": "(id: string) => void",
         "default": null,
         "required": true,
-        "description": null
+        "description": "Called with the option id when a choice is picked."
       },
       {
         "name": "backLabel",
         "type": "string",
         "default": "'Back'",
         "required": false,
-        "description": null
+        "description": "Name of the button that closes the choices."
       },
       {
         "name": "className",
         "type": "string",
         "default": null,
         "required": false,
-        "description": null
+        "description": "Classes for the button."
       }
     ],
     "a11y": [

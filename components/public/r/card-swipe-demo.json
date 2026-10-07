@@ -3,6 +3,9 @@
   "name": "card-swipe-demo",
   "title": "Card swipe demo",
   "description": "How to use Card swipe.",
+  "dependencies": [
+    "lucide-react"
+  ],
   "registryDependencies": [
     "@manniche/card-swipe"
   ],

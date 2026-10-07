@@ -115,7 +115,7 @@ export function InlineEdit({
                     type="button"
                     aria-label={saveLabel}
                     onClick={() => stop(true)}
-                    className="grid size-8 place-items-center rounded-lg bg-foreground text-background active:scale-95 motion-reduce:active:scale-100"
+                    className="grid size-8 relative after:-inset-1.5 after:absolute after:content-[''] place-items-center rounded-lg bg-foreground text-background active:scale-95 motion-reduce:active:scale-100"
                   >
                     <Check className="size-4" aria-hidden />
                   </button>
@@ -123,7 +123,7 @@ export function InlineEdit({
                     type="button"
                     aria-label={cancelLabel}
                     onClick={() => stop(false)}
-                    className="grid size-8 place-items-center rounded-lg bg-card text-foreground shadow-sm active:scale-95 motion-reduce:active:scale-100"
+                    className="grid size-8 relative after:-inset-1.5 after:absolute after:content-[''] place-items-center rounded-lg bg-card text-foreground shadow-sm active:scale-95 motion-reduce:active:scale-100"
                   >
                     <X className="size-4" aria-hidden />
                   </button>
@@ -137,7 +137,7 @@ export function InlineEdit({
                   aria-label={`${editLabel} ${label.toLowerCase()}`}
                   aria-describedby={`${id}-value`}
                   onClick={start}
-                  className="grid size-8 place-items-center rounded-lg border bg-card text-muted-foreground opacity-100 shadow-sm transition-opacity duration-150 focus-visible:opacity-100 sm:opacity-0 sm:group-hover:opacity-100"
+                  className="grid size-8 relative after:-inset-1.5 after:absolute after:content-[''] place-items-center rounded-lg border bg-card text-muted-foreground opacity-100 shadow-sm transition-opacity duration-150 focus-visible:opacity-100 sm:opacity-0 sm:group-hover:opacity-100"
                 >
                   <Pencil className="size-3.5" aria-hidden />
                 </motion.button>

@@ -3,6 +3,9 @@
   "name": "logo-grid-demo",
   "title": "Logo grid demo",
   "description": "How to use Logo grid.",
+  "dependencies": [
+    "lucide-react"
+  ],
   "registryDependencies": [
     "@manniche/logo-grid"
   ],

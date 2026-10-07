@@ -115,8 +115,9 @@ export function DeploymentCard({
             const open = openId === s.id
             const pct = Math.round(Math.max(0, Math.min(1, s.progress)) * 100)
             return (
-              <li key={s.id} className="relative transition-colors duration-150 motion-reduce:transition-none has-[button:enabled]:hover:bg-muted/50">
-                <div className="flex items-center gap-3 px-5 py-3.5">
+              <li key={s.id} className="transition-colors duration-150 motion-reduce:transition-none has-[button:enabled]:hover:bg-muted/50">
+                {/* The button's overlay covers this header row only, so the details below stay selectable. */}
+                <div className="relative flex items-center gap-3 px-5 py-3.5">
                   <span className={cn('grid size-6 shrink-0 place-items-center rounded-full bg-muted transition-colors duration-300 motion-reduce:transition-none', tone[s.status])}>
                     <StepIcon status={s.status} />
                   </span>
@@ -126,11 +127,12 @@ export function DeploymentCard({
                       aria-expanded={s.details ? open : undefined}
                       disabled={!s.details}
                       onClick={() => setOpenId(open ? null : s.id)}
-                      className="flex w-full items-center justify-between gap-2 text-left text-sm focus-visible:outline-none after:absolute after:inset-0 focus-visible:after:outline focus-visible:after:outline-2 focus-visible:after:-outline-offset-2 focus-visible:after:outline-ring"
+                      className="flex w-full items-center justify-between gap-2 text-left text-sm focus-visible:outline-none after:absolute after:inset-0 focus-visible:after:outline-2 focus-visible:after:-outline-offset-2 focus-visible:after:outline-ring"
                     >
                       <span className={cn('truncate font-medium', s.status === 'pending' && 'text-muted-foreground')}>
-                        {s.label}
-                        <span className="sr-only">: {t[s.status]}</span>
+                        {/* One text node for the name, so it reads "Install packages: Succeeded" without a stray space. */}
+                        <span aria-hidden>{s.label}</span>
+                        <span className="sr-only">{`${s.label}: ${t[s.status]}`}</span>
                       </span>
                       <span className="shrink-0 text-xs text-muted-foreground tabular-nums">{s.duration}</span>
                     </button>

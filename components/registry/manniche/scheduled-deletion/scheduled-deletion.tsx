@@ -61,7 +61,7 @@ export function ScheduledDeletion({
         <button
           type="button"
           onClick={onRestore}
-          className="inline-flex min-h-11 shrink-0 items-center gap-2 rounded-xl bg-primary px-4 text-sm font-medium text-primary-foreground transition-[background-color,transform] duration-150 ease-out-quint hover:bg-primary/90 active:scale-[0.97]"
+          className="inline-flex min-h-11 shrink-0 items-center gap-2 rounded-xl bg-primary px-4 text-sm font-medium text-primary-foreground transition-[background-color,transform] duration-150 ease-out-quint hover:bg-primary/90 active:scale-[0.97] motion-reduce:transition-none"
         >
           <RotateCcw className="size-4" aria-hidden />
           {restoreLabel}

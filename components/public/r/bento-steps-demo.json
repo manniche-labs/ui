@@ -4,7 +4,8 @@
   "title": "Bento steps demo",
   "description": "How to use Bento steps.",
   "registryDependencies": [
-    "@manniche/bento-steps"
+    "@manniche/bento-steps",
+    "@manniche/chart-kit"
   ],
   "files": [
     {

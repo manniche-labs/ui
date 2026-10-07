@@ -19,9 +19,9 @@ type SwitchBaseProps = {
 export type SwitchProps = SwitchBaseProps &
   (
     | {
-        /** Visible label, linked to the switch. */
+        /** Visible label, linked to the switch. Pass this, `aria-label` or both. */
         label: string
-        /** Optional spoken name that replaces the visible label for screen readers. */
+        /** Spoken name for screen readers. Required without a label; with one, it replaces the label when read aloud. */
         'aria-label'?: string
       }
     | {
@@ -55,7 +55,7 @@ export function Switch({ checked, defaultChecked = false, onChange, label, disab
           onClick={flip}
           whileTap="pressed"
           className={cn(
-            'relative flex h-8 w-[52px] shrink-0 items-center rounded-full p-[3px] transition-colors duration-200 outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:opacity-40',
+            'relative flex h-8 after:inset-x-0 after:-inset-y-1.5 after:absolute after:content-[""] w-[52px] shrink-0 items-center rounded-full p-[3px] transition-colors duration-200 outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:opacity-40',
             on ? 'justify-end bg-emerald-500' : 'justify-start bg-muted',
           )}
         >
