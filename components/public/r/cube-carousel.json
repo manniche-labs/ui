@@ -17,6 +17,41 @@
       "type": "registry:component"
     }
   ],
+  "meta": {
+    "tier": "free",
+    "added": "2026-10-03",
+    "usedIn": [],
+    "props": [
+      {
+        "name": "slides",
+        "type": "ReactNode[]",
+        "default": null,
+        "required": true,
+        "description": "One slide per face. Only the four around the cube are used at a time, so any number works."
+      },
+      {
+        "name": "label",
+        "type": "string",
+        "default": null,
+        "required": true,
+        "description": "Read by screen readers, e.g. “New arrivals”."
+      },
+      {
+        "name": "labels",
+        "type": "Partial<Record<'previous' | 'next' | 'slide', string>>",
+        "default": "{}",
+        "required": false,
+        "description": null
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "default": null,
+        "required": false,
+        "description": null
+      }
+    ]
+  },
   "categories": [
     "widgets"
   ],

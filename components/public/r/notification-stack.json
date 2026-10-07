@@ -17,6 +17,41 @@
       "type": "registry:component"
     }
   ],
+  "meta": {
+    "tier": "free",
+    "added": "2026-10-03",
+    "usedIn": [],
+    "props": [
+      {
+        "name": "items",
+        "type": "StackedNotification[]",
+        "default": null,
+        "required": true,
+        "description": null
+      },
+      {
+        "name": "onDismiss",
+        "type": "(id: string) => void",
+        "default": null,
+        "required": false,
+        "description": null
+      },
+      {
+        "name": "labels",
+        "type": "Partial<Record<'title' | 'show' | 'hide' | 'dismiss' | 'empty', string>>",
+        "default": "{}",
+        "required": false,
+        "description": null
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "default": null,
+        "required": false,
+        "description": null
+      }
+    ]
+  },
   "categories": [
     "overlays"
   ],

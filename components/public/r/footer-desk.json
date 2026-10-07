@@ -17,6 +17,91 @@
       "type": "registry:component"
     }
   ],
+  "meta": {
+    "tier": "free",
+    "added": "2026-10-06",
+    "usedIn": [],
+    "props": [
+      {
+        "name": "heading",
+        "type": "ReactNode",
+        "default": null,
+        "required": true,
+        "description": "The display line of the section (the h2): \"Talk to a person.\""
+      },
+      {
+        "name": "description",
+        "type": "ReactNode",
+        "default": null,
+        "required": false,
+        "description": "One quiet sentence under the heading."
+      },
+      {
+        "name": "contact",
+        "type": "{ name: string; role: string; initials?: string; avatar?: ReactNode }",
+        "default": null,
+        "required": true,
+        "description": "The person at the desk."
+      },
+      {
+        "name": "email",
+        "type": "string",
+        "default": null,
+        "required": true,
+        "description": "The address that gets the copy button."
+      },
+      {
+        "name": "bookCall",
+        "type": "{ label: string; href: string; external?: boolean }",
+        "default": null,
+        "required": false,
+        "description": "\"Book a call\". Left out, the link is left out."
+      },
+      {
+        "name": "offices",
+        "type": "DeskOffice[]",
+        "default": null,
+        "required": true,
+        "description": "The offices whose local time is shown, in the order given."
+      },
+      {
+        "name": "now",
+        "type": "Date",
+        "default": null,
+        "required": false,
+        "description": "The moment to show. Left out, the clocks read the real time after mount and tick once a minute."
+      },
+      {
+        "name": "locale",
+        "type": "string",
+        "default": null,
+        "required": false,
+        "description": "BCP 47 locale for the times. Default: the visitor's."
+      },
+      {
+        "name": "hour12",
+        "type": "boolean",
+        "default": "false",
+        "required": false,
+        "description": "12-hour clocks. Default false."
+      },
+      {
+        "name": "legal",
+        "type": "ReactNode",
+        "default": null,
+        "required": false,
+        "description": "A quiet line under the tile: ©, legal links."
+      },
+      {
+        "name": "labels",
+        "type": "{ offices?: string; sameTime?: string; pending?: string; copy?: string; copied?: string; copyFailed?: string; newTab?: string }",
+        "default": null,
+        "required": false,
+        "description": "Interface strings, for translation."
+      }
+    ],
+    "extends": "Omit<ComponentPropsWithoutRef<'footer'>, 'children'>"
+  },
   "categories": [
     "templates"
   ],

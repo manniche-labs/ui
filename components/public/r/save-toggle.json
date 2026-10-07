@@ -18,7 +18,54 @@
     }
   ],
   "meta": {
-    "credit": "Adapted from Watermelon UI (MIT)."
+    "credit": "Adapted from Watermelon UI (MIT).",
+    "tier": "free",
+    "added": "2026-10-04",
+    "usedIn": [],
+    "props": [
+      {
+        "name": "saved",
+        "type": "boolean",
+        "default": null,
+        "required": true,
+        "description": null
+      },
+      {
+        "name": "onSave",
+        "type": "() => Promise<void> | void",
+        "default": null,
+        "required": true,
+        "description": "Runs the save. The button spins until it settles; a rejection puts it back."
+      },
+      {
+        "name": "onUnsave",
+        "type": "() => void",
+        "default": null,
+        "required": true,
+        "description": null
+      },
+      {
+        "name": "label",
+        "type": "string",
+        "default": "'Save'",
+        "required": false,
+        "description": null
+      },
+      {
+        "name": "savedLabel",
+        "type": "string",
+        "default": "'Saved'",
+        "required": false,
+        "description": null
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "default": null,
+        "required": false,
+        "description": null
+      }
+    ]
   },
   "categories": [
     "controls"

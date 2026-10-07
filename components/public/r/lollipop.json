@@ -14,6 +14,114 @@
       "type": "registry:component"
     }
   ],
+  "meta": {
+    "tier": "free",
+    "added": "2026-10-06",
+    "usedIn": [
+      "widget-wall"
+    ],
+    "props": [
+      {
+        "name": "data",
+        "type": "LollipopDatum[]",
+        "default": null,
+        "required": true,
+        "description": "One entry per row, in any order: `{ label, value, details? }`."
+      },
+      {
+        "name": "label",
+        "type": "string",
+        "default": null,
+        "required": true,
+        "description": "What the list shows, such as \"Top merchants by spend, last 30 days\". Names the list."
+      },
+      {
+        "name": "format",
+        "type": "ValueFormat",
+        "default": null,
+        "required": false,
+        "description": "How values are written in the rows, the tooltip and on the axis."
+      },
+      {
+        "name": "sort",
+        "type": "'value' | 'label' | 'none'",
+        "default": "'value'",
+        "required": false,
+        "description": "\"value\" puts the largest first, \"label\" sorts by name, \"none\" keeps the order of `data`. Default \"value\"."
+      },
+      {
+        "name": "limit",
+        "type": "number",
+        "default": null,
+        "required": false,
+        "description": "Show only the largest n rows. Default all."
+      },
+      {
+        "name": "axis",
+        "type": "boolean",
+        "default": "true",
+        "required": false,
+        "description": "Show the value ticks under the list. Default true."
+      },
+      {
+        "name": "activeIndex",
+        "type": "number | null",
+        "default": null,
+        "required": false,
+        "description": "The highlighted row (an index into `data`), or null for none. Pass it to control the highlight."
+      },
+      {
+        "name": "defaultActiveIndex",
+        "type": "number | null",
+        "default": "null",
+        "required": false,
+        "description": "The highlighted row on first render when uncontrolled. Default null."
+      },
+      {
+        "name": "onActiveIndexChange",
+        "type": "(index: number | null) => void",
+        "default": null,
+        "required": false,
+        "description": "Called when the highlight moves by pointer, focus or keys, with null when it clears."
+      },
+      {
+        "name": "onSelect",
+        "type": "(index: number) => void",
+        "default": null,
+        "required": false,
+        "description": "Called when a row is clicked or pressed with Enter or Space, with its index into `data`."
+      },
+      {
+        "name": "loading",
+        "type": "boolean",
+        "default": "false",
+        "required": false,
+        "description": "Show breathing skeleton rows instead of data."
+      },
+      {
+        "name": "placeholder",
+        "type": "ReactNode",
+        "default": null,
+        "required": false,
+        "description": "Shown in place of the rows when there is no data or every value is 0, such as a message and a next step."
+      },
+      {
+        "name": "labels",
+        "type": "LollipopLabels",
+        "default": null,
+        "required": false,
+        "description": "Words for other languages."
+      },
+      {
+        "name": "density",
+        "type": "'comfortable' | 'compact'",
+        "default": null,
+        "required": false,
+        "description": "\"compact\" tightens the rows and columns. Inside a compact DataTile this happens on its own."
+      }
+    ],
+    "extends": "Omit<HTMLAttributes<HTMLDivElement>, 'children' | 'onSelect'>"
+  },
   "categories": [
     "widgets"
   ],

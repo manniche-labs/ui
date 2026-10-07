@@ -14,6 +14,108 @@
       "type": "registry:component"
     }
   ],
+  "meta": {
+    "tier": "free",
+    "added": "2026-10-06",
+    "usedIn": [
+      "business-finance",
+      "rental-portfolio"
+    ],
+    "props": [
+      {
+        "name": "data",
+        "type": "AreaPoint[]",
+        "default": null,
+        "required": true,
+        "description": "One object per point, oldest first: `{ label, title?, value, previous? }`."
+      },
+      {
+        "name": "label",
+        "type": "string",
+        "default": null,
+        "required": true,
+        "description": "The chart's accessible name, such as \"Everyday account balance, last 30 days\"."
+      },
+      {
+        "name": "format",
+        "type": "ValueFormat",
+        "default": null,
+        "required": false,
+        "description": "How values are written in the tooltip, the table and on the axis."
+      },
+      {
+        "name": "compare",
+        "type": "boolean",
+        "default": null,
+        "required": false,
+        "description": "Draw each point's `previous` value as a dashed comparison line. Default on when any point has one."
+      },
+      {
+        "name": "current",
+        "type": "number | null",
+        "default": null,
+        "required": false,
+        "description": "The index of the current point (today), marked with the signal dot. Default the last point; null for none."
+      },
+      {
+        "name": "height",
+        "type": "number",
+        "default": null,
+        "required": false,
+        "description": "The chart's height in px, axis labels included. Default 300, 200 when narrower than 560 px, less when compact."
+      },
+      {
+        "name": "tickEvery",
+        "type": "number",
+        "default": null,
+        "required": false,
+        "description": "Label every nth point, counted back from the last. Also the Page Up / Page Down step. Default as many as fit, about six."
+      },
+      {
+        "name": "loading",
+        "type": "boolean",
+        "default": "false",
+        "required": false,
+        "description": "Show a breathing skeleton instead of data."
+      },
+      {
+        "name": "placeholder",
+        "type": "ReactNode",
+        "default": null,
+        "required": false,
+        "description": "Shown over the empty frame when there is no data, such as a message and a next step."
+      },
+      {
+        "name": "activeIndex",
+        "type": "number | null",
+        "default": null,
+        "required": false,
+        "description": "The highlighted point (an index into `data`), or null."
+      },
+      {
+        "name": "defaultActiveIndex",
+        "type": "number | null",
+        "default": "null",
+        "required": false,
+        "description": "The highlighted point to start with, when `activeIndex` is not controlled. Default null."
+      },
+      {
+        "name": "onActiveIndexChange",
+        "type": "(index: number | null) => void",
+        "default": null,
+        "required": false,
+        "description": "Called when hover, a finger or the keyboard picks another point, and with null when it lets go."
+      },
+      {
+        "name": "labels",
+        "type": "AreaChartLabels",
+        "default": null,
+        "required": false,
+        "description": "Every visible and spoken string that is not data."
+      }
+    ],
+    "extends": "Omit<ComponentProps<'div'>, 'children'>"
+  },
   "categories": [
     "widgets"
   ],

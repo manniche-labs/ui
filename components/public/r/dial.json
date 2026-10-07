@@ -14,6 +14,131 @@
       "type": "registry:component"
     }
   ],
+  "meta": {
+    "tier": "free",
+    "added": "2026-10-06",
+    "usedIn": [
+      "account-home",
+      "health-overview",
+      "rental-portfolio",
+      "sales-floor"
+    ],
+    "props": [
+      {
+        "name": "value",
+        "type": "number",
+        "default": null,
+        "required": false,
+        "description": "The value. Pass it with `onValueChange` to control an adjustable dial, or alone for a read-only gauge."
+      },
+      {
+        "name": "defaultValue",
+        "type": "number",
+        "default": null,
+        "required": false,
+        "description": "The starting value when uncontrolled. Default `min`."
+      },
+      {
+        "name": "onValueChange",
+        "type": "(value: number) => void",
+        "default": null,
+        "required": false,
+        "description": "Called with the new value when a key or a drag changes it. Passing it makes the dial adjustable."
+      },
+      {
+        "name": "adjustable",
+        "type": "boolean",
+        "default": null,
+        "required": false,
+        "description": "Make the dial a slider even without `onValueChange` (uncontrolled). Default: true when `onValueChange` is set."
+      },
+      {
+        "name": "label",
+        "type": "string",
+        "default": null,
+        "required": true,
+        "description": "What the dial measures, such as \"Monthly budget used\". Its accessible name."
+      },
+      {
+        "name": "min",
+        "type": "number",
+        "default": "0",
+        "required": false,
+        "description": "The value at the left end. Default 0."
+      },
+      {
+        "name": "max",
+        "type": "number",
+        "default": null,
+        "required": false,
+        "description": "The value at the right end. Default 100, or the end of the last zone."
+      },
+      {
+        "name": "step",
+        "type": "number",
+        "default": "1",
+        "required": false,
+        "description": "How far one arrow key moves an adjustable dial. Default 1."
+      },
+      {
+        "name": "format",
+        "type": "ValueFormat",
+        "default": "{ suffix: '%' }",
+        "required": false,
+        "description": "How the value is written. Default `{ suffix: '%' }`."
+      },
+      {
+        "name": "caption",
+        "type": "ReactNode",
+        "default": null,
+        "required": false,
+        "description": "The small line under the figure (\"of €1 800 budget\"). On a zoned dial it follows the value on the second line (\"0.92× your daily budget so far\")."
+      },
+      {
+        "name": "ends",
+        "type": "[ReactNode, ReactNode] | false",
+        "default": null,
+        "required": false,
+        "description": "The labels under the two ends of the arc. Default `min` and `max` in `format`; false hides them."
+      },
+      {
+        "name": "segments",
+        "type": "number",
+        "default": "24",
+        "required": false,
+        "description": "How many segments make the arc. Default 24."
+      },
+      {
+        "name": "zones",
+        "type": "DialZone[]",
+        "default": null,
+        "required": false,
+        "description": "Turns the dial into the zoned gauge: arc coloured by zone, a needle, a status line and zone chips."
+      },
+      {
+        "name": "valueText",
+        "type": "(value: number) => string",
+        "default": null,
+        "required": false,
+        "description": "The value as words for screen readers. Default: the value in `format`, plus the zone when there is one."
+      },
+      {
+        "name": "labels",
+        "type": "DialLabels",
+        "default": null,
+        "required": false,
+        "description": "Words for other languages."
+      },
+      {
+        "name": "density",
+        "type": "'comfortable' | 'compact'",
+        "default": null,
+        "required": false,
+        "description": "\"compact\" draws a smaller dial. Inside a compact DataTile this happens on its own."
+      }
+    ],
+    "extends": "Omit<HTMLAttributes<HTMLDivElement>, 'children' | 'defaultValue' | 'onChange'>"
+  },
   "categories": [
     "widgets"
   ],

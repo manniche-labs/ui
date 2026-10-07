@@ -31,6 +31,84 @@
       "type": "registry:hook"
     }
   ],
+  "meta": {
+    "tier": "free",
+    "added": "2026-10-06",
+    "usedIn": [],
+    "props": [
+      {
+        "name": "images",
+        "type": "LensStripImage[]",
+        "default": null,
+        "required": true,
+        "description": "The pictures, in order. Pictures from another origin must send CORS headers, or they show as empty cards."
+      },
+      {
+        "name": "label",
+        "type": "string",
+        "default": null,
+        "required": true,
+        "description": "Read by screen readers, e.g. “Landscapes”."
+      },
+      {
+        "name": "index",
+        "type": "number",
+        "default": null,
+        "required": false,
+        "description": "Controlled: the picture in the lens."
+      },
+      {
+        "name": "defaultIndex",
+        "type": "number",
+        "default": null,
+        "required": false,
+        "description": "The picture in the lens at first, when uncontrolled."
+      },
+      {
+        "name": "onIndexChange",
+        "type": "(index: number) => void",
+        "default": null,
+        "required": false,
+        "description": "Called when the strip heads for a new picture: on release, a key, a button or a click."
+      },
+      {
+        "name": "loop",
+        "type": "boolean",
+        "default": "true",
+        "required": false,
+        "description": "Wrap round from the last picture to the first."
+      },
+      {
+        "name": "aspect",
+        "type": "number",
+        "default": "4 / 5",
+        "required": false,
+        "description": "Picture width over height. The lens takes the same shape."
+      },
+      {
+        "name": "magnify",
+        "type": "number",
+        "default": "1.6",
+        "required": false,
+        "description": "How much larger the strip looks through the lens."
+      },
+      {
+        "name": "dispersion",
+        "type": "number",
+        "default": "0.5",
+        "required": false,
+        "description": "How strongly the glass splits light into colour at its rim, from 0 (none) to 1."
+      },
+      {
+        "name": "labels",
+        "type": "Partial<Record<'previous' | 'next' | 'picture' | 'of', string>>",
+        "default": "{}",
+        "required": false,
+        "description": null
+      }
+    ],
+    "extends": "Omit<HTMLAttributes<HTMLDivElement>, 'onChange'>"
+  },
   "categories": [
     "widgets"
   ],

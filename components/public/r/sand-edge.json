@@ -31,6 +31,91 @@
       "type": "registry:hook"
     }
   ],
+  "meta": {
+    "tier": "free",
+    "added": "2026-10-06",
+    "usedIn": [],
+    "props": [
+      {
+        "name": "images",
+        "type": "SandEdgeImage[]",
+        "default": null,
+        "required": true,
+        "description": "The pictures. A picture from another origin must send CORS headers (Access-Control-Allow-Origin) to be drawn in WebGL."
+      },
+      {
+        "name": "label",
+        "type": "string",
+        "default": null,
+        "required": true,
+        "description": "Read by screen readers, e.g. “Landscapes”."
+      },
+      {
+        "name": "index",
+        "type": "number",
+        "default": null,
+        "required": false,
+        "description": "Controlled: the picture in the middle."
+      },
+      {
+        "name": "defaultIndex",
+        "type": "number",
+        "default": null,
+        "required": false,
+        "description": "The picture in the middle at first, when uncontrolled."
+      },
+      {
+        "name": "onIndexChange",
+        "type": "(index: number) => void",
+        "default": null,
+        "required": false,
+        "description": "Called when the carousel heads for a new picture: on release, a key, a button or a click."
+      },
+      {
+        "name": "loop",
+        "type": "boolean",
+        "default": "false",
+        "required": false,
+        "description": "Wrap round from the last picture to the first."
+      },
+      {
+        "name": "aspect",
+        "type": "number",
+        "default": "4 / 5",
+        "required": false,
+        "description": "Picture width over height."
+      },
+      {
+        "name": "grain",
+        "type": "number",
+        "default": "2",
+        "required": false,
+        "description": "Size of one grain of sand in CSS pixels, the same on every screen."
+      },
+      {
+        "name": "wind",
+        "type": "number",
+        "default": "1",
+        "required": false,
+        "description": "How far the wind carries the sand when the strip moves; 0 keeps the grains near their edge."
+      },
+      {
+        "name": "shimmer",
+        "type": "boolean",
+        "default": "false",
+        "required": false,
+        "description": "Loose grains at the edges shimmer slightly while on screen. Off under reduced motion."
+      },
+      {
+        "name": "labels",
+        "type": "Partial<Record<'previous' | 'next' | 'picture' | 'of', string>>",
+        "default": "{}",
+        "required": false,
+        "description": null
+      }
+    ],
+    "extends": "Omit<HTMLAttributes<HTMLDivElement>, 'onChange'>"
+  },
   "categories": [
     "widgets"
   ],

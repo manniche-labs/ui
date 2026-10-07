@@ -18,7 +18,54 @@
     }
   ],
   "meta": {
-    "credit": "Adapted from Watermelon UI (MIT)."
+    "credit": "Adapted from Watermelon UI (MIT).",
+    "tier": "free",
+    "added": "2026-10-03",
+    "usedIn": [],
+    "props": [
+      {
+        "name": "seconds",
+        "type": "number",
+        "default": "5",
+        "required": false,
+        "description": "Seconds the person has to change their mind."
+      },
+      {
+        "name": "label",
+        "type": "string",
+        "default": "'Delete'",
+        "required": false,
+        "description": null
+      },
+      {
+        "name": "undoLabel",
+        "type": "string",
+        "default": "'Undo'",
+        "required": false,
+        "description": null
+      },
+      {
+        "name": "onConfirm",
+        "type": "() => void",
+        "default": null,
+        "required": true,
+        "description": "Runs when the countdown reaches zero without an undo."
+      },
+      {
+        "name": "onUndo",
+        "type": "() => void",
+        "default": null,
+        "required": false,
+        "description": null
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "default": null,
+        "required": false,
+        "description": null
+      }
+    ]
   },
   "categories": [
     "controls"

@@ -8,7 +8,8 @@
     "build": "tsc -b && vite build",
     "lint": "oxlint",
     "preview": "vite preview",
-    "lab": "shadcn build && vite build --config vite.lab.config.ts && node scripts/template-html.mjs && node scripts/lab-export.mjs"
+    "lab": "shadcn build && vite build --config vite.lab.config.ts && node scripts/template-html.mjs && node scripts/lab-export.mjs",
+    "meta": "node scripts/registry-meta.mjs"
   },
   "dependencies": {
     "@tailwindcss/vite": "^4.3.3",

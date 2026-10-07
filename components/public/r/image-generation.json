@@ -17,6 +17,55 @@
       "type": "registry:component"
     }
   ],
+  "meta": {
+    "tier": "free",
+    "added": "2026-10-03",
+    "usedIn": [],
+    "props": [
+      {
+        "name": "progress",
+        "type": "number",
+        "default": null,
+        "required": true,
+        "description": "0 to 1. At 1 the result is shown."
+      },
+      {
+        "name": "children",
+        "type": "ReactNode",
+        "default": null,
+        "required": false,
+        "description": "The finished image, usually an <img>. Rendered behind the blur while it sharpens."
+      },
+      {
+        "name": "prompt",
+        "type": "string",
+        "default": null,
+        "required": false,
+        "description": null
+      },
+      {
+        "name": "size",
+        "type": "string",
+        "default": null,
+        "required": false,
+        "description": "A small badge in the corner, e.g. “1024 × 1024”."
+      },
+      {
+        "name": "labels",
+        "type": "Partial<Record<'working' | 'ready', string>>",
+        "default": "{}",
+        "required": false,
+        "description": null
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "default": null,
+        "required": false,
+        "description": null
+      }
+    ]
+  },
   "categories": [
     "agent"
   ],

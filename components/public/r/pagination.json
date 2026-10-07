@@ -23,7 +23,54 @@
     }
   ],
   "meta": {
-    "credit": "Adapted from Watermelon UI (MIT)."
+    "credit": "Adapted from Watermelon UI (MIT).",
+    "tier": "free",
+    "added": "2026-10-03",
+    "usedIn": [],
+    "props": [
+      {
+        "name": "total",
+        "type": "number",
+        "default": null,
+        "required": true,
+        "description": null
+      },
+      {
+        "name": "page",
+        "type": "number",
+        "default": null,
+        "required": false,
+        "description": "Controlled page, counted from 1."
+      },
+      {
+        "name": "defaultPage",
+        "type": "number",
+        "default": "1",
+        "required": false,
+        "description": null
+      },
+      {
+        "name": "onChange",
+        "type": "(page: number) => void",
+        "default": null,
+        "required": false,
+        "description": null
+      },
+      {
+        "name": "labels",
+        "type": "{ nav?: string; previous?: string; next?: string; of?: string }",
+        "default": "{}",
+        "required": false,
+        "description": "The words, so the control speaks your language."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "default": null,
+        "required": false,
+        "description": null
+      }
+    ]
   },
   "categories": [
     "navigation"

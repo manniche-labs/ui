@@ -15,6 +15,12 @@
       "type": "registry:hook"
     }
   ],
+  "meta": {
+    "tier": "free",
+    "added": "2026-10-06",
+    "usedIn": [],
+    "props": []
+  },
   "categories": [
     "hooks"
   ],

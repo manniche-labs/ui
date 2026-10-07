@@ -15,7 +15,47 @@
     }
   ],
   "meta": {
-    "credit": "Adapted from Watermelon UI (MIT)."
+    "credit": "Adapted from Watermelon UI (MIT).",
+    "tier": "free",
+    "added": "2026-10-03",
+    "usedIn": [],
+    "props": [
+      {
+        "name": "items",
+        "type": "LogoGridItem[]",
+        "default": null,
+        "required": true,
+        "description": "Twelve fill the grid around the centre; fewer leave empty cells."
+      },
+      {
+        "name": "title",
+        "type": "ReactNode",
+        "default": null,
+        "required": true,
+        "description": null
+      },
+      {
+        "name": "description",
+        "type": "ReactNode",
+        "default": null,
+        "required": false,
+        "description": null
+      },
+      {
+        "name": "action",
+        "type": "ReactNode",
+        "default": null,
+        "required": false,
+        "description": "E.g. a link to all integrations."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "default": null,
+        "required": false,
+        "description": null
+      }
+    ]
   },
   "categories": [
     "surfaces"

@@ -1,0 +1,20 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "locked-code-demo",
+  "title": "Locked code demo",
+  "description": "How to use Locked code.",
+  "registryDependencies": [
+    "@manniche/locked-code"
+  ],
+  "files": [
+    {
+      "path": "registry/manniche/examples/locked-code-demo.tsx",
+      "content": "import { LockedCode, type LockedCodeProps } from '@/registry/manniche/locked-code/locked-code'\n\n// The stub is placeholder lines, never real source: it ships in the page's HTML even though it is blurred.\nconst STUB = `\"use client\"\n\n// Placeholder lines drawn behind the lock.\n// They are not the component's source.\nimport { cn } from \"@/lib/utils\"\n\nexport type PlaceholderProps = {\n  className?: string\n}\n\nexport function Placeholder({ className }: PlaceholderProps) {\n  return <div className={cn(\"relative\", className)} />\n}`\n\n// Each specimen is a different Pro component, so the three regions on this page have different names.\nconst pro = (name: string): LockedCodeProps => ({\n  name,\n  stub: STUB,\n  unlockHref: '/lab/ui/pro#priser',\n  price: '€49',\n  priceNote: 'Introductory price until 31 December 2026, then €79',\n  facts: ['One-time payment', 'One developer', 'Key arrives by email right away'],\n  commands: [\n    { label: 'CLI', value: `npx shadcn@latest add @manniche-pro/${name}`, prefix: 'npx shadcn@latest add' },\n    {\n      label: 'MCP',\n      value:\n        'claude mcp add --transport http manniche-ui https://mikkelmanniche.dk/api/mcp --header \"Authorization: Bearer $MANNICHE_PRO_KEY\"',\n      prefix: 'claude mcp add',\n    },\n  ],\n  envVar: 'MANNICHE_PRO_KEY',\n  setupHref: '/lab/ui/pro#pro-start',\n  labels: { body: '{name} is part of Manniche UI Pro. A key opens the source of every Pro effect.' },\n})\n\n// The second specimen holds the hover/focus look still, through the parts' data-slot attributes.\nconst HOT =\n  '[&_[data-slot=locked-code-light]]:opacity-100 [&_[data-slot=locked-code-unlock]]:ring-2 [&_[data-slot=locked-code-unlock]]:ring-ring [&_[data-slot=locked-code-unlock]]:ring-offset-2 [&_[data-slot=locked-code-unlock]]:ring-offset-card'\n\nexport default function LockedCodeDemo() {\n  return (\n    <div className=\"mx-auto grid w-full max-w-5xl gap-10 px-4 py-6 sm:px-6 sm:py-10\">\n      <section className=\"grid gap-3\">\n        <h2 className=\"text-sm font-medium text-muted-foreground\">Locked</h2>\n        <LockedCode {...pro('flux-image')} />\n      </section>\n      <section className=\"grid gap-3\">\n        <h2 className=\"text-sm font-medium text-muted-foreground\">\n          Unlock link hovered or focused: the key slot lights (held still here)\n        </h2>\n        <LockedCode {...pro('warp-type')} commands={[]} className={HOT} />\n      </section>\n      <section className=\"grid gap-3\">\n        <h2 className=\"text-sm font-medium text-muted-foreground\">Narrow, 375 px</h2>\n        <div className=\"w-full max-w-[375px]\">\n          <LockedCode {...pro('dot-globe')} />\n        </div>\n      </section>\n    </div>\n  )\n}\n",
+      "type": "registry:example"
+    }
+  ],
+  "categories": [
+    "surfaces"
+  ],
+  "type": "registry:example"
+}

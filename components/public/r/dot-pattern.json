@@ -13,6 +13,28 @@
       "type": "registry:component"
     }
   ],
+  "meta": {
+    "tier": "free",
+    "added": "2026-10-03",
+    "usedIn": [],
+    "props": [
+      {
+        "name": "spacing",
+        "type": "number",
+        "default": "18",
+        "required": false,
+        "description": "Distance between dots in pixels."
+      },
+      {
+        "name": "vignette",
+        "type": "boolean",
+        "default": "true",
+        "required": false,
+        "description": "Fade the dots out towards the edges."
+      }
+    ],
+    "extends": "HTMLAttributes<HTMLDivElement>"
+  },
   "categories": [
     "surfaces"
   ],

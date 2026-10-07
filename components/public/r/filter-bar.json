@@ -1,0 +1,120 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "filter-bar",
+  "title": "Filter bar",
+  "description": "A tier switch (All, Free, Pro, New, with counts from props) and a scrolling row of category chips. Both are plain links, so it filters without JavaScript; with onChange it filters in place.",
+  "dependencies": [
+    "lucide-react"
+  ],
+  "registryDependencies": [
+    "utils"
+  ],
+  "files": [
+    {
+      "path": "registry/manniche/filter-bar/filter-bar.tsx",
+      "content": "// Filter bar for a gallery: a segmented tier switch (All / Free / Pro / New) and a row of category chips, each with\n// its count. Every option is a real link (`hrefFor` builds it, by default `?filter=…&kat=…`), so the bar works with no\n// JS at all and Cmd/Ctrl/Shift click opens a filtered view in a new tab. Pass `onChange` and a plain click (or Enter)\n// filters in place instead: the link does not navigate and you get the next state.\n//\n// The counts are yours: pass them for the current state, so a category with no hits under a tier can show its 0\n// (keep the chosen one in the list, so the empty grid below can say why). The bar never invents a number.\n//\n// Keyboard: Tab walks the tiers, then the chips. Keys 1 to 4 pick a tier from anywhere on the page (not while typing\n// in a field or with a dialog open); `shortcuts={false}` turns them off, which also hides their hints and drops\n// `aria-keyshortcuts` (WCAG 2.1.4). After a change, focus stays on the option you chose, even if your list re-sorts.\n//\n// The chip row scrolls sideways when it overflows, fading at the edge that has more. The round arrow keys beside it\n// are a mouse helper only (hidden from screen readers and Tab, since the chips themselves are reachable); they\n// appear only when the row overflows and there is a fine pointer. The chosen chip is kept in view without scrolling\n// the page.\n//\n// Motion: the tier indicator slides to the chosen tier (transform, 280 ms, ease-out-quint), keys and chips sink 1 px\n// on press. A change made from the keyboard jumps straight there, and so does everything under reduced motion.\nimport { ChevronLeft, ChevronRight } from 'lucide-react'\nimport { useEffect, useId, useLayoutEffect, useRef, useState, type CSSProperties, type MouseEvent } from 'react'\nimport { useReducedMotion } from '@/registry/manniche/hooks/use-reduced-motion'\nimport { cn } from '@/lib/utils'\n\nexport type FilterTier = 'all' | 'free' | 'pro' | 'new'\n\nexport type FilterState = {\n  /** The tier filter. */\n  filter: FilterTier\n  /** The chosen category, or null for all categories. */\n  category: string | null\n}\n\nexport type FilterBarLabels = {\n  /** The label above the tier switch (it names the navigation landmark). */\n  filter: string\n  /** The label above the chips (it names the navigation landmark). */\n  category: string\n  all: string\n  free: string\n  pro: string\n  new: string\n  /** The first chip, for all categories. */\n  allCategories: string\n}\n\nconst LABELS: FilterBarLabels = {\n  filter: 'Filter',\n  category: 'Category',\n  all: 'All',\n  free: 'Free',\n  pro: 'Pro',\n  new: 'New',\n  allCategories: 'all',\n}\n\nconst TIERS: FilterTier[] = ['all', 'free', 'pro', 'new']\n\nexport type FilterBarProps = {\n  /** The current filter and category. Read it from the URL on the server so the bar renders right without JS. */\n  value: FilterState\n  /** How many items each tier holds for the current category. */\n  counts: Record<FilterTier, number>\n  /** The category chips in the order to show them, each with its count for the current tier (0 is fine). */\n  categories: { name: string; count: number }[]\n  /** The count on the \"all\" chip. Defaults to the sum of the category counts. */\n  allCount?: number\n  /** Builds the link for a state. Defaults to `?filter=<tier>&kat=<category>`. */\n  hrefFor?: (next: FilterState) => string\n  /** Filter in place: a plain click or Enter calls this instead of following the link. */\n  onChange?: (next: FilterState) => void\n  /** Keys 1 to 4 pick a tier from anywhere on the page. Off: no keys, no hints, no aria-keyshortcuts. */\n  shortcuts?: boolean\n  /** Every visible string, for other languages. */\n  labels?: Partial<FilterBarLabels>\n  className?: string\n}\n\nfunction defaultHref({ filter, category }: FilterState) {\n  const p = new URLSearchParams({ filter })\n  if (category) p.set('kat', category)\n  return `?${p}`\n}\n\nconst isModified = (e: MouseEvent) => e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey\n\nfunction isTyping(target: EventTarget | null) {\n  if (!(target instanceof HTMLElement)) return false\n  return target.isContentEditable || /^(INPUT|TEXTAREA|SELECT)$/.test(target.tagName)\n}\n\n// Another modal is up when a native modal dialog is open, or a visible dialog from a library such as Radix\n// (role=dialog, alertdialog or aria-modal). `own` and what is inside it do not count.\nfunction modalOpen(own: Element | null = null) {\n  const found = document.querySelectorAll('dialog[open], [role=\"dialog\"], [role=\"alertdialog\"], [aria-modal=\"true\"]')\n  return [...found].some((el) => el !== own && !own?.contains(el) && el.getClientRects().length > 0)\n}\n\n/** Tier switch and category chips as real links, with counts from you and focus that stays put. */\nexport function FilterBar({\n  value,\n  counts,\n  categories,\n  allCount,\n  hrefFor = defaultHref,\n  onChange,\n  shortcuts = true,\n  labels: labelsProp,\n  className,\n}: FilterBarProps) {\n  const labels = { ...LABELS, ...labelsProp }\n  const reduced = useReducedMotion()\n  const filterId = useId()\n  const categoryId = useId()\n  const root = useRef<HTMLDivElement>(null)\n  const row = useRef<HTMLElement>(null)\n  const seg = useRef<HTMLElement>(null)\n  const pendingFocus = useRef<string | null>(null)\n  const [instant, setInstant] = useState(false)\n  const [edge, setEdge] = useState({ overflow: false, start: true, end: true })\n\n  const tierIndex = Math.max(0, TIERS.indexOf(value.filter))\n  const chipTotal = allCount ?? categories.reduce((sum, c) => sum + c.count, 0)\n  const chipSignature = categories.map((c) => `${c.name}:${c.count}`).join('|')\n\n  const choose = (next: FilterState, focusKey: string, e: MouseEvent<HTMLAnchorElement>) => {\n    if (!onChange || e.defaultPrevented || isModified(e)) return\n    e.preventDefault()\n    // detail 0: Enter or a shortcut, not a pointer. Keyboard changes jump instead of slide.\n    setInstant(e.detail === 0)\n    if (next.filter === value.filter && next.category === value.category) return\n    if (document.activeElement === e.currentTarget) pendingFocus.current = focusKey\n    onChange(next)\n  }\n\n  // If the change re-sorted or rebuilt the options, put focus back on the one that was chosen.\n  useLayoutEffect(() => {\n    const key = pendingFocus.current\n    pendingFocus.current = null\n    if (!key) return\n    const target = root.current?.querySelector<HTMLElement>(`[data-filter-key=\"${CSS.escape(key)}\"]`)\n    if (target && document.activeElement !== target && (document.activeElement === document.body || document.activeElement === null)) {\n      target.focus({ preventScroll: true })\n    }\n  }, [value.filter, value.category])\n\n  // Keep the chosen chip inside the row without scrolling the page.\n  useLayoutEffect(() => {\n    const el = row.current\n    if (!el) return\n    const on = el.querySelector<HTMLElement>('[aria-current=\"page\"]')\n    if (!on || !value.category) {\n      el.scrollLeft = 0\n      return\n    }\n    const left = on.getBoundingClientRect().left - el.getBoundingClientRect().left + el.scrollLeft\n    const right = left + on.offsetWidth\n    if (right <= el.clientWidth - 24) el.scrollLeft = 0\n    else if (left < el.scrollLeft || right > el.scrollLeft + el.clientWidth) el.scrollLeft = Math.max(0, left - 24)\n  }, [value.category, value.filter, categories.length])\n\n  // Which ends of the chip row have more, and whether it overflows at all.\n  useEffect(() => {\n    const el = row.current\n    if (!el) return\n    const measure = () => {\n      const room = el.scrollWidth - el.clientWidth\n      const next = { overflow: room > 2, start: el.scrollLeft <= 2, end: el.scrollLeft >= room - 2 }\n      setEdge((prev) => (prev.overflow === next.overflow && prev.start === next.start && prev.end === next.end ? prev : next))\n    }\n    measure()\n    const ro = new ResizeObserver(measure)\n    ro.observe(el)\n    el.addEventListener('scroll', measure, { passive: true })\n    return () => {\n      ro.disconnect()\n      el.removeEventListener('scroll', measure)\n    }\n  }, [chipSignature])\n\n  // Keys 1–4 pick a tier: clicking its link keeps one path for links, onChange and focus.\n  useEffect(() => {\n    if (!shortcuts) return\n    const onKey = (e: KeyboardEvent) => {\n      if (e.defaultPrevented || e.repeat || e.metaKey || e.ctrlKey || e.altKey || !/^[1-4]$/.test(e.key)) return\n      if (isTyping(e.target) || modalOpen()) return\n      const link = seg.current?.querySelectorAll<HTMLAnchorElement>('a')[Number(e.key) - 1]\n      if (!link) return\n      e.preventDefault()\n      link.click()\n    }\n    document.addEventListener('keydown', onKey)\n    return () => document.removeEventListener('keydown', onKey)\n  }, [shortcuts])\n\n  const jog = (dir: -1 | 1) => {\n    const el = row.current\n    if (!el) return\n    el.scrollBy({ left: dir * Math.round(el.clientWidth * 0.8), behavior: reduced ? 'auto' : 'smooth' })\n  }\n\n  const tierLabel: Record<FilterTier, string> = { all: labels.all, free: labels.free, pro: labels.pro, new: labels.new }\n  const chip = (name: string | null, count: number) => {\n    const next = { filter: value.filter, category: name }\n    const on = value.category === name\n    const key = `c:${name ?? ''}`\n    return (\n      <a\n        key={key}\n        href={hrefFor(next)}\n        data-filter-key={key}\n        aria-current={on ? 'page' : undefined}\n        onClick={(e) => choose(next, key, e)}\n        className={cn(\n          'inline-flex h-11 flex-none items-center gap-[7px] rounded-full px-4 font-mono text-[12.5px] leading-none font-medium whitespace-nowrap',\n          'transition-transform duration-100 ease-out-quint active:translate-y-px motion-reduce:transition-none',\n          'focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring',\n          on\n            ? 'bg-foreground text-background shadow-[inset_0_1px_0_color-mix(in_oklab,var(--background)_30%,transparent),inset_0_-2px_0_rgb(0_0_0/0.25)]'\n            : 'bg-card text-muted-foreground shadow-[inset_0_-2px_0_color-mix(in_oklab,var(--foreground)_6%,transparent),0_0_0_1px_color-mix(in_oklab,var(--foreground)_10%,transparent)] hover:bg-muted hover:text-foreground dark:shadow-[inset_0_1px_0_rgb(255_255_255/0.06),inset_0_-2px_0_rgb(0_0_0/0.38),0_0_0_1px_rgb(255_255_255/0.08)]',\n        )}\n      >\n        {name ?? labels.allCategories}\n        <span className={cn('tabular-nums', on ? 'text-background/70' : 'text-muted-foreground')}>{count}</span>\n      </a>\n    )\n  }\n\n  return (\n    <div ref={root} className={cn('@container min-w-0', className)}>\n      <div className=\"grid min-w-0 gap-x-8 gap-y-5 @min-[68rem]:grid-cols-[auto_minmax(0,1fr)]\">\n      <div className=\"min-w-0\">\n        <span id={filterId} className=\"mb-[9px] ml-0.5 block text-[12.5px] leading-none font-medium text-muted-foreground\">\n          {labels.filter}\n        </span>\n        <nav\n          ref={seg}\n          aria-labelledby={filterId}\n          style={{ '--i': tierIndex } as CSSProperties}\n          className={cn(\n            'relative isolate grid auto-cols-fr grid-flow-col rounded-[14px] p-1 @min-[45rem]:min-w-[520px]',\n            'bg-foreground/[0.045] shadow-[inset_0_1px_2px_rgb(0_0_0/0.06),inset_0_0_0_1px_color-mix(in_oklab,var(--foreground)_7%,transparent)]',\n            'dark:bg-black/35 dark:shadow-[inset_0_1px_2px_rgb(0_0_0/0.55),inset_0_0_0_1px_rgb(255_255_255/0.05)]',\n          )}\n        >\n          <span\n            aria-hidden\n            className={cn(\n              'absolute inset-y-1 left-1 -z-10 w-[calc((100%-8px)/4)] translate-x-[calc(var(--i)*100%)] rounded-[10px] bg-card',\n              'shadow-[inset_0_-2px_0_color-mix(in_oklab,var(--foreground)_7%,transparent),0_0_0_1px_color-mix(in_oklab,var(--foreground)_10%,transparent),0_1px_2px_rgb(0_0_0/0.06)]',\n              'dark:bg-[color-mix(in_oklab,var(--card)_80%,white_6%)] dark:shadow-[inset_0_1px_0_rgb(255_255_255/0.09),inset_0_-2px_0_rgb(0_0_0/0.42),0_0_0_1px_rgb(255_255_255/0.1)]',\n              !instant && 'transition-transform duration-[280ms] ease-out-quint',\n              'motion-reduce:transition-none',\n            )}\n          >\n            <i className=\"absolute top-[7px] right-2 size-[5px] rounded-full bg-primary\" />\n          </span>\n          {TIERS.map((tier, i) => {\n            const next = { filter: tier, category: value.category }\n            const on = tier === value.filter\n            const key = `t:${tier}`\n            return (\n              <a\n                key={tier}\n                href={hrefFor(next)}\n                data-filter-key={key}\n                aria-current={on ? 'page' : undefined}\n                aria-keyshortcuts={shortcuts ? String(i + 1) : undefined}\n                onClick={(e) => choose(next, key, e)}\n                className={cn(\n                  'relative flex min-h-11 items-center justify-center gap-1.5 rounded-[10px] px-2 text-sm whitespace-nowrap select-none @min-[45rem]:gap-2 @min-[45rem]:px-3.5',\n                  'transition-transform duration-100 ease-out-quint active:translate-y-px motion-reduce:transition-none',\n                  'focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring',\n                  on ? 'text-foreground' : 'text-muted-foreground hover:text-foreground',\n                )}\n              >\n                {shortcuts && (\n                  <span\n                    aria-hidden\n                    className=\"hidden h-5 min-w-5 place-items-center rounded-[5px] bg-muted px-[5px] font-mono text-[11px] leading-none text-muted-foreground shadow-[inset_0_1px_0_color-mix(in_oklab,var(--foreground)_8%,transparent),inset_0_-1.5px_0_rgb(0_0_0/0.18),0_0_0_1px_color-mix(in_oklab,var(--foreground)_8%,transparent)] @min-[45rem]:inline-grid [@media(hover:none)]:hidden\"\n                  >\n                    {i + 1}\n                  </span>\n                )}\n                {tierLabel[tier]}\n                <span className=\"font-mono text-[11.5px] leading-none font-medium text-muted-foreground tabular-nums\">{counts[tier]}</span>\n              </a>\n            )\n          })}\n        </nav>\n      </div>\n\n      <div className=\"min-w-0\">\n        <span id={categoryId} className=\"mb-[9px] ml-0.5 block text-[12.5px] leading-none font-medium text-muted-foreground\">\n          {labels.category}\n        </span>\n        <div className=\"flex min-w-0 items-center gap-2.5\">\n          <nav\n            ref={row}\n            aria-labelledby={categoryId}\n            style={{ '--fl': edge.start ? '0px' : '40px', '--fr': edge.end ? '0px' : '56px' } as CSSProperties}\n            className=\"-mt-1.5 -mb-2 -ml-1.5 flex min-w-0 flex-1 gap-1.5 overflow-x-auto overscroll-x-contain px-1.5 pt-1.5 pb-2 [scrollbar-width:none] [scroll-padding-inline:48px_64px] [mask-image:linear-gradient(90deg,transparent,#000_var(--fl),#000_calc(100%-var(--fr)),transparent)] [&::-webkit-scrollbar]:hidden\"\n          >\n            {chip(null, chipTotal)}\n            {categories.map((c) => chip(c.name, c.count))}\n          </nav>\n          {edge.overflow && (\n            <div aria-hidden className=\"flex flex-none gap-1.5 @max-[35rem]:hidden [@media(hover:none)]:hidden\">\n              {([-1, 1] as const).map((dir) => (\n                <button\n                  key={dir}\n                  type=\"button\"\n                  tabIndex={-1}\n                  disabled={dir === -1 ? edge.start : edge.end}\n                  onClick={() => jog(dir)}\n                  className={cn(\n                    'inline-grid size-11 place-items-center rounded-full bg-card text-muted-foreground',\n                    'shadow-[inset_0_-2px_0_color-mix(in_oklab,var(--foreground)_6%,transparent),0_0_0_1px_color-mix(in_oklab,var(--foreground)_10%,transparent)] dark:shadow-[inset_0_1px_0_rgb(255_255_255/0.06),inset_0_-2px_0_rgb(0_0_0/0.38),0_0_0_1px_rgb(255_255_255/0.08)]',\n                    'transition-transform duration-100 ease-out-quint hover:bg-muted hover:text-foreground active:translate-y-px disabled:pointer-events-none disabled:opacity-35 motion-reduce:transition-none',\n                  )}\n                >\n                  {dir === -1 ? <ChevronLeft className=\"size-4\" /> : <ChevronRight className=\"size-4\" />}\n                </button>\n              ))}\n            </div>\n          )}\n        </div>\n      </div>\n      </div>\n    </div>\n  )\n}\n",
+      "type": "registry:component"
+    },
+    {
+      "path": "registry/manniche/hooks/use-reduced-motion.ts",
+      "content": "import { useSyncExternalStore } from 'react'\n\nconst QUERY = '(prefers-reduced-motion: reduce)'\n\nfunction subscribe(onChange: () => void) {\n  const mq = window.matchMedia(QUERY)\n  mq.addEventListener('change', onChange)\n  return () => mq.removeEventListener('change', onChange)\n}\n\n/** True when the visitor has asked the system for less motion. */\nexport function useReducedMotion() {\n  return useSyncExternalStore(\n    subscribe,\n    () => window.matchMedia(QUERY).matches,\n    () => false,\n  )\n}\n",
+      "type": "registry:hook"
+    }
+  ],
+  "meta": {
+    "tier": "free",
+    "added": "2026-10-07",
+    "usedIn": [],
+    "props": [
+      {
+        "name": "value",
+        "type": "FilterState",
+        "default": null,
+        "required": true,
+        "description": "The current filter and category. Read it from the URL on the server so the bar renders right without JS."
+      },
+      {
+        "name": "counts",
+        "type": "Record<FilterTier, number>",
+        "default": null,
+        "required": true,
+        "description": "How many items each tier holds for the current category."
+      },
+      {
+        "name": "categories",
+        "type": "{ name: string; count: number }[]",
+        "default": null,
+        "required": true,
+        "description": "The category chips in the order to show them, each with its count for the current tier (0 is fine)."
+      },
+      {
+        "name": "allCount",
+        "type": "number",
+        "default": null,
+        "required": false,
+        "description": "The count on the \"all\" chip. Defaults to the sum of the category counts."
+      },
+      {
+        "name": "hrefFor",
+        "type": "(next: FilterState) => string",
+        "default": "defaultHref",
+        "required": false,
+        "description": "Builds the link for a state. Defaults to `?filter=<tier>&kat=<category>`."
+      },
+      {
+        "name": "onChange",
+        "type": "(next: FilterState) => void",
+        "default": null,
+        "required": false,
+        "description": "Filter in place: a plain click or Enter calls this instead of following the link."
+      },
+      {
+        "name": "shortcuts",
+        "type": "boolean",
+        "default": "true",
+        "required": false,
+        "description": "Keys 1 to 4 pick a tier from anywhere on the page. Off: no keys, no hints, no aria-keyshortcuts."
+      },
+      {
+        "name": "labels",
+        "type": "Partial<FilterBarLabels>",
+        "default": null,
+        "required": false,
+        "description": "Every visible string, for other languages."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "default": null,
+        "required": false,
+        "description": null
+      }
+    ],
+    "a11y": [
+      {
+        "topic": "keyboard",
+        "text": "Every tier and chip is a link in the Tab order. Keys 1 to 4 pick a tier; they are ignored while typing or when a modal is open, and shortcuts={false} removes them with their hints and aria-keyshortcuts. Focus stays on the chosen link.",
+        "keys": [
+          "Tab",
+          "Enter",
+          "1",
+          "2",
+          "3",
+          "4"
+        ]
+      },
+      {
+        "topic": "screen-reader",
+        "text": "Two labelled nav landmarks; the active link has aria-current. A polite status says what is shown. The chip scroller arrows are aria-hidden with tabIndex -1, since every chip is reachable by Tab."
+      },
+      {
+        "topic": "motion",
+        "text": "The tier indicator slides with transform; under reduced motion it moves at once."
+      }
+    ]
+  },
+  "categories": [
+    "navigation"
+  ],
+  "type": "registry:component"
+}

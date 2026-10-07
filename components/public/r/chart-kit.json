@@ -58,6 +58,41 @@
       "success": "oklch(0.72 0.13 155)"
     }
   },
+  "meta": {
+    "tier": "free",
+    "added": "2026-10-06",
+    "usedIn": [
+      "account-home",
+      "area-chart",
+      "bar-chart",
+      "bento-metrics",
+      "bento-product",
+      "bubble-chart",
+      "business-finance",
+      "card-stack",
+      "contact-form",
+      "contact-people",
+      "currency-wallet",
+      "dial",
+      "donut",
+      "dot-matrix",
+      "footer-slim",
+      "gallery-shop",
+      "health-overview",
+      "lollipop",
+      "people-ops",
+      "rental-portfolio",
+      "sales-floor",
+      "sparkline",
+      "spend-control",
+      "transaction-list",
+      "wallet-dashboard",
+      "week-schedule",
+      "widget-wall",
+      "workspace-home"
+    ],
+    "props": []
+  },
   "categories": [
     "widgets"
   ],

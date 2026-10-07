@@ -33,6 +33,12 @@
       "success": "oklch(0.72 0.13 155)"
     }
   },
+  "meta": {
+    "tier": "free",
+    "added": "2026-10-04",
+    "usedIn": [],
+    "props": []
+  },
   "categories": [
     "templates"
   ],

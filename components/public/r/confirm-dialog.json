@@ -14,6 +14,83 @@
       "type": "registry:component"
     }
   ],
+  "meta": {
+    "tier": "free",
+    "added": "2026-10-05",
+    "usedIn": [],
+    "props": [
+      {
+        "name": "open",
+        "type": "boolean",
+        "default": null,
+        "required": true,
+        "description": null
+      },
+      {
+        "name": "onOpenChange",
+        "type": "(open: boolean) => void",
+        "default": null,
+        "required": true,
+        "description": null
+      },
+      {
+        "name": "title",
+        "type": "string",
+        "default": null,
+        "required": true,
+        "description": null
+      },
+      {
+        "name": "description",
+        "type": "ReactNode",
+        "default": null,
+        "required": false,
+        "description": null
+      },
+      {
+        "name": "confirmLabel",
+        "type": "string",
+        "default": null,
+        "required": true,
+        "description": "The verb and the thing, e.g. “Delete project”. Never “Yes” or “OK”."
+      },
+      {
+        "name": "cancelLabel",
+        "type": "string",
+        "default": null,
+        "required": true,
+        "description": "What happens if they back out, e.g. “Keep project”. Never “No” or “Cancel” alone."
+      },
+      {
+        "name": "onConfirm",
+        "type": "() => void",
+        "default": null,
+        "required": true,
+        "description": null
+      },
+      {
+        "name": "destructive",
+        "type": "boolean",
+        "default": "false",
+        "required": false,
+        "description": "Red, for actions that destroy something. Leave it off for everything else."
+      },
+      {
+        "name": "typeToConfirm",
+        "type": "string",
+        "default": null,
+        "required": false,
+        "description": "When set, the confirm button stays off until this exact text is typed, e.g. the project name."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "default": null,
+        "required": false,
+        "description": null
+      }
+    ]
+  },
   "categories": [
     "controls"
   ],

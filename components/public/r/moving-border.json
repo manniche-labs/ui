@@ -13,6 +13,35 @@
       "type": "registry:component"
     }
   ],
+  "meta": {
+    "tier": "free",
+    "added": "2026-10-06",
+    "usedIn": [],
+    "props": [
+      {
+        "name": "duration",
+        "type": "number",
+        "default": null,
+        "required": false,
+        "description": "Seconds for one lap of the light. Defaults to 4 for `light` and 9 for `iridescent`."
+      },
+      {
+        "name": "width",
+        "type": "number",
+        "default": "1.5",
+        "required": false,
+        "description": "Border width in pixels."
+      },
+      {
+        "name": "variant",
+        "type": "'light' | 'iridescent'",
+        "default": "'light'",
+        "required": false,
+        "description": "`light`: one primary-coloured light runs round. `iridescent`: a thin-film ring whose hue shifts along the border, around the primary hue."
+      }
+    ],
+    "extends": "HTMLAttributes<HTMLDivElement>"
+  },
   "categories": [
     "surfaces"
   ],

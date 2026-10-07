@@ -19,6 +19,34 @@
       "type": "registry:hook"
     }
   ],
+  "meta": {
+    "tier": "free",
+    "added": "2026-10-03",
+    "usedIn": [],
+    "props": [
+      {
+        "name": "speed",
+        "type": "number",
+        "default": "1",
+        "required": false,
+        "description": "Flow speed; 1 is slow and heavy."
+      },
+      {
+        "name": "children",
+        "type": "ReactNode",
+        "default": null,
+        "required": false,
+        "description": "Content shown on top of the metal."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "default": null,
+        "required": false,
+        "description": null
+      }
+    ]
+  },
   "categories": [
     "surfaces"
   ],

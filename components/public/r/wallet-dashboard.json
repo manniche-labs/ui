@@ -18,6 +18,62 @@
       "type": "registry:component"
     }
   ],
+  "meta": {
+    "tier": "free",
+    "added": "2026-10-06",
+    "usedIn": [],
+    "props": [
+      {
+        "name": "data",
+        "type": "{ balance: number; change: number; cards: StackCard[]; periods: WalletPeriod[]; subscriptions: WalletSubscription[] }",
+        "default": null,
+        "required": true,
+        "description": null
+      },
+      {
+        "name": "format",
+        "type": "ValueFormat",
+        "default": "DEFAULT_FORMAT",
+        "required": false,
+        "description": null
+      },
+      {
+        "name": "title",
+        "type": "string",
+        "default": "'Wallet'",
+        "required": false,
+        "description": null
+      },
+      {
+        "name": "note",
+        "type": "string",
+        "default": "'Example data.'",
+        "required": false,
+        "description": null
+      },
+      {
+        "name": "labels",
+        "type": "{ balance?: string; cards?: string; cashFlow?: string; spending?: string; subscriptions?: string; period?: string; perMonth?: string; renews?: (date: string) => string; monthlyTotal?: string }",
+        "default": null,
+        "required": false,
+        "description": null
+      },
+      {
+        "name": "now",
+        "type": "Date",
+        "default": null,
+        "required": false,
+        "description": "Reserved for date-aware content; the screen itself is static."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "default": null,
+        "required": false,
+        "description": null
+      }
+    ]
+  },
   "categories": [
     "templates"
   ],

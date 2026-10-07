@@ -18,7 +18,54 @@
     }
   ],
   "meta": {
-    "credit": "Adapted from Watermelon UI (MIT)."
+    "credit": "Adapted from Watermelon UI (MIT).",
+    "tier": "free",
+    "added": "2026-10-04",
+    "usedIn": [],
+    "props": [
+      {
+        "name": "open",
+        "type": "boolean",
+        "default": null,
+        "required": true,
+        "description": null
+      },
+      {
+        "name": "onOpenChange",
+        "type": "(open: boolean) => void",
+        "default": null,
+        "required": true,
+        "description": null
+      },
+      {
+        "name": "steps",
+        "type": "DialogStackStep[]",
+        "default": null,
+        "required": true,
+        "description": null
+      },
+      {
+        "name": "closeLabel",
+        "type": "string",
+        "default": "'Close'",
+        "required": false,
+        "description": null
+      },
+      {
+        "name": "backLabel",
+        "type": "string",
+        "default": "'Back'",
+        "required": false,
+        "description": null
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "default": null,
+        "required": false,
+        "description": null
+      }
+    ]
   },
   "categories": [
     "overlays"

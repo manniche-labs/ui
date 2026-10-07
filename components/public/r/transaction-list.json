@@ -18,6 +18,111 @@
       "type": "registry:component"
     }
   ],
+  "meta": {
+    "tier": "free",
+    "added": "2026-10-06",
+    "usedIn": [
+      "account-home",
+      "business-finance",
+      "people-ops",
+      "rental-portfolio",
+      "widget-wall"
+    ],
+    "props": [
+      {
+        "name": "data",
+        "type": "Transaction[]",
+        "default": null,
+        "required": true,
+        "description": "The payments. Days are sorted newest first; rows keep your order within a day."
+      },
+      {
+        "name": "label",
+        "type": "string",
+        "default": null,
+        "required": true,
+        "description": "The accessible name of the list, such as \"Recent transactions\"."
+      },
+      {
+        "name": "today",
+        "type": "string",
+        "default": null,
+        "required": false,
+        "description": "\"YYYY-MM-DD\" of today, so the first days read \"Today\" and \"Yesterday\". Without it every day shows its date."
+      },
+      {
+        "name": "format",
+        "type": "ValueFormat",
+        "default": "{ decimals: 2 }",
+        "required": false,
+        "description": "The amounts' format. Default two decimals; pass a currency for money."
+      },
+      {
+        "name": "categories",
+        "type": "Record<string, string>",
+        "default": null,
+        "required": false,
+        "description": "Colours per category name, such as { Groceries: 'var(--chart-1)' }."
+      },
+      {
+        "name": "limit",
+        "type": "number",
+        "default": null,
+        "required": false,
+        "description": "Show this many rows and put the rest behind \"Show more\". Default all."
+      },
+      {
+        "name": "onSelect",
+        "type": "(item: Transaction) => void",
+        "default": null,
+        "required": false,
+        "description": "Makes each row a button and is called with its payment."
+      },
+      {
+        "name": "selectedId",
+        "type": "string",
+        "default": null,
+        "required": false,
+        "description": "The id of the row that is open elsewhere, marked with the signal colour. Needs `onSelect`."
+      },
+      {
+        "name": "headingLevel",
+        "type": "2 | 3 | 4 | 5 | 6",
+        "default": "4",
+        "required": false,
+        "description": "The level of the day headings. Default 4."
+      },
+      {
+        "name": "loading",
+        "type": "boolean",
+        "default": "false",
+        "required": false,
+        "description": "Show placeholder rows while the data loads."
+      },
+      {
+        "name": "empty",
+        "type": "ReactNode",
+        "default": null,
+        "required": false,
+        "description": "What to show when there are no payments. Default a short line."
+      },
+      {
+        "name": "density",
+        "type": "'comfortable' | 'compact'",
+        "default": null,
+        "required": false,
+        "description": "\"compact\" tightens the rows. Default follows the tile."
+      },
+      {
+        "name": "labels",
+        "type": "TransactionListLabels",
+        "default": null,
+        "required": false,
+        "description": null
+      }
+    ],
+    "extends": "Omit<HTMLAttributes<HTMLDivElement>, 'onSelect'>"
+  },
   "categories": [
     "widgets"
   ],

@@ -16,6 +16,63 @@
       "type": "registry:component"
     }
   ],
+  "meta": {
+    "tier": "free",
+    "added": "2026-10-06",
+    "usedIn": [],
+    "props": [
+      {
+        "name": "title",
+        "type": "ReactNode",
+        "default": null,
+        "required": true,
+        "description": "The headline of the card."
+      },
+      {
+        "name": "description",
+        "type": "ReactNode",
+        "default": null,
+        "required": false,
+        "description": "One sentence under the headline."
+      },
+      {
+        "name": "items",
+        "type": "ReactNode[]",
+        "default": null,
+        "required": true,
+        "description": "What the person gets, 3 to 5 short items. Shown as a list with check marks."
+      },
+      {
+        "name": "consent",
+        "type": "ReactNode",
+        "default": null,
+        "required": false,
+        "description": "The consent line under the form, such as a sentence with a link to the privacy policy."
+      },
+      {
+        "name": "onSubmit",
+        "type": "(values: CtaSignupValues) => Promise<void> | void",
+        "default": null,
+        "required": false,
+        "description": "Called with the values when the form is valid. Return a promise; the button shows its sending state until it settles. Resolve to show the success state, reject to show an error and keep the typed text. The section itself never sends anything."
+      },
+      {
+        "name": "autoComplete",
+        "type": "string",
+        "default": "'email'",
+        "required": false,
+        "description": "The `autocomplete` token of the field. Default \"email\"."
+      },
+      {
+        "name": "labels",
+        "type": "CtaSignupLabels",
+        "default": null,
+        "required": false,
+        "description": "Text for the interface itself, for translation."
+      }
+    ],
+    "extends": "Omit<ComponentProps<'section'>, 'children' | 'title' | 'onSubmit'>"
+  },
   "categories": [
     "templates"
   ],

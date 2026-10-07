@@ -17,6 +17,62 @@
       "type": "registry:component"
     }
   ],
+  "meta": {
+    "tier": "free",
+    "added": "2026-10-03",
+    "usedIn": [],
+    "props": [
+      {
+        "name": "merchant",
+        "type": "string",
+        "default": null,
+        "required": true,
+        "description": null
+      },
+      {
+        "name": "lines",
+        "type": "ReceiptLine[]",
+        "default": null,
+        "required": true,
+        "description": null
+      },
+      {
+        "name": "onPay",
+        "type": "() => Promise<{ reference: string } | void>",
+        "default": null,
+        "required": true,
+        "description": "Called when the pay button is pressed. The receipt prints once it resolves; if it throws, the button comes back."
+      },
+      {
+        "name": "currency",
+        "type": "string",
+        "default": "'EUR'",
+        "required": false,
+        "description": null
+      },
+      {
+        "name": "locale",
+        "type": "string",
+        "default": "'en-IE'",
+        "required": false,
+        "description": null
+      },
+      {
+        "name": "labels",
+        "type": "Partial<Record<'pay' | 'processing' | 'printing' | 'paid' | 'total' | 'again' | 'reference', string>>",
+        "default": "{}",
+        "required": false,
+        "description": null
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "default": null,
+        "required": false,
+        "description": null
+      }
+    ]
+  },
   "categories": [
     "widgets"
   ],

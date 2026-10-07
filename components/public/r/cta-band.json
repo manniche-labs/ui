@@ -16,6 +16,56 @@
       "type": "registry:component"
     }
   ],
+  "meta": {
+    "tier": "free",
+    "added": "2026-10-06",
+    "usedIn": [],
+    "props": [
+      {
+        "name": "headline",
+        "type": "ReactNode",
+        "default": null,
+        "required": true,
+        "description": "The display line. Keep it short; it is set in the display face and balanced across lines."
+      },
+      {
+        "name": "description",
+        "type": "ReactNode",
+        "default": null,
+        "required": false,
+        "description": "One sentence under the headline that says what happens next."
+      },
+      {
+        "name": "primary",
+        "type": "CtaAction",
+        "default": null,
+        "required": true,
+        "description": "The one primary action."
+      },
+      {
+        "name": "secondary",
+        "type": "CtaAction",
+        "default": null,
+        "required": false,
+        "description": "A quieter second action, such as \"Talk to us\"."
+      },
+      {
+        "name": "fact",
+        "type": "ReactNode",
+        "default": null,
+        "required": false,
+        "description": "A plain promise under the band's content, such as \"No card needed. Cancel any time.\" Never a statistic."
+      },
+      {
+        "name": "labels",
+        "type": "CtaBandLabels",
+        "default": null,
+        "required": false,
+        "description": "Text for the interface itself, for translation."
+      }
+    ],
+    "extends": "Omit<ComponentProps<'section'>, 'children' | 'title'>"
+  },
   "categories": [
     "templates"
   ],
