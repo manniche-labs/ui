@@ -156,7 +156,7 @@ export function Sparkline({
   ...rest
 }: SparklineProps) {
   const labels = { ...LABELS, ...labelsProp }
-  const { ref: frameRef, ...frame } = useChartFrame<HTMLDivElement>()
+  const { ref: frameRef, ...frame } = useChartFrame<HTMLDivElement>({ height: height ?? 30 })
   const { say, region } = useAnnounce()
   const hintId = useId()
   const clipId = useSvgId('spark')
@@ -294,7 +294,7 @@ export function Sparkline({
         style={{ height }}
       >
         {W > 0 && H > 0 && (
-          <svg aria-hidden width={W} height={H} viewBox={`0 0 ${W} ${H}`} className="pointer-events-none absolute inset-0 block overflow-visible">
+          <svg aria-hidden width={W} height={H} viewBox={`0 0 ${W} ${H}`} className={cn('pointer-events-none absolute inset-0 block overflow-visible', frame.fit && 'h-full w-full')}>
             {loading ? (
               <path
                 d={smoothPath(SKELETON.map((v, i) => [x0 + (i / (SKELETON.length - 1)) * (W - 2 * PAD_X), PAD_Y + v * (H - 2 * PAD_Y)]))}
