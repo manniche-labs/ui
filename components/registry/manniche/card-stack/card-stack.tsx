@@ -33,7 +33,9 @@ export type StackCard = {
 export type CardStackLabels = {
   /** The small line over the figure. Default "Everyday · Debit". */
   readout?: (card: StackCard) => string
+  /** The accessible name of the previous button. Default “Previous card”. */
   previous?: string
+  /** The accessible name of the next button. Default “Next card”. */
   next?: string
   /** The name of the dot picker. */
   picker?: string
@@ -68,6 +70,7 @@ export type CardStackProps = Omit<HTMLAttributes<HTMLDivElement>, 'defaultValue'
   renderCard?: (card: StackCard, state: { front: boolean; index: number }) => ReactNode
   /** Hide the figure under the fan. */
   hideAmount?: boolean
+  /** Text overrides for the readout, buttons, hints and announcements, with English defaults. */
   labels?: CardStackLabels
 }
 

@@ -8,7 +8,9 @@ export type CubeCarouselProps = {
   slides: ReactNode[]
   /** Read by screen readers, e.g. “New arrivals”. */
   label: string
+  /** Screen reader and button text with English defaults. Keys: `previous`, `next` and `slide`. */
   labels?: Partial<Record<'previous' | 'next' | 'slide', string>>
+  /** Classes for the outer section. */
   className?: string
 }
 
@@ -37,7 +39,8 @@ export function CubeCarousel({ slides, label, labels = {}, className }: CubeCaro
     <section
       aria-roledescription="carousel"
       aria-label={label}
-      className={cn('w-full max-w-sm', className)}
+      tabIndex={0}
+      className={cn('w-full max-w-sm rounded-2xl', className)}
       onKeyDown={(e) => {
         if (e.key === 'ArrowRight') go(1)
         else if (e.key === 'ArrowLeft') go(-1)

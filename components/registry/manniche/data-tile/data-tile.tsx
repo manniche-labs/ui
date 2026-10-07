@@ -17,7 +17,9 @@ export type DataTileProps = {
   inverted?: boolean
   /** "compact" tightens the padding and gaps for dense dashboards. Default "comfortable". */
   density?: 'comfortable' | 'compact'
+  /** Classes for the outer tile. */
   className?: string
+  /** The tile body, such as a figure, a chart or a list. */
   children?: ReactNode
 }
 
