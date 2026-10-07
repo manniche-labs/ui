@@ -171,6 +171,16 @@ export function GalleryCard({
     }
   }, [active, armed])
 
+  // A card left alone for a while lets its video go, so sweeping across a grid does not keep dozens buffered.
+  useEffect(() => {
+    if (active || !armed) return
+    const t = setTimeout(() => {
+      setArmed(false)
+      setLoopState((s) => (s === 'failed' ? s : 'loading'))
+    }, 4000)
+    return () => clearTimeout(t)
+  }, [active, armed])
+
   const activate = () => {
     if (!canLoop) return
     if (!armed) setArmed(true)
@@ -205,7 +215,9 @@ export function GalleryCard({
       data-loop={active ? loopState : undefined}
       onPointerEnter={onPointerEnter}
       onPointerLeave={onPointerLeave}
-      onFocus={() => {
+      onFocus={(e) => {
+        // Keyboard focus only: a mouse click also focuses the link, and must not leave the loop running.
+        if (!(e.target as Element).matches(':focus-visible')) return
         activate()
         setFocused(true)
       }}

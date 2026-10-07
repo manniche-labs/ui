@@ -28,6 +28,7 @@ import {
   useLayoutEffect,
   useRef,
   useState,
+  useSyncExternalStore,
   type KeyboardEvent,
   type MouseEvent,
   type ReactNode,
@@ -143,6 +144,11 @@ function isTyping(target: EventTarget | null) {
 // An iframe fires `load` even when its page failed. For a page on this origin the stage can look: no document (the
 // browser's own error page) or an HTTP error status means it failed. A page on another origin cannot be read, so
 // only the timeout can catch it.
+// False on the server and while hydrating, true after. The iframe waits for it: one that loads before React has
+// hydrated would fire its load event with no listener and sit at loading until the timeout.
+const noSubscribe = () => () => {}
+const useHydrated = () => useSyncExternalStore(noSubscribe, () => true, () => false)
+
 function frameFailed(frame: HTMLIFrameElement) {
   try {
     if (new URL(frame.src, location.href).origin !== location.origin) return false
@@ -206,6 +212,7 @@ export function PreviewStage({
   const box = useRef<HTMLDivElement>(null)
   const group = useRef<HTMLDivElement>(null)
   const reloadButton = useRef<HTMLButtonElement>(null)
+  const hydrated = useHydrated()
 
   const [ownWidth, setOwnWidth] = useState(defaultWidth ?? widths[widths.length - 1])
   const [ownTheme, setOwnTheme] = useState<StageTheme>(defaultTheme)
@@ -459,6 +466,7 @@ export function PreviewStage({
             style={{ width, height: size.h ? size.h / scale : '100%', transform: `translateX(-50%) scale(${scale})` }}
           >
             {frameSrc ? (
+              hydrated && (
               <iframe
                 key={loadKey}
                 src={frameSrc}
@@ -471,6 +479,7 @@ export function PreviewStage({
                   state === 'ready' ? 'opacity-100' : 'pointer-events-none opacity-0',
                 )}
               />
+              )
             ) : (
               <div
                 key={reloads}
