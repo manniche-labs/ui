@@ -12,9 +12,13 @@ export type OpeningDay = { id: string; label: string; open: boolean; ranges: Tim
 export type OpeningHoursProps = {
   /** Controlled week. Times are "HH:MM", as a time input gives them. */
   value?: OpeningDay[]
+  /** Starting week when the control is not controlled. */
   defaultValue?: OpeningDay[]
+  /** Called with the whole updated week after any switch, time or range changes. */
   onChange?: (days: OpeningDay[]) => void
+  /** Visible text and screen reader text for the time fields and the add and remove buttons; defaults to English. */
   labels?: { from?: string; to?: string; add?: string; remove?: string }
+  /** Classes for the outer list of days. */
   className?: string
 }
 
@@ -73,7 +77,7 @@ export function OpeningHours({ value, defaultValue = [], onChange, labels = {}, 
                                 const ranges = d.ranges.filter((x) => x.id !== r.id)
                                 return { ...d, ranges, open: ranges.length > 0 }
                               })}
-                              className="ml-auto grid size-10 place-items-center rounded-xl text-muted-foreground transition-colors duration-150 hover:bg-muted hover:text-foreground"
+                              className="ml-auto grid size-10 relative after:-inset-0.5 after:absolute after:content-[''] place-items-center rounded-xl text-muted-foreground transition-colors duration-150 hover:bg-muted hover:text-foreground"
                             >
                               <X className="size-4" aria-hidden />
                             </button>
@@ -84,7 +88,7 @@ export function OpeningHours({ value, defaultValue = [], onChange, labels = {}, 
                     <button
                       type="button"
                       onClick={() => patch(day.id, (d) => ({ ...d, ranges: [...d.ranges, range(d.ranges.at(-1)?.to ?? '09:00', '18:00')] }))}
-                      className="mx-4 mb-3 inline-flex min-h-10 items-center gap-1.5 rounded-xl px-2 text-sm text-muted-foreground transition-colors duration-150 hover:bg-muted hover:text-foreground"
+                      className="mx-4 mb-3 inline-flex min-h-10 relative after:inset-x-0 after:-inset-y-0.5 after:absolute after:content-[''] items-center gap-1.5 rounded-xl px-2 text-sm text-muted-foreground transition-colors duration-150 hover:bg-muted hover:text-foreground"
                     >
                       <Plus className="size-4" aria-hidden />
                       {add}

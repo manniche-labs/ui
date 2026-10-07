@@ -6,13 +6,17 @@ import { RollingNumber } from '@/registry/manniche/rolling-number/rolling-number
 import { cn } from '@/lib/utils'
 
 export type PaginationProps = {
+  /** Number of pages. */
   total: number
   /** Controlled page, counted from 1. */
   page?: number
+  /** Starting page when the control is not controlled, counted from 1. */
   defaultPage?: number
+  /** Called with the new page number when previous or next is pressed. */
   onChange?: (page: number) => void
   /** The words, so the control speaks your language. */
   labels?: { nav?: string; previous?: string; next?: string; of?: string }
+  /** Classes for the outer nav. */
   className?: string
 }
 
@@ -29,7 +33,7 @@ export function Pagination({ total, page, defaultPage = 1, onChange, labels = {}
   }
 
   const btn =
-    'grid size-11 place-items-center rounded-xl bg-card text-foreground shadow-sm transition-[background-color,transform] duration-150 hover:bg-accent active:scale-[0.94] disabled:pointer-events-none disabled:opacity-40'
+    'grid size-11 place-items-center rounded-xl bg-card text-foreground shadow-sm transition-[background-color,transform] duration-150 hover:bg-accent active:scale-[0.94] disabled:pointer-events-none disabled:opacity-40 motion-reduce:transition-none'
 
   return (
     <nav aria-label={nav} className={cn('inline-flex items-center gap-3 rounded-2xl border bg-muted p-1.5', className)}>

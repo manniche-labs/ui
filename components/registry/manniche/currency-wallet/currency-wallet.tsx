@@ -18,12 +18,19 @@ export type WalletCurrency = {
 }
 
 export type CurrencyWalletProps = {
+  /** One entry per currency, each with its balance, rewards, spending and allocation. */
   data: WalletCurrency[]
+  /** The currency code selected first. Default the first entry in `data`. */
   defaultCurrency?: string
+  /** The page heading (h1). Default "Currency wallet". */
   title?: string
+  /** Footer text on the balance tile. Default "Example data." */
   note?: string
+  /** Not read yet; the screen does not depend on the date. */
   now?: Date
+  /** Visible text and screen reader text, with English defaults. */
   labels?: { currency?: string; balance?: string; rewards?: string; spending?: string; allocation?: string; points?: string; toNext?: (n: number, tier: string) => string }
+  /** Classes for the outer container. */
   className?: string
 }
 
@@ -52,13 +59,13 @@ export function CurrencyWallet({ data, defaultCurrency, title = 'Currency wallet
           <h1 className="text-[22px] leading-tight font-semibold tracking-tight">{title}</h1>
           <Pills label={l.currency} options={data.map((c) => ({ id: c.code, label: c.code }))} value={cur.code} onChange={setCode} />
         </div>
-        <DataTile title={l.balance} className="@3xl:col-span-3 @6xl:col-span-4" footer={<span>{note}</span>}>
+        <DataTile headingLevel={2} title={l.balance} className="@3xl:col-span-3 @6xl:col-span-4" footer={<span>{note}</span>}>
           <BigNumber value={cur.balance} format={fmt} size="lg" />
           <div className="mt-3">
             <DeltaPill value={cur.change} format={{ decimals: 1, suffix: '%', sign: true }} />
           </div>
         </DataTile>
-        <DataTile title={l.rewards} inverted className="@3xl:col-span-3 @6xl:col-span-4">
+        <DataTile headingLevel={2} title={l.rewards} inverted className="@3xl:col-span-3 @6xl:col-span-4">
           <BigNumber value={cur.rewards.points} size="lg" />
           <p className="mt-1 text-sm opacity-80">{l.points} · {cur.rewards.tier}</p>
           {/* The sentence under the bar says the same, so the bar itself is hidden from screen readers. */}
@@ -72,10 +79,10 @@ export function CurrencyWallet({ data, defaultCurrency, title = 'Currency wallet
             ))}
           </ul>
         </DataTile>
-        <DataTile title={l.spending} className="@3xl:col-span-6 @6xl:col-span-4">
+        <DataTile headingLevel={2} title={l.spending} className="@3xl:col-span-6 @6xl:col-span-4">
           <Donut data={cur.spending} label={`${l.spending}, ${cur.code}`} format={fmt} />
         </DataTile>
-        <DataTile title={l.allocation} className="@3xl:col-span-6 @6xl:col-span-12">
+        <DataTile headingLevel={2} title={l.allocation} className="@3xl:col-span-6 @6xl:col-span-12">
           <ul className="grid gap-4 @3xl:grid-cols-2">
             {cur.allocation.map((a) => (
               <li key={a.id}>

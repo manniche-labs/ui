@@ -34,8 +34,10 @@ export default function FooterStatusDemo() {
         focusTarget="top"
         legal={<span>© 2026 Halden Studio</span>}
       />
-      {/* Narrowest form: no links, no version. */}
-      <FooterStatus status="operational" updated="14:20" />
+      {/* Narrowest form: no links, no version. Inside a section it is not a second page footer. */}
+      <section aria-label="Narrowest form">
+        <FooterStatus status="operational" updated="14:20" />
+      </section>
     </div>
   )
 }

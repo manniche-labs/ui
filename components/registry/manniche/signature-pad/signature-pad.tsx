@@ -9,8 +9,11 @@ import { cn } from '@/lib/utils'
 export type Signature = { kind: 'drawn'; png: string } | { kind: 'typed'; name: string }
 
 export type SignaturePadProps = {
+  /** Called with the drawn PNG data URL or the typed name when Done is pressed. */
   onSign: (signature: Signature) => void
-  labels?: Partial<Record<'title' | 'clear' | 'done' | 'type' | 'draw' | 'typed' | 'signed' | 'pad', string>>
+  /** Visible text and screen reader text; defaults to English. */
+  labels?: Partial<Record<'title' | 'clear' | 'done' | 'type' | 'draw' | 'typed' | 'signed' | 'pad' | 'again', string>>
+  /** Classes for the pad, and for the signed state that replaces it. */
   className?: string
 }
 
@@ -22,6 +25,7 @@ const EN = {
   draw: 'Draw instead',
   typed: 'Your full name',
   signed: 'Signed',
+  again: 'Sign again',
   pad: 'Signature area. Draw with a mouse, finger or pen.',
 }
 
@@ -98,7 +102,7 @@ export function SignaturePad({ onSign, labels = {}, className }: SignaturePadPro
   }
 
   const ready = mode === 'draw' ? !empty : name.trim().length > 1
-  const ghost = 'inline-flex min-h-10 items-center gap-1.5 rounded-xl px-3 text-sm text-muted-foreground transition-colors duration-150 hover:bg-muted hover:text-foreground'
+  const ghost = 'inline-flex min-h-10 relative after:inset-x-0 after:-inset-y-0.5 after:absolute after:content-[""] items-center gap-1.5 rounded-xl px-3 text-sm text-muted-foreground transition-colors duration-150 hover:bg-muted hover:text-foreground'
 
   return (
     <MotionConfig reducedMotion="user" transition={{ type: 'spring', bounce: 0, duration: 0.5 }}>
@@ -109,7 +113,6 @@ export function SignaturePad({ onSign, labels = {}, className }: SignaturePadPro
             initial={{ opacity: 0, scale: 0.94 }}
             animate={{ opacity: 1, scale: 1 }}
             className={cn('flex items-center gap-2', className)}
-            role="status"
           >
             <span className="inline-flex min-h-11 items-center gap-2 rounded-full bg-foreground px-5 font-medium text-background">
               <Check className="size-4" aria-hidden />
@@ -121,7 +124,7 @@ export function SignaturePad({ onSign, labels = {}, className }: SignaturePadPro
                 setSigned(null)
                 setEmpty(true)
               }}
-              aria-label={mode === 'draw' ? t.draw : t.type}
+              aria-label={t.again}
               className="grid size-11 place-items-center rounded-full bg-muted transition-colors duration-150 hover:bg-accent"
             >
               <PenLine className="size-4" aria-hidden />
@@ -178,7 +181,7 @@ export function SignaturePad({ onSign, labels = {}, className }: SignaturePadPro
                 type="button"
                 disabled={!ready}
                 onClick={done}
-                className="inline-flex min-h-11 items-center gap-2 rounded-full bg-foreground px-5 text-sm font-medium text-background transition-[opacity,transform] duration-150 active:scale-[0.97] disabled:opacity-30"
+                className="inline-flex min-h-11 items-center gap-2 rounded-full bg-foreground px-5 text-sm font-medium text-background transition-[opacity,transform] duration-150 active:scale-[0.97] disabled:opacity-30 motion-reduce:transition-none"
               >
                 <Check className="size-4" aria-hidden />
                 {t.done}
@@ -187,6 +190,9 @@ export function SignaturePad({ onSign, labels = {}, className }: SignaturePadPro
           </motion.section>
         )}
       </AnimatePresence>
+      <span role="status" className="sr-only">
+        {signed ? t.signed : ''}
+      </span>
     </MotionConfig>
   )
 }

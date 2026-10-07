@@ -4,7 +4,8 @@
   "title": "Locked code demo",
   "description": "How to use Locked code.",
   "registryDependencies": [
-    "@manniche/locked-code"
+    "@manniche/locked-code",
+    "utils"
   ],
   "files": [
     {

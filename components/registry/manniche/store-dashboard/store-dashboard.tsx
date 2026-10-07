@@ -17,6 +17,7 @@ import {
   Users,
   X,
 } from 'lucide-react'
+import { useId, useState, type KeyboardEvent as ReactKeyboardEvent } from 'react'
 import { cn } from '@/lib/utils'
 
 const navItems = [
@@ -156,8 +157,44 @@ function Nav() {
   )
 }
 
+export type StoreDashboardLabels = {
+  /** Accessible name of the search field. Default: "Search orders and products". */
+  search?: string
+  /** Screen reader word before a rising KPI change. Default: "Up". */
+  up?: string
+  /** Screen reader word before a falling KPI change. Default: "Down". */
+  down?: string
+  /** Screen reader word after a change that is good for the shop. Default: "better". */
+  better?: string
+  /** Screen reader word after a change that is bad for the shop. Default: "worse". */
+  worse?: string
+  /** Accessible name of the scrollable orders table. Default: "Orders table". */
+  ordersTable?: string
+  /** Screen reader hint on the revenue chart. Default: "Use the left and right arrow keys to read each bar." */
+  barsHint?: string
+}
+
+export type StoreDashboardProps = {
+  /** Visible text and screen reader text, with English defaults. Keys: search, up, down, better, worse, ordersTable, barsHint. */
+  labels?: StoreDashboardLabels
+}
+
 /** Shop admin dashboard: sidebar, KPI cards with sparklines, a revenue chart with a period switch, top products and recent orders. */
-export function StoreDashboard() {
+export function StoreDashboard({ labels = {} }: StoreDashboardProps) {
+  const {
+    search = 'Search orders and products',
+    up = 'Up',
+    down = 'Down',
+    better = 'better',
+    worse = 'worse',
+    ordersTable = 'Orders table',
+    barsHint = 'Use the left and right arrow keys to read each bar.',
+  } = labels
+  // Prefix for ids and the radio group, so two dashboards on one page never share them.
+  const uid = useId()
+  // The bar each period's chart shows with the keyboard, and the text read out when it moves.
+  const [at, setAt] = useState<Record<string, number>>({})
+  const [said, setSaid] = useState('')
   return (
     <div id="top" className="group/dash min-h-dvh bg-muted/40 font-sans text-foreground antialiased lg:grid lg:grid-cols-[15rem_1fr]">
       <aside className="hidden border-r bg-card lg:sticky lg:top-0 lg:flex lg:h-dvh lg:flex-col">
@@ -183,7 +220,7 @@ export function StoreDashboard() {
       <div className="min-w-0">
         <header className="sticky top-0 z-20 flex h-16 items-center gap-3 border-b bg-background/85 px-4 backdrop-blur sm:px-6">
           <details className="group/menu relative lg:hidden">
-            <summary className="grid size-9 cursor-pointer list-none place-items-center rounded-lg border [&::-webkit-details-marker]:hidden">
+            <summary className="grid size-9 relative after:-inset-1 after:absolute after:content-[''] cursor-pointer list-none place-items-center rounded-lg border [&::-webkit-details-marker]:hidden">
               <Menu className="size-4 group-open/menu:hidden" aria-hidden />
               <X className="hidden size-4 group-open/menu:block" aria-hidden />
               <span className="sr-only">Menu</span>
@@ -195,16 +232,17 @@ export function StoreDashboard() {
           <div className="lg:hidden">
             <Brand />
           </div>
-          <label className="ml-auto hidden h-9 w-72 items-center gap-2 rounded-lg border bg-card px-3 text-sm text-muted-foreground focus-within:ring-2 focus-within:ring-ring sm:flex lg:ml-0">
+          <label className="ml-auto hidden h-9 relative after:inset-x-0 after:-inset-y-1 after:absolute after:content-[''] w-72 items-center gap-2 rounded-lg border bg-card px-3 text-sm text-muted-foreground focus-within:ring-2 focus-within:ring-ring sm:flex lg:ml-0">
             <Search className="size-4" aria-hidden />
             <input
               type="search"
+              aria-label={search}
               placeholder="Search orders, products…"
               className="w-full bg-transparent text-foreground outline-none placeholder:text-muted-foreground"
             />
           </label>
           <div className="ml-auto flex items-center gap-2 sm:ml-0 lg:ml-auto">
-            <button type="button" className="relative grid size-9 place-items-center rounded-lg border bg-card" aria-label="Notifications, 3 new">
+            <button type="button" className="relative grid size-9 after:-inset-1 after:absolute after:content-[''] place-items-center rounded-lg border bg-card" aria-label="Notifications, 3 new">
               <Bell className="size-4" aria-hidden />
               <span className="absolute top-1.5 right-1.5 size-2 rounded-full bg-primary ring-2 ring-card" />
             </button>
@@ -229,7 +267,7 @@ export function StoreDashboard() {
                   key={p.id}
                   className="cursor-pointer rounded-md px-3 py-1.5 text-muted-foreground transition-colors duration-150 has-checked:bg-foreground has-checked:text-background has-focus-visible:ring-2 has-focus-visible:ring-ring"
                 >
-                  <input type="radio" name="period" value={p.id} defaultChecked={p.id === 'month'} className="sr-only" />
+                  <input type="radio" name={`${uid}period`} value={p.id} defaultChecked={p.id === 'month'} className="sr-only" />
                   {p.label}
                 </label>
               ))}
@@ -251,7 +289,9 @@ export function StoreDashboard() {
                       )}
                     >
                       <Arrow className="size-3" aria-hidden />
+                      <span className="sr-only">{k.change > 0 ? up : down}</span>
                       {Math.abs(k.change)}%
+                      <span className="sr-only">, {good ? better : worse}</span>
                     </span>
                   </div>
                   <p className="mt-2 text-2xl font-semibold tracking-tight tabular-nums">{k.value}</p>
@@ -265,12 +305,31 @@ export function StoreDashboard() {
           </ul>
 
           <div className="grid gap-6 xl:grid-cols-[1.6fr_1fr]">
-            <section aria-labelledby="revenue" className="min-w-0 rounded-2xl border bg-card p-5 sm:p-6">
+            <div className="min-w-0 rounded-2xl border bg-card p-5 sm:p-6">
+              <p id={`${uid}bars-hint`} className="sr-only">
+                {barsHint}
+              </p>
+              <p role="status" className="sr-only">
+                {said}
+              </p>
               {periods.map((p) => {
                 const max = Math.max(...p.bars.map(([, v]) => v))
+                const active = at[p.id] ?? p.bars.length - 1
+                // One Tab stop per chart: the arrow keys, Home and End move the tooltip from bar to bar.
+                const onKey = (e: ReactKeyboardEvent<HTMLOListElement>) => {
+                  const last = p.bars.length - 1
+                  const to = { ArrowLeft: active - 1, ArrowRight: active + 1, Home: 0, End: last }[e.key]
+                  if (to === undefined) return
+                  e.preventDefault()
+                  const next = Math.min(last, Math.max(0, to))
+                  const [label, value] = p.bars[next]
+                  setAt((s) => ({ ...s, [p.id]: next }))
+                  setSaid(`${label}: €${value.toLocaleString('en-GB')}`)
+                }
                 return (
-                  <div
+                  <section
                     key={p.id}
+                    aria-labelledby={`${uid}revenue-${p.id}`}
                     className={cn(
                       'hidden',
                       p.id === 'week' && 'group-has-[[value=week]:checked]/dash:block',
@@ -280,7 +339,7 @@ export function StoreDashboard() {
                   >
                     <div className="flex items-baseline justify-between gap-4">
                       <div>
-                        <h2 id={p.id === 'month' ? 'revenue' : undefined} className="text-sm text-muted-foreground">
+                        <h2 id={`${uid}revenue-${p.id}`} className="text-sm text-muted-foreground">
                           Revenue, {p.label}
                         </h2>
                         <p className="mt-1 text-3xl font-semibold tracking-tight tabular-nums">{p.total}</p>
@@ -290,12 +349,18 @@ export function StoreDashboard() {
                         Sales incl. VAT
                       </p>
                     </div>
-                    <ol className="mt-8 flex h-56 items-end gap-2 border-b sm:gap-3" aria-label={`Revenue by period, ${p.label}`}>
+                    <ol
+                      tabIndex={0}
+                      aria-label={`Revenue by period, ${p.label}`}
+                      aria-describedby={`${uid}bars-hint`}
+                      onKeyDown={onKey}
+                      className="group/chart mt-8 flex h-56 items-end gap-2 border-b outline-none focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-ring sm:gap-3"
+                    >
                       {p.bars.map(([label, value], i) => (
-                        <li key={label} className="group/bar relative flex h-full flex-1 flex-col justify-end" tabIndex={0}>
+                        <li key={label} data-on={i === active ? '' : undefined} className="group/bar relative flex h-full flex-1 flex-col justify-end">
                           <span
                             className={cn(
-                              'pointer-events-none absolute z-10 scale-95 rounded-md bg-foreground px-2 py-1 text-xs whitespace-nowrap text-background opacity-0 shadow-lg transition-[opacity,scale] duration-150 group-hover/bar:scale-100 group-hover/bar:opacity-100 group-focus/bar:scale-100 group-focus/bar:opacity-100',
+                              'pointer-events-none absolute z-10 scale-95 rounded-md bg-foreground px-2 py-1 text-xs whitespace-nowrap text-background opacity-0 shadow-lg transition-[opacity,scale] duration-150 group-hover/bar:scale-100 group-hover/bar:opacity-100 group-focus-visible/chart:group-data-on/bar:scale-100 group-focus-visible/chart:group-data-on/bar:opacity-100 motion-reduce:transition-none motion-reduce:scale-100',
                               i === 0 ? 'left-0' : i === p.bars.length - 1 ? 'right-0' : 'left-1/2 -translate-x-1/2',
                             )}
                             style={{ bottom: `calc(${(value / max) * 100}% + 6px)` }}
@@ -303,7 +368,7 @@ export function StoreDashboard() {
                             {label}: €{value.toLocaleString('en-GB')}
                           </span>
                           <span
-                            className="block origin-bottom rounded-t-md bg-primary/75 transition-[background-color,scale] duration-500 ease-out-quint group-hover/bar:bg-primary group-focus/bar:bg-primary starting:scale-y-0"
+                            className="block origin-bottom rounded-t-md bg-primary/75 transition-[background-color,scale] duration-500 ease-out-quint group-hover/bar:bg-primary group-focus-visible/chart:group-data-on/bar:bg-primary starting:scale-y-0 motion-reduce:transition-none motion-reduce:starting:scale-y-100"
                             style={{ height: `${(value / max) * 100}%`, transitionDelay: `${i * 30}ms` }}
                           />
                         </li>
@@ -316,14 +381,14 @@ export function StoreDashboard() {
                         </li>
                       ))}
                     </ol>
-                  </div>
+                  </section>
                 )
               })}
-            </section>
+            </div>
 
-            <section aria-labelledby="top-products" className="min-w-0 rounded-2xl border bg-card p-5 sm:p-6">
+            <section aria-labelledby={`${uid}top-products`} className="min-w-0 rounded-2xl border bg-card p-5 sm:p-6">
               <div className="flex items-center justify-between">
-                <h2 id="top-products" className="font-semibold">
+                <h2 id={`${uid}top-products`} className="font-semibold">
                   Top products
                 </h2>
                 <a href="#products" className="text-sm text-muted-foreground transition-colors hover:text-foreground">
@@ -343,7 +408,7 @@ export function StoreDashboard() {
                     </div>
                     <div className="mt-2 ml-10 h-1.5 overflow-hidden rounded-full bg-muted">
                       <div
-                        className="h-full origin-left rounded-full bg-primary transition-[scale] duration-700 ease-out-quint starting:scale-x-0"
+                        className="h-full origin-left rounded-full bg-primary transition-[scale] duration-700 ease-out-quint starting:scale-x-0 motion-reduce:transition-none motion-reduce:starting:scale-x-100"
                         style={{ width: `${p.share * 100}%` }}
                       />
                     </div>
@@ -353,16 +418,16 @@ export function StoreDashboard() {
             </section>
           </div>
 
-          <section aria-labelledby="orders" className="overflow-hidden rounded-2xl border bg-card">
+          <section aria-labelledby={`${uid}orders`} className="overflow-hidden rounded-2xl border bg-card">
             <div className="flex items-center justify-between p-5 sm:px-6">
-              <h2 id="orders" className="font-semibold">
+              <h2 id={`${uid}orders`} className="font-semibold">
                 Recent orders
               </h2>
               <a href="#orders" className="rounded-lg border px-3 py-1.5 text-sm transition-colors hover:bg-muted">
                 View all
               </a>
             </div>
-            <div className="overflow-x-auto">
+            <div role="region" aria-label={ordersTable} tabIndex={0} className="overflow-x-auto focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-ring">
               <table className="w-full min-w-160 text-left text-sm whitespace-nowrap">
                 <thead className="border-y bg-muted/50 text-xs text-muted-foreground">
                   <tr>

@@ -11,6 +11,7 @@ export type CloudDriftProps = {
   speed?: number
   /** Content shown on top of the sky. */
   children?: ReactNode
+  /** Classes for the outer element. */
   className?: string
 }
 

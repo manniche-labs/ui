@@ -3,6 +3,9 @@
   "name": "spend-control-demo",
   "title": "Spend control demo",
   "description": "How to use Spend control.",
+  "dependencies": [
+    "lucide-react"
+  ],
   "registryDependencies": [
     "@manniche/spend-control"
   ],

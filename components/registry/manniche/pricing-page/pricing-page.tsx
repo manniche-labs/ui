@@ -1,6 +1,7 @@
 // A pricing page for a software product. The monthly/yearly switch is two radio buttons and a :has() selector,
 // so it works without JavaScript and the same markup can ship as a static page. Colours come from the theme tokens.
 import { ArrowRight, Check, Minus, Sparkles } from 'lucide-react'
+import { useId } from 'react'
 import { cn } from '@/lib/utils'
 
 type Plan = { name: string; blurb: string; monthly: number; yearly: number; cta: string; featured?: boolean; features: string[] }
@@ -105,8 +106,21 @@ function Mark({ value, featured }: { value: Cell; featured?: boolean }) {
   return <span className="text-sm">{value}</span>
 }
 
+export type PricingPageLabels = {
+  /** Accessible name of the scrollable plan comparison table. Default: "Plan comparison table". */
+  compareTable?: string
+}
+
+export type PricingPageProps = {
+  /** Screen reader text with English defaults. Keys: compareTable. */
+  labels?: PricingPageLabels
+}
+
 /** Pricing page: plans with a monthly/yearly switch, a comparison table, FAQ and a closing call to action. */
-export function PricingPage() {
+export function PricingPage({ labels = {} }: PricingPageProps) {
+  const { compareTable = 'Plan comparison table' } = labels
+  // Prefix for the radio group, so two of these on one page never share it.
+  const uid = useId()
   return (
     <div id="top" className="group/pricing min-h-dvh bg-background font-sans text-foreground antialiased">
       <header className="border-b">
@@ -133,7 +147,7 @@ export function PricingPage() {
             </a>
             <a
               href="#trial"
-              className="rounded-full bg-foreground px-4 py-2 text-sm font-medium text-background transition-transform duration-150 ease-out active:scale-[0.97]"
+              className="rounded-full bg-foreground px-4 py-2 text-sm font-medium text-background transition-transform duration-150 ease-out active:scale-[0.97] motion-reduce:transition-none motion-reduce:active:scale-100"
             >
               Try it free
             </a>
@@ -164,7 +178,7 @@ export function PricingPage() {
                   key={value}
                   className="relative flex cursor-pointer items-center gap-2 rounded-full px-4 py-2 text-muted-foreground transition-colors duration-200 has-checked:bg-background has-checked:text-foreground has-checked:shadow-sm has-focus-visible:ring-2 has-focus-visible:ring-ring"
                 >
-                  <input type="radio" name="billing" value={value} defaultChecked={value === 'monthly'} className="sr-only" />
+                  <input type="radio" name={`${uid}billing`} value={value} defaultChecked={value === 'monthly'} className="sr-only" />
                   {label}
                   {value === 'yearly' && <span className="rounded-full bg-primary/15 px-2 py-0.5 text-xs text-primary">−20%</span>}
                 </label>
@@ -179,7 +193,7 @@ export function PricingPage() {
               <li
                 key={plan.name}
                 className={cn(
-                  'relative flex flex-col rounded-3xl border p-7 transition-[translate,box-shadow] duration-300 ease-out-quint starting:translate-y-3 starting:opacity-0',
+                  'relative flex flex-col rounded-3xl border p-7 transition-[translate,box-shadow] duration-300 ease-out-quint starting:translate-y-3 starting:opacity-0 motion-reduce:transition-none motion-reduce:starting:translate-y-0 motion-reduce:starting:opacity-100',
                   plan.featured
                     ? 'border-transparent bg-primary text-primary-foreground shadow-xl shadow-primary/20 lg:-my-3 lg:py-10'
                     : 'bg-card hover:shadow-lg',
@@ -194,12 +208,12 @@ export function PricingPage() {
                 <a
                   href="#trial"
                   className={cn(
-                    'group/cta mt-6 inline-flex items-center justify-center gap-2 rounded-full px-5 py-3 text-sm font-medium transition-transform duration-150 ease-out active:scale-[0.97]',
+                    'group/cta mt-6 inline-flex items-center justify-center gap-2 rounded-full px-5 py-3 text-sm font-medium transition-transform duration-150 ease-out active:scale-[0.97] motion-reduce:transition-none motion-reduce:active:scale-100',
                     plan.featured ? 'bg-primary-foreground text-primary' : 'bg-foreground text-background',
                   )}
                 >
                   {plan.cta}
-                  <ArrowRight className="size-4 transition-transform duration-200 group-hover/cta:translate-x-0.5" aria-hidden />
+                  <ArrowRight className="size-4 transition-transform duration-200 group-hover/cta:translate-x-0.5 motion-reduce:transition-none motion-reduce:group-hover/cta:translate-x-0" aria-hidden />
                 </a>
                 <ul className={cn('mt-8 space-y-3 border-t pt-6 text-sm', plan.featured && 'border-primary-foreground/20')}>
                   {plan.features.map((f) => (
@@ -215,7 +229,7 @@ export function PricingPage() {
 
           <div className="mt-14 text-center">
             <p className="text-sm text-muted-foreground">Trusted by 4,000 independent shops</p>
-            <ul className="mt-5 flex flex-wrap justify-center gap-x-10 gap-y-3 text-lg font-semibold tracking-tight text-muted-foreground/70">
+            <ul className="mt-5 flex flex-wrap justify-center gap-x-10 gap-y-3 text-lg font-semibold tracking-tight text-muted-foreground">
               {logos.map((l) => (
                 <li key={l}>{l}</li>
               ))}
@@ -228,7 +242,7 @@ export function PricingPage() {
             <h2 id="compare" className="text-center text-3xl font-semibold tracking-tight">
               Compare plans
             </h2>
-            <div className="mt-10 overflow-x-auto rounded-2xl border bg-card">
+            <div role="region" aria-label={compareTable} tabIndex={0} className="mt-10 overflow-x-auto rounded-2xl border bg-card focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring">
               <table className="w-full min-w-136 text-left text-sm">
                 <thead>
                   <tr className="border-b">
@@ -286,7 +300,9 @@ export function PricingPage() {
               <details key={q} className="group/faq px-5">
                 <summary className="flex cursor-pointer list-none items-center justify-between gap-4 py-4 font-medium [&::-webkit-details-marker]:hidden">
                   {q}
-                  <span className="grid size-6 shrink-0 place-items-center rounded-full border text-muted-foreground transition-transform duration-200 group-open/faq:rotate-45">
+                  <span className="grid size-6 shrink-0 place-items-center rounded-full border text-muted-foreground transition-transform duration-200 group-open/faq:rotate-45 motion-reduce:transition-none"
+                    aria-hidden
+                  >
                     +
                   </span>
                 </summary>
@@ -304,7 +320,7 @@ export function PricingPage() {
             <div className="relative mt-8 flex flex-wrap justify-center gap-3">
               <a
                 href="#trial"
-                className="rounded-full bg-primary px-6 py-3 text-sm font-medium text-primary-foreground transition-transform duration-150 ease-out active:scale-[0.97]"
+                className="rounded-full bg-primary px-6 py-3 text-sm font-medium text-primary-foreground transition-transform duration-150 ease-out active:scale-[0.97] motion-reduce:transition-none motion-reduce:active:scale-100"
               >
                 Start free trial
               </a>

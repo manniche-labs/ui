@@ -8,7 +8,7 @@ export default function ConfirmDialogDemo() {
       <button
         type="button"
         onClick={() => setOpen(true)}
-        className="inline-flex min-h-11 items-center rounded-xl border border-destructive/40 bg-card px-4 text-sm font-medium text-destructive hover:bg-destructive hover:text-white"
+        className="inline-flex min-h-11 items-center rounded-xl border border-destructive/40 bg-card px-4 text-sm font-medium text-destructive hover:bg-destructive hover:text-background"
       >
         Delete collection
       </button>

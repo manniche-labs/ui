@@ -12,7 +12,7 @@
   "files": [
     {
       "path": "registry/manniche/currency-wallet/currency-wallet.tsx",
-      "content": "// A multi-currency wallet in Tiles: a currency switch, a rewards panel, a spending donut and allocation bars.\nimport { useState } from 'react'\nimport { cn } from '@/lib/utils'\nimport { BigNumber, DeltaPill, Pills } from '@/registry/manniche/chart-kit/chart-kit'\nimport { DataTile, TileFact } from '@/registry/manniche/data-tile/data-tile'\nimport { Donut, type DonutDatum } from '@/registry/manniche/donut/donut'\n\nexport type WalletCurrency = {\n  /** ISO code, also the switch label: \"EUR\". */\n  code: string\n  balance: number\n  change: number\n  spending: DonutDatum[]\n  /** Share of the balance per holding, 0 to 1. */\n  allocation: { id: string; label: string; share: number }[]\n  /** `tier` is the current tier, `nextTier` the one `next` more points reach. */\n  rewards: { points: number; next: number; tier: string; nextTier: string; perks: string[] }\n}\n\nexport type CurrencyWalletProps = {\n  data: WalletCurrency[]\n  defaultCurrency?: string\n  title?: string\n  note?: string\n  now?: Date\n  labels?: { currency?: string; balance?: string; rewards?: string; spending?: string; allocation?: string; points?: string; toNext?: (n: number, tier: string) => string }\n  className?: string\n}\n\n/** Currency wallet: switch the currency and every tile follows. */\nexport function CurrencyWallet({ data, defaultCurrency, title = 'Currency wallet', note = 'Example data.', labels, className }: CurrencyWalletProps) {\n  const l = {\n    currency: 'Currency',\n    balance: 'Balance',\n    rewards: 'Rewards',\n    spending: 'Spending',\n    allocation: 'Allocation',\n    points: 'points',\n    toNext: (n: number, tier: string) => `${n.toLocaleString('en-GB')} points to ${tier}`,\n    ...labels,\n  }\n  const [code, setCode] = useState(defaultCurrency ?? data[0]?.code ?? '')\n  const cur = data.find((c) => c.code === code) ?? data[0]\n  if (!cur) return null\n  const fmt = { currency: cur.code, decimals: 2 }\n  const toGo = cur.rewards.points + cur.rewards.next\n  const progress = toGo > 0 ? Math.min(1, Math.max(0, cur.rewards.points / toGo)) : 0\n  return (\n    <div className={cn('@container w-full font-sans text-foreground', className)}>\n      <div className=\"grid gap-4 @3xl:grid-cols-6 @6xl:grid-cols-12\">\n        <div className=\"flex flex-wrap items-center justify-between gap-3 @3xl:col-span-6 @6xl:col-span-12\">\n          <h1 className=\"text-[22px] leading-tight font-semibold tracking-tight\">{title}</h1>\n          <Pills label={l.currency} options={data.map((c) => ({ id: c.code, label: c.code }))} value={cur.code} onChange={setCode} />\n        </div>\n        <DataTile title={l.balance} className=\"@3xl:col-span-3 @6xl:col-span-4\" footer={<span>{note}</span>}>\n          <BigNumber value={cur.balance} format={fmt} size=\"lg\" />\n          <div className=\"mt-3\">\n            <DeltaPill value={cur.change} format={{ decimals: 1, suffix: '%', sign: true }} />\n          </div>\n        </DataTile>\n        <DataTile title={l.rewards} inverted className=\"@3xl:col-span-3 @6xl:col-span-4\">\n          <BigNumber value={cur.rewards.points} size=\"lg\" />\n          <p className=\"mt-1 text-sm opacity-80\">{l.points} · {cur.rewards.tier}</p>\n          {/* The sentence under the bar says the same, so the bar itself is hidden from screen readers. */}\n          <div aria-hidden className=\"mt-4 h-1.5 overflow-hidden rounded-full bg-current/20\">\n            <div className=\"h-full origin-left rounded-full bg-current transition-transform duration-700 motion-reduce:transition-none\" style={{ transform: `scaleX(${progress})` }} />\n          </div>\n          <p className=\"mt-2 text-xs opacity-80\">{l.toNext(cur.rewards.next, cur.rewards.nextTier)}</p>\n          <ul className=\"mt-4 space-y-1 text-sm\">\n            {cur.rewards.perks.map((p) => (\n              <li key={p}>{p}</li>\n            ))}\n          </ul>\n        </DataTile>\n        <DataTile title={l.spending} className=\"@3xl:col-span-6 @6xl:col-span-4\">\n          <Donut data={cur.spending} label={`${l.spending}, ${cur.code}`} format={fmt} />\n        </DataTile>\n        <DataTile title={l.allocation} className=\"@3xl:col-span-6 @6xl:col-span-12\">\n          <ul className=\"grid gap-4 @3xl:grid-cols-2\">\n            {cur.allocation.map((a) => (\n              <li key={a.id}>\n                <TileFact label={a.label} aside={<span className=\"tabular-nums\">{Math.round(a.share * 100)}%</span>}>\n                  <span aria-hidden className=\"mt-2 block h-2 w-full overflow-hidden rounded-full bg-muted\">\n                    <span className=\"block h-full origin-left rounded-full bg-chart-1 transition-transform duration-700 motion-reduce:transition-none\" style={{ transform: `scaleX(${a.share})` }} />\n                  </span>\n                </TileFact>\n              </li>\n            ))}\n          </ul>\n        </DataTile>\n      </div>\n    </div>\n  )\n}\n\nexport default CurrencyWallet\n",
+      "content": "// A multi-currency wallet in Tiles: a currency switch, a rewards panel, a spending donut and allocation bars.\nimport { useState } from 'react'\nimport { cn } from '@/lib/utils'\nimport { BigNumber, DeltaPill, Pills } from '@/registry/manniche/chart-kit/chart-kit'\nimport { DataTile, TileFact } from '@/registry/manniche/data-tile/data-tile'\nimport { Donut, type DonutDatum } from '@/registry/manniche/donut/donut'\n\nexport type WalletCurrency = {\n  /** ISO code, also the switch label: \"EUR\". */\n  code: string\n  balance: number\n  change: number\n  spending: DonutDatum[]\n  /** Share of the balance per holding, 0 to 1. */\n  allocation: { id: string; label: string; share: number }[]\n  /** `tier` is the current tier, `nextTier` the one `next` more points reach. */\n  rewards: { points: number; next: number; tier: string; nextTier: string; perks: string[] }\n}\n\nexport type CurrencyWalletProps = {\n  /** One entry per currency, each with its balance, rewards, spending and allocation. */\n  data: WalletCurrency[]\n  /** The currency code selected first. Default the first entry in `data`. */\n  defaultCurrency?: string\n  /** The page heading (h1). Default \"Currency wallet\". */\n  title?: string\n  /** Footer text on the balance tile. Default \"Example data.\" */\n  note?: string\n  /** Not read yet; the screen does not depend on the date. */\n  now?: Date\n  /** Visible text and screen reader text, with English defaults. */\n  labels?: { currency?: string; balance?: string; rewards?: string; spending?: string; allocation?: string; points?: string; toNext?: (n: number, tier: string) => string }\n  /** Classes for the outer container. */\n  className?: string\n}\n\n/** Currency wallet: switch the currency and every tile follows. */\nexport function CurrencyWallet({ data, defaultCurrency, title = 'Currency wallet', note = 'Example data.', labels, className }: CurrencyWalletProps) {\n  const l = {\n    currency: 'Currency',\n    balance: 'Balance',\n    rewards: 'Rewards',\n    spending: 'Spending',\n    allocation: 'Allocation',\n    points: 'points',\n    toNext: (n: number, tier: string) => `${n.toLocaleString('en-GB')} points to ${tier}`,\n    ...labels,\n  }\n  const [code, setCode] = useState(defaultCurrency ?? data[0]?.code ?? '')\n  const cur = data.find((c) => c.code === code) ?? data[0]\n  if (!cur) return null\n  const fmt = { currency: cur.code, decimals: 2 }\n  const toGo = cur.rewards.points + cur.rewards.next\n  const progress = toGo > 0 ? Math.min(1, Math.max(0, cur.rewards.points / toGo)) : 0\n  return (\n    <div className={cn('@container w-full font-sans text-foreground', className)}>\n      <div className=\"grid gap-4 @3xl:grid-cols-6 @6xl:grid-cols-12\">\n        <div className=\"flex flex-wrap items-center justify-between gap-3 @3xl:col-span-6 @6xl:col-span-12\">\n          <h1 className=\"text-[22px] leading-tight font-semibold tracking-tight\">{title}</h1>\n          <Pills label={l.currency} options={data.map((c) => ({ id: c.code, label: c.code }))} value={cur.code} onChange={setCode} />\n        </div>\n        <DataTile headingLevel={2} title={l.balance} className=\"@3xl:col-span-3 @6xl:col-span-4\" footer={<span>{note}</span>}>\n          <BigNumber value={cur.balance} format={fmt} size=\"lg\" />\n          <div className=\"mt-3\">\n            <DeltaPill value={cur.change} format={{ decimals: 1, suffix: '%', sign: true }} />\n          </div>\n        </DataTile>\n        <DataTile headingLevel={2} title={l.rewards} inverted className=\"@3xl:col-span-3 @6xl:col-span-4\">\n          <BigNumber value={cur.rewards.points} size=\"lg\" />\n          <p className=\"mt-1 text-sm opacity-80\">{l.points} · {cur.rewards.tier}</p>\n          {/* The sentence under the bar says the same, so the bar itself is hidden from screen readers. */}\n          <div aria-hidden className=\"mt-4 h-1.5 overflow-hidden rounded-full bg-current/20\">\n            <div className=\"h-full origin-left rounded-full bg-current transition-transform duration-700 motion-reduce:transition-none\" style={{ transform: `scaleX(${progress})` }} />\n          </div>\n          <p className=\"mt-2 text-xs opacity-80\">{l.toNext(cur.rewards.next, cur.rewards.nextTier)}</p>\n          <ul className=\"mt-4 space-y-1 text-sm\">\n            {cur.rewards.perks.map((p) => (\n              <li key={p}>{p}</li>\n            ))}\n          </ul>\n        </DataTile>\n        <DataTile headingLevel={2} title={l.spending} className=\"@3xl:col-span-6 @6xl:col-span-4\">\n          <Donut data={cur.spending} label={`${l.spending}, ${cur.code}`} format={fmt} />\n        </DataTile>\n        <DataTile headingLevel={2} title={l.allocation} className=\"@3xl:col-span-6 @6xl:col-span-12\">\n          <ul className=\"grid gap-4 @3xl:grid-cols-2\">\n            {cur.allocation.map((a) => (\n              <li key={a.id}>\n                <TileFact label={a.label} aside={<span className=\"tabular-nums\">{Math.round(a.share * 100)}%</span>}>\n                  <span aria-hidden className=\"mt-2 block h-2 w-full overflow-hidden rounded-full bg-muted\">\n                    <span className=\"block h-full origin-left rounded-full bg-chart-1 transition-transform duration-700 motion-reduce:transition-none\" style={{ transform: `scaleX(${a.share})` }} />\n                  </span>\n                </TileFact>\n              </li>\n            ))}\n          </ul>\n        </DataTile>\n      </div>\n    </div>\n  )\n}\n\nexport default CurrencyWallet\n",
       "type": "registry:component"
     }
   ],
@@ -26,55 +26,55 @@
         "type": "WalletCurrency[]",
         "default": null,
         "required": true,
-        "description": null
+        "description": "One entry per currency, each with its balance, rewards, spending and allocation."
       },
       {
         "name": "defaultCurrency",
         "type": "string",
         "default": null,
         "required": false,
-        "description": null
+        "description": "The currency code selected first. Default the first entry in `data`."
       },
       {
         "name": "title",
         "type": "string",
         "default": "'Currency wallet'",
         "required": false,
-        "description": null
+        "description": "The page heading (h1). Default \"Currency wallet\"."
       },
       {
         "name": "note",
         "type": "string",
         "default": "'Example data.'",
         "required": false,
-        "description": null
+        "description": "Footer text on the balance tile. Default \"Example data.\""
       },
       {
         "name": "now",
         "type": "Date",
         "default": null,
         "required": false,
-        "description": null
+        "description": "Not read yet; the screen does not depend on the date."
       },
       {
         "name": "labels",
         "type": "{ currency?: string; balance?: string; rewards?: string; spending?: string; allocation?: string; points?: string; toNext?: (n: number, tier: string) => string }",
         "default": null,
         "required": false,
-        "description": null
+        "description": "Visible text and screen reader text, with English defaults."
       },
       {
         "name": "className",
         "type": "string",
         "default": null,
         "required": false,
-        "description": null
+        "description": "Classes for the outer container."
       }
     ],
     "a11y": [
       {
         "topic": "screen-reader",
-        "text": "An h1 and a currency switch, Pills from chart-kit (default label \"Currency\"); every tile follows the chosen currency. The rewards progress bar is aria-hidden because the \"to next\" sentence says the same; allocation bars are aria-hidden and the share is written as text. The donut is described in its own note."
+        "text": "An h1, tiles named by their h2, and a currency switch, Pills from chart-kit (default label \"Currency\"); every tile follows the chosen currency. The rewards progress bar is aria-hidden because the \"to next\" sentence says the same; allocation bars are aria-hidden and the share is written as text. The donut is described in its own note."
       },
       {
         "topic": "keyboard",

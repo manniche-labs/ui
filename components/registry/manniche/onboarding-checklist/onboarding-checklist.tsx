@@ -14,16 +14,23 @@ export type ChecklistStep = {
 }
 
 export type OnboardingChecklistProps = {
+  /** The steps to list, in order. The first one not done is marked as next. */
   steps: ChecklistStep[]
+  /** The text on the button that opens and closes the list. Default “Getting started”. */
   title?: string
+  /** Start with the list open. Default false. */
   defaultOpen?: boolean
+  /** Words for the progress meter and finished steps: `progress` (meter name), `of`, `done` (read as “2 of 5 done”) and `stepDone` (read before a finished step). */
+  labels?: Partial<Record<'progress' | 'of' | 'done' | 'stepDone', string>>
+  /** Classes for the outer section. */
   className?: string
 }
 
 const BARS = 14
 
 /** A collapsible “getting started” card with a segmented progress meter. The first open step is marked as next. */
-export function OnboardingChecklist({ steps, title = 'Getting started', defaultOpen = false, className }: OnboardingChecklistProps) {
+export function OnboardingChecklist({ steps, title = 'Getting started', defaultOpen = false, labels = {}, className }: OnboardingChecklistProps) {
+  const t = { progress: 'Progress', of: 'of', done: 'done', stepDone: 'Done:', ...labels }
   const [open, setOpen] = useState(defaultOpen)
   const panel = useId()
   const done = steps.filter((s) => s.done).length
@@ -41,21 +48,22 @@ export function OnboardingChecklist({ steps, title = 'Getting started', defaultO
           onClick={() => setOpen(!open)}
           className="flex min-h-14 w-full items-center gap-3 px-4 text-left outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-inset"
         >
-          <ChevronDown className={cn('size-5 shrink-0 text-muted-foreground transition-transform duration-200', open && 'rotate-180')} aria-hidden />
+          <ChevronDown className={cn('size-5 shrink-0 text-muted-foreground transition-transform duration-200 motion-reduce:transition-none', open && 'rotate-180')} aria-hidden />
           <span className="min-w-0 flex-1 truncate font-semibold">{title}</span>
           <span className="flex shrink-0 items-center gap-3">
             <span
               role="progressbar"
-              aria-label="Progress"
+              aria-label={t.progress}
               aria-valuemin={0}
               aria-valuemax={steps.length}
               aria-valuenow={done}
-              className="hidden gap-1 min-[400px]:flex"
+              aria-valuetext={`${done} ${t.of} ${steps.length} ${t.done}`}
+              className="flex gap-1 max-[399px]:sr-only"
             >
               {Array.from({ length: BARS }, (_, i) => (
                 <span
                   key={i}
-                  className={cn('h-4 w-1 rounded-full transition-colors duration-500', i < (done / Math.max(1, steps.length)) * BARS ? 'bg-primary' : 'bg-muted')}
+                  className={cn('h-4 w-1 rounded-full transition-colors duration-500 motion-reduce:transition-none', i < (done / Math.max(1, steps.length)) * BARS ? 'bg-primary' : 'bg-muted')}
                 />
               ))}
             </span>
@@ -89,7 +97,7 @@ export function OnboardingChecklist({ steps, title = 'Getting started', defaultO
                       {step.done ? (
                         <span className="grid size-6 shrink-0 place-items-center rounded-full bg-primary text-primary-foreground">
                           <Check className="size-3.5" strokeWidth={3} aria-hidden />
-                          <span className="sr-only">Done:</span>
+                          <span className="sr-only">{t.stepDone}</span>
                         </span>
                       ) : (
                         <span

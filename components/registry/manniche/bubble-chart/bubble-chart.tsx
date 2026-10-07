@@ -16,9 +16,9 @@
 // Motion: on first view the bubbles grow from their centres one after another (all done in 600 ms). Bubbles only
 // move by transform and fade by opacity, so new data glides them to their new places. Under reduced motion
 // everything is drawn in place at once and nothing moves.
-import { useCallback, useEffect, useId, useMemo, useState, type HTMLAttributes, type KeyboardEvent, type PointerEvent } from 'react'
+import { useCallback, useContext, useEffect, useId, useMemo, useState, type HTMLAttributes, type KeyboardEvent, type PointerEvent } from 'react'
 import { cn } from '@/lib/utils'
-import { ChartTooltip, SrTable } from '@/registry/manniche/chart-kit/chart-kit'
+import { ChartTooltip, SrTable, StaticPlots } from '@/registry/manniche/chart-kit/chart-kit'
 import {
   BASE,
   EASE_CSS,
@@ -31,7 +31,7 @@ import {
   valueParts,
   type ValueFormat,
 } from '@/registry/manniche/chart-kit/chart-utils'
-import { useAnnounce, useChartFrame } from '@/registry/manniche/chart-kit/use-chart'
+import { STATIC_STEPS, StaticChartFrame, useAnnounce, useChartFrame } from '@/registry/manniche/chart-kit/use-chart'
 
 export type BubbleDatum = {
   /** The item's name, written beside or inside its bubble and read aloud. Also its key, so keep it unique. */
@@ -192,7 +192,20 @@ function pack(radii: number[], aspect: number) {
  * A bubble chart: bubbles sized by value, on two axes when the data has `x` and `y`, packed together when it does
  * not. Direct labels where they fit, one tooltip for the rest, one Tab stop with arrow keys.
  */
-export function BubbleChart({
+export function BubbleChart({ className, style, ...props }: BubbleChartProps) {
+  const still = useContext(StaticChartFrame)
+  if (!still || still.height !== undefined) return <BubbleChartPlot className={className} style={style} {...props} />
+  // A static file: the plot at a phone, column, tablet and desktop width, at the heights the CSS gives each.
+  const [low, high] = props.density === 'compact' ? [240, 280] : [280, 320]
+  const plots = [300, 460, 640, 880].map((width, i) => ({ width, height: props.height ?? (i < 2 ? low : high), className: STATIC_STEPS[i] }))
+  return (
+    <StaticPlots plots={plots} className={className} style={style}>
+      {(c) => <BubbleChartPlot {...props} className={c} />}
+    </StaticPlots>
+  )
+}
+
+function BubbleChartPlot({
   data,
   label,
   format,

@@ -16,12 +16,19 @@ export type Command = {
 }
 
 export type CommandPaletteProps = {
+  /** The commands to list and search. Each has an id, a label and an onSelect, and can have a group, keywords, a hint and an icon. */
   commands: Command[]
+  /** Whether the palette is open. */
   open: boolean
+  /** Called with the new open state when the palette should open or close, from the hotkey, Esc, a click outside or a chosen command. */
   onOpenChange: (open: boolean) => void
+  /** Placeholder in the search field, also its accessible name. */
   placeholder?: string
   /** Open and close with Cmd+K / Ctrl+K. */
   hotkey?: boolean
+  /** Visible text and screen reader text. Keys: `oneResult`, `results` (with `{count}`) and `noResults`, read out as the list changes. */
+  labels?: { oneResult?: string; results?: string; noResults?: string }
+  /** Classes for the dialog. */
   className?: string
 }
 
@@ -29,7 +36,8 @@ export type CommandPaletteProps = {
  * A searchable list of commands in a modal. Built on the native <dialog>, so focus is trapped
  * and Esc closes it. The input is a combobox; arrow keys move, Enter runs the command.
  */
-export function CommandPalette({ commands, open, onOpenChange, placeholder = 'Type a command or search', hotkey = true, className }: CommandPaletteProps) {
+export function CommandPalette({ commands, open, onOpenChange, placeholder = 'Type a command or search', hotkey = true, labels = {}, className }: CommandPaletteProps) {
+  const { oneResult = '1 result', results = '{count} results', noResults = 'No results' } = labels
   const dialog = useRef<HTMLDialogElement>(null)
   const listId = useId()
   const [query, setQuery] = useState('')
@@ -120,7 +128,7 @@ export function CommandPalette({ commands, open, onOpenChange, placeholder = 'Ty
             }
           }}
           role="combobox"
-          aria-expanded="true"
+          aria-expanded={shown.length > 0}
           aria-controls={listId}
           aria-autocomplete="list"
           aria-activedescendant={shown.length ? `${listId}-${current}` : undefined}
@@ -130,8 +138,13 @@ export function CommandPalette({ commands, open, onOpenChange, placeholder = 'Ty
         />
       </div>
 
-      <div id={listId} role="listbox" aria-label="Commands" className="max-h-80 overflow-y-auto p-1.5">
-        {shown.length === 0 && <p className="px-3 py-8 text-center text-sm text-muted-foreground">No commands match “{query}”.</p>}
+      {/* Always in the DOM, so a change in the number of results is read out. */}
+      <p role="status" className="sr-only">
+        {open ? (shown.length === 0 ? noResults : shown.length === 1 ? oneResult : results.replace('{count}', String(shown.length))) : ''}
+      </p>
+
+      {shown.length === 0 && <p className="px-3 py-8 text-center text-sm text-muted-foreground">No commands match “{query}”.</p>}
+      <div id={listId} role="listbox" aria-label="Commands" hidden={shown.length === 0} className="max-h-80 overflow-y-auto p-1.5">
         {groups.map(([group, list]) => (
           <div key={group} role="group" aria-label={group || undefined}>
             {group && <p className="px-3 pt-2 pb-1 text-xs font-medium tracking-wide text-muted-foreground uppercase">{group}</p>}

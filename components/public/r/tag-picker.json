@@ -13,7 +13,7 @@
   "files": [
     {
       "path": "registry/manniche/tag-picker/tag-picker.tsx",
-      "content": "// Based on Watermelon UI's “Tags” (MIT, © 2026 Watermelon Platform Contributors,\n// github.com/WatermelonCorp/watermelon-platform). Rewritten as a controlled picker with labelled buttons.\nimport { X } from 'lucide-react'\nimport { LayoutGroup, MotionConfig, motion } from 'motion/react'\nimport { useId, useState } from 'react'\nimport { cn } from '@/lib/utils'\n\nexport type TagOption = { id: string; label: string }\n\nexport type TagPickerProps = {\n  options: TagOption[]\n  /** Controlled ids of the picked tags, in the order they were picked. */\n  value?: string[]\n  defaultValue?: string[]\n  onChange?: (ids: string[]) => void\n  label?: string\n  /** Shown in the empty box before anything is picked. */\n  placeholder?: string\n  className?: string\n}\n\n/** Pick tags from a pool; each one flies up into the box and back down when removed. */\nexport function TagPicker({ options, value, defaultValue = [], onChange, label = 'Tags', placeholder = 'Pick a few below', className }: TagPickerProps) {\n  const [own, setOwn] = useState(defaultValue)\n  const picked = value ?? own\n  const group = useId()\n  const heading = useId()\n\n  const set = (ids: string[]) => {\n    setOwn(ids)\n    onChange?.(ids)\n  }\n\n  const byId = new Map(options.map((o) => [o.id, o]))\n  const pool = options.filter((o) => !picked.includes(o.id))\n\n  return (\n    <MotionConfig reducedMotion=\"user\" transition={{ type: 'spring', stiffness: 300, damping: 35 }}>\n      <LayoutGroup id={group}>\n        <div className={cn('w-full', className)} role=\"group\" aria-labelledby={heading}>\n          <p id={heading} className=\"text-sm font-medium\">\n            {label}\n          </p>\n          <motion.ul layout aria-label=\"Picked\" className=\"mt-2 flex min-h-14 flex-wrap items-center gap-1.5 rounded-2xl border bg-card p-1.5\">\n            {picked.length === 0 && <li className=\"px-2.5 text-sm text-muted-foreground\">{placeholder}</li>}\n            {picked.map((id) => {\n              const tag = byId.get(id)\n              if (!tag) return null\n              return (\n                <motion.li key={id} layoutId={id} style={{ borderRadius: 12 }} className=\"z-20 flex items-center gap-0.5 border bg-background py-0.5 pr-0.5 pl-3 text-sm font-medium\">\n                  <motion.span layout=\"position\">{tag.label}</motion.span>\n                  <button\n                    type=\"button\"\n                    onClick={() => set(picked.filter((p) => p !== id))}\n                    aria-label={`Remove ${tag.label}`}\n                    className=\"grid size-9 place-items-center rounded-[10px] text-muted-foreground transition-colors duration-150 hover:bg-muted hover:text-foreground\"\n                  >\n                    <X className=\"size-4\" aria-hidden />\n                  </button>\n                </motion.li>\n              )\n            })}\n          </motion.ul>\n          {pool.length > 0 && (\n            <motion.ul layout aria-label=\"Available\" className=\"mt-3 flex flex-wrap gap-2 rounded-2xl border bg-card p-2\">\n              {pool.map((tag) => (\n                <motion.li key={tag.id} layoutId={tag.id} style={{ borderRadius: 12 }} className=\"z-10 bg-muted\">\n                  <button\n                    type=\"button\"\n                    onClick={() => set([...picked, tag.id])}\n                    className=\"min-h-10 px-4 text-sm font-medium text-muted-foreground transition-colors duration-150 hover:text-foreground\"\n                  >\n                    <motion.span layout=\"position\" className=\"inline-block\">\n                      {tag.label}\n                    </motion.span>\n                  </button>\n                </motion.li>\n              ))}\n            </motion.ul>\n          )}\n        </div>\n      </LayoutGroup>\n    </MotionConfig>\n  )\n}\n",
+      "content": "// Based on Watermelon UI's “Tags” (MIT, © 2026 Watermelon Platform Contributors,\n// github.com/WatermelonCorp/watermelon-platform). Rewritten as a controlled picker with labelled buttons.\nimport { X } from 'lucide-react'\nimport { LayoutGroup, MotionConfig, motion } from 'motion/react'\nimport { useEffect, useId, useRef, useState } from 'react'\nimport { cn } from '@/lib/utils'\n\nexport type TagOption = {\n  /** Stable key for the tag; this is what `value` and `onChange` carry. */\n  id: string\n  /** Text shown on the tag. */\n  label: string\n}\n\nexport type TagPickerProps = {\n  /** Every tag that can be picked. */\n  options: TagOption[]\n  /** Controlled ids of the picked tags, in the order they were picked. */\n  value?: string[]\n  /** Ids picked at the start when the picker is not controlled. */\n  defaultValue?: string[]\n  /** Called with the new list of picked ids each time a tag is added or removed. */\n  onChange?: (ids: string[]) => void\n  /** Heading above the picker, also the name of the group. */\n  label?: string\n  /** Shown in the empty box before anything is picked. */\n  placeholder?: string\n  /** Visible text and screen reader text; defaults to English. `added` and `removed` follow the tag name in the live announcement. */\n  labels?: Partial<Record<'picked' | 'available' | 'remove' | 'added' | 'removed', string>>\n  /** Classes for the outer group. */\n  className?: string\n}\n\n/** Pick tags from a pool; each one flies up into the box and back down when removed. Focus follows the tag, and a status line announces the change. */\nexport function TagPicker({ options, value, defaultValue = [], onChange, label = 'Tags', placeholder = 'Pick a few below', labels = {}, className }: TagPickerProps) {\n  const { picked: pickedLabel = 'Picked', available: availableLabel = 'Available', remove = 'Remove', added = 'added', removed = 'removed' } = labels\n  const [own, setOwn] = useState(defaultValue)\n  const [message, setMessage] = useState('')\n  const refs = useRef<{ target: 'remove' | 'add'; id: string; text: string } | null>(null)\n  const removeBtns = useRef(new Map<string, HTMLButtonElement>())\n  const addBtns = useRef(new Map<string, HTMLButtonElement>())\n  const picked = value ?? own\n  const group = useId()\n  const heading = useId()\n\n  const set = (ids: string[]) => {\n    setOwn(ids)\n    onChange?.(ids)\n  }\n\n  // The button that was pressed unmounts as the tag moves, so focus goes to the same tag in its new place.\n  // `own` changes on every press, even when a controlling parent turns the change down. The request is then\n  // forgotten, so it moves no focus later and is not announced.\n  useEffect(() => {\n    const next = refs.current\n    refs.current = null\n    if (!next) return\n    const el = (next.target === 'remove' ? removeBtns : addBtns).current.get(next.id)\n    if (!el) return\n    el.focus()\n    setMessage(next.text)\n  }, [picked, own])\n\n  const add = (tag: TagOption) => {\n    refs.current = { target: 'remove', id: tag.id, text: `${tag.label} ${added}` }\n    set([...picked, tag.id])\n  }\n  const drop = (tag: TagOption) => {\n    refs.current = { target: 'add', id: tag.id, text: `${tag.label} ${removed}` }\n    set(picked.filter((p) => p !== tag.id))\n  }\n\n  const byId = new Map(options.map((o) => [o.id, o]))\n  const pool = options.filter((o) => !picked.includes(o.id))\n\n  return (\n    <MotionConfig reducedMotion=\"user\" transition={{ type: 'spring', stiffness: 300, damping: 35 }}>\n      <LayoutGroup id={group}>\n        <div className={cn('w-full', className)} role=\"group\" aria-labelledby={heading}>\n          <p id={heading} className=\"text-sm font-medium\">\n            {label}\n          </p>\n          <motion.ul layout aria-label={pickedLabel} className=\"mt-2 flex min-h-14 flex-wrap items-center gap-1.5 rounded-2xl border bg-card p-1.5\">\n            {picked.length === 0 && <li className=\"px-2.5 text-sm text-muted-foreground\">{placeholder}</li>}\n            {picked.map((id) => {\n              const tag = byId.get(id)\n              if (!tag) return null\n              return (\n                <motion.li key={id} layoutId={id} style={{ borderRadius: 12 }} className=\"z-20 flex items-center gap-0.5 border bg-background py-0.5 pr-0.5 pl-3 text-sm font-medium\">\n                  <motion.span layout=\"position\">{tag.label}</motion.span>\n                  <button\n                    type=\"button\"\n                    ref={(el) => {\n                      if (el) removeBtns.current.set(id, el)\n                      else removeBtns.current.delete(id)\n                    }}\n                    onClick={() => drop(tag)}\n                    aria-label={`${remove} ${tag.label}`}\n                    className=\"grid size-9 relative after:-inset-1 after:absolute after:content-[''] place-items-center rounded-[10px] text-muted-foreground transition-colors duration-150 hover:bg-muted hover:text-foreground motion-reduce:transition-none\"\n                  >\n                    <X className=\"size-4\" aria-hidden />\n                  </button>\n                </motion.li>\n              )\n            })}\n          </motion.ul>\n          {pool.length > 0 && (\n            <motion.ul layout aria-label={availableLabel} className=\"mt-3 flex flex-wrap gap-2 rounded-2xl border bg-card p-2\">\n              {pool.map((tag) => (\n                <motion.li key={tag.id} layoutId={tag.id} style={{ borderRadius: 12 }} className=\"z-10 bg-muted\">\n                  <button\n                    type=\"button\"\n                    ref={(el) => {\n                      if (el) addBtns.current.set(tag.id, el)\n                      else addBtns.current.delete(tag.id)\n                    }}\n                    onClick={() => add(tag)}\n                    className=\"min-h-10 relative after:inset-x-0 after:-inset-y-0.5 after:absolute after:content-[''] px-4 text-sm font-medium text-muted-foreground transition-colors duration-150 hover:text-foreground motion-reduce:transition-none\"\n                  >\n                    <motion.span layout=\"position\" className=\"inline-block\">\n                      {tag.label}\n                    </motion.span>\n                  </button>\n                </motion.li>\n              ))}\n            </motion.ul>\n          )}\n          <span role=\"status\" className=\"sr-only\">\n            {message}\n          </span>\n        </div>\n      </LayoutGroup>\n    </MotionConfig>\n  )\n}\n",
       "type": "registry:component"
     }
   ],
@@ -28,7 +28,7 @@
         "type": "TagOption[]",
         "default": null,
         "required": true,
-        "description": null
+        "description": "Every tag that can be picked."
       },
       {
         "name": "value",
@@ -42,21 +42,21 @@
         "type": "string[]",
         "default": "[]",
         "required": false,
-        "description": null
+        "description": "Ids picked at the start when the picker is not controlled."
       },
       {
         "name": "onChange",
         "type": "(ids: string[]) => void",
         "default": null,
         "required": false,
-        "description": null
+        "description": "Called with the new list of picked ids each time a tag is added or removed."
       },
       {
         "name": "label",
         "type": "string",
         "default": "'Tags'",
         "required": false,
-        "description": null
+        "description": "Heading above the picker, also the name of the group."
       },
       {
         "name": "placeholder",
@@ -66,17 +66,24 @@
         "description": "Shown in the empty box before anything is picked."
       },
       {
+        "name": "labels",
+        "type": "Partial<Record<'picked' | 'available' | 'remove' | 'added' | 'removed', string>>",
+        "default": "{}",
+        "required": false,
+        "description": "Visible text and screen reader text; defaults to English. `added` and `removed` follow the tag name in the live announcement."
+      },
+      {
         "name": "className",
         "type": "string",
         "default": null,
         "required": false,
-        "description": null
+        "description": "Classes for the outer group."
       }
     ],
     "a11y": [
       {
         "topic": "keyboard",
-        "text": "Every tag in the pool and every remove button is a native button, so Tab, Enter and Space pick and remove.",
+        "text": "Every tag in the pool and every remove button is a native button, so Tab, Enter and Space pick and remove. When a tag moves, focus follows it: picking a tag focuses its remove button in the box, and removing one focuses the tag in the pool.",
         "keys": [
           "Tab",
           "Enter",
@@ -85,11 +92,11 @@
       },
       {
         "topic": "screen-reader",
-        "text": "The picker is a group labelled by label (default Tags). The picked tags are a list labelled Picked and the pool a list labelled Available. Each remove button is named Remove <tag label>, and its icon is aria-hidden. The empty box shows placeholder text."
+        "text": "The picker is a group labelled by label (default Tags). The picked tags are a list labelled Picked and the pool a list labelled Available. Each remove button is named Remove <tag label>, and its icon is aria-hidden. The empty box shows placeholder text. A persistent status region says <tag> added or <tag> removed. All of these words come from labels."
       },
       {
         "topic": "motion",
-        "text": "The picker is wrapped in MotionConfig with reducedMotion set to user, so Motion follows the system setting for the flight between the lists."
+        "text": "The picker is wrapped in MotionConfig with reducedMotion set to user, so Motion follows the system setting for the flight between the lists. The colour transitions are off under reduced motion."
       }
     ]
   },

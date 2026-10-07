@@ -16,15 +16,19 @@ export type Reminder = {
 };
 
 export type EventRemindersProps = {
+  /** The name of the event, shown as the heading. */
   title: string;
   /** Already formatted, e.g. “Thursday 9 October, 14:00”. */
   when: string;
   /** Controlled list. Leave it out and the card keeps its own. */
   value?: Reminder[];
+  /** The reminders the card starts with when it is not controlled. */
   defaultValue?: Reminder[];
+  /** Called with the full new list whenever a reminder is added, changed or removed. */
   onChange?: (reminders: Reminder[]) => void;
   /** Most reminders one event can have. */
   max?: number;
+  /** Visible text and screen reader text with English defaults, for channels, units, “before”, and the add, remove, more, less and change buttons. */
   labels?: Partial<
     Record<
       | ReminderChannel
@@ -33,10 +37,13 @@ export type EventRemindersProps = {
       | "add"
       | "remove"
       | "more"
-      | "fewer",
+      | "fewer"
+      | "changeChannel"
+      | "changeUnit",
       string
     >
   >;
+  /** Classes for the outer section. */
   className?: string;
 };
 
@@ -57,6 +64,8 @@ const EN = {
   remove: "Remove reminder",
   more: "More",
   fewer: "Less",
+  changeChannel: "Change channel",
+  changeUnit: "Change unit",
 };
 
 /** A card where people set when and how they are reminded of an event. */
@@ -73,18 +82,26 @@ export function EventReminders({
   const [own, setOwn] = useState(defaultValue);
   const list = value ?? own;
   const t = { ...EN, ...labels };
+  // The latest change, read out by the status region below.
+  const [note, setNote] = useState("");
 
   const set = (next: Reminder[]) => {
     setOwn(next);
     onChange?.(next);
   };
-  const patch = (id: string, p: Partial<Reminder>) =>
+  const patch = (id: string, p: Partial<Reminder>) => {
+    const old = list.find((r) => r.id === id);
+    if (old) {
+      const n = { ...old, ...p };
+      setNote(`${t[n.channel]}, ${n.amount} ${t[n.unit]} ${t.before}`);
+    }
     set(list.map((r) => (r.id === id ? { ...r, ...p } : r)));
+  };
 
   const pill =
-    "inline-flex min-h-10 items-center gap-1.5 rounded-full bg-muted px-3 text-sm font-medium transition-colors duration-150 hover:bg-accent";
+    "inline-flex min-h-10 relative after:inset-x-0 after:-inset-y-0.5 after:absolute after:content-[''] items-center gap-1.5 rounded-full bg-muted px-3 text-sm font-medium transition-colors duration-150 hover:bg-accent";
   const round =
-    "grid size-8 place-items-center rounded-full text-muted-foreground transition-colors duration-150 hover:bg-background hover:text-foreground disabled:opacity-30";
+    "grid size-8 relative after:-inset-1.5 after:absolute after:content-[''] place-items-center rounded-full text-muted-foreground transition-colors duration-150 hover:bg-background hover:text-foreground disabled:opacity-30";
 
   return (
     <MotionConfig
@@ -102,6 +119,10 @@ export function EventReminders({
           <h2 className="text-lg font-semibold text-balance">{title}</h2>
           <p className="mt-1 text-sm text-muted-foreground">{when}</p>
         </header>
+
+        <p role="status" className="sr-only">
+          {note}
+        </p>
 
         <ul className="space-y-2 border-t border-dashed pt-3">
           <AnimatePresence mode="popLayout" initial={false}>
@@ -121,6 +142,7 @@ export function EventReminders({
                     <button
                       type="button"
                       className={pill}
+                      aria-label={`${t.changeChannel}: ${t[r.channel]}`}
                       onClick={() =>
                         patch(r.id, {
                           channel:
@@ -159,6 +181,7 @@ export function EventReminders({
                       <button
                         type="button"
                         className={pill}
+                        aria-label={`${t.changeUnit}: ${t[r.unit]}`}
                         onClick={() => {
                           const unit =
                             UNITS[(UNITS.indexOf(r.unit) + 1) % UNITS.length];

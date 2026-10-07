@@ -18,10 +18,15 @@ export type DeliveryBoardData = {
 export type DeliveryBoardLabels = { note?: string; daysLabel?: string }
 
 export type DeliveryBoardProps = {
+  /** The clients, the days in the date strip, the roadmap lanes and the assistant tile to show. */
   data: DeliveryBoardData
+  /** Visible text and screen reader text, with English defaults. Keys: note, daysLabel. */
   labels?: DeliveryBoardLabels
+  /** The current time. When its day is in the date strip, that day is marked and opens first. */
   now?: Date
+  /** Called with no arguments when the assistant tile's button is pressed. */
   onAssistant?: () => void
+  /** Classes for the outer container. */
   className?: string
 }
 
@@ -57,7 +62,7 @@ export function DeliveryBoard({ data, labels, now, onAssistant, className }: Del
         <div className="@2xl:col-span-2">
           <DataTile className="h-full" title={data.assistant.title} inverted>
             <p className="text-sm opacity-80">{data.assistant.text}</p>
-            <button type="button" onClick={onAssistant} className="mt-4 rounded-full bg-foreground px-4 py-2 text-sm font-medium text-background transition-transform active:scale-[0.97] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring">
+            <button type="button" onClick={onAssistant} className="mt-4 rounded-full bg-foreground px-4 py-2 text-sm font-medium text-background transition-transform active:scale-[0.97] motion-reduce:transition-none motion-reduce:active:scale-100 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring">
               {data.assistant.action}
             </button>
           </DataTile>

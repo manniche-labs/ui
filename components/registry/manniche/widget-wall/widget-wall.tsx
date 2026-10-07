@@ -27,7 +27,14 @@ export type WidgetWallData = {
 
 export type WidgetWallLabels = { note?: string }
 
-export type WidgetWallProps = { data: WidgetWallData; labels?: WidgetWallLabels; className?: string }
+export type WidgetWallProps = {
+  /** The highlight, KPIs, trades, matrix, profile, team, ranking and weekly widgets to show. */
+  data: WidgetWallData
+  /** Visible text and screen reader text, with English defaults. Key: note, the footer text on the tiles. */
+  labels?: WidgetWallLabels
+  /** Classes for the outer container. */
+  className?: string
+}
 
 export function WidgetWall({ data, labels, className }: WidgetWallProps) {
   const note = labels?.note ?? 'Example data.'

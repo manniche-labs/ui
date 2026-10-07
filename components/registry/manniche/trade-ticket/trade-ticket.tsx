@@ -11,14 +11,19 @@ export type TradeTicketProps = {
   outcomes: [Outcome, Outcome]
   /** Most someone can spend; the Max chip uses it. */
   balance: number
+  /** The ISO currency code used to format money. Default “USD”. */
   currency?: string
+  /** The language used to format money. Default “en-US”. */
   locale?: string
+  /** Called with the side, the chosen outcome id, the amount and the share count when the form is submitted with an amount above zero. */
   onTrade: (order: TradeOrder) => void
-  labels?: Partial<Record<'buy' | 'sell' | 'amount' | 'toWin' | 'toGet' | 'avg' | 'trade' | 'max', string>>
+  /** Visible text and screen reader text with English defaults, such as buy, sell, amount, outcome and trade. */
+  labels?: Partial<Record<'buy' | 'sell' | 'amount' | 'toWin' | 'toGet' | 'avg' | 'trade' | 'max' | 'outcome', string>>
+  /** Classes for the form. */
   className?: string
 }
 
-const EN = { buy: 'Buy', sell: 'Sell', amount: 'Amount', toWin: 'To win', toGet: 'You get', avg: 'Avg. price', trade: 'Trade', max: 'Max' }
+const EN = { buy: 'Buy', sell: 'Sell', amount: 'Amount', toWin: 'To win', toGet: 'You get', avg: 'Avg. price', trade: 'Trade', max: 'Max', outcome: 'Outcome' }
 const CHIPS = [1, 5, 10, 100]
 
 /** A ticket for buying or selling one of two outcomes, with the payout worked out as you type. */
@@ -66,7 +71,7 @@ export function TradeTicket({ outcomes, balance, currency = 'USD', locale = 'en-
 
         <div className="space-y-3 p-3">
           <LayoutGroup id={`${ids}-outcome`}>
-            <div role="group" aria-label="Outcome" className="grid grid-cols-2 gap-1 rounded-2xl bg-muted p-1">
+            <div role="group" aria-label={t.outcome} className="grid grid-cols-2 gap-1 rounded-2xl bg-muted p-1">
               {outcomes.map((o, i) => {
                 const on = pick === o.id
                 return (
@@ -115,12 +120,12 @@ export function TradeTicket({ outcomes, balance, currency = 'USD', locale = 'en-
             </div>
             <div className="mt-4 flex flex-wrap justify-center gap-1.5">
               {CHIPS.map((n) => (
-                <button key={n} type="button" onClick={() => add(n)} className="min-h-10 rounded-xl bg-background px-3 text-sm font-semibold transition-[background-color,transform] duration-150 hover:bg-accent active:scale-[0.96]">
+                <button key={n} type="button" onClick={() => add(n)} className="min-h-10 relative after:inset-x-0 after:-inset-y-0.5 after:absolute after:content-[''] rounded-xl bg-background px-3 text-sm font-semibold transition-[background-color,transform] duration-150 hover:bg-accent active:scale-[0.96] motion-reduce:transition-none">
                   +{symbol}
                   {n}
                 </button>
               ))}
-              <button type="button" onClick={() => setRaw(String(balance))} className="min-h-10 rounded-xl bg-background px-3 text-sm font-semibold transition-[background-color,transform] duration-150 hover:bg-accent active:scale-[0.96]">
+              <button type="button" onClick={() => setRaw(String(balance))} className="min-h-10 relative after:inset-x-0 after:-inset-y-0.5 after:absolute after:content-[''] rounded-xl bg-background px-3 text-sm font-semibold transition-[background-color,transform] duration-150 hover:bg-accent active:scale-[0.96] motion-reduce:transition-none">
                 {t.max}
               </button>
             </div>
@@ -142,7 +147,7 @@ export function TradeTicket({ outcomes, balance, currency = 'USD', locale = 'en-
           <button
             type="submit"
             disabled={amount <= 0}
-            className="min-h-12 w-full rounded-2xl bg-foreground font-semibold text-background transition-[opacity,transform] duration-150 active:scale-[0.98] disabled:opacity-40"
+            className="min-h-12 w-full rounded-2xl bg-foreground font-semibold text-background transition-[opacity,transform] duration-150 active:scale-[0.98] disabled:opacity-40 motion-reduce:transition-none"
           >
             {t.trade}
           </button>

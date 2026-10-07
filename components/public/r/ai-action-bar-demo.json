@@ -3,6 +3,9 @@
   "name": "ai-action-bar-demo",
   "title": "AI action bar demo",
   "description": "How to use AI action bar.",
+  "dependencies": [
+    "lucide-react"
+  ],
   "registryDependencies": [
     "@manniche/ai-action-bar"
   ],

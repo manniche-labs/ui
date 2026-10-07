@@ -36,7 +36,7 @@ export function ShimmerButton({ magnetic = false, className, children, onPointer
       onPointerLeave={leave}
       className={cn(
         'relative isolate inline-flex min-h-11 items-center justify-center gap-2 overflow-hidden rounded-full bg-primary px-6 font-medium text-primary-foreground',
-        'transition-transform duration-300 ease-out-quint active:scale-[0.97] disabled:opacity-50',
+        'transition-transform duration-300 ease-out-quint active:scale-[0.97] disabled:opacity-50 motion-reduce:transition-none',
         className,
       )}
       {...rest}

@@ -15,8 +15,11 @@ export type AgentStep = {
 }
 
 export type AgentActivityProps = {
+  /** The steps, in order, each with an id, a label and a status. */
   steps: AgentStep[]
+  /** Heading of the card and name of the section. */
   title?: string
+  /** Classes for the outer section. */
   className?: string
 }
 

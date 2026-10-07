@@ -40,19 +40,25 @@ export type Transaction = {
 export type TransactionListLabels = {
   /** The name of a day group. `offset` is days before `today`, or null without `today`. */
   day?: (date: string, offset: number | null, locale: string) => string
+  /** The chip text and spoken status of a pending payment. Default “Pending”. */
   pending?: string
+  /** The chip text and spoken status of a failed payment. Default “Failed”. */
   failed?: string
   /** Read after the amount of money that came in. */
   incoming?: string
   /** Read before a day's total. */
   net?: string
+  /** The text on the button that shows hidden rows, given how many are hidden. */
   more?: (hidden: number) => string
+  /** The text on the button that hides the extra rows again. */
   less?: string
   /** Read when more rows are shown. */
   shown?: (count: number) => string
   /** The one-line sentence a row is read as. */
   row?: (item: Transaction, parts: { amount: string; status: string; time: string }) => string
+  /** The text shown when there are no payments. Default “No transactions yet.” */
   empty?: string
+  /** The accessible name of the loading state. Default “Loading transactions”. */
   loading?: string
 }
 
@@ -81,6 +87,7 @@ export type TransactionListProps = Omit<HTMLAttributes<HTMLDivElement>, 'onSelec
   empty?: ReactNode
   /** "compact" tightens the rows. Default follows the tile. */
   density?: 'comfortable' | 'compact'
+  /** Text overrides for day names, statuses, buttons and the spoken row, with English defaults. */
   labels?: TransactionListLabels
 }
 
@@ -237,7 +244,8 @@ export function TransactionList({
         const offset = todayN === null ? null : todayN - dayNumber(g.date)
         const headId = `${baseId}-d${gi}`
         return (
-          <section key={g.date} aria-labelledby={headId} className="min-w-0">
+          // A named group, not a section: a region per day would fill the landmark list, twice over with two lists.
+          <div key={g.date} role="group" aria-labelledby={headId} className="min-w-0">
             <H
               id={headId}
               className={cn(
@@ -277,7 +285,7 @@ export function TransactionList({
                 )
               })}
             </ul>
-          </section>
+          </div>
         )
       })}
       {limit !== undefined && limit < total && (

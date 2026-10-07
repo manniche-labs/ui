@@ -17,10 +17,15 @@ export type WorkspaceHomeData = {
 export type WorkspaceHomeLabels = { search?: string; searchLabel?: string; navLabel?: string; note?: string }
 
 export type WorkspaceHomeProps = {
+  /** The navigation items, offer tile, deals chart and schedule to show. */
   data: WorkspaceHomeData
+  /** Visible text and screen reader text, with English defaults. Keys: search, searchLabel, navLabel, note. */
   labels?: WorkspaceHomeLabels
+  /** Called with the typed text when the search form is submitted. */
   onSearch?: (query: string) => void
+  /** Called with no arguments when the offer tile's button is pressed. */
   onOffer?: () => void
+  /** Classes for the outer container. */
   className?: string
 }
 
@@ -72,7 +77,7 @@ export function WorkspaceHome({ data, labels, onSearch, onOffer, className }: Wo
             <button
               type="button"
               onClick={onOffer}
-              className="mt-4 rounded-full bg-foreground px-4 py-2 text-sm font-medium text-background transition-transform active:scale-[0.97] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
+              className="mt-4 rounded-full bg-foreground px-4 py-2 text-sm font-medium text-background transition-transform active:scale-[0.97] motion-reduce:transition-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
             >
               {data.offer.action}
             </button>

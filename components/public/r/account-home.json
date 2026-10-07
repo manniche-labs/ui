@@ -14,7 +14,7 @@
   "files": [
     {
       "path": "registry/manniche/account-home/account-home.tsx",
-      "content": "// An account home screen in Tiles: the payment card, the balance, a three-state spending dial and recent transactions.\nimport { cn } from '@/lib/utils'\nimport { BigNumber, DeltaPill } from '@/registry/manniche/chart-kit/chart-kit'\nimport { formatValue, type ValueFormat } from '@/registry/manniche/chart-kit/chart-utils'\nimport { DataTile, TileFact } from '@/registry/manniche/data-tile/data-tile'\nimport { CardStack, type StackCard } from '@/registry/manniche/card-stack/card-stack'\nimport { Dial, type DialZone } from '@/registry/manniche/dial/dial'\nimport { TransactionList, type Transaction } from '@/registry/manniche/transaction-list/transaction-list'\n\nexport type AccountHomeProps = {\n  data: {\n    card: StackCard\n    balance: number\n    change: number\n    /** Spending pace against the budget: 1 is exactly on budget. */\n    pace: number\n    budget: number\n    transactions: Transaction[]\n    categories?: Record<string, string>\n  }\n  format?: ValueFormat\n  title?: string\n  note?: string\n  /** \"YYYY-MM-DD\" of today, so the list reads \"Today\" and \"Yesterday\". Default the day of `now`. */\n  today?: string\n  /** The current time. Used for `today` when that is not given. */\n  now?: Date\n  labels?: { card?: string; balance?: string; pace?: string; paceCaption?: string; transactions?: string; budget?: string; zones?: [string, string, string] }\n  className?: string\n}\n\nconst DEFAULT_FORMAT: ValueFormat = { currency: 'EUR', decimals: 2 }\n\n/** Account home: card, balance, spending pace dial (under, on track, over) and transactions. */\n// \"YYYY-MM-DD\" of `now` in local time, for TransactionList's \"Today\" and \"Yesterday\".\nconst dayOf = (d: Date) => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`\n\nexport function AccountHome({ data, format = DEFAULT_FORMAT, title = 'Account', note = 'Example data.', today, now, labels, className }: AccountHomeProps) {\n  const day = today ?? (now ? dayOf(now) : undefined)\n  const l = { card: 'Card', balance: 'Balance', pace: 'Spending pace', paceCaption: 'of your daily budget', transactions: 'Recent transactions', budget: 'Budget this month', zones: ['Under', 'On track', 'Over'] as [string, string, string], ...labels }\n  const zones: DialZone[] = [\n    { label: l.zones[0], to: 0.85, color: 'var(--chart-1)' },\n    { label: l.zones[1], to: 1.1, color: 'var(--success)' },\n    { label: l.zones[2], to: 1.6, color: 'var(--destructive)' },\n  ]\n  return (\n    <div className={cn('@container w-full font-sans text-foreground', className)}>\n      <div className=\"grid gap-4 @3xl:grid-cols-6 @6xl:grid-cols-12\">\n        <h1 className=\"text-[22px] leading-tight font-semibold tracking-tight @3xl:col-span-6 @6xl:col-span-12\">{title}</h1>\n        <DataTile title={l.card} className=\"@3xl:col-span-3 @6xl:col-span-4\">\n          <CardStack data={[data.card]} label={l.card} format={format} hideAmount />\n        </DataTile>\n        <DataTile title={l.balance} inverted className=\"@3xl:col-span-3 @6xl:col-span-4\" footer={<span>{note}</span>}>\n          <BigNumber value={data.balance} format={format} size=\"lg\" />\n          <div className=\"mt-3\">\n            <DeltaPill value={data.change} format={{ decimals: 1, suffix: '%', sign: true }} />\n          </div>\n          <div className=\"mt-5\">\n            <TileFact label={l.budget}>{formatValue(data.budget, { ...format, decimals: 2 })}</TileFact>\n          </div>\n        </DataTile>\n        <DataTile title={l.pace} className=\"@3xl:col-span-6 @6xl:col-span-4\">\n          <Dial value={data.pace} zones={zones} format={{ decimals: 2, suffix: '×' }} label={l.pace} caption={l.paceCaption} />\n        </DataTile>\n        <DataTile title={l.transactions} className=\"@3xl:col-span-6 @6xl:col-span-12\">\n          <TransactionList data={data.transactions} label={l.transactions} today={day} format={format} categories={data.categories} limit={5} />\n        </DataTile>\n      </div>\n    </div>\n  )\n}\n\nexport default AccountHome\n",
+      "content": "// An account home screen in Tiles: the payment card, the balance, a three-state spending dial and recent transactions.\nimport { cn } from '@/lib/utils'\nimport { BigNumber, DeltaPill } from '@/registry/manniche/chart-kit/chart-kit'\nimport { formatValue, type ValueFormat } from '@/registry/manniche/chart-kit/chart-utils'\nimport { DataTile, TileFact } from '@/registry/manniche/data-tile/data-tile'\nimport { CardStack, type StackCard } from '@/registry/manniche/card-stack/card-stack'\nimport { Dial, type DialZone } from '@/registry/manniche/dial/dial'\nimport { TransactionList, type Transaction } from '@/registry/manniche/transaction-list/transaction-list'\n\nexport type AccountHomeProps = {\n  /** The card, balance, spending pace, budget, transactions and optional category names to show. */\n  data: {\n    card: StackCard\n    balance: number\n    change: number\n    /** Spending pace against the budget: 1 is exactly on budget. */\n    pace: number\n    budget: number\n    transactions: Transaction[]\n    categories?: Record<string, string>\n  }\n  /** How amounts are formatted. Default euro with two decimals. */\n  format?: ValueFormat\n  /** The page heading (h1). Default \"Account\". */\n  title?: string\n  /** Footer text on the balance tile. Default \"Example data.\" */\n  note?: string\n  /** \"YYYY-MM-DD\" of today, so the list reads \"Today\" and \"Yesterday\". Default the day of `now`. */\n  today?: string\n  /** The current time. Used for `today` when that is not given. */\n  now?: Date\n  /** Visible text and screen reader text, with English defaults. */\n  labels?: { card?: string; balance?: string; pace?: string; paceCaption?: string; transactions?: string; budget?: string; zones?: [string, string, string] }\n  /** Classes for the outer container. */\n  className?: string\n}\n\nconst DEFAULT_FORMAT: ValueFormat = { currency: 'EUR', decimals: 2 }\n\n/** Account home: card, balance, spending pace dial (under, on track, over) and transactions. */\n// \"YYYY-MM-DD\" of `now` in local time, for TransactionList's \"Today\" and \"Yesterday\".\nconst dayOf = (d: Date) => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`\n\nexport function AccountHome({ data, format = DEFAULT_FORMAT, title = 'Account', note = 'Example data.', today, now, labels, className }: AccountHomeProps) {\n  const day = today ?? (now ? dayOf(now) : undefined)\n  const l = { card: 'Card', balance: 'Balance', pace: 'Spending pace', paceCaption: 'of your daily budget', transactions: 'Recent transactions', budget: 'Budget this month', zones: ['Under', 'On track', 'Over'] as [string, string, string], ...labels }\n  const zones: DialZone[] = [\n    { label: l.zones[0], to: 0.85, color: 'var(--chart-1)' },\n    { label: l.zones[1], to: 1.1, color: 'var(--success)' },\n    { label: l.zones[2], to: 1.6, color: 'var(--destructive)' },\n  ]\n  return (\n    <div className={cn('@container w-full font-sans text-foreground', className)}>\n      <div className=\"grid gap-4 @3xl:grid-cols-6 @6xl:grid-cols-12\">\n        <h1 className=\"text-[22px] leading-tight font-semibold tracking-tight @3xl:col-span-6 @6xl:col-span-12\">{title}</h1>\n        <DataTile headingLevel={2} title={l.card} className=\"@3xl:col-span-3 @6xl:col-span-4\">\n          <CardStack data={[data.card]} label={l.card} format={format} hideAmount />\n        </DataTile>\n        <DataTile headingLevel={2} title={l.balance} inverted className=\"@3xl:col-span-3 @6xl:col-span-4\" footer={<span>{note}</span>}>\n          <BigNumber value={data.balance} format={format} size=\"lg\" />\n          <div className=\"mt-3\">\n            <DeltaPill value={data.change} format={{ decimals: 1, suffix: '%', sign: true }} />\n          </div>\n          <div className=\"mt-5\">\n            <TileFact label={l.budget}>{formatValue(data.budget, { ...format, decimals: 2 })}</TileFact>\n          </div>\n        </DataTile>\n        <DataTile headingLevel={2} title={l.pace} className=\"@3xl:col-span-6 @6xl:col-span-4\">\n          <Dial value={data.pace} zones={zones} format={{ decimals: 2, suffix: '×' }} label={l.pace} caption={l.paceCaption} />\n        </DataTile>\n        <DataTile headingLevel={2} title={l.transactions} className=\"@3xl:col-span-6 @6xl:col-span-12\">\n          <TransactionList headingLevel={3} data={data.transactions} label={l.transactions} today={day} format={format} categories={data.categories} limit={5} />\n        </DataTile>\n      </div>\n    </div>\n  )\n}\n\nexport default AccountHome\n",
       "type": "registry:component"
     }
   ],
@@ -28,28 +28,28 @@
         "type": "{ card: StackCard; balance: number; change: number; pace: number; budget: number; transactions: Transaction[]; categories?: Record<string, string> }",
         "default": null,
         "required": true,
-        "description": null
+        "description": "The card, balance, spending pace, budget, transactions and optional category names to show."
       },
       {
         "name": "format",
         "type": "ValueFormat",
         "default": "DEFAULT_FORMAT",
         "required": false,
-        "description": null
+        "description": "How amounts are formatted. Default euro with two decimals."
       },
       {
         "name": "title",
         "type": "string",
         "default": "'Account'",
         "required": false,
-        "description": null
+        "description": "The page heading (h1). Default \"Account\"."
       },
       {
         "name": "note",
         "type": "string",
         "default": "'Example data.'",
         "required": false,
-        "description": null
+        "description": "Footer text on the balance tile. Default \"Example data.\""
       },
       {
         "name": "today",
@@ -70,20 +70,20 @@
         "type": "{ card?: string; balance?: string; pace?: string; paceCaption?: string; transactions?: string; budget?: string; zones?: [string, string, string] }",
         "default": null,
         "required": false,
-        "description": null
+        "description": "Visible text and screen reader text, with English defaults."
       },
       {
         "name": "className",
         "type": "string",
         "default": null,
         "required": false,
-        "description": null
+        "description": "Classes for the outer container."
       }
     ],
     "a11y": [
       {
         "topic": "screen-reader",
-        "text": "An h1 title (default \"Account\") with tiles named by their h3: card-stack with one card and hideAmount set, an inverted balance tile with BigNumber and DeltaPill from chart-kit, a three-zone dial (default Under, On track, Over) that is a read-only meter, and transaction-list limited to 5. See their notes. Tab stops come from card-stack and from the transaction-list show more button when there are more than 5 transactions."
+        "text": "An h1 title (default \"Account\") with tiles named by their h2: card-stack with one card and hideAmount set, an inverted balance tile with BigNumber and DeltaPill from chart-kit, a three-zone dial (default Under, On track, Over) that is a read-only meter, and transaction-list limited to 5. See their notes. Tab stops come from card-stack and from the transaction-list show more button when there are more than 5 transactions."
       }
     ]
   },

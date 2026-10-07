@@ -13,6 +13,9 @@ export type CodeBlockProps = {
   children?: ReactNode
   /** Number the lines. */
   lineNumbers?: boolean
+  /** Visible text and screen reader text. Keys: `copy`, `copied` and `code` (the header and region name when there is no filename or language). */
+  labels?: { copy?: string; copied?: string; code?: string }
+  /** Classes for the outer figure. */
   className?: string
 }
 
@@ -20,7 +23,9 @@ export type CodeBlockProps = {
  * Code with a header and a copy button. It does no highlighting itself, so it adds no weight;
  * pass highlighted markup as children if you want colours.
  */
-export function CodeBlock({ code, language, filename, children, lineNumbers = false, className }: CodeBlockProps) {
+export function CodeBlock({ code, language, filename, children, lineNumbers = false, labels = {}, className }: CodeBlockProps) {
+  const { copy: copyLabel = 'Copy', copied: copiedLabel = 'Copied', code: codeLabel = 'Code' } = labels
+  const title = filename ?? language ?? codeLabel
   const [copied, setCopied] = useState(false)
 
   useEffect(() => {
@@ -43,17 +48,17 @@ export function CodeBlock({ code, language, filename, children, lineNumbers = fa
   return (
     <figure className={cn('overflow-hidden rounded-2xl border bg-card text-card-foreground', className)}>
       <figcaption className="flex items-center justify-between gap-3 border-b bg-muted/50 py-1 pr-1 pl-4">
-        <span className="truncate font-mono text-[0.8125rem] text-muted-foreground">{filename ?? language ?? 'Code'}</span>
+        <span className="truncate font-mono text-[0.8125rem] text-muted-foreground">{title}</span>
         <button
           type="button"
           onClick={copy}
-          className="inline-flex min-h-11 shrink-0 items-center gap-1.5 rounded-xl px-3 text-sm text-muted-foreground transition-colors duration-150 hover:bg-muted hover:text-foreground"
+          className="inline-flex min-h-11 shrink-0 items-center gap-1.5 rounded-xl px-3 text-sm text-muted-foreground transition-colors duration-150 hover:bg-muted hover:text-foreground motion-reduce:transition-none"
         >
           {copied ? <Check className="size-4 text-success" aria-hidden /> : <Copy className="size-4" aria-hidden />}
-          <span aria-live="polite">{copied ? 'Copied' : 'Copy'}</span>
+          <span aria-live="polite">{copied ? copiedLabel : copyLabel}</span>
         </button>
       </figcaption>
-      <pre className="max-h-[28rem] overflow-auto py-3 font-mono text-[0.8125rem] leading-6" tabIndex={0}>
+      <pre className="max-h-[28rem] overflow-auto py-3 font-mono text-[0.8125rem] leading-6" tabIndex={0} role="region" aria-label={title}>
         {children ? (
           <div className="px-4">{children}</div>
         ) : lineNumbers ? (

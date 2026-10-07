@@ -43,6 +43,7 @@ export type LensStripProps = Omit<HTMLAttributes<HTMLDivElement>, 'onChange'> & 
   magnify?: number
   /** How strongly the glass splits light into colour at its rim, from 0 (none) to 1. */
   dispersion?: number
+  /** Screen reader and button text with English defaults. Keys: `previous`, `next`, `picture` and `of`. */
   labels?: Partial<Record<'previous' | 'next' | 'picture' | 'of', string>>
 }
 

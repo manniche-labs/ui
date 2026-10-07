@@ -28,6 +28,7 @@ export type SandEdgeProps = Omit<HTMLAttributes<HTMLDivElement>, 'onChange'> & {
   wind?: number
   /** Loose grains at the edges shimmer slightly while on screen. Off under reduced motion. */
   shimmer?: boolean
+  /** Screen reader and button text with English defaults. Keys: `previous`, `next`, `picture` and `of`. */
   labels?: Partial<Record<'previous' | 'next' | 'picture' | 'of', string>>
 }
 

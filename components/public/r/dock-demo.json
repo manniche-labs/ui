@@ -3,6 +3,9 @@
   "name": "dock-demo",
   "title": "Dock demo",
   "description": "How to use Dock.",
+  "dependencies": [
+    "lucide-react"
+  ],
   "registryDependencies": [
     "@manniche/dock"
   ],

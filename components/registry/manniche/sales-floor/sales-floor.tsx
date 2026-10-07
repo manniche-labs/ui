@@ -16,7 +16,16 @@ export type SalesFloorData = {
 
 export type SalesFloorLabels = { note?: string }
 
-export type SalesFloorProps = { data: SalesFloorData; labels?: SalesFloorLabels; onEndCall?: () => void; className?: string }
+export type SalesFloorProps = {
+  /** The target dial, current call, performance bars and lead sources to show. */
+  data: SalesFloorData
+  /** Visible text and screen reader text, with English defaults. Key: note, the footer text on the tiles. */
+  labels?: SalesFloorLabels
+  /** Called with no arguments when the call tile's end-call button is pressed. */
+  onEndCall?: () => void
+  /** Classes for the outer container. */
+  className?: string
+}
 
 export function SalesFloor({ data, labels, onEndCall, className }: SalesFloorProps) {
   const note = labels?.note ?? 'Example data.'
@@ -40,7 +49,7 @@ export function SalesFloor({ data, labels, onEndCall, className }: SalesFloorPro
             <button
               type="button"
               onClick={onEndCall}
-              className="mt-4 rounded-full bg-foreground px-4 py-2 text-sm font-medium text-background transition-transform active:scale-[0.97] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
+              className="mt-4 rounded-full bg-foreground px-4 py-2 text-sm font-medium text-background transition-transform active:scale-[0.97] motion-reduce:transition-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
             >
               {data.call.action}
             </button>

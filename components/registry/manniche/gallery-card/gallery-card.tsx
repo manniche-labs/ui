@@ -74,6 +74,7 @@ export type GalleryCardProps = {
   headingLevel?: 2 | 3 | 4 | 5 | 6
   /** Every visible string, for other languages. */
   labels?: Partial<GalleryCardLabels>
+  /** Classes for the card element. */
   className?: string
 }
 

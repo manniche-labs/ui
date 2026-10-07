@@ -73,6 +73,7 @@ export type FilterBarProps = {
   shortcuts?: boolean
   /** Every visible string, for other languages. */
   labels?: Partial<FilterBarLabels>
+  /** Classes for the outer wrapper. */
   className?: string
 }
 

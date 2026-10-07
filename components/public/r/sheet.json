@@ -3,13 +3,16 @@
   "name": "sheet",
   "title": "Sheet",
   "description": "A panel that slides up from the bottom and can be dragged down to close.",
+  "dependencies": [
+    "lucide-react"
+  ],
   "registryDependencies": [
     "utils"
   ],
   "files": [
     {
       "path": "registry/manniche/sheet/sheet.tsx",
-      "content": "import { useEffect, useRef, type PointerEvent, type ReactNode } from 'react'\nimport { cn } from '@/lib/utils'\n\nexport type SheetProps = {\n  open: boolean\n  onOpenChange: (open: boolean) => void\n  /** Accessible name, and the heading at the top of the sheet. */\n  title: string\n  children: ReactNode\n  className?: string\n}\n\n/**\n * A panel that slides up from the bottom. Drag it down, press Esc or tap outside to close.\n * Built on the native <dialog>, so focus is trapped and returns to the opener on close.\n */\nexport function Sheet({ open, onOpenChange, title, children, className }: SheetProps) {\n  const dialog = useRef<HTMLDialogElement>(null)\n  const drag = useRef<{ y: number; id: number } | null>(null)\n\n  useEffect(() => {\n    const d = dialog.current\n    if (!d) return\n    if (open && !d.open) {\n      d.style.transform = ''\n      d.showModal()\n    } else if (!open && d.open) d.close()\n  }, [open])\n\n  function down(e: PointerEvent<HTMLDivElement>) {\n    drag.current = { y: e.clientY, id: e.pointerId }\n    e.currentTarget.setPointerCapture(e.pointerId)\n    dialog.current!.style.transition = 'none'\n  }\n  function move(e: PointerEvent<HTMLDivElement>) {\n    if (!drag.current) return\n    dialog.current!.style.transform = `translateY(${Math.max(0, e.clientY - drag.current.y)}px)`\n  }\n  function up(e: PointerEvent<HTMLDivElement>) {\n    if (!drag.current) return\n    const d = dialog.current!\n    const dy = e.clientY - drag.current.y\n    drag.current = null\n    d.style.transition = ''\n    if (dy > d.offsetHeight * 0.3) onOpenChange(false)\n    else d.style.transform = ''\n  }\n\n  return (\n    <dialog\n      ref={dialog}\n      onClose={() => onOpenChange(false)}\n      onClick={(e) => e.target === dialog.current && onOpenChange(false)}\n      aria-label={title}\n      className={cn(\n        'mx-auto mt-auto mb-0 w-full max-w-xl rounded-t-3xl border border-b-0 bg-card p-0 text-card-foreground shadow-2xl',\n        'max-h-[85dvh] overflow-hidden transition-transform duration-300 ease-out-quint',\n        'backdrop:bg-black/40 open:animate-[manniche-sheet-in_380ms_cubic-bezier(0.23,1,0.32,1)] motion-reduce:open:animate-none',\n        className,\n      )}\n    >\n      <style href=\"manniche-sheet\" precedence=\"default\">\n        {'@keyframes manniche-sheet-in { from { transform: translateY(100%) } }'}\n      </style>\n      <div\n        onPointerDown={down}\n        onPointerMove={move}\n        onPointerUp={up}\n        onPointerCancel={up}\n        className=\"cursor-grab touch-none px-6 pt-3 pb-2 active:cursor-grabbing\"\n      >\n        <div className=\"mx-auto mb-4 h-1.5 w-11 rounded-full bg-border\" aria-hidden />\n        <h2 className=\"text-lg font-medium\">{title}</h2>\n      </div>\n      <div className=\"max-h-[calc(85dvh-5rem)] overflow-y-auto px-6 pb-[max(2rem,env(safe-area-inset-bottom))]\">{children}</div>\n    </dialog>\n  )\n}\n",
+      "content": "import { X } from 'lucide-react'\nimport { useEffect, useRef, type PointerEvent, type ReactNode } from 'react'\nimport { cn } from '@/lib/utils'\n\nexport type SheetProps = {\n  /** Whether the sheet is open. */\n  open: boolean\n  /** Called with the new open state when the sheet should close: the close button, Esc, a click outside or a drag down. */\n  onOpenChange: (open: boolean) => void\n  /** Accessible name, and the heading at the top of the sheet. */\n  title: string\n  /** The content below the title. */\n  children: ReactNode\n  /** Visible text and screen reader text. Key: `close` (the name of the close button). */\n  labels?: { close?: string }\n  /** Classes for the dialog. */\n  className?: string\n}\n\n/**\n * A panel that slides up from the bottom. Close it with the button in the corner, drag it down, press Esc or tap outside.\n * Built on the native <dialog>, so focus is trapped and returns to the opener on close.\n */\nexport function Sheet({ open, onOpenChange, title, children, labels = {}, className }: SheetProps) {\n  const { close = 'Close' } = labels\n  const dialog = useRef<HTMLDialogElement>(null)\n  const drag = useRef<{ y: number; id: number } | null>(null)\n\n  useEffect(() => {\n    const d = dialog.current\n    if (!d) return\n    if (open && !d.open) {\n      d.style.transform = ''\n      d.showModal()\n    } else if (!open && d.open) d.close()\n  }, [open])\n\n  function down(e: PointerEvent<HTMLDivElement>) {\n    drag.current = { y: e.clientY, id: e.pointerId }\n    e.currentTarget.setPointerCapture(e.pointerId)\n    dialog.current!.style.transition = 'none'\n  }\n  function move(e: PointerEvent<HTMLDivElement>) {\n    if (!drag.current) return\n    dialog.current!.style.transform = `translateY(${Math.max(0, e.clientY - drag.current.y)}px)`\n  }\n  function up(e: PointerEvent<HTMLDivElement>) {\n    if (!drag.current) return\n    const d = dialog.current!\n    const dy = e.clientY - drag.current.y\n    drag.current = null\n    d.style.transition = ''\n    if (dy > d.offsetHeight * 0.3) onOpenChange(false)\n    else d.style.transform = ''\n  }\n\n  return (\n    <dialog\n      ref={dialog}\n      onClose={() => onOpenChange(false)}\n      onClick={(e) => e.target === dialog.current && onOpenChange(false)}\n      aria-label={title}\n      className={cn(\n        'mx-auto mt-auto mb-0 w-full max-w-xl rounded-t-3xl border border-b-0 bg-card p-0 text-card-foreground shadow-2xl',\n        'max-h-[85dvh] overflow-hidden transition-transform duration-300 ease-out-quint motion-reduce:transition-none',\n        'backdrop:bg-black/40 open:animate-[manniche-sheet-in_380ms_cubic-bezier(0.23,1,0.32,1)] motion-reduce:open:animate-none',\n        className,\n      )}\n    >\n      <style href=\"manniche-sheet\" precedence=\"default\">\n        {'@keyframes manniche-sheet-in { from { transform: translateY(100%) } }'}\n      </style>\n      <div\n        onPointerDown={down}\n        onPointerMove={move}\n        onPointerUp={up}\n        onPointerCancel={up}\n        className=\"cursor-grab touch-none px-6 pt-3 pr-16 pb-2 active:cursor-grabbing\"\n      >\n        <div className=\"mx-auto mb-4 h-1.5 w-11 rounded-full bg-border\" aria-hidden />\n        <h2 className=\"text-lg font-medium\">{title}</h2>\n      </div>\n      <button\n        type=\"button\"\n        onClick={() => onOpenChange(false)}\n        aria-label={close}\n        className=\"absolute top-2 right-3 grid size-11 place-items-center rounded-full text-muted-foreground transition-colors duration-150 hover:bg-muted hover:text-foreground motion-reduce:transition-none\"\n      >\n        <X className=\"size-5\" aria-hidden />\n      </button>\n      <div className=\"max-h-[calc(85dvh-5rem)] overflow-y-auto px-6 pb-[max(2rem,env(safe-area-inset-bottom))]\">{children}</div>\n    </dialog>\n  )\n}\n",
       "type": "registry:component"
     }
   ],
@@ -23,14 +26,14 @@
         "type": "boolean",
         "default": null,
         "required": true,
-        "description": null
+        "description": "Whether the sheet is open."
       },
       {
         "name": "onOpenChange",
         "type": "(open: boolean) => void",
         "default": null,
         "required": true,
-        "description": null
+        "description": "Called with the new open state when the sheet should close: the close button, Esc, a click outside or a drag down."
       },
       {
         "name": "title",
@@ -44,36 +47,45 @@
         "type": "ReactNode",
         "default": null,
         "required": true,
-        "description": null
+        "description": "The content below the title."
+      },
+      {
+        "name": "labels",
+        "type": "{ close?: string }",
+        "default": "{}",
+        "required": false,
+        "description": "Visible text and screen reader text. Key: `close` (the name of the close button)."
       },
       {
         "name": "className",
         "type": "string",
         "default": null,
         "required": false,
-        "description": null
+        "description": "Classes for the dialog."
       }
     ],
     "a11y": [
       {
         "topic": "keyboard",
-        "text": "Esc closes it, because it is a native modal dialog that traps focus and returns it to the opener on close. A click on the backdrop closes it too.",
+        "text": "Esc closes it, because it is a native modal dialog that traps focus and returns it to the opener on close. A visible 44 pixel Close button at the top right does the same with Enter or Space, and a click on the backdrop closes it too.",
         "keys": [
           "Escape",
-          "Tab"
+          "Tab",
+          "Enter",
+          "Space"
         ]
       },
       {
         "topic": "screen-reader",
-        "text": "The dialog is labelled by title, which is also the h2 at the top. The grab handle is aria-hidden."
+        "text": "The dialog is labelled by title, which is also the h2 at the top. The Close button is named by labels.close. The grab handle is aria-hidden."
       },
       {
         "topic": "motion",
-        "text": "Under reduced motion the slide-in animation is off."
+        "text": "Under reduced motion the slide-in animation and the button transition are off."
       },
       {
         "topic": "other",
-        "text": "Dragging the top area (handle and title) down by more than 30% of the sheet's height closes it, and a shorter drag springs back. The drag is pointer only; Esc and a click on the backdrop close it too."
+        "text": "Dragging the top area (handle and title) down by more than 30% of the sheet's height closes it, and a shorter drag springs back. The drag is an extra for pointer users: the Close button, Esc and a click on the backdrop do the same by keyboard."
       }
     ]
   },

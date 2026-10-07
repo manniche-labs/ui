@@ -6,13 +6,19 @@ import { cn } from '@/lib/utils'
 export type ReceiptLine = { label: string; amount: number }
 
 export type ReceiptPrinterProps = {
+  /** The shop name, shown on the terminal and at the top of the receipt. */
   merchant: string
+  /** The items on the receipt, each with a label and an amount; the total is their sum. */
   lines: ReceiptLine[]
   /** Called when the pay button is pressed. The receipt prints once it resolves; if it throws, the button comes back. */
   onPay: () => Promise<{ reference: string } | void>
+  /** The ISO currency code used to format money. Default “EUR”. */
   currency?: string
+  /** The language used to format money and the date. Default “en-IE”. */
   locale?: string
+  /** Visible text and screen reader text with English defaults, for the pay button, the three statuses, the total, the new order button and the reference. */
   labels?: Partial<Record<'pay' | 'processing' | 'printing' | 'paid' | 'total' | 'again' | 'reference', string>>
+  /** Classes for the outer wrapper around the terminal and the receipt. */
   className?: string
 }
 
@@ -60,7 +66,10 @@ export function ReceiptPrinter({ merchant, lines, onPay, currency = 'EUR', local
               </div>
             </div>
 
-            <div className="mt-4 min-h-11" aria-live="polite">
+            <p role="status" className="sr-only">
+              {status}
+            </p>
+            <div className="mt-4 min-h-11">
               <AnimatePresence mode="popLayout" initial={false}>
                 {phase === 'idle' ? (
                   <motion.button
@@ -71,12 +80,12 @@ export function ReceiptPrinter({ merchant, lines, onPay, currency = 'EUR', local
                     animate={{ opacity: 1, scale: 1 }}
                     exit={{ opacity: 0, scale: 0.96 }}
                     transition={{ duration: 0.2 }}
-                    className="min-h-11 w-full rounded-xl bg-neutral-50 font-semibold text-neutral-950 transition-transform duration-150 active:scale-[0.98]"
+                    className="min-h-11 w-full rounded-xl bg-neutral-50 font-semibold text-neutral-950 transition-transform duration-150 motion-reduce:transition-none active:scale-[0.98] motion-reduce:active:scale-100"
                   >
                     {t.pay} {money.format(total)}
                   </motion.button>
                 ) : (
-                  <motion.p
+                  <motion.div
                     key={phase}
                     initial={{ opacity: 0, y: 6 }}
                     animate={{ opacity: 1, y: 0 }}
@@ -85,18 +94,18 @@ export function ReceiptPrinter({ merchant, lines, onPay, currency = 'EUR', local
                     className="flex min-h-11 items-center gap-2 text-sm text-neutral-300"
                   >
                     {phase === 'paid' ? <Check className="size-4 text-emerald-400" aria-hidden /> : <LoaderCircle className="size-4 animate-spin motion-reduce:animate-none" aria-hidden />}
-                    {status}
+                    <span aria-hidden>{status}</span>
                     {phase === 'paid' && (
                       <button
                         type="button"
                         onClick={() => setPhase('idle')}
-                        className="ml-auto inline-flex min-h-10 items-center gap-1.5 rounded-lg px-2.5 text-neutral-300 transition-colors duration-150 hover:bg-white/10 hover:text-white"
+                        className="ml-auto inline-flex min-h-10 relative after:inset-x-0 after:-inset-y-0.5 after:absolute after:content-[''] items-center gap-1.5 rounded-lg px-2.5 text-neutral-300 transition-colors duration-150 hover:bg-white/10 hover:text-white"
                       >
                         <RotateCcw className="size-3.5" aria-hidden />
                         {t.again}
                       </button>
                     )}
-                  </motion.p>
+                  </motion.div>
                 )}
               </AnimatePresence>
             </div>

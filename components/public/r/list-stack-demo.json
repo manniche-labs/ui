@@ -3,6 +3,9 @@
   "name": "list-stack-demo",
   "title": "List stack demo",
   "description": "How to use List stack.",
+  "dependencies": [
+    "lucide-react"
+  ],
   "registryDependencies": [
     "@manniche/list-stack"
   ],

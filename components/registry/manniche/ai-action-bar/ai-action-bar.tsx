@@ -2,7 +2,7 @@
 // github.com/WatermelonCorp/watermelon-platform). Rewritten with named tools and a working submit.
 import { ArrowUp, Sparkles, Wrench } from 'lucide-react'
 import { AnimatePresence, LayoutGroup, MotionConfig, motion } from 'motion/react'
-import { useId, useState, type ComponentType, type SubmitEvent } from 'react'
+import { useId, useRef, useState, type ComponentType, type KeyboardEvent, type SubmitEvent } from 'react'
 import { cn } from '@/lib/utils'
 
 export type AiBarTool = {
@@ -14,12 +14,17 @@ export type AiBarTool = {
 }
 
 export type AiActionBarProps = {
+  /** The tool buttons shown in tools mode, each with an id, a label, an icon and an optional onSelect. */
   tools: AiBarTool[]
   /** Runs with the instruction when the person sends it. */
   onAsk: (prompt: string) => void
+  /** Placeholder in the prompt field. */
   placeholder?: string
-  labels?: { tools?: string; ask?: string; send?: string }
+  /** Screen reader text with English defaults. Keys: `tools`, `ask`, `send` and `mode` (the name of the mode switch). */
+  labels?: { tools?: string; ask?: string; send?: string; mode?: string }
+  /** Which mode it starts in: the tool buttons or the prompt field. */
   defaultMode?: 'tools' | 'ask'
+  /** Classes for the outer bar. */
   className?: string
 }
 
@@ -28,7 +33,10 @@ export function AiActionBar({ tools, onAsk, placeholder = 'Ask AI to change itâ€
   const [mode, setMode] = useState(defaultMode)
   const [text, setText] = useState('')
   const group = useId()
-  const { tools: toolsLabel = 'Tools', ask = 'Ask AI', send = 'Send' } = labels
+  const { tools: toolsLabel = 'Tools', ask = 'Ask AI', send = 'Send', mode: modeLabel = 'Mode' } = labels
+  const radios = useRef<(HTMLButtonElement | null)[]>([])
+  // Arrow keys switch the mode without sending focus into the prompt field; a click or tap does.
+  const [viaArrows, setViaArrows] = useState(false)
   const spring = { type: 'spring', stiffness: 260, damping: 32 } as const
 
   const submit = (e: SubmitEvent<HTMLFormElement>) => {
@@ -44,21 +52,44 @@ export function AiActionBar({ tools, onAsk, placeholder = 'Ask AI to change itâ€
     { id: 'ask', label: ask, Icon: Sparkles },
   ] as const
 
+  const onRadioKey = (e: KeyboardEvent<HTMLButtonElement>, index: number) => {
+    const last = modes.length - 1
+    const next =
+      e.key === 'ArrowRight' || e.key === 'ArrowDown' ? (index === last ? 0 : index + 1)
+      : e.key === 'ArrowLeft' || e.key === 'ArrowUp' ? (index === 0 ? last : index - 1)
+      : e.key === 'Home' ? 0
+      : e.key === 'End' ? last
+      : -1
+    if (next < 0) return
+    e.preventDefault()
+    setViaArrows(true)
+    setMode(modes[next].id)
+    radios.current[next]?.focus()
+  }
+
   return (
     <MotionConfig reducedMotion="user" transition={spring}>
       <LayoutGroup id={group}>
         <motion.div layout style={{ borderRadius: 28 }} className={cn('flex w-full max-w-md items-center gap-1 border bg-card p-1 shadow-sm', className)}>
-          <div role="radiogroup" aria-label="Mode" className="flex shrink-0 items-center gap-0.5 rounded-full bg-background p-1 shadow-sm">
-            {modes.map(({ id, label, Icon }) => (
+          <div role="radiogroup" aria-label={modeLabel} className="flex shrink-0 items-center gap-0.5 rounded-full bg-background p-1 shadow-sm">
+            {modes.map(({ id, label, Icon }, index) => (
               <button
                 key={id}
+                ref={(el) => {
+                  radios.current[index] = el
+                }}
                 type="button"
                 role="radio"
                 aria-checked={mode === id}
+                tabIndex={mode === id ? 0 : -1}
                 aria-label={label}
                 title={label}
-                onClick={() => setMode(id)}
-                className="relative grid size-10 place-items-center rounded-full outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                onClick={() => {
+                  setViaArrows(false)
+                  setMode(id)
+                }}
+                onKeyDown={(e) => onRadioKey(e, index)}
+                className="relative grid size-10 after:-inset-0.5 after:absolute after:content-[''] place-items-center rounded-full outline-none focus-visible:ring-2 focus-visible:ring-ring"
               >
                 {mode === id && <motion.span layoutId="mode" className="absolute inset-0 rounded-full bg-muted" />}
                 <Icon className="relative size-[18px]" aria-hidden />
@@ -82,9 +113,11 @@ export function AiActionBar({ tools, onAsk, placeholder = 'Ask AI to change itâ€
                     onClick={onSelect}
                     aria-label={label}
                     title={label}
-                    className="grid size-10 place-items-center rounded-full text-foreground transition-[background-color,transform] duration-150 hover:bg-muted active:scale-[0.92]"
+                    className="grid size-10 relative after:-inset-0.5 after:absolute after:content-[''] place-items-center rounded-full text-foreground transition-[background-color,transform] duration-150 hover:bg-muted active:scale-[0.92] motion-reduce:transition-none motion-reduce:active:scale-100"
                   >
-                    <Icon className="size-[18px]" />
+                    <span aria-hidden className="contents">
+                      <Icon className="size-[18px]" />
+                    </span>
                   </button>
                 ))}
               </motion.div>
@@ -98,7 +131,7 @@ export function AiActionBar({ tools, onAsk, placeholder = 'Ask AI to change itâ€
                 className="flex min-w-0 flex-1 items-center gap-1 pl-2"
               >
                 <input
-                  autoFocus
+                  autoFocus={!viaArrows}
                   value={text}
                   onChange={(e) => setText(e.target.value)}
                   placeholder={placeholder}
@@ -109,7 +142,7 @@ export function AiActionBar({ tools, onAsk, placeholder = 'Ask AI to change itâ€
                   type="submit"
                   aria-label={send}
                   disabled={!text.trim()}
-                  className="grid size-10 shrink-0 place-items-center rounded-full bg-foreground text-background transition-[opacity,transform] duration-150 active:scale-[0.92] disabled:opacity-30"
+                  className="grid size-10 relative after:-inset-0.5 after:absolute after:content-[''] shrink-0 place-items-center rounded-full bg-foreground text-background transition-[opacity,transform] duration-150 active:scale-[0.92] motion-reduce:transition-none motion-reduce:active:scale-100 disabled:opacity-30"
                 >
                   <ArrowUp className="size-[18px]" aria-hidden />
                 </button>

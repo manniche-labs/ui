@@ -7,7 +7,7 @@
 // text when open) over a real list; the picker is a nav with aria-current on the chosen region.
 // Reduced motion: a group fades and lifts in when opened; under reduced motion it just appears. Height jumps by design.
 import { ChevronDown } from 'lucide-react'
-import { MotionConfig, motion } from 'motion/react'
+import { MotionConfig, motion, useReducedMotion } from 'motion/react'
 import { useEffect, useId, useRef, useState, type ComponentPropsWithoutRef, type ReactNode } from 'react'
 import { cn } from '@/lib/utils'
 import { DataTile } from '@/registry/manniche/data-tile/data-tile'
@@ -104,6 +104,7 @@ function LinkList({ links, newTab }: { links: SitemapLink[]; newTab: string }) {
 
 function Group({ group, folded, open, onToggle, newTab }: { group: SitemapGroup; folded: boolean; open: boolean; onToggle: () => void; newTab: string }) {
   const id = useId()
+  const reduce = useReducedMotion()
   const count = (
     <span className="font-mono text-[11px] text-muted-foreground tabular-nums" aria-hidden>
       {String(group.links.length).padStart(2, '0')}
@@ -134,13 +135,18 @@ function Group({ group, folded, open, onToggle, newTab }: { group: SitemapGroup;
           {count}
           <ChevronDown
             aria-hidden
-            className={cn('ml-auto size-4 flex-none text-muted-foreground transition-[transform] duration-200 ease-out-quint', open && 'rotate-180')}
+            className={cn('ml-auto size-4 flex-none text-muted-foreground transition-[transform] duration-200 ease-out-quint motion-reduce:transition-none', open && 'rotate-180')}
           />
         </button>
       </h3>
       <div id={id} role="region" aria-label={group.title} hidden={!open}>
         {open && (
-          <motion.div initial={{ opacity: 0, y: -6 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.24, ease: [0.23, 1, 0.32, 1] }} className="pb-3">
+          <motion.div
+            initial={reduce ? false : { opacity: 0, y: -6 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.24, ease: [0.23, 1, 0.32, 1] }}
+            className="pb-3"
+          >
             <LinkList links={group.links} newTab={newTab} />
           </motion.div>
         )}

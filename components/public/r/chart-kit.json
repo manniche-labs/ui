@@ -12,7 +12,7 @@
   "files": [
     {
       "path": "registry/manniche/chart-kit/chart-kit.tsx",
-      "content": "// The shared grammar for the Tiles data primitives (bar-chart, donut, dial, area-chart and the rest): a size and\n// draw-in hook, one tooltip anatomy, the big display number, a change pill, a pill switch and a hidden data table\n// for screen readers. Formatting, scales and colours live in chart-utils.ts.\n// There is no chart library. Each primitive draws its own SVG with these pieces, so the axes, tooltips and numbers\n// look the same everywhere. Series colours come from --chart-1 … --chart-5 and the signal from --primary.\nimport { AnimatePresence, motion } from 'motion/react'\nimport { useEffect, useRef, useState, type KeyboardEvent, type ReactNode } from 'react'\nimport { useReducedMotion } from '@/registry/manniche/hooks/use-reduced-motion'\nimport { cn } from '@/lib/utils'\nimport { EASE, formatValue, stepIndex, valueParts, type ValueFormat } from './chart-utils'\n\n// Tooltip -------------------------------------------------------------------------------------------------------\n\nexport type TooltipRow = { label: string; value: string; color?: string }\n\nexport type ChartTooltipProps = {\n  open: boolean\n  /** Where the tooltip points, in px inside the chart's positioned wrapper. */\n  x: number\n  y: number\n  /** The wrapper's width, so the tooltip stays inside it. */\n  bounds: number\n  /** Above the point by default; below when the point sits near the top. */\n  below?: boolean\n  /** The small label on top, such as the date. */\n  title: string\n  /** The figure itself. */\n  value: ReactNode\n  rows?: TooltipRow[]\n}\n\n/**\n * One tooltip anatomy for every chart: a dark chip with a mono label, the figure and optional rows with a colour\n * key. It is hidden from screen readers; the chart says the same through its live region. Moves glide only while\n * it is already open, so it never flies in from a corner.\n */\nexport function ChartTooltip({ open, x, y, bounds, below = false, title, value, rows = [] }: ChartTooltipProps) {\n  const box = useRef<HTMLDivElement>(null)\n  const [size, setSize] = useState({ w: 0, h: 0 })\n  const [gliding, setGliding] = useState(false)\n\n  // Resize notes arrive after layout and before paint, so a new size is in place before the frame is drawn.\n  useEffect(() => {\n    const el = box.current\n    if (!el) return\n    const ro = new ResizeObserver(() => setSize({ w: el.offsetWidth, h: el.offsetHeight }))\n    ro.observe(el)\n    return () => ro.disconnect()\n  }, [])\n  // The first frame after opening snaps into place; moves after that glide.\n  useEffect(() => {\n    if (!open) return\n    const id = requestAnimationFrame(() => setGliding(true))\n    return () => {\n      cancelAnimationFrame(id)\n      setGliding(false)\n    }\n  }, [open])\n  const { w, h } = size\n\n  const tx = Math.max(-6, Math.min(bounds - w + 6, x - w / 2))\n  const ty = below ? y + 12 : y - h - 12\n  const origin = `${Math.max(10, Math.min(w - 10, x - tx))}px ${below ? '0%' : '100%'}`\n\n  return (\n    <div\n      ref={box}\n      aria-hidden\n      className={cn(\n        'pointer-events-none absolute top-0 left-0 z-30 w-max max-w-60 rounded-[calc(var(--radius)+2px)] bg-foreground px-3 pt-2 pb-2.5 text-card',\n        'shadow-[0_1px_2px_rgba(0,0,0,0.14),0_10px_24px_-10px_rgba(0,0,0,0.4)] ease-out-quint motion-reduce:transition-none',\n        gliding ? 'transition-[opacity,transform] duration-150' : 'transition-opacity duration-150',\n      )}\n      style={{\n        opacity: open ? 1 : 0,\n        transform: `translate(${tx}px, ${ty}px) scale(${open ? 1 : 0.96})`,\n        transformOrigin: origin,\n      }}\n    >\n      <span className=\"block font-mono text-[11px] leading-tight tracking-[0.02em] text-[color-mix(in_oklab,var(--card)_60%,var(--foreground))]\">\n        {title}\n      </span>\n      <span className=\"mt-1 block text-[17px] leading-[1.1] font-semibold tracking-[-0.015em] tabular-nums\">{value}</span>\n      {rows.map((r) => (\n        <span\n          key={r.label}\n          className=\"mt-1.5 flex items-center gap-2 text-[12.5px] leading-[1.3] text-[color-mix(in_oklab,var(--card)_82%,var(--foreground))] tabular-nums\"\n        >\n          {r.color && <i className=\"size-2.5 flex-none rounded-[3px]\" style={{ background: r.color }} />}\n          {r.label}\n          <b className=\"ml-auto pl-3 font-medium text-card\">{r.value}</b>\n        </span>\n      ))}\n    </div>\n  )\n}\n\n// The display number --------------------------------------------------------------------------------------------\n\nexport type BigNumberProps = {\n  value: number\n  format?: ValueFormat\n  /** xl for the one figure a tile is about, sm for a figure inside a chart. Default \"lg\". */\n  size?: 'xl' | 'lg' | 'md' | 'sm'\n  /** Roll the digits that change. Default true; never under reduced motion. */\n  roll?: boolean\n  className?: string\n}\n\nconst SIZES = {\n  xl: 'text-[clamp(50px,5.2vw,76px)]',\n  lg: 'text-[clamp(36px,3.4vw,48px)]',\n  md: 'text-[30px]',\n  sm: 'text-[22px]',\n}\n\n/**\n * The big figure: heavy, tight and tabular, with the currency symbol and the decimals set small and muted. It uses\n * --font-display when the app defines one (Archivo at width 86 % is what it was drawn with) and the body face\n * otherwise. Screen readers get the whole value once.\n */\nexport function BigNumber({ value, format, size = 'lg', roll = true, className }: BigNumberProps) {\n  const p = valueParts(value, format)\n  const small = 'text-[0.46em] font-bold tracking-[-0.02em] text-muted-foreground'\n  const unit = p.unit && (\n    <span className={cn(small, p.unitAfter ? 'ml-[0.12em]' : 'mr-[0.12em] self-start pt-[0.12em]')}>{p.unit}</span>\n  )\n  return (\n    <span\n      className={cn(\n        'inline-flex items-baseline leading-[0.95] font-extrabold tracking-[-0.045em] whitespace-nowrap tabular-nums',\n        SIZES[size],\n        className,\n      )}\n      style={{ fontFamily: 'var(--font-display, inherit)', fontStretch: '86%' }}\n    >\n      <span className=\"sr-only\">{formatValue(value, format)}</span>\n      <span aria-hidden className=\"inline-flex items-baseline\">\n        {p.sign}\n        {!p.unitAfter && unit}\n        <Digits text={p.whole} roll={roll} />\n        {p.fraction && (\n          <span className={small}>\n            <Digits text={p.fraction} roll={roll} />\n          </span>\n        )}\n        {p.unitAfter && unit}\n        {p.suffix && <span className={cn(small, 'ml-[0.06em]')}>{p.suffix}</span>}\n      </span>\n    </span>\n  )\n}\n\n/** Digits that roll up when they grow and down when they shrink, counted from the right so places stay put. */\nexport function Digits({ text, roll = true }: { text: string; roll?: boolean }) {\n  const reduced = useReducedMotion()\n  const [last, setLast] = useState({ text, dir: 1 })\n  const dir = last.text === text ? last.dir : Number(text.replace(/\\D/g, '')) >= Number(last.text.replace(/\\D/g, '')) ? 1 : -1\n  if (last.text !== text) setLast({ text, dir })\n  if (!roll || reduced) return <>{text}</>\n  const chars = text.split('')\n  return (\n    <span className=\"inline-flex\">\n      {chars.map((ch, i) => {\n        const place = chars.length - i\n        return (\n          <span key={place} className=\"relative -my-[0.08em] inline-flex overflow-hidden py-[0.08em]\">\n            <AnimatePresence mode=\"popLayout\" initial={false} custom={dir}>\n              <motion.span\n                key={ch}\n                initial={{ y: `${dir * 60}%`, opacity: 0, filter: 'blur(2px)' }}\n                animate={{ y: 0, opacity: 1, filter: 'blur(0px)' }}\n                exit={{ y: `${dir * -60}%`, opacity: 0, filter: 'blur(2px)' }}\n                transition={{ duration: 0.3, ease: EASE, delay: Math.min(place, 6) * 0.015 }}\n                className=\"inline-block\"\n              >\n                {ch}\n              </motion.span>\n            </AnimatePresence>\n          </span>\n        )\n      })}\n    </span>\n  )\n}\n\n/** A change as a small pill with an arrow. Green when it went the good way; set `goodWhen` to \"down\" for costs. The arrow carries the direction, so the figure never shows a sign. */\nexport function DeltaPill({\n  value,\n  format = { decimals: 1, suffix: '%' },\n  goodWhen = 'up',\n  className,\n}: {\n  value: number\n  format?: ValueFormat\n  goodWhen?: 'up' | 'down'\n  className?: string\n}) {\n  const up = value > 0\n  const flat = Number(Math.abs(value).toFixed(format.decimals ?? 0)) === 0\n  const good = flat ? null : up === (goodWhen === 'up')\n  const tone = good === null ? null : good ? 'var(--success)' : 'var(--destructive)'\n  return (\n    <span\n      className={cn(\n        'inline-flex h-[26px] items-center gap-1 rounded-full pr-2.5 pl-2 text-[12.5px] leading-none font-medium whitespace-nowrap tabular-nums',\n        className,\n      )}\n      style={\n        tone\n          ? {\n              background: `color-mix(in oklab, ${tone} ${good ? 15 : 13}%, var(--card))`,\n              color: `color-mix(in oklab, ${tone} ${good ? 80 : 85}%, var(--foreground))`,\n            }\n          : { background: 'var(--muted)', color: 'var(--muted-foreground)' }\n      }\n    >\n      {!flat && (\n        <svg\n          viewBox=\"0 0 12 12\"\n          className=\"size-3 fill-none stroke-current stroke-2 [stroke-linecap:round] [stroke-linejoin:round]\"\n          aria-hidden\n        >\n          <path d={up ? 'M6 10V2M2.5 5.5 6 2l3.5 3.5' : 'M6 2v8M2.5 6.5 6 10l3.5-3.5'} />\n        </svg>\n      )}\n      {formatValue(Math.abs(value), { ...format, sign: false })}\n      <span className=\"sr-only\">{flat ? ', unchanged' : up ? ', up' : ', down'}</span>\n    </span>\n  )\n}\n\n// Controls ------------------------------------------------------------------------------------------------------\n\nexport type PillOption = { id: string; label: string }\n\n/** A segment switch: a dark pill slides to the picked option. A radio group with arrow keys, Home and End. */\nexport function Pills({\n  options,\n  value,\n  onChange,\n  label,\n  className,\n}: {\n  options: PillOption[]\n  value: string\n  onChange: (id: string) => void\n  /** Read aloud for the group, e.g. \"Period\". */\n  label: string\n  className?: string\n}) {\n  const refs = useRef<(HTMLButtonElement | null)[]>([])\n  const index = Math.max(0, options.findIndex((o) => o.id === value))\n  const onKey = (e: KeyboardEvent, i: number) => {\n    // Radio groups take both axes: down and right go forward, up and left go back.\n    const key = e.key === 'ArrowDown' ? 'ArrowRight' : e.key === 'ArrowUp' ? 'ArrowLeft' : e.key\n    const to = stepIndex(key, i, options.length, { loop: true })\n    if (to === null) return\n    e.preventDefault()\n    refs.current[to]?.focus()\n    onChange(options[to].id)\n  }\n  return (\n    <div\n      role=\"radiogroup\"\n      aria-label={label}\n      className={cn('relative isolate inline-grid auto-cols-fr grid-flow-col rounded-full bg-muted p-1', className)}\n    >\n      <span\n        aria-hidden\n        className=\"absolute top-1 bottom-1 left-1 -z-10 rounded-full bg-foreground transition-transform duration-[260ms] ease-out-quint motion-reduce:transition-none\"\n        style={{ width: `calc((100% - 8px) / ${options.length})`, transform: `translateX(${index * 100}%)` }}\n      />\n      {options.map((o, i) => (\n        <button\n          key={o.id}\n          ref={(el) => {\n            refs.current[i] = el\n          }}\n          type=\"button\"\n          role=\"radio\"\n          aria-checked={i === index}\n          tabIndex={i === index ? 0 : -1}\n          onClick={() => onChange(o.id)}\n          onKeyDown={(e) => onKey(e, i)}\n          className={cn(\n            'relative min-h-11 cursor-pointer rounded-full px-3.5 text-[13.5px] font-medium whitespace-nowrap focus-visible:outline-offset-0',\n            // The visible pill is 36 px; the hit area reaches the 44 px of the track.\n            'before:absolute before:inset-x-0 before:-inset-y-1 before:content-[\"\"]',\n            i === index ? 'text-card' : 'text-muted-foreground hover:text-foreground',\n          )}\n        >\n          {o.label}\n        </button>\n      ))}\n    </div>\n  )\n}\n\n// Screen readers ------------------------------------------------------------------------------------------------\n\n/** The chart's data as a table only screen readers see. The first column is read as the row heading. */\nexport function SrTable({ caption, head, rows }: { caption: string; head: string[]; rows: (string | number)[][] }) {\n  return (\n    <div className=\"sr-only\">\n      <table>\n        <caption>{caption}</caption>\n        <thead>\n          <tr>\n            {head.map((h) => (\n              <th key={h} scope=\"col\">\n                {h}\n              </th>\n            ))}\n          </tr>\n        </thead>\n        <tbody>\n          {rows.map((r, i) => (\n            <tr key={i}>\n              {r.map((c, j) =>\n                j ? (\n                  <td key={j}>{c}</td>\n                ) : (\n                  <th key={j} scope=\"row\">\n                    {c}\n                  </th>\n                ),\n              )}\n            </tr>\n          ))}\n        </tbody>\n      </table>\n    </div>\n  )\n}\n",
+      "content": "// The shared grammar for the Tiles data primitives (bar-chart, donut, dial, area-chart and the rest): a size and\n// draw-in hook, one tooltip anatomy, the big display number, a change pill, a pill switch and a hidden data table\n// for screen readers. Formatting, scales and colours live in chart-utils.ts.\n// There is no chart library. Each primitive draws its own SVG with these pieces, so the axes, tooltips and numbers\n// look the same everywhere. Series colours come from --chart-1 … --chart-5 and the signal from --primary.\nimport { AnimatePresence, motion } from 'motion/react'\nimport { useEffect, useRef, useState, type CSSProperties, type KeyboardEvent, type ReactNode } from 'react'\nimport { useReducedMotion } from '@/registry/manniche/hooks/use-reduced-motion'\nimport { cn } from '@/lib/utils'\nimport { EASE, formatValue, stepIndex, valueParts, type ValueFormat } from './chart-utils'\nimport { StaticChartFrame } from './use-chart'\n\n// Tooltip -------------------------------------------------------------------------------------------------------\n\nexport type TooltipRow = { label: string; value: string; color?: string }\n\nexport type ChartTooltipProps = {\n  /** Shows the tooltip. It fades and scales out when false. */\n  open: boolean\n  /** Where the tooltip points, in px inside the chart's positioned wrapper. */\n  x: number\n  /** The vertical point in px inside the wrapper. The tooltip sits 12 px above it, or below with `below`. */\n  y: number\n  /** The wrapper's width, so the tooltip stays inside it. */\n  bounds: number\n  /** Above the point by default; below when the point sits near the top. */\n  below?: boolean\n  /** The small label on top, such as the date. */\n  title: string\n  /** The figure itself. */\n  value: ReactNode\n  /** Extra lines under the figure, each with a label, a value and an optional colour key. */\n  rows?: TooltipRow[]\n}\n\n/**\n * One tooltip anatomy for every chart: a dark chip with a mono label, the figure and optional rows with a colour\n * key. It is hidden from screen readers; the chart says the same through its live region. Moves glide only while\n * it is already open, so it never flies in from a corner.\n */\nexport function ChartTooltip({ open, x, y, bounds, below = false, title, value, rows = [] }: ChartTooltipProps) {\n  const box = useRef<HTMLDivElement>(null)\n  const [size, setSize] = useState({ w: 0, h: 0 })\n  const [gliding, setGliding] = useState(false)\n\n  // Resize notes arrive after layout and before paint, so a new size is in place before the frame is drawn.\n  useEffect(() => {\n    const el = box.current\n    if (!el) return\n    const ro = new ResizeObserver(() => setSize({ w: el.offsetWidth, h: el.offsetHeight }))\n    ro.observe(el)\n    return () => ro.disconnect()\n  }, [])\n  // The first frame after opening snaps into place; moves after that glide.\n  useEffect(() => {\n    if (!open) return\n    const id = requestAnimationFrame(() => setGliding(true))\n    return () => {\n      cancelAnimationFrame(id)\n      setGliding(false)\n    }\n  }, [open])\n  const { w, h } = size\n\n  const tx = Math.max(-6, Math.min(bounds - w + 6, x - w / 2))\n  const ty = below ? y + 12 : y - h - 12\n  const origin = `${Math.max(10, Math.min(w - 10, x - tx))}px ${below ? '0%' : '100%'}`\n\n  return (\n    <div\n      ref={box}\n      aria-hidden\n      className={cn(\n        'pointer-events-none absolute top-0 left-0 z-30 w-max max-w-60 rounded-[calc(var(--radius)+2px)] bg-foreground px-3 pt-2 pb-2.5 text-card',\n        'shadow-[0_1px_2px_rgba(0,0,0,0.14),0_10px_24px_-10px_rgba(0,0,0,0.4)] ease-out-quint motion-reduce:transition-none',\n        gliding ? 'transition-[opacity,transform] duration-150' : 'transition-opacity duration-150',\n      )}\n      style={{\n        opacity: open ? 1 : 0,\n        transform: `translate(${tx}px, ${ty}px) scale(${open ? 1 : 0.96})`,\n        transformOrigin: origin,\n      }}\n    >\n      <span className=\"block font-mono text-[11px] leading-tight tracking-[0.02em] text-[color-mix(in_oklab,var(--card)_60%,var(--foreground))]\">\n        {title}\n      </span>\n      <span className=\"mt-1 block text-[17px] leading-[1.1] font-semibold tracking-[-0.015em] tabular-nums\">{value}</span>\n      {rows.map((r) => (\n        <span\n          key={r.label}\n          className=\"mt-1.5 flex items-center gap-2 text-[12.5px] leading-[1.3] text-[color-mix(in_oklab,var(--card)_82%,var(--foreground))] tabular-nums\"\n        >\n          {r.color && <i className=\"size-2.5 flex-none rounded-[3px]\" style={{ background: r.color }} />}\n          {r.label}\n          <b className=\"ml-auto pl-3 font-medium text-card\">{r.value}</b>\n        </span>\n      ))}\n    </div>\n  )\n}\n\n// The display number --------------------------------------------------------------------------------------------\n\nexport type BigNumberProps = {\n  /** The number to show. Screen readers get it whole and formatted. */\n  value: number\n  /** Decimals, unit, suffix and sign, as in chart-utils `formatValue`. */\n  format?: ValueFormat\n  /** xl for the one figure a tile is about, sm for a figure inside a chart. Default \"lg\". */\n  size?: 'xl' | 'lg' | 'md' | 'sm'\n  /** Roll the digits that change. Default true; never under reduced motion. */\n  roll?: boolean\n  /** Classes for the outer span. */\n  className?: string\n}\n\nconst SIZES = {\n  xl: 'text-[clamp(50px,5.2vw,76px)]',\n  lg: 'text-[clamp(36px,3.4vw,48px)]',\n  md: 'text-[30px]',\n  sm: 'text-[22px]',\n}\n\n/**\n * The big figure: heavy, tight and tabular, with the currency symbol and the decimals set small and muted. It uses\n * --font-display when the app defines one (Archivo at width 86 % is what it was drawn with) and the body face\n * otherwise. Screen readers get the whole value once.\n */\nexport function BigNumber({ value, format, size = 'lg', roll = true, className }: BigNumberProps) {\n  const p = valueParts(value, format)\n  const small = 'text-[0.46em] font-bold tracking-[-0.02em] text-muted-foreground'\n  const unit = p.unit && (\n    <span className={cn(small, p.unitAfter ? 'ml-[0.12em]' : 'mr-[0.12em] self-start pt-[0.12em]')}>{p.unit}</span>\n  )\n  return (\n    <span\n      className={cn(\n        'inline-flex items-baseline leading-[0.95] font-extrabold tracking-[-0.045em] whitespace-nowrap tabular-nums',\n        SIZES[size],\n        className,\n      )}\n      style={{ fontFamily: 'var(--font-display, inherit)', fontStretch: '86%' }}\n    >\n      <span className=\"sr-only\">{formatValue(value, format)}</span>\n      <span aria-hidden className=\"inline-flex items-baseline\">\n        {p.sign}\n        {!p.unitAfter && unit}\n        <Digits text={p.whole} roll={roll} />\n        {p.fraction && (\n          <span className={small}>\n            <Digits text={p.fraction} roll={roll} />\n          </span>\n        )}\n        {p.unitAfter && unit}\n        {p.suffix && <span className={cn(small, 'ml-[0.06em]')}>{p.suffix}</span>}\n      </span>\n    </span>\n  )\n}\n\n/** Digits that roll up when they grow and down when they shrink, counted from the right so places stay put. */\nexport function Digits({\n  text,\n  roll = true,\n}: {\n  /** The digits as already formatted text. Each place rolls on its own. */\n  text: string\n  /** Roll the digits that change. Default true; never under reduced motion. */\n  roll?: boolean\n}) {\n  const reduced = useReducedMotion()\n  const [last, setLast] = useState({ text, dir: 1 })\n  const dir = last.text === text ? last.dir : Number(text.replace(/\\D/g, '')) >= Number(last.text.replace(/\\D/g, '')) ? 1 : -1\n  if (last.text !== text) setLast({ text, dir })\n  if (!roll || reduced) return <>{text}</>\n  const chars = text.split('')\n  return (\n    <span className=\"inline-flex\">\n      {chars.map((ch, i) => {\n        const place = chars.length - i\n        return (\n          <span key={place} className=\"relative -my-[0.08em] inline-flex overflow-hidden py-[0.08em]\">\n            <AnimatePresence mode=\"popLayout\" initial={false} custom={dir}>\n              <motion.span\n                key={ch}\n                initial={{ y: `${dir * 60}%`, opacity: 0, filter: 'blur(2px)' }}\n                animate={{ y: 0, opacity: 1, filter: 'blur(0px)' }}\n                exit={{ y: `${dir * -60}%`, opacity: 0, filter: 'blur(2px)' }}\n                transition={{ duration: 0.3, ease: EASE, delay: Math.min(place, 6) * 0.015 }}\n                className=\"inline-block\"\n              >\n                {ch}\n              </motion.span>\n            </AnimatePresence>\n          </span>\n        )\n      })}\n    </span>\n  )\n}\n\n/** A change as a small pill with an arrow. Green when it went the good way; set `goodWhen` to \"down\" for costs. The arrow carries the direction, so the figure never shows a sign. */\nexport function DeltaPill({\n  value,\n  format = { decimals: 1, suffix: '%' },\n  goodWhen = 'up',\n  className,\n  labels = {},\n}: {\n  /** The change. Its sign sets the arrow; the figure is shown without a sign. */\n  value: number\n  /** How the figure is written. Default one decimal with a % suffix. */\n  format?: ValueFormat\n  /** Which way is good: green then, red the other way. Default \"up\"; use \"down\" for costs. */\n  goodWhen?: 'up' | 'down'\n  /** Classes for the pill. */\n  className?: string\n  /** Screen reader text after the figure. Keys up, down and unchanged; English by default. */\n  labels?: { up?: string; down?: string; unchanged?: string }\n}) {\n  const { up: upText = 'up', down: downText = 'down', unchanged = 'unchanged' } = labels\n  const up = value > 0\n  const flat = Number(Math.abs(value).toFixed(format.decimals ?? 0)) === 0\n  const good = flat ? null : up === (goodWhen === 'up')\n  const tone = good === null ? null : good ? 'var(--success)' : 'var(--destructive)'\n  return (\n    <span\n      className={cn(\n        'inline-flex h-[26px] items-center gap-1 rounded-full pr-2.5 pl-2 text-[12.5px] leading-none font-medium whitespace-nowrap tabular-nums',\n        className,\n      )}\n      style={\n        tone\n          ? {\n              background: `color-mix(in oklab, ${tone} ${good ? 15 : 13}%, var(--card))`,\n              color: `color-mix(in oklab, ${tone} ${good ? 80 : 85}%, var(--foreground))`,\n            }\n          : { background: 'var(--muted)', color: 'var(--muted-foreground)' }\n      }\n    >\n      {!flat && (\n        <svg\n          viewBox=\"0 0 12 12\"\n          className=\"size-3 fill-none stroke-current stroke-2 [stroke-linecap:round] [stroke-linejoin:round]\"\n          aria-hidden\n        >\n          <path d={up ? 'M6 10V2M2.5 5.5 6 2l3.5 3.5' : 'M6 2v8M2.5 6.5 6 10l3.5-3.5'} />\n        </svg>\n      )}\n      {formatValue(Math.abs(value), { ...format, sign: false })}\n      <span className=\"sr-only\">, {flat ? unchanged : up ? upText : downText}</span>\n    </span>\n  )\n}\n\n// Controls ------------------------------------------------------------------------------------------------------\n\nexport type PillOption = { id: string; label: string }\n\n/** A segment switch: a dark pill slides to the picked option. A radio group with arrow keys, Home and End. */\nexport function Pills({\n  options,\n  value,\n  onChange,\n  label,\n  className,\n}: {\n  /** The choices, each with an id and the visible label. */\n  options: PillOption[]\n  /** The id of the picked option. */\n  value: string\n  /** Called with the option's id on click and on arrow keys, Home and End. */\n  onChange: (id: string) => void\n  /** Read aloud for the group, e.g. \"Period\". */\n  label: string\n  /** Classes for the radio group. */\n  className?: string\n}) {\n  const refs = useRef<(HTMLButtonElement | null)[]>([])\n  const index = Math.max(0, options.findIndex((o) => o.id === value))\n  const onKey = (e: KeyboardEvent, i: number) => {\n    // Radio groups take both axes: down and right go forward, up and left go back.\n    const key = e.key === 'ArrowDown' ? 'ArrowRight' : e.key === 'ArrowUp' ? 'ArrowLeft' : e.key\n    const to = stepIndex(key, i, options.length, { loop: true })\n    if (to === null) return\n    e.preventDefault()\n    refs.current[to]?.focus()\n    onChange(options[to].id)\n  }\n  return (\n    <div\n      role=\"radiogroup\"\n      aria-label={label}\n      className={cn('relative isolate inline-grid auto-cols-fr grid-flow-col rounded-full bg-muted p-1', className)}\n    >\n      <span\n        aria-hidden\n        className=\"absolute top-1 bottom-1 left-1 -z-10 rounded-full bg-foreground transition-transform duration-[260ms] ease-out-quint motion-reduce:transition-none\"\n        style={{ width: `calc((100% - 8px) / ${options.length})`, transform: `translateX(${index * 100}%)` }}\n      />\n      {options.map((o, i) => (\n        <button\n          key={o.id}\n          ref={(el) => {\n            refs.current[i] = el\n          }}\n          type=\"button\"\n          role=\"radio\"\n          aria-checked={i === index}\n          tabIndex={i === index ? 0 : -1}\n          onClick={() => onChange(o.id)}\n          onKeyDown={(e) => onKey(e, i)}\n          className={cn(\n            'relative min-h-11 cursor-pointer rounded-full px-3.5 text-[13.5px] font-medium whitespace-nowrap focus-visible:outline-offset-0',\n            // The visible pill is 36 px; the hit area reaches the 44 px of the track.\n            'before:absolute before:inset-x-0 before:-inset-y-1 before:content-[\"\"]',\n            i === index ? 'text-card' : 'text-muted-foreground hover:text-foreground',\n          )}\n        >\n          {o.label}\n        </button>\n      ))}\n    </div>\n  )\n}\n\n// Screen readers ------------------------------------------------------------------------------------------------\n\n/** The chart's data as a table only screen readers see. The first column is read as the row heading. */\nexport function SrTable({\n  caption,\n  head,\n  rows,\n}: {\n  /** The table's caption, read before the data. */\n  caption: string\n  /** The column headings. */\n  head: string[]\n  /** One array per row; the first cell is the row heading. */\n  rows: (string | number)[][]\n}) {\n  return (\n    <div className=\"sr-only\">\n      <table>\n        <caption>{caption}</caption>\n        <thead>\n          <tr>\n            {head.map((h) => (\n              <th key={h} scope=\"col\">\n                {h}\n              </th>\n            ))}\n          </tr>\n        </thead>\n        <tbody>\n          {rows.map((r, i) => (\n            <tr key={i}>\n              {r.map((c, j) =>\n                j ? (\n                  <td key={j}>{c}</td>\n                ) : (\n                  <th key={j} scope=\"row\">\n                    {c}\n                  </th>\n                ),\n              )}\n            </tr>\n          ))}\n        </tbody>\n      </table>\n    </div>\n  )\n}\n\n/** One size of a chart in a static file, and the container query classes that show it. */\nexport type StaticPlot = { width: number; height: number; className: string }\n\n/**\n * Inside StaticChartFrame a chart cannot measure, so one fixed width is too small on a phone and too narrow on a\n * desktop. This renders the plot once per size, and the wrapper's own container width shows the one that fits.\n * The others are display: none, so screen readers and the keyboard only meet the one on show.\n */\nexport function StaticPlots({\n  plots,\n  className,\n  style,\n  children,\n}: {\n  /** The sizes to render, each with the container query classes that show it. STATIC_STEPS has four. */\n  plots: StaticPlot[]\n  /** Classes for the wrapper, which is the container the queries measure. */\n  className?: string\n  /** Inline styles for the wrapper. */\n  style?: CSSProperties\n  /** Renders the plot for one size; pass the class name on to the plot's root. */\n  children: (className: string) => ReactNode\n}) {\n  return (\n    <div className={cn('@container min-w-0', className)} style={style}>\n      {plots.map((p) => (\n        <StaticChartFrame.Provider key={p.width} value={{ width: p.width, height: p.height }}>\n          {children(p.className)}\n        </StaticChartFrame.Provider>\n      ))}\n    </div>\n  )\n}\n",
       "type": "registry:component"
     },
     {
@@ -22,7 +22,7 @@
     },
     {
       "path": "registry/manniche/chart-kit/use-chart.tsx",
-      "content": "// The chart hooks: size and draw-in, a polite live region, and unique ids for SVG defs.\nimport { createContext, useCallback, useContext, useEffect, useId, useRef, useState } from 'react'\nimport { useReducedMotion } from '@/registry/manniche/hooks/use-reduced-motion'\n\n/**\n * For a page that is rendered once to static HTML and never hydrated (the lab's template files). Charts measure\n * themselves in the browser, so without this they would draw at width 0, which is nothing. Inside this provider a\n * chart starts at `width` px (and its own default height), counts as drawn and sits at rest, and its SVG scales to\n * its box with the viewBox. In a live app, leave it out: the charts measure themselves as before.\n */\nexport const StaticChartFrame = createContext<{ width: number } | null>(null)\n\n/**\n * Watches an element's size and whether it has come into view. `drawn` turns true once, the first time a fifth of\n * the chart is visible, and at once under reduced motion. The ref is a callback, so a chart that mounts its frame\n * later (after loading, or when data arrives) is still measured.\n */\nexport function useChartFrame<T extends Element = HTMLDivElement>(fallback?: { height?: number }) {\n  const still = useContext(StaticChartFrame)\n  const [node, setNode] = useState<T | null>(null)\n  const [size, setSize] = useState({ width: still?.width ?? 0, height: still ? (fallback?.height ?? 0) : 0 })\n  const [seen, setSeen] = useState(false)\n  const reduced = useReducedMotion()\n\n  useEffect(() => {\n    if (!node) return\n    const ro = new ResizeObserver(([e]) => {\n      const width = Math.round(e.contentRect.width)\n      const height = Math.round(e.contentRect.height)\n      setSize((s) => (s.width === width && s.height === height ? s : { width, height }))\n    })\n    ro.observe(node)\n    return () => ro.disconnect()\n  }, [node])\n\n  useEffect(() => {\n    if (!node || seen) return\n    const io = new IntersectionObserver(\n      ([e]) => {\n        if (e.isIntersecting) setSeen(true)\n      },\n      { threshold: 0.2 },\n    )\n    io.observe(node)\n    return () => io.disconnect()\n  }, [node, seen])\n\n  return { ref: setNode, width: size.width, height: size.height, drawn: seen || reduced || !!still, reduced: reduced || !!still, fit: !!still }\n}\n\n/** A polite live region and a function that reads a sentence into it. Render `region` once inside the chart. */\nexport function useAnnounce() {\n  const [text, setText] = useState('')\n  const timer = useRef(0)\n  const say = useCallback((t: string) => {\n    // Clear first, so the same sentence twice is read twice.\n    setText('')\n    window.clearTimeout(timer.current)\n    timer.current = window.setTimeout(() => setText(t), 30)\n  }, [])\n  useEffect(() => () => window.clearTimeout(timer.current), [])\n  const region = (\n    <span className=\"sr-only\" aria-live=\"polite\" aria-atomic=\"true\">\n      {text}\n    </span>\n  )\n  return { say, region }\n}\n\n/** A stable id prefix for SVG defs (patterns, clip paths) that stays unique per chart. */\nexport function useSvgId(name: string) {\n  return `${name}-${useId().replace(/[^a-zA-Z0-9_-]/g, '')}`\n}\n",
+      "content": "// The chart hooks: size and draw-in, a polite live region, and unique ids for SVG defs.\nimport { createContext, useCallback, useContext, useEffect, useId, useRef, useState } from 'react'\nimport { useReducedMotion } from '@/registry/manniche/hooks/use-reduced-motion'\n\n/**\n * For a page that is rendered once to static HTML and never hydrated (the lab's template files). Charts measure\n * themselves in the browser, so without this they would draw at width 0, which is nothing. Inside this provider a\n * chart starts at `width` px (and its own default height), counts as drawn and sits at rest, and its SVG scales to\n * its box with the viewBox. `height`, when set, replaces the chart's default height. In a live app, leave it out:\n * the charts measure themselves as before.\n */\nexport const StaticChartFrame = createContext<{ width: number; height?: number } | null>(null)\n\n/** Container query classes for four static sizes: a phone, a narrow column, a tablet and a desktop. */\nexport const STATIC_STEPS = ['@min-[420px]:hidden', 'hidden @min-[420px]:block @min-[560px]:hidden', 'hidden @min-[560px]:block @min-[760px]:hidden', 'hidden @min-[760px]:block']\n\n/**\n * Watches an element's size and whether it has come into view. `drawn` turns true once, the first time a fifth of\n * the chart is visible, and at once under reduced motion. The ref is a callback, so a chart that mounts its frame\n * later (after loading, or when data arrives) is still measured.\n */\nexport function useChartFrame<T extends Element = HTMLDivElement>(fallback?: { height?: number }) {\n  const still = useContext(StaticChartFrame)\n  const [node, setNode] = useState<T | null>(null)\n  const [size, setSize] = useState({ width: still?.width ?? 0, height: still ? (still.height ?? fallback?.height ?? 0) : 0 })\n  const [seen, setSeen] = useState(false)\n  const reduced = useReducedMotion()\n\n  useEffect(() => {\n    if (!node) return\n    const ro = new ResizeObserver(([e]) => {\n      const width = Math.round(e.contentRect.width)\n      const height = Math.round(e.contentRect.height)\n      setSize((s) => (s.width === width && s.height === height ? s : { width, height }))\n    })\n    ro.observe(node)\n    return () => ro.disconnect()\n  }, [node])\n\n  useEffect(() => {\n    if (!node || seen) return\n    const io = new IntersectionObserver(\n      ([e]) => {\n        if (e.isIntersecting) setSeen(true)\n      },\n      { threshold: 0.2 },\n    )\n    io.observe(node)\n    return () => io.disconnect()\n  }, [node, seen])\n\n  return { ref: setNode, width: size.width, height: size.height, drawn: seen || reduced || !!still, reduced: reduced || !!still, fit: !!still }\n}\n\n/** A polite live region and a function that reads a sentence into it. Render `region` once inside the chart. */\nexport function useAnnounce() {\n  const [text, setText] = useState('')\n  const timer = useRef(0)\n  const say = useCallback((t: string) => {\n    // Clear first, so the same sentence twice is read twice.\n    setText('')\n    window.clearTimeout(timer.current)\n    timer.current = window.setTimeout(() => setText(t), 30)\n  }, [])\n  useEffect(() => () => window.clearTimeout(timer.current), [])\n  const region = (\n    <span className=\"sr-only\" aria-live=\"polite\" aria-atomic=\"true\">\n      {text}\n    </span>\n  )\n  return { say, region }\n}\n\n/** A stable id prefix for SVG defs (patterns, clip paths) that stays unique per chart. */\nexport function useSvgId(name: string) {\n  return `${name}-${useId().replace(/[^a-zA-Z0-9_-]/g, '')}`\n}\n",
       "type": "registry:component"
     },
     {
@@ -101,7 +101,7 @@
             "type": "boolean",
             "default": null,
             "required": true,
-            "description": null
+            "description": "Shows the tooltip. It fades and scales out when false."
           },
           {
             "name": "x",
@@ -115,7 +115,7 @@
             "type": "number",
             "default": null,
             "required": true,
-            "description": null
+            "description": "The vertical point in px inside the wrapper. The tooltip sits 12 px above it, or below with `below`."
           },
           {
             "name": "bounds",
@@ -150,7 +150,7 @@
             "type": "TooltipRow[]",
             "default": "[]",
             "required": false,
-            "description": null
+            "description": "Extra lines under the figure, each with a label, a value and an optional colour key."
           }
         ]
       },
@@ -162,14 +162,14 @@
             "type": "number",
             "default": null,
             "required": true,
-            "description": null
+            "description": "The number to show. Screen readers get it whole and formatted."
           },
           {
             "name": "format",
             "type": "ValueFormat",
             "default": null,
             "required": false,
-            "description": null
+            "description": "Decimals, unit, suffix and sign, as in chart-utils `formatValue`."
           },
           {
             "name": "size",
@@ -190,7 +190,7 @@
             "type": "string",
             "default": null,
             "required": false,
-            "description": null
+            "description": "Classes for the outer span."
           }
         ]
       },
@@ -202,14 +202,14 @@
             "type": "string",
             "default": null,
             "required": true,
-            "description": null
+            "description": "The digits as already formatted text. Each place rolls on its own."
           },
           {
             "name": "roll",
             "type": "boolean",
             "default": "true",
             "required": false,
-            "description": null
+            "description": "Roll the digits that change. Default true; never under reduced motion."
           }
         ]
       },
@@ -221,28 +221,35 @@
             "type": "number",
             "default": null,
             "required": true,
-            "description": null
+            "description": "The change. Its sign sets the arrow; the figure is shown without a sign."
           },
           {
             "name": "format",
             "type": "ValueFormat",
             "default": "{ decimals: 1, suffix: '%' }",
             "required": false,
-            "description": null
+            "description": "How the figure is written. Default one decimal with a % suffix."
           },
           {
             "name": "goodWhen",
             "type": "'up' | 'down'",
             "default": "'up'",
             "required": false,
-            "description": null
+            "description": "Which way is good: green then, red the other way. Default \"up\"; use \"down\" for costs."
           },
           {
             "name": "className",
             "type": "string",
             "default": null,
             "required": false,
-            "description": null
+            "description": "Classes for the pill."
+          },
+          {
+            "name": "labels",
+            "type": "{ up?: string; down?: string; unchanged?: string }",
+            "default": "{}",
+            "required": false,
+            "description": "Screen reader text after the figure. Keys up, down and unchanged; English by default."
           }
         ]
       },
@@ -254,21 +261,21 @@
             "type": "PillOption[]",
             "default": null,
             "required": true,
-            "description": null
+            "description": "The choices, each with an id and the visible label."
           },
           {
             "name": "value",
             "type": "string",
             "default": null,
             "required": true,
-            "description": null
+            "description": "The id of the picked option."
           },
           {
             "name": "onChange",
             "type": "(id: string) => void",
             "default": null,
             "required": true,
-            "description": null
+            "description": "Called with the option's id on click and on arrow keys, Home and End."
           },
           {
             "name": "label",
@@ -282,7 +289,7 @@
             "type": "string",
             "default": null,
             "required": false,
-            "description": null
+            "description": "Classes for the radio group."
           }
         ]
       },
@@ -294,21 +301,54 @@
             "type": "string",
             "default": null,
             "required": true,
-            "description": null
+            "description": "The table's caption, read before the data."
           },
           {
             "name": "head",
             "type": "string[]",
             "default": null,
             "required": true,
-            "description": null
+            "description": "The column headings."
           },
           {
             "name": "rows",
             "type": "(string | number)[][]",
             "default": null,
             "required": true,
-            "description": null
+            "description": "One array per row; the first cell is the row heading."
+          }
+        ]
+      },
+      {
+        "name": "StaticPlots",
+        "props": [
+          {
+            "name": "plots",
+            "type": "StaticPlot[]",
+            "default": null,
+            "required": true,
+            "description": "The sizes to render, each with the container query classes that show it. STATIC_STEPS has four."
+          },
+          {
+            "name": "className",
+            "type": "string",
+            "default": null,
+            "required": false,
+            "description": "Classes for the wrapper, which is the container the queries measure."
+          },
+          {
+            "name": "style",
+            "type": "CSSProperties",
+            "default": null,
+            "required": false,
+            "description": "Inline styles for the wrapper."
+          },
+          {
+            "name": "children",
+            "type": "(className: string) => ReactNode",
+            "default": null,
+            "required": true,
+            "description": "Renders the plot for one size; pass the class name on to the plot's root."
           }
         ]
       }
@@ -316,7 +356,7 @@
     "a11y": [
       {
         "topic": "screen-reader",
-        "text": "BigNumber carries the full value in sr-only text and the visual is aria-hidden. DeltaPill adds \", up\", \", down\" or \", unchanged\". ChartTooltip is aria-hidden. SrTable is a visually hidden table with a caption and column headers with scope."
+        "text": "BigNumber carries the full value in sr-only text and the visual is aria-hidden. DeltaPill adds up, down or unchanged after the figure, from its labels. ChartTooltip is aria-hidden. SrTable is a visually hidden table with a caption and column headers with scope."
       },
       {
         "topic": "keyboard",

@@ -1,16 +1,17 @@
 // A full landing page for a small shop. Every interaction is plain HTML and CSS (details, :hover, :focus-within),
 // so the same markup works as React and as a static page. Colours come from the theme tokens.
 import { ArrowRight, Leaf, Menu, RotateCcw, Search, ShieldCheck, ShoppingBag, Star, Truck, X } from 'lucide-react'
+import { useId } from 'react'
 import { cn } from '@/lib/utils'
 import { ProductArt, type ProductArtKind } from './product-art'
 
 const nav = ['Shop', 'Collections', 'Journal', 'About']
 
-const products: { name: string; price: string; kind: ProductArtKind; colours: string[]; badge?: string }[] = [
-  { name: 'Morning mug', price: '€24', kind: 'mug', colours: ['bg-primary', 'bg-foreground/70', 'bg-muted-foreground/40'], badge: 'New' },
-  { name: 'Tall vase', price: '€58', kind: 'vase', colours: ['bg-primary', 'bg-foreground/70'] },
-  { name: 'Serving bowl', price: '€42', kind: 'bowl', colours: ['bg-primary', 'bg-muted-foreground/40'] },
-  { name: 'Water carafe', price: '€36', kind: 'carafe', colours: ['bg-primary/40'], badge: 'Back in stock' },
+const products: { name: string; price: string; kind: ProductArtKind; colours: [cls: string, name: string][]; badge?: string }[] = [
+  { name: 'Morning mug', price: '€24', kind: 'mug', colours: [['bg-primary', 'Green'], ['bg-foreground/70', 'Charcoal'], ['bg-muted-foreground/40', 'Sand']], badge: 'New' },
+  { name: 'Tall vase', price: '€58', kind: 'vase', colours: [['bg-primary', 'Green'], ['bg-foreground/70', 'Charcoal']] },
+  { name: 'Serving bowl', price: '€42', kind: 'bowl', colours: [['bg-primary', 'Green'], ['bg-muted-foreground/40', 'Sand']] },
+  { name: 'Water carafe', price: '€36', kind: 'carafe', colours: [['bg-primary/40', 'Pale green']], badge: 'Back in stock' },
 ]
 
 const promises = [
@@ -55,8 +56,25 @@ function Stars({ className }: { className?: string }) {
   )
 }
 
+export type ShopLandingLabels = {
+  /** Text of the button on each product card. Default: "Add to bag". */
+  addToBag?: string
+  /** Screen reader and visible text for the number of colours of a product, from the count. Default: "{n} colours" ("1 colour" for one). */
+  colours?: (count: number) => string
+}
+
+export type ShopLandingProps = {
+  /** Called with the product name and price when a product's "Add to bag" button is pressed. Without it the button does nothing. */
+  onAddToBag?: (product: { name: string; price: string }) => void
+  /** Visible text and screen reader text, with English defaults. Keys: addToBag, colours. */
+  labels?: ShopLandingLabels
+}
+
 /** Landing page for a homeware shop: hero, promises, products, collections, story, reviews, FAQ and newsletter. */
-export function ShopLanding() {
+export function ShopLanding({ onAddToBag, labels = {} }: ShopLandingProps) {
+  const { addToBag = 'Add to bag', colours = (n: number) => (n === 1 ? '1 colour' : `${n} colours`) } = labels
+  // Prefix for the newsletter field id, so two of these on one page never share it.
+  const uid = useId()
   return (
     <div id="top" className="min-h-dvh bg-background font-sans text-foreground antialiased">
       <p className="bg-foreground px-4 py-2 text-center text-xs text-background sm:text-sm">Free delivery over €60 · Returns within 30 days</p>
@@ -119,7 +137,7 @@ export function ShopLanding() {
             <div className="mt-8 flex flex-wrap gap-3">
               <a
                 href="#shop"
-                className="inline-flex min-h-12 items-center gap-2 rounded-full bg-primary px-6 font-medium text-primary-foreground shadow-sm transition hover:opacity-90 active:scale-[0.98]"
+                className="inline-flex min-h-12 items-center gap-2 rounded-full bg-primary px-6 font-medium text-primary-foreground shadow-sm transition hover:opacity-90 active:scale-[0.98] motion-reduce:active:scale-100 motion-reduce:transition-none"
               >
                 Shop the edit <ArrowRight className="size-4" aria-hidden />
               </a>
@@ -192,14 +210,19 @@ export function ShopLanding() {
           <ul className="mt-10 grid grid-cols-2 gap-x-4 gap-y-10 lg:grid-cols-4">
             {products.map((p) => (
               <li key={p.name} className="group relative">
-                <div className="relative aspect-[4/5] overflow-hidden rounded-3xl bg-muted p-6 transition duration-300 group-hover:-translate-y-1 group-hover:shadow-lg">
-                  <div className="h-full transition duration-500 group-hover:scale-105">
+                <div className="pointer-events-none relative z-10 aspect-[4/5] overflow-hidden rounded-3xl bg-muted p-6 transition duration-300 group-hover:-translate-y-1 group-hover:shadow-lg motion-reduce:transition-none motion-reduce:group-hover:translate-y-0">
+                  <div className="h-full transition duration-500 group-hover:scale-105 motion-reduce:transition-none motion-reduce:group-hover:scale-100">
                     <ProductArt kind={p.kind} />
                   </div>
                   {p.badge && <span className="absolute top-3 left-3 rounded-full bg-card px-2.5 py-1 text-xs font-medium shadow-sm">{p.badge}</span>}
-                  <span className="absolute inset-x-3 bottom-3 translate-y-2 rounded-full bg-foreground py-2.5 text-center text-sm font-medium text-background opacity-0 transition duration-200 group-focus-within:translate-y-0 group-focus-within:opacity-100 group-hover:translate-y-0 group-hover:opacity-100">
-                    Add to bag
-                  </span>
+                  <button
+                    type="button"
+                    onClick={() => onAddToBag?.({ name: p.name, price: p.price })}
+                    className="pointer-events-auto absolute inset-x-3 bottom-3 min-h-11 translate-y-2 rounded-full bg-foreground py-2.5 text-center text-sm font-medium text-background opacity-0 transition duration-200 group-focus-within:translate-y-0 group-focus-within:opacity-100 group-hover:translate-y-0 group-hover:opacity-100 motion-reduce:translate-y-0 motion-reduce:transition-none"
+                  >
+                    {addToBag}
+                    <span className="sr-only">: {p.name}</span>
+                  </button>
                 </div>
                 <div className="mt-4 flex items-start justify-between gap-2">
                   <h3 className="font-medium">
@@ -209,11 +232,16 @@ export function ShopLanding() {
                   </h3>
                   <span className="font-medium">{p.price}</span>
                 </div>
-                <p className="mt-2 flex gap-1.5" aria-label={`${p.colours.length} colours`}>
-                  {p.colours.map((c) => (
-                    <span key={c} className={cn('size-3.5 rounded-full ring-1 ring-border', c)} />
-                  ))}
-                </p>
+                <div className="mt-2 flex items-center gap-2">
+                  <ul className="flex gap-1.5">
+                    {p.colours.map(([cls, name]) => (
+                      <li key={cls} className={cn('size-3.5 rounded-full ring-1 ring-border', cls)}>
+                        <span className="sr-only">{name}</span>
+                      </li>
+                    ))}
+                  </ul>
+                  <p className="text-xs text-muted-foreground">{colours(p.colours.length)}</p>
+                </div>
               </li>
             ))}
           </ul>
@@ -231,9 +259,9 @@ export function ShopLanding() {
               <a
                 key={c.title}
                 href="#collections"
-                className={cn('group flex flex-col justify-between overflow-hidden rounded-[2rem] p-6 transition hover:shadow-lg', c.cls)}
+                className={cn('group flex flex-col justify-between overflow-hidden rounded-[2rem] p-6 transition hover:shadow-lg motion-reduce:transition-none', c.cls)}
               >
-                <div className={cn('mx-auto h-40 w-full max-w-xs transition duration-500 group-hover:scale-105', c.art)}>
+                <div className={cn('mx-auto h-40 w-full max-w-xs transition duration-500 group-hover:scale-105 motion-reduce:transition-none motion-reduce:group-hover:scale-100', c.art)}>
                   <ProductArt kind={c.kind} />
                 </div>
                 <div className="mt-6 flex items-end justify-between">
@@ -241,7 +269,7 @@ export function ShopLanding() {
                     <h3 className="text-xl font-semibold">{c.title}</h3>
                     <p className="text-sm text-muted-foreground">{c.count}</p>
                   </div>
-                  <span className="grid size-11 place-items-center rounded-full bg-card shadow-sm transition group-hover:translate-x-1">
+                  <span className="grid size-11 place-items-center rounded-full bg-card shadow-sm transition group-hover:translate-x-1 motion-reduce:transition-none motion-reduce:group-hover:translate-x-0">
                     <ArrowRight className="size-4" aria-hidden />
                   </span>
                 </div>
@@ -323,7 +351,7 @@ export function ShopLanding() {
                 <summary className="flex min-h-12 cursor-pointer list-none items-center justify-between gap-4 font-medium [&::-webkit-details-marker]:hidden">
                   {q}
                   <span
-                    className="grid size-8 shrink-0 place-items-center rounded-full bg-muted transition-transform duration-200 group-open:rotate-45"
+                    className="grid size-8 shrink-0 place-items-center rounded-full bg-muted transition-transform duration-200 group-open:rotate-45 motion-reduce:transition-none"
                     aria-hidden
                   >
                     +
@@ -343,11 +371,11 @@ export function ShopLanding() {
             <h2 className="relative font-serif text-3xl tracking-tight sm:text-4xl">10% off your first order</h2>
             <p className="relative mx-auto mt-3 max-w-md opacity-85">One letter a month with new pieces and the stories behind them. No spam.</p>
             <form className="relative mx-auto mt-8 flex max-w-md flex-col gap-2 sm:flex-row" action="#">
-              <label htmlFor="nl-email" className="sr-only">
+              <label htmlFor={`${uid}nl-email`} className="sr-only">
                 Email
               </label>
               <input
-                id="nl-email"
+                id={`${uid}nl-email`}
                 type="email"
                 required
                 placeholder="you@example.com"
@@ -355,7 +383,7 @@ export function ShopLanding() {
               />
               <button
                 type="submit"
-                className="min-h-12 rounded-full bg-foreground px-6 font-medium text-background transition hover:opacity-90 active:scale-[0.98]"
+                className="min-h-12 rounded-full bg-foreground px-6 font-medium text-background transition hover:opacity-90 active:scale-[0.98] motion-reduce:active:scale-100 motion-reduce:transition-none"
               >
                 Subscribe
               </button>
