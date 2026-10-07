@@ -1,5 +1,6 @@
 import { AnimatePresence, MotionConfig, motion } from 'motion/react'
 import { useEffect, useState } from 'react'
+import { useReducedMotion } from '@/registry/manniche/hooks/use-reduced-motion'
 import { cn } from '@/lib/utils'
 
 export type FlipWordsProps = {
@@ -9,6 +10,7 @@ export type FlipWordsProps = {
   interval?: number
   /** How many rounds before it stops on the last word, so it never moves forever. 0 keeps going. */
   rounds?: number
+  /** Classes for the outer inline element. */
   className?: string
 }
 
@@ -20,7 +22,8 @@ export type FlipWordsProps = {
 export function FlipWords({ words, interval = 2600, rounds = 3, className }: FlipWordsProps) {
   const [i, setI] = useState(0)
   const [paused, setPaused] = useState(false)
-  const [still] = useState(() => typeof matchMedia !== 'undefined' && matchMedia('(prefers-reduced-motion: reduce)').matches)
+  // Follows the system setting live; motion's own hook reads it once at mount and never updates.
+  const still = useReducedMotion()
   const done = rounds > 0 && i >= words.length * rounds - 1
 
   useEffect(() => {

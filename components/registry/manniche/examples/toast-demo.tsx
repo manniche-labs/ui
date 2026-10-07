@@ -11,6 +11,13 @@ export default function ToastDemo() {
       >
         Archive order
       </button>
+      <button
+        type="button"
+        className="ml-2 min-h-11 rounded-xl border bg-card px-4 text-sm font-medium"
+        onClick={() => toast('Payment failed', { tone: 'error', description: 'Check the card number and try again.' })}
+      >
+        Show an error
+      </button>
       <Toaster />
     </>
   )
