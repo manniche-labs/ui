@@ -25,6 +25,7 @@ export type CurveCarouselProps = Omit<HTMLAttributes<HTMLElement>, 'onChange'> &
   aspect?: number
   /** Show the previous and next buttons and the position rule. */
   controls?: boolean
+  /** Screen reader and button text with English defaults. Keys: `previous`, `next`, `slide`, `of` and `slides`. */
   labels?: Partial<Record<'previous' | 'next' | 'slide' | 'of' | 'slides', string>>
 }
 

@@ -2,7 +2,7 @@
 // github.com/WatermelonCorp/watermelon-platform). Rewritten as a list of rows that open into a detail card, with no brand icons.
 import { Check, Plus, X } from 'lucide-react'
 import { AnimatePresence, MotionConfig, motion } from 'motion/react'
-import { useEffect, useId, useRef, useState, type ReactNode } from 'react'
+import { useEffect, useId, useRef, useState, type KeyboardEvent as ReactKeyboardEvent, type ReactNode } from 'react'
 import { cn } from '@/lib/utils'
 
 export type Integration = {
@@ -18,15 +18,25 @@ export type Integration = {
 }
 
 export type IntegrationCardProps = {
+  /** The heading of the list, also the name of the card. Default “Integrations”. */
   title?: string
+  /** The integrations to list; each row opens into a detail dialog. */
   items: Integration[]
+  /** Called with the item id and the new state when the connect button is pressed. The state changes once the returned promise resolves. */
   onConnectChange?: (id: string, connected: boolean) => Promise<void> | void
+  /** The text on the button that connects an integration. Default “Connect”. */
   connectLabel?: string
+  /** The text on the badge of a connected row. Default “Connected”. */
   connectedLabel?: string
+  /** The text on the button that disconnects an integration. Default “Disconnect”. */
   disconnectLabel?: string
+  /** The heading above the triggers list in the dialog. Default “Triggers”. */
   triggersLabel?: string
+  /** The heading above the actions list in the dialog. Default “Actions”. */
   actionsLabel?: string
+  /** The accessible name of the close button in the dialog. Default “Close”. */
   closeLabel?: string
+  /** Classes for the outer section. */
   className?: string
 }
 
@@ -49,11 +59,41 @@ export function IntegrationCard({
   const base = useId()
   const rows = useRef<Record<string, HTMLButtonElement | null>>({})
   const closeRef = useRef<HTMLButtonElement>(null)
+  const dialogRef = useRef<HTMLDivElement>(null)
   const open = items.find((i) => i.id === openId)
 
   useEffect(() => {
-    if (open) closeRef.current?.focus()
+    if (!open) return
+    closeRef.current?.focus()
+    // The dialog is modal: if focus lands anywhere outside it (a click, a script), pull it back in.
+    const back = (e: FocusEvent) => {
+      if (dialogRef.current && e.target instanceof Node && !dialogRef.current.contains(e.target)) closeRef.current?.focus()
+    }
+    document.addEventListener('focusin', back)
+    return () => document.removeEventListener('focusin', back)
   }, [open])
+
+  // Keeps Tab and Shift+Tab inside the open dialog, and Escape closes it.
+  const trap = (e: ReactKeyboardEvent<HTMLDivElement>) => {
+    if (e.key === 'Escape') {
+      e.stopPropagation()
+      close()
+      return
+    }
+    if (e.key !== 'Tab') return
+    const items = Array.from(e.currentTarget.querySelectorAll<HTMLElement>('button:not([disabled]), [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'))
+    if (!items.length) return
+    const first = items[0]
+    const lastItem = items[items.length - 1]
+    const active = document.activeElement
+    if (e.shiftKey && (active === first || !e.currentTarget.contains(active))) {
+      e.preventDefault()
+      lastItem.focus()
+    } else if (!e.shiftKey && (active === lastItem || !e.currentTarget.contains(active))) {
+      e.preventDefault()
+      first.focus()
+    }
+  }
 
   const close = () => {
     const id = openId
@@ -122,10 +162,11 @@ export function IntegrationCard({
             <motion.div
               key={open.id}
               layout="position"
+              ref={dialogRef}
               role="dialog"
-              aria-modal="false"
+              aria-modal="true"
               aria-labelledby={`${base}-title`}
-              onKeyDown={(e) => e.key === 'Escape' && close()}
+              onKeyDown={trap}
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
