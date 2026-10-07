@@ -209,7 +209,7 @@ export function FooterDesk({
                   <a
                     href={bookCall.href}
                     {...(bookCall.external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
-                    className={cn(pill, 'bg-foreground text-background transition-[transform] duration-200 ease-out-quint active:scale-[0.98]')}
+                    className={cn(pill, 'bg-foreground text-background transition-[transform] duration-200 ease-out-quint active:scale-[0.98] motion-reduce:transition-none motion-reduce:active:scale-100')}
                   >
                     {bookCall.label}
                     <ArrowUpRight aria-hidden className="size-4" />

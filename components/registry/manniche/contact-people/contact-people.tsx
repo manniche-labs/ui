@@ -26,8 +26,11 @@ export type ContactPerson = {
 export type ContactPeopleProps = Omit<HTMLAttributes<HTMLElement>, 'title'> & {
   /** The section heading (h2). */
   heading: ReactNode
+  /** One line under the heading. */
   intro?: ReactNode
+  /** The people to list, each with contact details. */
   people: ContactPerson[]
+  /** Visible text and screen reader text, with English defaults. */
   labels?: { all?: string; filter?: string; copy?: string; copied?: string; failed?: string; book?: string; languages?: string; shown?: (n: number) => string }
 }
 

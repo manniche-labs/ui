@@ -8,6 +8,7 @@ import { Dial, type DialZone } from '@/registry/manniche/dial/dial'
 import { TransactionList, type Transaction } from '@/registry/manniche/transaction-list/transaction-list'
 
 export type AccountHomeProps = {
+  /** The card, balance, spending pace, budget, transactions and optional category names to show. */
   data: {
     card: StackCard
     balance: number
@@ -18,14 +19,19 @@ export type AccountHomeProps = {
     transactions: Transaction[]
     categories?: Record<string, string>
   }
+  /** How amounts are formatted. Default euro with two decimals. */
   format?: ValueFormat
+  /** The page heading (h1). Default "Account". */
   title?: string
+  /** Footer text on the balance tile. Default "Example data." */
   note?: string
   /** "YYYY-MM-DD" of today, so the list reads "Today" and "Yesterday". Default the day of `now`. */
   today?: string
   /** The current time. Used for `today` when that is not given. */
   now?: Date
+  /** Visible text and screen reader text, with English defaults. */
   labels?: { card?: string; balance?: string; pace?: string; paceCaption?: string; transactions?: string; budget?: string; zones?: [string, string, string] }
+  /** Classes for the outer container. */
   className?: string
 }
 

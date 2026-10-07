@@ -13,6 +13,7 @@ export type WalletSubscription = { id: string; name: string; amount: number; ren
 export type WalletPeriod = { id: string; label: string; long: string; flow: BarPoint[]; spending: DonutDatum[] }
 
 export type WalletDashboardProps = {
+  /** The balance, cards, spending periods and subscriptions to show. */
   data: {
     balance: number
     change: number
@@ -20,9 +21,13 @@ export type WalletDashboardProps = {
     periods: WalletPeriod[]
     subscriptions: WalletSubscription[]
   }
+  /** How amounts are formatted. Default euro with two decimals. */
   format?: ValueFormat
+  /** The page heading (h1). Default "Wallet". */
   title?: string
+  /** Footer text on the balance tile. Default "Example data." */
   note?: string
+  /** Visible text and screen reader text, with English defaults. */
   labels?: {
     balance?: string
     cards?: string
@@ -36,6 +41,7 @@ export type WalletDashboardProps = {
   }
   /** Reserved for date-aware content; the screen itself is static. */
   now?: Date
+  /** Classes for the outer container. */
   className?: string
 }
 

@@ -18,12 +18,19 @@ export type WalletCurrency = {
 }
 
 export type CurrencyWalletProps = {
+  /** One entry per currency, each with its balance, rewards, spending and allocation. */
   data: WalletCurrency[]
+  /** The currency code selected first. Default the first entry in `data`. */
   defaultCurrency?: string
+  /** The page heading (h1). Default "Currency wallet". */
   title?: string
+  /** Footer text on the balance tile. Default "Example data." */
   note?: string
+  /** Not read yet; the screen does not depend on the date. */
   now?: Date
+  /** Visible text and screen reader text, with English defaults. */
   labels?: { currency?: string; balance?: string; rewards?: string; spending?: string; allocation?: string; points?: string; toNext?: (n: number, tier: string) => string }
+  /** Classes for the outer container. */
   className?: string
 }
 

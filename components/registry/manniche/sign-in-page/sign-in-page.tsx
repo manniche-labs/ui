@@ -1,6 +1,7 @@
 // A split-screen sign-in page. "Sign in" and "Create account" share one form and swap with two radio buttons and :has(),
 // and fields show their error state with :user-invalid, so it all works without JavaScript. Colours come from the theme tokens.
 import { ArrowRight, Fingerprint, KeyRound, Mail, Star } from 'lucide-react'
+import { useRef, useState } from 'react'
 
 function Logo({ className }: { className?: string }) {
   return (
@@ -17,8 +18,40 @@ function Logo({ className }: { className?: string }) {
 const field =
   'peer h-11 w-full rounded-xl border bg-card px-3.5 text-sm outline-none transition-[border-color,box-shadow] duration-150 placeholder:text-muted-foreground/70 hover:border-foreground/25 focus:border-ring focus:ring-4 focus:ring-ring/15 user-invalid:border-destructive user-invalid:ring-destructive/15'
 
+export type SignInPageLabels = {
+  /** Error text under the email field. Default: "Enter an email address like name@shop.com." */
+  emailError?: string
+  /** Error text under the password field. Default: "Use at least 8 characters." */
+  passwordError?: string
+  /** Screen reader name of the five stars next to the customer quote. Default: "5 out of 5". */
+  rating?: string
+}
+
+export type SignInPageProps = {
+  /** Visible text and screen reader text, with English defaults. Keys: emailError, passwordError, rating. */
+  labels?: SignInPageLabels
+}
+
 /** Sign-in page: form with passkey, email link and password, a sign-up variant, and a brand panel with a customer quote. */
-export function SignInPage() {
+export function SignInPage({ labels = {} }: SignInPageProps) {
+  const { emailError = 'Enter an email address like name@shop.com.', passwordError = 'Use at least 8 characters.', rating = '5 out of 5' } = labels
+  // The error texts show through :user-invalid alone. This state only mirrors it into aria-invalid and aria-describedby,
+  // so a screen reader is not given the error text as a description while the field is fine.
+  const [invalid, setInvalid] = useState({ email: false, password: false })
+  const dirty = useRef({ email: false, password: false })
+  const mark = (name: 'email' | 'password', bad: boolean) => setInvalid((v) => (v[name] === bad ? v : { ...v, [name]: bad }))
+  const track = (name: 'email' | 'password') => ({
+    onChange: (e: React.ChangeEvent<HTMLInputElement>) => {
+      dirty.current[name] = true
+      if (invalid[name]) mark(name, !e.currentTarget.validity.valid)
+    },
+    onBlur: (e: React.FocusEvent<HTMLInputElement>) => {
+      if (dirty.current[name]) mark(name, !e.currentTarget.validity.valid)
+    },
+    onInvalid: () => mark(name, true),
+    'aria-invalid': invalid[name] || undefined,
+    'aria-describedby': invalid[name] ? `auth-${name}-error` : undefined,
+  })
   return (
     <div id="top" className="group/auth grid min-h-dvh bg-background font-sans text-foreground antialiased lg:grid-cols-2">
       <div className="flex flex-col px-4 py-6 sm:px-10">
@@ -30,7 +63,7 @@ export function SignInPage() {
         </div>
 
         <main className="mx-auto flex w-full max-w-sm flex-1 flex-col justify-center py-12">
-          <div className="transition-[opacity,translate] duration-500 ease-out-quint starting:translate-y-2 starting:opacity-0">
+          <div className="transition-[opacity,translate] duration-500 ease-out-quint starting:translate-y-2 starting:opacity-0 motion-reduce:transition-none motion-reduce:starting:translate-y-0 motion-reduce:starting:opacity-100">
             <h1 className="text-3xl font-semibold tracking-tight">
               <span className="group-has-[[value=signup]:checked]/auth:hidden">Welcome back</span>
               <span className="hidden group-has-[[value=signup]:checked]/auth:inline">Open your shop</span>
@@ -58,7 +91,7 @@ export function SignInPage() {
 
             <button
               type="button"
-              className="mt-6 flex h-11 w-full items-center justify-center gap-2 rounded-xl border bg-card text-sm font-medium transition-[background-color,scale] duration-150 ease-out hover:bg-muted active:scale-[0.98]"
+              className="mt-6 flex h-11 w-full items-center justify-center gap-2 rounded-xl border bg-card text-sm font-medium transition-[background-color,scale] duration-150 ease-out hover:bg-muted active:scale-[0.98] motion-reduce:transition-none motion-reduce:active:scale-100"
             >
               <Fingerprint className="size-4 text-primary" aria-hidden />
               Continue with a passkey
@@ -83,12 +116,14 @@ export function SignInPage() {
                   Email
                 </label>
                 <div className="relative">
-                  <input id="auth-email" name="email" type="email" required autoComplete="email" placeholder="you@shop.com" className={`${field} pl-10`} />
+                  <input id="auth-email" name="email" type="email" required autoComplete="email" placeholder="you@shop.com" className={`${field} pl-10`} {...track('email')} />
                   <Mail
                     className="pointer-events-none absolute top-5.5 left-3.5 size-4 -translate-y-1/2 text-muted-foreground peer-focus:text-primary"
                     aria-hidden
                   />
-                  <p className="mt-1.5 hidden text-xs text-destructive peer-user-invalid:block">Enter an email address like name@shop.com.</p>
+                  <p id="auth-email-error" className="mt-1.5 hidden text-xs text-destructive peer-user-invalid:block">
+                    {emailError}
+                  </p>
                 </div>
               </div>
 
@@ -114,12 +149,15 @@ export function SignInPage() {
                     autoComplete="current-password"
                     placeholder="At least 8 characters"
                     className={`${field} pl-10`}
+                    {...track('password')}
                   />
                   <KeyRound
                     className="pointer-events-none absolute top-5.5 left-3.5 size-4 -translate-y-1/2 text-muted-foreground peer-focus:text-primary"
                     aria-hidden
                   />
-                  <p className="mt-1.5 hidden text-xs text-destructive peer-user-invalid:block">Use at least 8 characters.</p>
+                  <p id="auth-password-error" className="mt-1.5 hidden text-xs text-destructive peer-user-invalid:block">
+                    {passwordError}
+                  </p>
                 </div>
               </div>
 
@@ -134,11 +172,11 @@ export function SignInPage() {
 
               <button
                 type="submit"
-                className="group/submit flex h-11 w-full items-center justify-center gap-2 rounded-xl bg-primary text-sm font-medium text-primary-foreground shadow-sm shadow-primary/30 transition-[filter,scale] duration-150 ease-out hover:brightness-110 active:scale-[0.98]"
+                className="group/submit flex h-11 w-full items-center justify-center gap-2 rounded-xl bg-primary text-sm font-medium text-primary-foreground shadow-sm shadow-primary/30 transition-[filter,scale] duration-150 ease-out hover:brightness-110 active:scale-[0.98] motion-reduce:transition-none motion-reduce:active:scale-100"
               >
                 <span className="group-has-[[value=signup]:checked]/auth:hidden">Sign in</span>
                 <span className="hidden group-has-[[value=signup]:checked]/auth:inline">Create account</span>
-                <ArrowRight className="size-4 transition-transform duration-200 group-hover/submit:translate-x-0.5" aria-hidden />
+                <ArrowRight className="size-4 transition-transform duration-200 group-hover/submit:translate-x-0.5 motion-reduce:transition-none motion-reduce:group-hover/submit:translate-x-0" aria-hidden />
               </button>
             </form>
 
@@ -179,7 +217,7 @@ export function SignInPage() {
             ].map(([n, l]) => (
               <li
                 key={l}
-                className="rounded-2xl bg-primary-foreground/10 p-4 backdrop-blur-sm transition-[opacity,translate] duration-700 ease-out-quint starting:translate-y-3 starting:opacity-0"
+                className="rounded-2xl bg-primary-foreground/10 p-4 backdrop-blur-sm transition-[opacity,translate] duration-700 ease-out-quint starting:translate-y-3 starting:opacity-0 motion-reduce:transition-none motion-reduce:starting:translate-y-0 motion-reduce:starting:opacity-100"
               >
                 <p className="text-2xl font-semibold tracking-tight">{n}</p>
                 <p className="text-sm text-primary-foreground/75">{l}</p>
@@ -187,7 +225,7 @@ export function SignInPage() {
             ))}
           </ul>
           <figure>
-            <span className="flex gap-0.5" aria-label="5 out of 5">
+            <span role="img" aria-label={rating} className="flex gap-0.5">
               {Array.from({ length: 5 }, (_, i) => (
                 <Star key={i} className="size-4 fill-current" aria-hidden />
               ))}

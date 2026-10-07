@@ -299,15 +299,10 @@ export function FooterColumns({
       <div className="mx-auto w-full max-w-6xl px-4 py-12 @min-[40rem]:py-16 sm:px-6">
         <div
           className={cn(
-            'grid gap-x-12 gap-y-10',
+            'grid gap-x-12 gap-y-10 [reading-flow:grid-order]',
             newsletter && '@min-[56rem]:grid-cols-[minmax(0,1fr)_minmax(18rem,22rem)] @min-[56rem]:items-start',
           )}
         >
-          {newsletter && (
-            <div className="order-first min-w-0 @min-[56rem]:order-last">
-              <NewsletterTile data={newsletter} labels={l} />
-            </div>
-          )}
           <div className="grid min-w-0 gap-10">
             <div className="max-w-sm">
               <div className="text-lg font-semibold tracking-[-0.02em]" style={{ fontFamily: 'var(--font-display, inherit)' }}>
@@ -332,6 +327,13 @@ export function FooterColumns({
               </div>
             </nav>
           </div>
+          {newsletter && (
+            // Last in the DOM, so the Tab order follows the wide layout (columns, then newsletter). On narrow boxes it is shown
+            // first; reading-flow lets browsers that support it keep the Tab order in step with that.
+            <div className="order-first min-w-0 @min-[56rem]:order-none">
+              <NewsletterTile data={newsletter} labels={l} />
+            </div>
+          )}
         </div>
 
         <div className="mt-12 flex flex-col gap-x-8 gap-y-2 border-t border-border pt-4 @min-[40rem]:flex-row @min-[40rem]:items-center @min-[40rem]:justify-between">

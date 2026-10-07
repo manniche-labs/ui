@@ -32,11 +32,17 @@ export type SpendControlLabels = {
 }
 
 export type SpendControlProps = {
+  /** The navigation items, spending bars, virtual cards, merchants and upsell tile to show. */
   data: SpendControlData
+  /** Visible text and screen reader text, with English defaults. Keys: title, cards, spending, merchants, limit, frozen, note, navLabel. */
   labels?: SpendControlLabels
+  /** The current time. When given, its date is shown in the header. */
   now?: Date
+  /** ISO 4217 currency code for all amounts. Default "EUR". */
   currency?: string
+  /** Called with no arguments when the upsell tile's button is pressed. */
   onUpsell?: () => void
+  /** Classes for the outer container. */
   className?: string
 }
 
