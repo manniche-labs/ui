@@ -158,6 +158,23 @@ const EASE = 'cubic-bezier(0.23, 1, 0.32, 1)'
 const noop = () => () => {}
 const isMac = () => /Mac|iPhone|iPad|iPod/.test(navigator.platform || navigator.userAgent)
 
+// Another modal is up when a native modal dialog is open, or a visible dialog from a library such as Radix
+// (role=dialog, alertdialog or aria-modal). `own` and what is inside it do not count.
+function otherDialogOpen(own: Element | null = null) {
+  const found = document.querySelectorAll('dialog[open], [role="dialog"], [role="alertdialog"], [aria-modal="true"]')
+  return [...found].some((el) => el !== own && !own?.contains(el) && el.getClientRects().length > 0)
+}
+
+// Only web and mail links are followed, so an item's href can never run script.
+function safeHref(href: string) {
+  try {
+    const url = new URL(href, location.href)
+    return ['http:', 'https:', 'mailto:'].includes(url.protocol) ? url.href : null
+  } catch {
+    return null
+  }
+}
+
 function fill(template: string, values: Record<string, ReactNode>): ReactNode {
   return template.split(/(\{\w+\})/).map((part, i) => {
     const key = /^\{(\w+)\}$/.exec(part)?.[1]
@@ -348,6 +365,7 @@ export function CommandSearch({
   const listRef = useRef<HTMLDivElement>(null)
   const mode = useRef<Mode>('pointer')
   const returnTo = useRef<HTMLElement | null>(null)
+  const pressedOn = useRef<EventTarget | null>(null)
   const closing = useRef(false)
   const scrollToActive = useRef(false)
   const toastTimer = useRef<ReturnType<typeof setTimeout>>(undefined)
@@ -528,6 +546,9 @@ export function CommandSearch({
     returnTo.current = null
     mode.current = 'pointer'
     if (isOpen) setOpen(false)
+    // The browser usually puts focus back itself, and onSelect may have moved it on purpose: leave that alone.
+    const now = document.activeElement
+    if (now && now !== document.body && !dialogRef.current?.contains(now)) return
     const field = fieldRef.current
     const back = !from || from === document.body || from === field || !from.isConnected ? field : from
     back?.focus({ preventScroll: true })
@@ -537,7 +558,10 @@ export function CommandSearch({
     const d = dialogRef.current
     if (d?.open) d.close()
     if (onSelect) onSelect(item)
-    else if (item.href) window.location.assign(item.href)
+    else if (item.href) {
+      const url = safeHref(item.href)
+      if (url) window.location.assign(url)
+    }
   }
 
   const showToast = (text: ReactNode) => {
@@ -567,8 +591,9 @@ export function CommandSearch({
   useEffect(() => {
     if (!hotkeys) return
     const onKey = (e: KeyboardEvent) => {
+      if (e.defaultPrevented) return
       const k = keys.current
-      const otherModal = [...document.querySelectorAll('dialog[open]')].some((d) => d !== dialogRef.current)
+      const otherModal = otherDialogOpen(dialogRef.current)
       if ((e.metaKey || e.ctrlKey) && !e.altKey && !e.shiftKey && e.key.toLowerCase() === 'k') {
         if (otherModal) return
         e.preventDefault()
@@ -617,10 +642,11 @@ export function CommandSearch({
   const type = (v: string) => {
     setQuery(v)
     setActive(0)
-    scrollToActive.current = true
   }
 
   const onInputKey = (e: ReactKeyboardEvent<HTMLInputElement>) => {
+    // Enter and the arrows belong to the IME while it is composing (Chinese, Japanese, Korean input).
+    if (e.nativeEvent.isComposing) return
     if (e.key === 'ArrowDown') {
       e.preventDefault()
       move(current + 1)
@@ -730,8 +756,13 @@ export function CommandSearch({
           void close('key')
         }}
         onClose={onClosed}
+        onPointerDown={(e) => {
+          pressedOn.current = e.target
+        }}
         onClick={(e) => {
-          if (e.target === scrimRef.current || e.target === dialogRef.current)
+          // A text selection dragged out of the field ends on the scrim: that is not a click outside.
+          const outside = (t: EventTarget | null) => t === scrimRef.current || t === dialogRef.current
+          if (outside(e.target) && (e.detail === 0 || outside(pressedOn.current)))
             void close(e.detail === 0 ? 'key' : 'pointer')
         }}
         className="fixed inset-0 m-0 h-full max-h-none w-full max-w-none overflow-hidden border-0 bg-transparent p-0 text-foreground backdrop:bg-transparent"

@@ -89,12 +89,11 @@ function isTyping(target: EventTarget | null) {
   return target.isContentEditable || /^(INPUT|TEXTAREA|SELECT)$/.test(target.tagName)
 }
 
-function modalOpen() {
-  try {
-    return document.querySelector('dialog:modal') !== null
-  } catch {
-    return document.querySelector('dialog[open]') !== null
-  }
+// Another modal is up when a native modal dialog is open, or a visible dialog from a library such as Radix
+// (role=dialog, alertdialog or aria-modal). `own` and what is inside it do not count.
+function modalOpen(own: Element | null = null) {
+  const found = document.querySelectorAll('dialog[open], [role="dialog"], [role="alertdialog"], [aria-modal="true"]')
+  return [...found].some((el) => el !== own && !own?.contains(el) && el.getClientRects().length > 0)
 }
 
 /** Tier switch and category chips as real links, with counts from you and focus that stays put. */
