@@ -14,6 +14,8 @@
 //            parameter of the exported component), read with the TypeScript compiler API; [] for hooks and libs
 //   extends  the base type text when the props type builds on one (for example Omit<HTMLAttributes<'div'>, 'children'>);
 //            those inherited attributes are not listed in `props`. Left out when there is none.
+//   parts    for a kit (one file exporting several components and none named after the item, like chart-kit):
+//            [{ name, props, extends? }] per exported component, read the same way; `props` is then []. Left out otherwise.
 //   a11y     never generated. Written by hand as [{ topic: 'keyboard' | 'motion' | 'screen-reader' | 'other', text, keys? }]
 //            and kept exactly as it is.
 import fs from 'node:fs'
@@ -27,7 +29,7 @@ const TYPE_MAX = 200
 const DEFAULT_MAX = 300
 const A11Y_TOPICS = ['keyboard', 'motion', 'screen-reader', 'other']
 // Written by this script, in this order, after the keys that were already in `meta`.
-const MANAGED = ['tier', 'added', 'usedIn', 'props', 'extends', 'a11y']
+const MANAGED = ['tier', 'added', 'usedIn', 'props', 'extends', 'parts', 'a11y']
 
 const args = new Set(process.argv.slice(2))
 const WRITE = args.has('--write')
@@ -283,18 +285,33 @@ function propsOf(item) {
     if (!typeNode) return { props: [], error: 'the component takes props without a type' }
   }
   if (!typeNode && !propsType?.exported) {
+    // A kit: every exported component is a part with its own props.
+    if (exportedFuncs.length > 1) {
+      const parts = []
+      for (const [n, f] of exportedFuncs) {
+        const p = f.fn.parameters[0]
+        const t = p ? (p.type ?? (f.call?.typeArguments?.length >= 2 ? f.call.typeArguments[1] : null)) : null
+        if (p && !t) return { props: [], error: `the kit part ${n} takes props without a type` }
+        parts.push({ name: n, ...(t ? propList(expand(t, decls), f) : { props: [] }) })
+      }
+      return { props: [], parts }
+    }
     return { props: [], error: exportedFuncs.length ? `no ${want}Props type and no component named ${want} among ${exportedFuncs.map(([n]) => n).join(', ')}` : `no ${want}Props type and no exported component` }
   }
 
-  const { members, bases } = typeNode ? expand(typeNode, decls) : expandNamed(`${want}Props`, decls)
-  const defaults = comp ? defaultsOf(comp.fn, decls.sf) : new Map()
-  const props = []
-  for (const mm of members) {
-    const p = memberToProp(mm)
-    if (!p || props.some((q) => q.name === p.name)) continue
-    props.push({ name: p.name, type: p.type, default: defaults.get(p.name) ?? null, required: p.required, description: p.description })
+  return propList(typeNode ? expand(typeNode, decls) : expandNamed(`${want}Props`, decls), comp)
+
+  /** { props, extends } from expanded members, with defaults from the component's destructuring. */
+  function propList({ members, bases }, c) {
+    const defaults = c ? defaultsOf(c.fn, decls.sf) : new Map()
+    const props = []
+    for (const mm of members) {
+      const p = memberToProp(mm)
+      if (!p || props.some((q) => q.name === p.name)) continue
+      props.push({ name: p.name, type: p.type, default: defaults.get(p.name) ?? null, required: p.required, description: p.description })
+    }
+    return bases.length ? { props, extends: bases.join(' & ') } : { props }
   }
-  return { props, extends: bases.length ? bases.join(' & ') : undefined }
 }
 
 function expandNamed(name, decls) {
@@ -338,6 +355,7 @@ function withMeta(item) {
   meta.usedIn = [...usedIn.get(item.name)].sort()
   meta.props = r.props
   if (r.extends) meta.extends = r.extends
+  if (r.parts) meta.parts = r.parts
   if (old.a11y !== undefined) {
     const ok = Array.isArray(old.a11y) && old.a11y.every((a) => A11Y_TOPICS.includes(a?.topic) && typeof a.text === 'string' && (a.keys === undefined || Array.isArray(a.keys)))
     if (!ok) problem(item, `a11y does not match [{ topic: ${A11Y_TOPICS.join(' | ')}, text, keys? }]`)
@@ -356,7 +374,7 @@ const changed = registry.items.filter((old, n) => JSON.stringify(old) !== JSON.s
 const withProps = items.filter((i) => results.get(i.name).props.length).length
 const summary = [
   `${items.length} items (examples left alone): ${changed.length} need a change, ${items.length - changed.length} are up to date.`,
-  `props: ${withProps} items with props, ${items.length - withProps} without; extends on ${[...results.values()].filter((r) => r.extends).length}.`,
+  `props: ${withProps} items with props, ${items.length - withProps} without; extends on ${[...results.values()].filter((r) => r.extends).length}; kits with parts: ${[...results.values()].filter((r) => r.parts).length}.`,
   `usedIn: ${items.filter((i) => usedIn.get(i.name).size).length} items are used by another item.`,
   `a11y: ${next.items.filter((i) => i.meta?.a11y?.length).length} items have hand-written notes.`,
   ...(shallow ? ['Shallow git history: `added` is kept as stored, not checked.'] : []),
@@ -394,7 +412,7 @@ console.log(summary.join('\n'))
 if (VERBOSE) {
   for (const item of items) {
     const r = results.get(item.name)
-    console.log(`  ${item.name.padEnd(24)} ${String(r.props.length).padStart(2)} props${r.extends ? `  extends ${r.extends}` : ''}  used in ${usedIn.get(item.name).size}  added ${addedOf(item)}`)
+    console.log(`  ${item.name.padEnd(24)} ${String(r.props.length).padStart(2)} props${r.parts ? ` (kit: ${r.parts.map((p) => p.name).join(', ')})` : ''}${r.extends ? `  extends ${r.extends}` : ''}  used in ${usedIn.get(item.name).size}  added ${addedOf(item)}`)
   }
 } else if (changed.length) console.log(`Would change: ${shorten(names(changed.filter((i) => i.type !== 'registry:example')), 400)}`)
 console.log('Nothing written. Use --write to update registry.json.')
