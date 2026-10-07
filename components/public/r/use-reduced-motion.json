@@ -17,7 +17,13 @@
       "bento-metrics",
       "bento-product"
     ],
-    "props": []
+    "props": [],
+    "a11y": [
+      {
+        "topic": "motion",
+        "text": "Returns true while the system asks for less motion (prefers-reduced-motion: reduce) and re-renders when that setting changes. It returns false on the server."
+      }
+    ]
   },
   "categories": [
     "hooks"

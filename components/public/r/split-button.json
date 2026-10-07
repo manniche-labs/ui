@@ -58,6 +58,25 @@
         "required": false,
         "description": null
       }
+    ],
+    "a11y": [
+      {
+        "topic": "keyboard",
+        "text": "The main button opens the options and moves focus to the first option. Esc, or the back arrow, closes them and returns focus to the main button. Picking an option calls onSelect and closes. The part that is hidden is inert, so Tab never lands on it.",
+        "keys": [
+          "Escape",
+          "Tab",
+          "Enter"
+        ]
+      },
+      {
+        "topic": "screen-reader",
+        "text": "The main button sets aria-expanded. The options sit in a group labelled by label, and the back button is named by backLabel with an aria-hidden icon."
+      },
+      {
+        "topic": "motion",
+        "text": "The component is wrapped in MotionConfig with reducedMotion set to user, so Motion follows the system setting for the split."
+      }
     ]
   },
   "categories": [

@@ -118,7 +118,31 @@
         "description": "\"compact\" draws a smaller ring and tighter gaps. Inside a compact DataTile this happens on its own."
       }
     ],
-    "extends": "Omit<HTMLAttributes<HTMLDivElement>, \"children\" | \"onSelect\">"
+    "extends": "Omit<HTMLAttributes<HTMLDivElement>, \"children\" | \"onSelect\">",
+    "a11y": [
+      {
+        "topic": "keyboard",
+        "text": "The legend is one Tab stop with roving focus. ArrowRight and ArrowDown go forward, ArrowLeft and ArrowUp back, Home and End to the ends, with no wrapping. Escape lets go. Rows and ring segments light each other.",
+        "keys": [
+          "Tab",
+          "ArrowRight",
+          "ArrowLeft",
+          "ArrowDown",
+          "ArrowUp",
+          "Home",
+          "End",
+          "Escape"
+        ]
+      },
+      {
+        "topic": "screen-reader",
+        "text": "The ring is an image named with the label, the total and the target if there is one. The legend is a list of buttons, each named like \"Groceries: €415, 30 percent\"."
+      },
+      {
+        "topic": "motion",
+        "text": "Under reduced motion the ring is drawn in place at once and nothing moves."
+      }
+    ]
   },
   "categories": [
     "widgets"

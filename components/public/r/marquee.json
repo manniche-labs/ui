@@ -60,6 +60,20 @@
         "required": false,
         "description": null
       }
+    ],
+    "a11y": [
+      {
+        "topic": "keyboard",
+        "text": "The loop pauses while the pointer is over it or focus is inside it. The second copy of the items is inert and aria-hidden, so Tab never visits it twice."
+      },
+      {
+        "topic": "screen-reader",
+        "text": "The container is a region named by label (for example Customers). Only the first copy of the items is exposed to screen readers."
+      },
+      {
+        "topic": "motion",
+        "text": "Under reduced motion the loop stops, the second copy is hidden, the edge fade is removed and the items wrap onto lines."
+      }
     ]
   },
   "categories": [

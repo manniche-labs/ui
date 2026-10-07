@@ -107,7 +107,30 @@
         "description": null
       }
     ],
-    "extends": "Omit<HTMLAttributes<HTMLElement>, 'onChange'>"
+    "extends": "Omit<HTMLAttributes<HTMLElement>, 'onChange'>",
+    "a11y": [
+      {
+        "topic": "keyboard",
+        "text": "The stage is one Tab stop. ArrowLeft and ArrowRight move through the slides; on the vertical layout ArrowUp and ArrowDown do instead. Home and End jump to the ends. Keys are skipped while an input has focus. A click on a side card brings it forward for a mouse. The buttons use aria-disabled at the ends, and controls={false} hides them.",
+        "keys": [
+          "Tab",
+          "ArrowLeft",
+          "ArrowRight",
+          "ArrowUp",
+          "ArrowDown",
+          "Home",
+          "End"
+        ]
+      },
+      {
+        "topic": "screen-reader",
+        "text": "A section with the carousel role description, named by label, with a stage group inside (named \"Slides\" by default). Each slide is a group labelled \"Slide i of n\"; slides that are not current are aria-hidden and inert. A polite live region reads the position. The rule and counter are aria-hidden."
+      },
+      {
+        "topic": "motion",
+        "text": "Under reduced motion every move jumps."
+      }
+    ]
   },
   "categories": [
     "widgets"

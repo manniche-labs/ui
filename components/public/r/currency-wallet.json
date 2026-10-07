@@ -70,6 +70,29 @@
         "required": false,
         "description": null
       }
+    ],
+    "a11y": [
+      {
+        "topic": "screen-reader",
+        "text": "An h1 and a currency switch, Pills from chart-kit (default label \"Currency\"); every tile follows the chosen currency. The rewards progress bar is aria-hidden because the \"to next\" sentence says the same; allocation bars are aria-hidden and the share is written as text. The donut is described in its own note."
+      },
+      {
+        "topic": "keyboard",
+        "text": "Pills arrows switch currency, with Home and End.",
+        "keys": [
+          "Tab",
+          "ArrowLeft",
+          "ArrowRight",
+          "ArrowUp",
+          "ArrowDown",
+          "Home",
+          "End"
+        ]
+      },
+      {
+        "topic": "motion",
+        "text": "The bar transitions are dropped under reduced motion."
+      }
     ]
   },
   "categories": [

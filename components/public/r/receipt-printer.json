@@ -71,6 +71,25 @@
         "required": false,
         "description": null
       }
+    ],
+    "a11y": [
+      {
+        "topic": "keyboard",
+        "text": "The Pay button starts the run; at the end a New order button appears.",
+        "keys": [
+          "Tab",
+          "Enter",
+          "Space"
+        ]
+      },
+      {
+        "topic": "screen-reader",
+        "text": "The status area is a polite live region: it reads \"Processing payment\", \"Printing your receipt\" and \"Paid\". The receipt is a list of lines. Icons and the barcode are aria-hidden."
+      },
+      {
+        "topic": "motion",
+        "text": "The spinner stops under reduced motion, and the receipt slide uses Motion with reduced motion set to user."
+      }
     ]
   },
   "categories": [

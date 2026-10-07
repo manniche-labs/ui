@@ -57,6 +57,29 @@
         "required": false,
         "description": null
       }
+    ],
+    "a11y": [
+      {
+        "topic": "keyboard",
+        "text": "The dock has one Tab stop, on the open item (or the first item). ArrowRight and ArrowLeft wrap around, and Home and End jump to the ends. Enter or Space picks the item. The label shows as a tooltip on hover and on keyboard focus.",
+        "keys": [
+          "ArrowLeft",
+          "ArrowRight",
+          "Home",
+          "End",
+          "Tab",
+          "Enter",
+          "Space"
+        ]
+      },
+      {
+        "topic": "screen-reader",
+        "text": "The dock is a toolbar named by label (default Dock). Each icon button is named by its label and sets aria-pressed for the open one. The dot under the open item is aria-hidden."
+      },
+      {
+        "topic": "motion",
+        "text": "The component is wrapped in MotionConfig with reducedMotion set to user, so Motion follows the system setting for the lift and bounce."
+      }
     ]
   },
   "categories": [

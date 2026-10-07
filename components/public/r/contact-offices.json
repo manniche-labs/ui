@@ -57,7 +57,30 @@
         "description": null
       }
     ],
-    "extends": "Omit<HTMLAttributes<HTMLElement>, 'title'>"
+    "extends": "Omit<HTMLAttributes<HTMLElement>, 'title'>",
+    "a11y": [
+      {
+        "topic": "screen-reader",
+        "text": "A section named by its h2 with a list of offices; each is an article with an h3 city, a status (Open now or Closed, in text with an aria-live region), local time, an address element with a tel link, and opening hours in a table with a caption and row headers."
+      },
+      {
+        "topic": "screen-reader",
+        "text": "A copy address button announces its result in a role=\"status\" region; the directions link opens a new tab and names the city in hidden text."
+      },
+      {
+        "topic": "keyboard",
+        "text": "Buttons and links are native.",
+        "keys": [
+          "Tab",
+          "Enter",
+          "Space"
+        ]
+      },
+      {
+        "topic": "other",
+        "text": "Without now, the clock is read after mount and updated each minute; the first render shows \"--:--\"."
+      }
+    ]
   },
   "categories": [
     "templates"

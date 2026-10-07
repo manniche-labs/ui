@@ -98,6 +98,12 @@
         "required": false,
         "description": null
       }
+    ],
+    "a11y": [
+      {
+        "topic": "screen-reader",
+        "text": "A section labelled by its heading when title is set; the level comes from headingLevel (default 3). The TileLegend export is a list with a visible text label per item, and the colour swatches are aria-hidden."
+      }
     ]
   },
   "categories": [

@@ -51,7 +51,36 @@
         "description": null
       }
     ],
-    "extends": "Omit<HTMLAttributes<HTMLElement>, 'title'>"
+    "extends": "Omit<HTMLAttributes<HTMLElement>, 'title'>",
+    "a11y": [
+      {
+        "topic": "screen-reader",
+        "text": "A section named by its h2 with a list of people; each is an article with an h3 name and role. Languages are a list named \"Languages\". When there is more than one team a Pills radio group from chart-kit (label \"Team\") filters, and \"{n} people shown\" is announced in a role=\"status\" region."
+      },
+      {
+        "topic": "screen-reader",
+        "text": "The copy button shows a word that is aria-hidden and is named \"Copy email: {email}\"; the result is announced in a role=\"status\" region. The initials are aria-hidden unless an avatar is passed. \"Book a call\" adds the name in hidden text."
+      },
+      {
+        "topic": "keyboard",
+        "text": "Pills arrows move between teams, with Home and End; buttons and links are native.",
+        "keys": [
+          "Tab",
+          "ArrowLeft",
+          "ArrowRight",
+          "ArrowUp",
+          "ArrowDown",
+          "Home",
+          "End",
+          "Enter",
+          "Space"
+        ]
+      },
+      {
+        "topic": "motion",
+        "text": "The press feedback on the buttons is dropped under reduced motion."
+      }
+    ]
   },
   "categories": [
     "templates"

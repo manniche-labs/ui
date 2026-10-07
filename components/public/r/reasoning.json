@@ -56,6 +56,25 @@
         "required": false,
         "description": null
       }
+    ],
+    "a11y": [
+      {
+        "topic": "keyboard",
+        "text": "The header is a native button, so Tab, Enter and Space toggle it. Once the reader has toggled it, their choice stands, even when streaming changes.",
+        "keys": [
+          "Tab",
+          "Enter",
+          "Space"
+        ]
+      },
+      {
+        "topic": "screen-reader",
+        "text": "The button sets aria-expanded and aria-controls pointing at the content, which is hidden while closed. Its label reads Thinking while streaming, Thought for N seconds when ms is given, otherwise Reasoning. The icons are aria-hidden."
+      },
+      {
+        "topic": "motion",
+        "text": "Under reduced motion the pulsing brain icon and the fade-in of the opened content are off."
+      }
     ]
   },
   "categories": [

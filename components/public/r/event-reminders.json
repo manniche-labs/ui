@@ -84,6 +84,25 @@
         "required": false,
         "description": null
       }
+    ],
+    "a11y": [
+      {
+        "topic": "keyboard",
+        "text": "Every control is a native button: the channel pill, the minus and plus buttons, the unit pill, remove and add. Minus and plus are disabled at their limits.",
+        "keys": [
+          "Tab",
+          "Enter",
+          "Space"
+        ]
+      },
+      {
+        "topic": "screen-reader",
+        "text": "A section with an h2 title and a list of reminders. Minus, plus and remove are named from labels. The channel pill shows the channel name as text. Icons are aria-hidden."
+      },
+      {
+        "topic": "motion",
+        "text": "The list uses Motion with reduced motion set to user."
+      }
     ]
   },
   "categories": [

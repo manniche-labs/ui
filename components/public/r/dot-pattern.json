@@ -33,7 +33,13 @@
         "description": "Fade the dots out towards the edges."
       }
     ],
-    "extends": "HTMLAttributes<HTMLDivElement>"
+    "extends": "HTMLAttributes<HTMLDivElement>",
+    "a11y": [
+      {
+        "topic": "screen-reader",
+        "text": "Decorative only, with no interactive parts. The dots are a CSS background; the vignette span (vignette, default true) is aria-hidden."
+      }
+    ]
   },
   "categories": [
     "surfaces"

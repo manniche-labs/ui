@@ -120,7 +120,29 @@
         "description": "\"compact\" tightens the rows and columns. Inside a compact DataTile this happens on its own."
       }
     ],
-    "extends": "Omit<HTMLAttributes<HTMLDivElement>, 'children' | 'onSelect'>"
+    "extends": "Omit<HTMLAttributes<HTMLDivElement>, 'children' | 'onSelect'>",
+    "a11y": [
+      {
+        "topic": "keyboard",
+        "text": "The list is one Tab stop with roving focus. ArrowUp and ArrowDown, Home and End move between rows; Escape lets go.",
+        "keys": [
+          "Tab",
+          "ArrowUp",
+          "ArrowDown",
+          "Home",
+          "End",
+          "Escape"
+        ]
+      },
+      {
+        "topic": "screen-reader",
+        "text": "The list is named by label and each row is a button named like \"1. Harbour Market: €289.20, Visits 6\". The axis and tooltip are aria-hidden. While loading it is aria-busy with hidden loading text."
+      },
+      {
+        "topic": "motion",
+        "text": "Under reduced motion the stems are at full length at once and rows jump instead of sliding. The loading skeleton pulses only when motion is allowed."
+      }
+    ]
   },
   "categories": [
     "widgets"

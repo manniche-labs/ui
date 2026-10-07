@@ -79,6 +79,12 @@
         "required": false,
         "description": null
       }
+    ],
+    "a11y": [
+      {
+        "topic": "screen-reader",
+        "text": "An h1 title (default \"Account\") with tiles named by their h3: card-stack with one card and hideAmount set, an inverted balance tile with BigNumber and DeltaPill from chart-kit, a three-zone dial (default Under, On track, Over) that is a read-only meter, and transaction-list limited to 5. See their notes. Tab stops come from card-stack and from the transaction-list show more button when there are more than 5 transactions."
+      }
     ]
   },
   "categories": [

@@ -142,7 +142,31 @@
         "description": "Every visible and spoken string that is not data."
       }
     ],
-    "extends": "Omit<ComponentProps<'div'>, 'children'>"
+    "extends": "Omit<ComponentProps<'div'>, 'children'>",
+    "a11y": [
+      {
+        "topic": "keyboard",
+        "text": "The grid is one Tab stop. Arrows move in both axes, Home and End go to the ends of a row, Ctrl+Home and Ctrl+End to the corners, and Escape lets go.",
+        "keys": [
+          "Tab",
+          "ArrowLeft",
+          "ArrowRight",
+          "ArrowUp",
+          "ArrowDown",
+          "Home",
+          "End",
+          "Escape"
+        ]
+      },
+      {
+        "topic": "screen-reader",
+        "text": "The grid is an image named by label with a hint. Each step is read once as row, column and value, with \"now\" (labels.current) on the current cell. A hidden table holds the data, and the dots differ in size and darkness so the pattern reads without colour."
+      },
+      {
+        "topic": "motion",
+        "text": "Under reduced motion every dot is at its size at once."
+      }
+    ]
   },
   "categories": [
     "widgets"

@@ -121,7 +121,26 @@
         "description": null
       }
     ],
-    "extends": "Omit<HTMLAttributes<HTMLDivElement>, 'onSelect'>"
+    "extends": "Omit<HTMLAttributes<HTMLDivElement>, 'onSelect'>",
+    "a11y": [
+      {
+        "topic": "keyboard",
+        "text": "With onSelect each row is a button, so Tab and Enter work, and the selected row has aria-current. Without onSelect the rows are plain list items. Show more is a button, shown when limit hides rows.",
+        "keys": [
+          "Tab",
+          "Enter",
+          "Space"
+        ]
+      },
+      {
+        "topic": "screen-reader",
+        "text": "Each day is a section labelled by its heading, with a hidden \"net\" before the day total. A row is read as one sentence through visually hidden text and its visuals are aria-hidden. Pending, failed and incoming are shown by chip, glyph or struck-through amount as well as colour. Show more has aria-expanded and announces how many rows were revealed. Loading is a status region named by labels.loading."
+      },
+      {
+        "topic": "motion",
+        "text": "Under reduced motion new rows appear at once and row transitions are off. The skeleton pulses only when motion is allowed."
+      }
+    ]
   },
   "categories": [
     "widgets"

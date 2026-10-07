@@ -91,6 +91,29 @@
         "required": false,
         "description": null
       }
+    ],
+    "a11y": [
+      {
+        "topic": "keyboard",
+        "text": "Enter sends and Shift+Enter makes a new line. Enter never sends while an IME is composing. After a send, focus goes back to the text field. Attach, remove, send and stop are native buttons.",
+        "keys": [
+          "Enter",
+          "Shift+Enter",
+          "Tab"
+        ]
+      },
+      {
+        "topic": "screen-reader",
+        "text": "The textarea is named by label (default Message) and described by a screen-reader-only hint: Enter sends. Shift and Enter makes a new line. Attach files, Send, Stop and each Remove <file name> button carry an aria-label, and their icons are aria-hidden. Attached files sit in a list labelled Attached files. The file input is aria-hidden and out of the tab order. Attach files shows only with accept. Send is disabled until there is text or a file."
+      },
+      {
+        "topic": "motion",
+        "text": "With halo on, under reduced motion the ring stops spinning and stays at a fixed angle, and its fades and the arrow's shift have no transition."
+      },
+      {
+        "topic": "other",
+        "text": "In forced colors mode the frame becomes a real border and the focus ring a real outline, because box-shadow is dropped there."
+      }
     ]
   },
   "categories": [

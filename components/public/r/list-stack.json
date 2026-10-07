@@ -50,6 +50,25 @@
         "required": false,
         "description": null
       }
+    ],
+    "a11y": [
+      {
+        "topic": "keyboard",
+        "text": "The toggle is a button that expands and collapses the list. Collapsed items after the first are aria-hidden.",
+        "keys": [
+          "Tab",
+          "Enter",
+          "Space"
+        ]
+      },
+      {
+        "topic": "screen-reader",
+        "text": "The list is a ul. The toggle has aria-expanded and aria-controls, and its label comes from showLabel and hideLabel (\"Show all (n)\" and \"Hide\")."
+      },
+      {
+        "topic": "motion",
+        "text": "The expand uses Motion with reduced motion set to user."
+      }
     ]
   },
   "categories": [

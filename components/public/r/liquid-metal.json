@@ -45,6 +45,16 @@
         "required": false,
         "description": null
       }
+    ],
+    "a11y": [
+      {
+        "topic": "screen-reader",
+        "text": "Decorative only: the canvas is aria-hidden and has no interactive parts."
+      },
+      {
+        "topic": "motion",
+        "text": "Under reduced motion one still frame is drawn and the loop never starts. Otherwise it runs only while visible, and without WebGL it falls back to still bands."
+      }
     ]
   },
   "categories": [

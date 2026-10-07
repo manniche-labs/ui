@@ -19,7 +19,21 @@
     "tier": "free",
     "added": "2026-10-06",
     "usedIn": [],
-    "props": []
+    "props": [],
+    "a11y": [
+      {
+        "topic": "keyboard",
+        "text": "The hook binds no key handlers. Keys and buttons move the carousel through go(index) and move(by), which the component wires up. The wheel handler only reacts to sideways wheel and trackpad swipes, or Shift with the wheel, on axis x; a vertical wheel is left to the page."
+      },
+      {
+        "topic": "motion",
+        "text": "Under reduced motion every move jumps to its slide instead of gliding, and the speed passed to onFrame stays 0."
+      },
+      {
+        "topic": "other",
+        "text": "A drag ends with a click on whatever was under the pointer. The bound onClickCapture swallows that one click."
+      }
+    ]
   },
   "categories": [
     "hooks"

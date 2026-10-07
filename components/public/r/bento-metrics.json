@@ -65,7 +65,17 @@
         "description": "Roll the figures in when the section first comes into view. Never under reduced motion. Default true."
       }
     ],
-    "extends": "Omit<ComponentProps<'section'>, 'children' | 'title'>"
+    "extends": "Omit<ComponentProps<'section'>, 'children' | 'title'>",
+    "a11y": [
+      {
+        "topic": "screen-reader",
+        "text": "A section named by its h2 with a list of tiles with an h3 label each. The real value is in screen-reader-only text and the rolling digits are aria-hidden; DeltaPill from chart-kit reads the direction; the sparkline takes the metric label (or trendLabel) as its label."
+      },
+      {
+        "topic": "motion",
+        "text": "With roll (default true) the figures show 0 after mount and roll up once when they scroll into view; the server markup has the real values. Under reduced motion they never roll and show the real values."
+      }
+    ]
   },
   "categories": [
     "templates"

@@ -61,7 +61,17 @@
         "description": "Every visible and spoken string that is not content."
       }
     ],
-    "extends": "Omit<ComponentProps<'section'>, 'children' | 'title'>"
+    "extends": "Omit<ComponentProps<'section'>, 'children' | 'title'>",
+    "a11y": [
+      {
+        "topic": "screen-reader",
+        "text": "A section named by its h2 with an ordered list; the current step has aria-current=\"step\". Each step has an h3 and a screen-reader-only \"Step\" before the number; when current is set, the state is said in words (Done, Now, and a screen-reader-only Up next). Checks and dots are aria-hidden, and the connecting line is a CSS pseudo-element with no content."
+      },
+      {
+        "topic": "other",
+        "text": "No motion and no controls."
+      }
+    ]
   },
   "categories": [
     "templates"

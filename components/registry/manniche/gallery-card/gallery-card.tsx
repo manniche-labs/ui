@@ -141,6 +141,7 @@ export function GalleryCard({
   const [run, setRun] = useState(0)
   const dwell = useRef<ReturnType<typeof setTimeout> | null>(null)
   const video = useRef<HTMLVideoElement>(null)
+  const image = useRef<HTMLImageElement>(null)
 
   // A new poster gets a fresh chance to load.
   const [lastPoster, setLastPoster] = useState(poster)
@@ -155,6 +156,12 @@ export function GalleryCard({
   useEffect(() => () => {
     if (dwell.current) clearTimeout(dwell.current)
   }, [])
+
+  // A server-rendered poster can fail before React is listening, and then onError never fires: check it once mounted.
+  useEffect(() => {
+    const img = image.current
+    if (img?.complete && img.naturalWidth === 0) setImageFailed(true)
+  }, [poster])
 
   // Play while active, rewind when not, so the next hover starts from the top.
   useEffect(() => {
@@ -237,6 +244,7 @@ export function GalleryCard({
       <div className="relative isolate aspect-[16/10] overflow-hidden rounded-[14px] bg-muted">
         {showImage ? (
           <img
+            ref={image}
             src={poster}
             alt=""
             loading="lazy"

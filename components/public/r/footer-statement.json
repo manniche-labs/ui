@@ -79,7 +79,26 @@
         "description": "UI strings, for translation."
       }
     ],
-    "extends": "Omit<ComponentPropsWithoutRef<'footer'>, 'children'>"
+    "extends": "Omit<ComponentPropsWithoutRef<'footer'>, 'children'>",
+    "a11y": [
+      {
+        "topic": "screen-reader",
+        "text": "A footer named by the h2 statement. It has an action link, a mailto link, and a copy button whose visible word is aria-hidden and whose name is \"{copy} {email}\". The copy result is a role=\"status\" region. Links are in a nav (default \"Footer\") and the legal links in a list."
+      },
+      {
+        "topic": "keyboard",
+        "text": "Native links and button.",
+        "keys": [
+          "Tab",
+          "Enter",
+          "Space"
+        ]
+      },
+      {
+        "topic": "motion",
+        "text": "The only motion is a 200 ms press feedback on the action and the copy button; its transition is dropped under reduced motion."
+      }
+    ]
   },
   "categories": [
     "templates"

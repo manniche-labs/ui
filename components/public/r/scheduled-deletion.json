@@ -70,6 +70,16 @@
         "required": false,
         "description": null
       }
+    ],
+    "a11y": [
+      {
+        "topic": "screen-reader",
+        "text": "The banner has role status. Its text gives the date it goes for good and the days left, or That is today. The restore button is a native button, and the clock icon and the progress strip are aria-hidden. The day count refreshes once an hour.",
+        "keys": [
+          "Tab",
+          "Enter"
+        ]
+      }
     ]
   },
   "categories": [

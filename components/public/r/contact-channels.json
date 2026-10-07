@@ -71,7 +71,30 @@
         "description": "UI strings, for translation."
       }
     ],
-    "extends": "Omit<HTMLAttributes<HTMLElement>, 'title'>"
+    "extends": "Omit<HTMLAttributes<HTMLElement>, 'title'>",
+    "a11y": [
+      {
+        "topic": "screen-reader",
+        "text": "A section named by its h2 with a list of channels; each is an article with an h3, a detail, the answer time and one link. The recommended one is inverted and also says \"Recommended\" in text. Icons are aria-hidden; an external link opens a new tab with hidden text."
+      },
+      {
+        "topic": "screen-reader",
+        "text": "The FAQ is native details/summary under an h3; the +/- marks are aria-hidden."
+      },
+      {
+        "topic": "keyboard",
+        "text": "Links and the FAQ summaries are native.",
+        "keys": [
+          "Tab",
+          "Enter",
+          "Space"
+        ]
+      },
+      {
+        "topic": "motion",
+        "text": "The link press feedback is dropped under reduced motion; the FAQ answer appears without the animation."
+      }
+    ]
   },
   "categories": [
     "templates"

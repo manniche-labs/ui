@@ -114,7 +114,28 @@
         "description": null
       }
     ],
-    "extends": "Omit<HTMLAttributes<HTMLDivElement>, 'onChange'>"
+    "extends": "Omit<HTMLAttributes<HTMLDivElement>, 'onChange'>",
+    "a11y": [
+      {
+        "topic": "keyboard",
+        "text": "The stage is one Tab stop. ArrowLeft and ArrowRight move between pictures, Home and End jump to the ends. A click on a side picture brings it forward.",
+        "keys": [
+          "Tab",
+          "ArrowLeft",
+          "ArrowRight",
+          "Home",
+          "End"
+        ]
+      },
+      {
+        "topic": "screen-reader",
+        "text": "The pictures are real images with alt text, also when WebGL is missing. Each slide is labelled \"Picture i of n\"; the others are aria-hidden and inert. The caption and rule are aria-hidden; a polite live region reads the position."
+      },
+      {
+        "topic": "motion",
+        "text": "Under reduced motion every move jumps and the eroded edges stand still. The shimmer prop (default false) adds grain shimmer and is off under reduced motion."
+      }
+    ]
   },
   "categories": [
     "widgets"

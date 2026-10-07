@@ -28,6 +28,25 @@
         "required": false,
         "description": null
       }
+    ],
+    "a11y": [
+      {
+        "topic": "keyboard",
+        "text": "Close and the optional action are native buttons. The auto-dismiss timer pauses while the pointer is over a toast and while focus is inside it, and the Infinity duration keeps a toast until it is closed. An action runs its handler and then dismisses the toast.",
+        "keys": [
+          "Tab",
+          "Enter",
+          "Space"
+        ]
+      },
+      {
+        "topic": "screen-reader",
+        "text": "Toasts sit in a section labelled Notifications, in an ordered list with aria-live polite. The close button is labelled Close, and the success and error icons are aria-hidden, so the tone is not read out: put it in the title or description. At most four toasts are kept."
+      },
+      {
+        "topic": "motion",
+        "text": "Under reduced motion the enter and leave animations are off. A dismissed toast is removed 200 ms later."
+      }
     ]
   },
   "categories": [

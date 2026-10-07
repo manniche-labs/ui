@@ -76,7 +76,36 @@
         "description": null
       }
     ],
-    "extends": "Omit<HTMLAttributes<HTMLElement>, 'onSubmit' | 'title'>"
+    "extends": "Omit<HTMLAttributes<HTMLElement>, 'onSubmit' | 'title'>",
+    "a11y": [
+      {
+        "topic": "screen-reader",
+        "text": "A section named by its h2 with a form tile and an aside named by its h3 (default \"Other ways to reach us\") holding email, phone and address in a description list. Name, email and message have real labels; aria-invalid and aria-describedby point to the error; the message count (\"{n} / 800\", or \"{n} over\" past the limit) is also in its aria-describedby."
+      },
+      {
+        "topic": "screen-reader",
+        "text": "Sending, sent and error states are announced through a role=\"status\" region. With more than one topic, the topic is Pills from chart-kit when the form tile is at least 26rem wide and a native select when narrower, both named by \"Topic\". Consent is a checkbox in a label that only shows when consent is passed."
+      },
+      {
+        "topic": "keyboard",
+        "text": "On an invalid submit focus moves to the first invalid field. The send button uses aria-disabled while sending so it keeps focus. After sent, focus moves to the confirmation heading, and \"Write another\" moves it back to the name field.",
+        "keys": [
+          "Tab",
+          "ArrowLeft",
+          "ArrowRight",
+          "ArrowUp",
+          "ArrowDown",
+          "Home",
+          "End",
+          "Enter",
+          "Space"
+        ]
+      },
+      {
+        "topic": "motion",
+        "text": "The press feedback on the send button is dropped under reduced motion."
+      }
+    ]
   },
   "categories": [
     "templates"

@@ -65,6 +65,25 @@
         "required": false,
         "description": null
       }
+    ],
+    "a11y": [
+      {
+        "topic": "keyboard",
+        "text": "The button opens an email field that takes focus. Enter submits, and the native email validation (type email, required) applies. Esc closes the field and returns focus to the button. A pointer press outside closes the field only while it is empty. After a submit it shows doneLabel for 2.2 seconds, then closes.",
+        "keys": [
+          "Enter",
+          "Escape",
+          "Tab"
+        ]
+      },
+      {
+        "topic": "screen-reader",
+        "text": "The button sets aria-expanded, and its text sits in an aria-live polite span, so the change to doneLabel is announced. The field has a label with screen-reader-only text from placeholder and autoComplete set to email. The bell and check icons are aria-hidden."
+      },
+      {
+        "topic": "motion",
+        "text": "The component is wrapped in MotionConfig with reducedMotion set to user, so Motion follows the system setting for the morph."
+      }
     ]
   },
   "categories": [

@@ -95,7 +95,28 @@
         "description": null
       }
     ],
-    "extends": "Omit<HTMLAttributes<HTMLElement>, 'onChange'>"
+    "extends": "Omit<HTMLAttributes<HTMLElement>, 'onChange'>",
+    "a11y": [
+      {
+        "topic": "keyboard",
+        "text": "The stage is one Tab stop. ArrowLeft and ArrowRight move between pictures, Home and End jump to the ends. The previous and next buttons use aria-disabled at the ends. They appear on hover or focus, and are always visible on touch screens. At an end a button fades out unless it has focus.",
+        "keys": [
+          "Tab",
+          "ArrowLeft",
+          "ArrowRight",
+          "Home",
+          "End"
+        ]
+      },
+      {
+        "topic": "screen-reader",
+        "text": "The post is an article labelled by label, with a carousel group inside. Each slide is labelled \"Picture i of n\"; the others are aria-hidden and inert. A polite live region reads the position. The counter badge and dots are aria-hidden."
+      },
+      {
+        "topic": "motion",
+        "text": "Under reduced motion every move jumps."
+      }
+    ]
   },
   "categories": [
     "widgets"

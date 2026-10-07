@@ -22,7 +22,7 @@
     },
     {
       "path": "registry/manniche/chart-kit/use-chart.tsx",
-      "content": "// The chart hooks: size and draw-in, a polite live region, and unique ids for SVG defs.\nimport { useCallback, useEffect, useId, useRef, useState } from 'react'\nimport { useReducedMotion } from '@/registry/manniche/hooks/use-reduced-motion'\n\n/**\n * Watches an element's size and whether it has come into view. `drawn` turns true once, the first time a fifth of\n * the chart is visible, and at once under reduced motion. The ref is a callback, so a chart that mounts its frame\n * later (after loading, or when data arrives) is still measured.\n */\nexport function useChartFrame<T extends Element = HTMLDivElement>() {\n  const [node, setNode] = useState<T | null>(null)\n  const [size, setSize] = useState({ width: 0, height: 0 })\n  const [seen, setSeen] = useState(false)\n  const reduced = useReducedMotion()\n\n  useEffect(() => {\n    if (!node) return\n    const ro = new ResizeObserver(([e]) => {\n      const width = Math.round(e.contentRect.width)\n      const height = Math.round(e.contentRect.height)\n      setSize((s) => (s.width === width && s.height === height ? s : { width, height }))\n    })\n    ro.observe(node)\n    return () => ro.disconnect()\n  }, [node])\n\n  useEffect(() => {\n    if (!node || seen) return\n    const io = new IntersectionObserver(\n      ([e]) => {\n        if (e.isIntersecting) setSeen(true)\n      },\n      { threshold: 0.2 },\n    )\n    io.observe(node)\n    return () => io.disconnect()\n  }, [node, seen])\n\n  return { ref: setNode, width: size.width, height: size.height, drawn: seen || reduced, reduced }\n}\n\n/** A polite live region and a function that reads a sentence into it. Render `region` once inside the chart. */\nexport function useAnnounce() {\n  const [text, setText] = useState('')\n  const timer = useRef(0)\n  const say = useCallback((t: string) => {\n    // Clear first, so the same sentence twice is read twice.\n    setText('')\n    window.clearTimeout(timer.current)\n    timer.current = window.setTimeout(() => setText(t), 30)\n  }, [])\n  useEffect(() => () => window.clearTimeout(timer.current), [])\n  const region = (\n    <span className=\"sr-only\" aria-live=\"polite\" aria-atomic=\"true\">\n      {text}\n    </span>\n  )\n  return { say, region }\n}\n\n/** A stable id prefix for SVG defs (patterns, clip paths) that stays unique per chart. */\nexport function useSvgId(name: string) {\n  return `${name}-${useId().replace(/[^a-zA-Z0-9_-]/g, '')}`\n}\n",
+      "content": "// The chart hooks: size and draw-in, a polite live region, and unique ids for SVG defs.\nimport { createContext, useCallback, useContext, useEffect, useId, useRef, useState } from 'react'\nimport { useReducedMotion } from '@/registry/manniche/hooks/use-reduced-motion'\n\n/**\n * For a page that is rendered once to static HTML and never hydrated (the lab's template files). Charts measure\n * themselves in the browser, so without this they would draw at width 0, which is nothing. Inside this provider a\n * chart starts at `width` px (and its own default height), counts as drawn and sits at rest, and its SVG scales to\n * its box with the viewBox. In a live app, leave it out: the charts measure themselves as before.\n */\nexport const StaticChartFrame = createContext<{ width: number } | null>(null)\n\n/**\n * Watches an element's size and whether it has come into view. `drawn` turns true once, the first time a fifth of\n * the chart is visible, and at once under reduced motion. The ref is a callback, so a chart that mounts its frame\n * later (after loading, or when data arrives) is still measured.\n */\nexport function useChartFrame<T extends Element = HTMLDivElement>(fallback?: { height?: number }) {\n  const still = useContext(StaticChartFrame)\n  const [node, setNode] = useState<T | null>(null)\n  const [size, setSize] = useState({ width: still?.width ?? 0, height: still ? (fallback?.height ?? 0) : 0 })\n  const [seen, setSeen] = useState(false)\n  const reduced = useReducedMotion()\n\n  useEffect(() => {\n    if (!node) return\n    const ro = new ResizeObserver(([e]) => {\n      const width = Math.round(e.contentRect.width)\n      const height = Math.round(e.contentRect.height)\n      setSize((s) => (s.width === width && s.height === height ? s : { width, height }))\n    })\n    ro.observe(node)\n    return () => ro.disconnect()\n  }, [node])\n\n  useEffect(() => {\n    if (!node || seen) return\n    const io = new IntersectionObserver(\n      ([e]) => {\n        if (e.isIntersecting) setSeen(true)\n      },\n      { threshold: 0.2 },\n    )\n    io.observe(node)\n    return () => io.disconnect()\n  }, [node, seen])\n\n  return { ref: setNode, width: size.width, height: size.height, drawn: seen || reduced || !!still, reduced: reduced || !!still, fit: !!still }\n}\n\n/** A polite live region and a function that reads a sentence into it. Render `region` once inside the chart. */\nexport function useAnnounce() {\n  const [text, setText] = useState('')\n  const timer = useRef(0)\n  const say = useCallback((t: string) => {\n    // Clear first, so the same sentence twice is read twice.\n    setText('')\n    window.clearTimeout(timer.current)\n    timer.current = window.setTimeout(() => setText(t), 30)\n  }, [])\n  useEffect(() => () => window.clearTimeout(timer.current), [])\n  const region = (\n    <span className=\"sr-only\" aria-live=\"polite\" aria-atomic=\"true\">\n      {text}\n    </span>\n  )\n  return { say, region }\n}\n\n/** A stable id prefix for SVG defs (patterns, clip paths) that stays unique per chart. */\nexport function useSvgId(name: string) {\n  return `${name}-${useId().replace(/[^a-zA-Z0-9_-]/g, '')}`\n}\n",
       "type": "registry:component"
     },
     {
@@ -91,7 +91,251 @@
       "widget-wall",
       "workspace-home"
     ],
-    "props": []
+    "props": [],
+    "parts": [
+      {
+        "name": "ChartTooltip",
+        "props": [
+          {
+            "name": "open",
+            "type": "boolean",
+            "default": null,
+            "required": true,
+            "description": null
+          },
+          {
+            "name": "x",
+            "type": "number",
+            "default": null,
+            "required": true,
+            "description": "Where the tooltip points, in px inside the chart's positioned wrapper."
+          },
+          {
+            "name": "y",
+            "type": "number",
+            "default": null,
+            "required": true,
+            "description": null
+          },
+          {
+            "name": "bounds",
+            "type": "number",
+            "default": null,
+            "required": true,
+            "description": "The wrapper's width, so the tooltip stays inside it."
+          },
+          {
+            "name": "below",
+            "type": "boolean",
+            "default": "false",
+            "required": false,
+            "description": "Above the point by default; below when the point sits near the top."
+          },
+          {
+            "name": "title",
+            "type": "string",
+            "default": null,
+            "required": true,
+            "description": "The small label on top, such as the date."
+          },
+          {
+            "name": "value",
+            "type": "ReactNode",
+            "default": null,
+            "required": true,
+            "description": "The figure itself."
+          },
+          {
+            "name": "rows",
+            "type": "TooltipRow[]",
+            "default": "[]",
+            "required": false,
+            "description": null
+          }
+        ]
+      },
+      {
+        "name": "BigNumber",
+        "props": [
+          {
+            "name": "value",
+            "type": "number",
+            "default": null,
+            "required": true,
+            "description": null
+          },
+          {
+            "name": "format",
+            "type": "ValueFormat",
+            "default": null,
+            "required": false,
+            "description": null
+          },
+          {
+            "name": "size",
+            "type": "'xl' | 'lg' | 'md' | 'sm'",
+            "default": "'lg'",
+            "required": false,
+            "description": "xl for the one figure a tile is about, sm for a figure inside a chart. Default \"lg\"."
+          },
+          {
+            "name": "roll",
+            "type": "boolean",
+            "default": "true",
+            "required": false,
+            "description": "Roll the digits that change. Default true; never under reduced motion."
+          },
+          {
+            "name": "className",
+            "type": "string",
+            "default": null,
+            "required": false,
+            "description": null
+          }
+        ]
+      },
+      {
+        "name": "Digits",
+        "props": [
+          {
+            "name": "text",
+            "type": "string",
+            "default": null,
+            "required": true,
+            "description": null
+          },
+          {
+            "name": "roll",
+            "type": "boolean",
+            "default": "true",
+            "required": false,
+            "description": null
+          }
+        ]
+      },
+      {
+        "name": "DeltaPill",
+        "props": [
+          {
+            "name": "value",
+            "type": "number",
+            "default": null,
+            "required": true,
+            "description": null
+          },
+          {
+            "name": "format",
+            "type": "ValueFormat",
+            "default": "{ decimals: 1, suffix: '%' }",
+            "required": false,
+            "description": null
+          },
+          {
+            "name": "goodWhen",
+            "type": "'up' | 'down'",
+            "default": "'up'",
+            "required": false,
+            "description": null
+          },
+          {
+            "name": "className",
+            "type": "string",
+            "default": null,
+            "required": false,
+            "description": null
+          }
+        ]
+      },
+      {
+        "name": "Pills",
+        "props": [
+          {
+            "name": "options",
+            "type": "PillOption[]",
+            "default": null,
+            "required": true,
+            "description": null
+          },
+          {
+            "name": "value",
+            "type": "string",
+            "default": null,
+            "required": true,
+            "description": null
+          },
+          {
+            "name": "onChange",
+            "type": "(id: string) => void",
+            "default": null,
+            "required": true,
+            "description": null
+          },
+          {
+            "name": "label",
+            "type": "string",
+            "default": null,
+            "required": true,
+            "description": "Read aloud for the group, e.g. \"Period\"."
+          },
+          {
+            "name": "className",
+            "type": "string",
+            "default": null,
+            "required": false,
+            "description": null
+          }
+        ]
+      },
+      {
+        "name": "SrTable",
+        "props": [
+          {
+            "name": "caption",
+            "type": "string",
+            "default": null,
+            "required": true,
+            "description": null
+          },
+          {
+            "name": "head",
+            "type": "string[]",
+            "default": null,
+            "required": true,
+            "description": null
+          },
+          {
+            "name": "rows",
+            "type": "(string | number)[][]",
+            "default": null,
+            "required": true,
+            "description": null
+          }
+        ]
+      }
+    ],
+    "a11y": [
+      {
+        "topic": "screen-reader",
+        "text": "BigNumber carries the full value in sr-only text and the visual is aria-hidden. DeltaPill adds \", up\", \", down\" or \", unchanged\". ChartTooltip is aria-hidden. SrTable is a visually hidden table with a caption and column headers with scope."
+      },
+      {
+        "topic": "keyboard",
+        "text": "Pills is a radio group with roving focus: arrows, Home and End move the choice, and up and down act like right and left. stepIndex in chart-utils moves by ArrowLeft, ArrowRight, Home and End, or ArrowUp and ArrowDown when vertical.",
+        "keys": [
+          "Tab",
+          "ArrowLeft",
+          "ArrowRight",
+          "ArrowUp",
+          "ArrowDown",
+          "Home",
+          "End"
+        ]
+      },
+      {
+        "topic": "motion",
+        "text": "Under reduced motion the digits do not roll and the tooltip transition is off. useChartFrame reports reduced and treats the chart as drawn at once."
+      }
+    ]
   },
   "categories": [
     "widgets"

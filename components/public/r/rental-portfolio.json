@@ -44,6 +44,12 @@
         "required": false,
         "description": null
       }
+    ],
+    "a11y": [
+      {
+        "topic": "screen-reader",
+        "text": "Tiles are sections named by their h3: BigNumber from chart-kit (the first tile is inverted), area-chart with a compare series, a dial from 0 to 100 with a percent suffix (a read-only meter), and transaction-list. See their notes. The screen adds no controls; area-chart is its only Tab stop."
+      }
     ]
   },
   "categories": [

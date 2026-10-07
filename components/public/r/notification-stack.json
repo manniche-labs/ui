@@ -50,6 +50,25 @@
         "required": false,
         "description": null
       }
+    ],
+    "a11y": [
+      {
+        "topic": "keyboard",
+        "text": "Show all and Show less is a native button, shown only with more than one item. Each Dismiss button is a native button. While the stack is folded only the first card has one.",
+        "keys": [
+          "Tab",
+          "Enter",
+          "Space"
+        ]
+      },
+      {
+        "topic": "screen-reader",
+        "text": "The stack is a section labelled by labels.title, with an ordered list. The toggle sets aria-expanded and aria-controls. While folded, every card after the first is aria-hidden. Each dismiss button is named Dismiss: <title>, and the icons are aria-hidden."
+      },
+      {
+        "topic": "motion",
+        "text": "The stack is wrapped in MotionConfig with reducedMotion set to user, so Motion follows the system setting for the fold and fan-out."
+      }
     ]
   },
   "categories": [
