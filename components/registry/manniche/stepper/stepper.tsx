@@ -8,13 +8,19 @@ import { cn } from '@/lib/utils'
 export type StepperProps = {
   /** Controlled value. Leave it out and the stepper keeps its own. */
   value?: number
+  /** Starting value when the stepper is not controlled. */
   defaultValue?: number
+  /** Lowest value; the minus button turns off there. */
   min?: number
+  /** Highest value; the plus button turns off there. */
   max?: number
+  /** Amount added or taken away per press. */
   step?: number
   /** Read aloud by screen readers, e.g. "Guests". */
   label: string
+  /** Called with the new value after each press. */
   onChange?: (value: number) => void
+  /** Classes for the outer box around the buttons and value. */
   className?: string
 }
 

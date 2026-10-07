@@ -18,6 +18,7 @@ export type BadgeProps = Omit<ComponentPropsWithoutRef<'span'>, 'children'> & {
   variant?: BadgeVariant
   /** The visible text. Keep it to a word or two. */
   children: ReactNode
+  /** Classes for the badge span. */
   className?: string
 }
 

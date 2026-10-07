@@ -10,7 +10,9 @@ type State = 'idle' | 'copied' | 'failed'
 export type CopyButtonProps = {
   /** The text that lands on the clipboard. */
   value: string
+  /** Visible text and screen reader text for the idle, copied and failed states; defaults to English. */
   labels?: { copy?: string; copied?: string; failed?: string }
+  /** Classes for the button. */
   className?: string
 }
 

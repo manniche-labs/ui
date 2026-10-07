@@ -7,11 +7,15 @@ import { cn } from '@/lib/utils'
 export type DockItem = { id: string; label: string; icon: ReactNode }
 
 export type DockProps = {
+  /** The icons to show, each with an id, a label and an icon. */
   items: DockItem[]
+  /** Id of the open item, which gets the dot; null when none is open. */
   value: string | null
+  /** Called with the item id when an icon is picked. */
   onValueChange: (id: string) => void
   /** Accessible name for the toolbar. */
   label?: string
+  /** Classes for the toolbar. */
   className?: string
 }
 
@@ -47,7 +51,7 @@ export function Dock({ items, value, onValueChange, label = 'Dock', className }:
           const active = it.id === value
           return (
             <div key={it.id} className="group relative flex flex-col items-center">
-              <span className="pointer-events-none absolute -top-9 rounded-lg bg-foreground px-2 py-1 text-xs whitespace-nowrap text-background opacity-0 transition-opacity duration-150 group-hover:opacity-100 group-has-focus-visible:opacity-100">
+              <span aria-hidden className="pointer-events-none absolute -top-9 rounded-lg bg-foreground px-2 py-1 text-xs whitespace-nowrap text-background opacity-0 transition-opacity duration-150 motion-reduce:transition-none group-hover:opacity-100 group-has-focus-visible:opacity-100">
                 {it.label}
               </span>
               <motion.button
@@ -72,7 +76,7 @@ export function Dock({ items, value, onValueChange, label = 'Dock', className }:
                   animate={{ scale: 1, y: 0 }}
                   transition={{ type: 'spring', stiffness: 550, damping: 15, mass: 1.1 }}
                   className={cn(
-                    'grid size-11 place-items-center rounded-xl bg-muted transition-colors duration-200 [&_svg]:size-5',
+                    'grid size-11 place-items-center rounded-xl bg-muted transition-colors duration-200 motion-reduce:transition-none [&_svg]:size-5',
                     active ? 'text-foreground' : 'text-muted-foreground hover:text-foreground',
                   )}
                 >
@@ -81,7 +85,7 @@ export function Dock({ items, value, onValueChange, label = 'Dock', className }:
               </motion.button>
               <span
                 aria-hidden
-                className={cn('mt-1 size-1 rounded-full bg-foreground/50 transition-opacity duration-300', active ? 'opacity-100' : 'opacity-0')}
+                className={cn('mt-1 size-1 rounded-full bg-foreground/50 transition-opacity duration-300 motion-reduce:transition-none', active ? 'opacity-100' : 'opacity-0')}
               />
             </div>
           )

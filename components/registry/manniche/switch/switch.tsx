@@ -2,17 +2,34 @@ import { MotionConfig, motion } from 'motion/react'
 import { useId, useState } from 'react'
 import { cn } from '@/lib/utils'
 
-export type SwitchProps = {
+type SwitchBaseProps = {
   /** Controlled state. */
   checked?: boolean
+  /** Starting state when the switch is not controlled. */
   defaultChecked?: boolean
+  /** Called with the new state each time the switch is flipped. */
   onChange?: (checked: boolean) => void
-  /** Visible label. Leave it out and pass `aria-label` instead. */
-  label?: string
-  'aria-label'?: string
+  /** Turns the switch off for pointer and keyboard. */
   disabled?: boolean
+  /** Classes for the outer span that wraps the switch and its label. */
   className?: string
 }
+
+/** The switch always has a name: pass a visible `label`, or an `aria-label` when there is no room for one. */
+export type SwitchProps = SwitchBaseProps &
+  (
+    | {
+        /** Visible label, linked to the switch. */
+        label: string
+        /** Optional spoken name that replaces the visible label for screen readers. */
+        'aria-label'?: string
+      }
+    | {
+        label?: undefined
+        /** Spoken name for a switch without a visible label. */
+        'aria-label': string
+      }
+  )
 
 /** A switch whose knob stretches as you press it and springs across, like the one on a phone. */
 export function Switch({ checked, defaultChecked = false, onChange, label, disabled, className, ...aria }: SwitchProps) {

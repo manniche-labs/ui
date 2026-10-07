@@ -4,16 +4,23 @@ import { useReducedMotion } from '@/registry/manniche/hooks/use-reduced-motion'
 import { cn } from '@/lib/utils'
 
 export type JellySliderProps = {
+  /** Controlled value. */
   value?: number
+  /** Starting value when the slider is not controlled. */
   defaultValue?: number
+  /** Called with the new value while it is dragged or moved with the keys. */
   onValueChange?: (value: number) => void
+  /** Lowest value. */
   min?: number
+  /** Highest value. */
   max?: number
+  /** Size of one step. */
   step?: number
   /** Read by screen readers. */
   label: string
   /** Turns the value into text for screen readers, e.g. “40 %”. */
   format?: (value: number) => string
+  /** Classes for the slider track. */
   className?: string
 }
 
