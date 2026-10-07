@@ -70,6 +70,21 @@
         "required": false,
         "description": null
       }
+    ],
+    "a11y": [
+      {
+        "topic": "keyboard",
+        "text": "Previous and next are native buttons, disabled at the first and last page.",
+        "keys": [
+          "Tab",
+          "Enter",
+          "Space"
+        ]
+      },
+      {
+        "topic": "screen-reader",
+        "text": "The control is a nav named by labels.nav (default Pages). The buttons are named Previous page and Next page, or your labels, with aria-hidden icons. The N of total text is aria-live polite, and the rolling number reads the whole number once."
+      }
     ]
   },
   "categories": [

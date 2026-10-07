@@ -69,7 +69,30 @@
         "description": "UI strings, for translation."
       }
     ],
-    "extends": "Omit<ComponentPropsWithoutRef<'footer'>, 'children'>"
+    "extends": "Omit<ComponentPropsWithoutRef<'footer'>, 'children'>",
+    "a11y": [
+      {
+        "topic": "screen-reader",
+        "text": "A footer with a nav (default \"Footer\") list that shows only when there are links. The theme switch is Pills from chart-kit (label \"Theme\": Light, Dark, System) and only shows when both theme and onThemeChange are passed. External links carry a hidden new tab text."
+      },
+      {
+        "topic": "keyboard",
+        "text": "Pills arrows move between theme options, with Home and End.",
+        "keys": [
+          "Tab",
+          "ArrowLeft",
+          "ArrowRight",
+          "ArrowUp",
+          "ArrowDown",
+          "Home",
+          "End"
+        ]
+      },
+      {
+        "topic": "motion",
+        "text": "The switch's thumb slides between options; under reduced motion it jumps."
+      }
+    ]
   },
   "categories": [
     "templates"

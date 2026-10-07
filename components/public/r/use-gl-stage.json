@@ -19,7 +19,21 @@
     "tier": "free",
     "added": "2026-10-06",
     "usedIn": [],
-    "props": []
+    "props": [],
+    "a11y": [
+      {
+        "topic": "screen-reader",
+        "text": "The canvas it creates is aria-hidden. The alt text on each GlImage is for the component to expose; the canvas itself is hidden from screen readers."
+      },
+      {
+        "topic": "motion",
+        "text": "With animate on, the frame loop runs only while the stage is on screen, and never under reduced motion. Without a loop the stage draws still frames at 4 seconds of animation time."
+      },
+      {
+        "topic": "other",
+        "text": "Without WebGL, or after the GPU drops the context, status becomes failed so the component can show its fallback."
+      }
+    ]
   },
   "categories": [
     "hooks"

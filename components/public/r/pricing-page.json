@@ -32,7 +32,30 @@
     "tier": "free",
     "added": "2026-10-04",
     "usedIn": [],
-    "props": []
+    "props": [],
+    "a11y": [
+      {
+        "topic": "screen-reader",
+        "text": "Header with nav \"Main\" (Pricing has aria-current=\"page\"), an h1, a list of plans with an h2 each, a comparison section named by its heading, an FAQ and a closing call to action. The comparison is a table with column, column group and row header scopes; included and not included cells carry the aria-labels \"Included\" and \"Not included\"."
+      },
+      {
+        "topic": "screen-reader",
+        "text": "The billing switch is a fieldset with a screen-reader-only legend \"Billing period\" and two native radios, so the choice is read as a group. Both prices are in the markup; the radio state picks which one shows."
+      },
+      {
+        "topic": "keyboard",
+        "text": "The billing radios are visually hidden and the label shows a focus ring when a radio has keyboard focus. Arrow keys move between the two radios; the FAQ uses native details/summary.",
+        "keys": [
+          "Tab",
+          "ArrowLeft",
+          "ArrowRight",
+          "ArrowUp",
+          "ArrowDown",
+          "Enter",
+          "Space"
+        ]
+      }
+    ]
   },
   "categories": [
     "templates"

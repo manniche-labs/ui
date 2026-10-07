@@ -49,6 +49,20 @@
         "required": false,
         "description": null
       }
+    ],
+    "a11y": [
+      {
+        "topic": "screen-reader",
+        "text": "A screen-reader-only span lists all the words joined with commas, and the visible swapping word is aria-hidden, so the words are heard once and not on each swap."
+      },
+      {
+        "topic": "keyboard",
+        "text": "The cycling pauses while the pointer is over it, and while focus is inside it (focus and blur on the wrapper)."
+      },
+      {
+        "topic": "motion",
+        "text": "Under reduced motion it shows the first word and never cycles. With rounds above 0 it stops on the last word after that many rounds, and with rounds set to 0 it keeps going."
+      }
     ]
   },
   "categories": [

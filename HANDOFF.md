@@ -44,7 +44,8 @@ One Vite server and one browser per machine.
 ## Status after 7/10
 
 - Phase 1 of the /lab plan (Notion: "Plan: /lab og Manniche UI Pro fra start til slut"): six gallery building blocks from Mikkel's chosen design, "Kontrolpulten" (bid 2): `badge`, `gallery-card`, `filter-bar`, `preview-stage`, `locked-code` and `command-search`. Phase 2 rebuilds the /lab gallery from them.
-- `npm run meta` (`scripts/registry-meta.mjs`) writes `meta.tier`, `added`, `usedIn`, `props` and `extends` into `registry.json`. Run it after adding or changing a component; `--check` fails when it is stale. `meta.a11y` is hand-written and so far only the six new components have it; `chart-kit` has no props type, so it gets no props.
+- `npm run meta` (`scripts/registry-meta.mjs`) writes `meta.tier`, `added`, `usedIn`, `props` and `extends` into `registry.json`. Run it after adding or changing a component; `--check` fails when it is stale. `meta.a11y` is hand-written; every component and template has it (7/10), and a new component needs it before merge. A kit without one main component (`chart-kit`) gets `meta.parts`, a props list per exported part.
+- `scripts/template-html.mjs` renders a template through its demo when it has one, inside `StaticChartFrame` (from `chart-kit/use-chart.tsx`), so charts draw at 640 px in the static files. Leave the provider out of live apps.
 - Not verified: Safari, real screen readers, FilterBar with JavaScript off in a browser, and the GalleryCard loop with a real video.
 
 ## Status after 6/10 evening

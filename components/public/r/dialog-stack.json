@@ -65,6 +65,24 @@
         "required": false,
         "description": null
       }
+    ],
+    "a11y": [
+      {
+        "topic": "keyboard",
+        "text": "It is a native modal dialog, so focus is trapped. Esc steps back one step, and closes the dialog on the first step. The back arrow does the same step back, and a backdrop click closes. Each step gets next, back and close in its content function.",
+        "keys": [
+          "Escape",
+          "Tab"
+        ]
+      },
+      {
+        "topic": "screen-reader",
+        "text": "The dialog is labelled by the title of the current step. The step on top is the only one reachable: earlier steps behind it are inert and aria-hidden. Back (from the second step on) and Close are icon buttons named by backLabel and closeLabel, with aria-hidden icons."
+      },
+      {
+        "topic": "motion",
+        "text": "The content is wrapped in MotionConfig with reducedMotion set to user, so Motion follows the system setting for the step animation."
+      }
     ]
   },
   "categories": [

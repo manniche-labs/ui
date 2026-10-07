@@ -53,6 +53,28 @@
         "required": false,
         "description": null
       }
+    ],
+    "a11y": [
+      {
+        "topic": "keyboard",
+        "text": "Esc closes it, because it is a native modal dialog that traps focus and returns it to the opener on close. A click on the backdrop closes it too.",
+        "keys": [
+          "Escape",
+          "Tab"
+        ]
+      },
+      {
+        "topic": "screen-reader",
+        "text": "The dialog is labelled by title, which is also the h2 at the top. The grab handle is aria-hidden."
+      },
+      {
+        "topic": "motion",
+        "text": "Under reduced motion the slide-in animation is off."
+      },
+      {
+        "topic": "other",
+        "text": "Dragging the top area (handle and title) down by more than 30% of the sheet's height closes it, and a shorter drag springs back. The drag is pointer only; Esc and a click on the backdrop close it too."
+      }
     ]
   },
   "categories": [

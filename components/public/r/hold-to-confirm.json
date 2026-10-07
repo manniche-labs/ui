@@ -68,6 +68,24 @@
         "required": false,
         "description": null
       }
+    ],
+    "a11y": [
+      {
+        "topic": "keyboard",
+        "text": "Space or Enter held down fills the button, and releasing early drains it at twice the speed. The key repeat is ignored. It fires onConfirm when full, shows doneLabel for 2 seconds, then resets. The pointer works the same way, and the context menu is blocked.",
+        "keys": [
+          "Space",
+          "Enter"
+        ]
+      },
+      {
+        "topic": "screen-reader",
+        "text": "The hint (default Press and hold to confirm) is set as aria-description on the button. The white copy of the label on the fill is aria-hidden, and doneLabel is announced through a polite live region."
+      },
+      {
+        "topic": "motion",
+        "text": "Under reduced motion the fill jumps in steps of a quarter instead of sliding."
+      }
     ]
   },
   "categories": [

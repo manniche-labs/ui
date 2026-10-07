@@ -32,7 +32,34 @@
     "tier": "free",
     "added": "2026-10-04",
     "usedIn": [],
-    "props": []
+    "props": [],
+    "a11y": [
+      {
+        "topic": "screen-reader",
+        "text": "Layout: an aside with nav \"Main\" (Overview has aria-current=\"page\"), a header with a search field and a \"Notifications, 3 new\" button, and main with the h1 \"Overview\". Below the lg breakpoint the aside is hidden and the same nav, also named \"Main\", sits in a details menu."
+      },
+      {
+        "topic": "screen-reader",
+        "text": "The period switch is a fieldset with a screen-reader-only legend \"Period\" and native radios; only the chosen period's chart is shown. KPI sparklines are aria-hidden, and the change pills read only the number because the direction arrow is aria-hidden. The revenue bars are an ordered list named \"Revenue by period, {period}\", and each bar holds its tooltip as real text."
+      },
+      {
+        "topic": "screen-reader",
+        "text": "Top products are an ordered list, and the orders table has column headers; the status dot is aria-hidden and the status is written out. The charts are drawn inline here, not with bar-chart or sparkline."
+      },
+      {
+        "topic": "keyboard",
+        "text": "Each revenue bar is a Tab stop (tabIndex 0) and shows its tooltip on focus as on hover. The period radios and the mobile details menu use native keys.",
+        "keys": [
+          "Tab",
+          "ArrowLeft",
+          "ArrowRight",
+          "ArrowUp",
+          "ArrowDown",
+          "Enter",
+          "Space"
+        ]
+      }
+    ]
   },
   "categories": [
     "templates"

@@ -42,6 +42,16 @@
         "required": false,
         "description": null
       }
+    ],
+    "a11y": [
+      {
+        "topic": "screen-reader",
+        "text": "The card is a section labelled by title, with the steps in an ordered list. Each step label is followed by a screen-reader-only status: waiting, in progress, done or failed. A screen-reader-only polite live region announces only the step in progress, or All steps done, so the reader is not flooded. Icons and the connector line are aria-hidden."
+      },
+      {
+        "topic": "motion",
+        "text": "The spinner on a running step stops under reduced motion."
+      }
     ]
   },
   "categories": [

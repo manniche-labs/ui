@@ -44,6 +44,28 @@
         "required": false,
         "description": null
       }
+    ],
+    "a11y": [
+      {
+        "topic": "keyboard",
+        "text": "Drawing is pointer only (mouse, finger or pen). The Type instead button swaps the canvas for a text field that takes focus, so a keyboard user can sign by typing a name of at least two characters. Done stays disabled until there is ink or a name.",
+        "keys": [
+          "Tab",
+          "Enter"
+        ]
+      },
+      {
+        "topic": "screen-reader",
+        "text": "The pad is a section labelled by title. The canvas has role img and the label from labels.pad, which says to draw with a mouse, finger or pen. The typed field has a screen-reader-only label. After signing, a role status shows Signed."
+      },
+      {
+        "topic": "other",
+        "text": "The ink uses the current text colour, and the bitmap is sized by the pixel ratio."
+      },
+      {
+        "topic": "motion",
+        "text": "The pad is wrapped in MotionConfig with reducedMotion set to user, so Motion follows the system setting for the swap between pad and Signed."
+      }
     ]
   },
   "categories": [

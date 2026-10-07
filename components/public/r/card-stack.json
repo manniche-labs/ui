@@ -96,7 +96,30 @@
         "description": null
       }
     ],
-    "extends": "Omit<HTMLAttributes<HTMLDivElement>, 'defaultValue' | 'onChange'>"
+    "extends": "Omit<HTMLAttributes<HTMLDivElement>, 'defaultValue' | 'onChange'>",
+    "a11y": [
+      {
+        "topic": "keyboard",
+        "text": "The stack group is a Tab stop, and so are the buttons and the radio dots. ArrowRight and ArrowDown go to the next card, ArrowLeft and ArrowUp to the previous, Home and End to the first and last. Keys count only when the stack itself has focus. The dots are a radio group with roving focus. A tap (under 4 px), a drag past a threshold or a flick flies the front card off; a short drag does not.",
+        "keys": [
+          "Tab",
+          "ArrowRight",
+          "ArrowLeft",
+          "ArrowDown",
+          "ArrowUp",
+          "Home",
+          "End"
+        ]
+      },
+      {
+        "topic": "screen-reader",
+        "text": "A carousel group described by a hidden hint. Only the front card is a slide; the others are aria-hidden and inert. A switch by key, button or swipe is announced through a polite live region; the dots are not announced. The amount readout is aria-hidden, and hideAmount removes it."
+      },
+      {
+        "topic": "motion",
+        "text": "Under reduced motion there is no fan-in, no flight and no rolling digits, and the button transitions are off."
+      }
+    ]
   },
   "categories": [
     "surfaces"

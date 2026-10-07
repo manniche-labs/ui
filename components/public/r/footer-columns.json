@@ -85,7 +85,26 @@
         "description": "UI strings, for translation."
       }
     ],
-    "extends": "Omit<ComponentPropsWithoutRef<'footer'>, 'children'>"
+    "extends": "Omit<ComponentPropsWithoutRef<'footer'>, 'children'>",
+    "a11y": [
+      {
+        "topic": "screen-reader",
+        "text": "A footer with a screen-reader-only h2, a nav (default \"Footer\") with an h3 and list per column, and a newsletter section named by its h3. The form has a label, aria-invalid and aria-describedby; the error has role=\"alert\" only when sending fails. A sent message sits in a role=\"status\" region. The region select has a screen-reader-only label, and external links carry a hidden new tab text."
+      },
+      {
+        "topic": "keyboard",
+        "text": "On an invalid submit focus moves to the email field. When sent, focus moves to the confirmation (tabIndex -1); \"Use another address\" returns focus to the field.",
+        "keys": [
+          "Tab",
+          "Enter",
+          "Space"
+        ]
+      },
+      {
+        "topic": "motion",
+        "text": "The button transition is dropped under reduced motion."
+      }
+    ]
   },
   "categories": [
     "templates"

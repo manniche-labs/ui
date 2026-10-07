@@ -68,7 +68,30 @@
         "description": "`auto` stacks the modules vertically when the gallery is narrower than 520 px."
       }
     ],
-    "extends": "Omit<HTMLAttributes<HTMLDivElement>, 'onChange'>"
+    "extends": "Omit<HTMLAttributes<HTMLDivElement>, 'onChange'>",
+    "a11y": [
+      {
+        "topic": "keyboard",
+        "text": "Each module header is a button. Arrow keys move between headers and wrap around, Home and End jump to the first and last. Focus on a header opens its module. With openOnHover (default true), a mouse pointer opens a module after 70 ms.",
+        "keys": [
+          "Tab",
+          "ArrowRight",
+          "ArrowLeft",
+          "ArrowDown",
+          "ArrowUp",
+          "Home",
+          "End"
+        ]
+      },
+      {
+        "topic": "screen-reader",
+        "text": "Each header is a heading (level set by headingLevel, default 3) around a button with aria-expanded and aria-controls. The open header is aria-disabled because it cannot close. Panels are regions labelled by their header and are inert while closed. The number and dot are aria-hidden."
+      },
+      {
+        "topic": "motion",
+        "text": "Under reduced motion the slide, caption and dot transitions are off."
+      }
+    ]
   },
   "categories": [
     "surfaces"

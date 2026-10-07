@@ -13,6 +13,13 @@
   - `command-search`: a search field that opens a Cmd+K palette with grouped results, a preview pane, Cmd+Enter to copy the install line, and a no-results state with suggestions.
   - Single-key shortcuts (`/`, 1–4, W, T) can be turned off with `shortcuts={false}`, which also hides their hints.
 - Registry metadata: `npm run meta` writes `meta.tier`, `added`, `usedIn`, `props` and `extends` into `registry.json` from the code and git history, and `--check` fails when it is out of date. `meta.a11y` (keyboard, screen reader and motion notes) is written by hand; the six new components have it. `npm run lab` now carries these fields to the site.
+- `meta.parts` for kits: a file that exports several components without one main component (`chart-kit`) gets a props list per part, and `npm run lab` carries it to the site.
+- `meta.a11y` for every component and template: keyboard, screen reader, motion and other notes, written from the code and checked sentence by sentence against it. Gaps found on the way are listed for a later fix, not described as features.
+
+### Fixed
+
+- `gallery-card` shows the drawn poster when a server-rendered image failed before React was listening, so `onError` never fired.
+- Template HTML for the lab: a template with a demo is rendered through it, so `footer-slim` is no longer an empty shell. Charts inside a `StaticChartFrame` start at 640 px, count as drawn and scale with their viewBox, so `area-chart`, `bar-chart`, `bubble-chart` and `sparkline` are no longer empty in the static files. Classes with `'` or `&` (the dial's grid areas) are read unescaped, so `rental-portfolio`'s dial keeps its layout.
 
 ## 2026-10-06
 

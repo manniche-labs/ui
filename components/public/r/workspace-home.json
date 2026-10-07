@@ -60,6 +60,21 @@
         "required": false,
         "description": null
       }
+    ],
+    "a11y": [
+      {
+        "topic": "screen-reader",
+        "text": "A nav (default label \"Workspace\") with buttons; the current one has aria-current=\"page\". A search form has role=\"search\" and an input with an aria-label (default \"Search\"). Tiles are sections named by their h3; the charts are bar-chart and week-schedule, see their notes."
+      },
+      {
+        "topic": "keyboard",
+        "text": "Nav buttons and the offer button are native with a focus-visible outline; the search field has no outline of its own, and the search form draws one around it while it has focus. Enter in the search field submits it to onSearch.",
+        "keys": [
+          "Tab",
+          "Enter",
+          "Space"
+        ]
+      }
     ]
   },
   "categories": [

@@ -63,6 +63,24 @@
         "required": false,
         "description": null
       }
+    ],
+    "a11y": [
+      {
+        "topic": "keyboard",
+        "text": "Each day has a switch and native time inputs, then remove and add buttons. The time inputs show a focus ring.",
+        "keys": [
+          "Tab",
+          "Space"
+        ]
+      },
+      {
+        "topic": "screen-reader",
+        "text": "Each day is a section labelled by its day name. The switch has role switch with aria-checked. Each time input is labelled with the day and \"from\" or \"to\" from labels. The dash between times is aria-hidden."
+      },
+      {
+        "topic": "motion",
+        "text": "The list uses Motion with reduced motion set to user."
+      }
     ]
   },
   "categories": [

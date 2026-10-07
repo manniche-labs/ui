@@ -32,7 +32,33 @@
     "tier": "free",
     "added": "2026-10-04",
     "usedIn": [],
-    "props": []
+    "props": [],
+    "a11y": [
+      {
+        "topic": "screen-reader",
+        "text": "Header with a Subscribe link (its text shows from the sm breakpoint and stays screen-reader-only below, the icon is aria-hidden), main with the h1, and from the lg breakpoint an aside with nav \"Versions\" linking to each release by its #v anchor."
+      },
+      {
+        "topic": "screen-reader",
+        "text": "Releases are an ordered list; each has a time element with dateTime, an article and an h2, and its changes are a list with a text badge (New, Improved, Fixed). The timeline line and dots are aria-hidden."
+      },
+      {
+        "topic": "screen-reader",
+        "text": "The filter is a fieldset with a screen-reader-only legend \"Show\" and four native radios (Everything, New, Improved, Fixed). Changes of another type are hidden with CSS, and so are releases with none of the chosen type. The subscribe form has a screen-reader-only label, type=email and required."
+      },
+      {
+        "topic": "keyboard",
+        "text": "Native radios, so Arrow keys change the filter; the version links are plain anchors.",
+        "keys": [
+          "Tab",
+          "ArrowLeft",
+          "ArrowRight",
+          "ArrowUp",
+          "ArrowDown",
+          "Enter"
+        ]
+      }
+    ]
   },
   "categories": [
     "templates"

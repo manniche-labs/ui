@@ -37,7 +37,30 @@
     "tier": "free",
     "added": "2026-10-04",
     "usedIn": [],
-    "props": []
+    "props": [],
+    "a11y": [
+      {
+        "topic": "screen-reader",
+        "text": "A full page: a promo line, a header with nav \"Main\" and a \"Mobile\" nav inside a details/summary, then main with the h1 in the hero and h2 sections (favourites, collections, story, reviews, FAQ, newsletter). Product names are h3 links, each collection is a link holding its h3, and the footer columns use h3."
+      },
+      {
+        "topic": "screen-reader",
+        "text": "Icon links carry an aria-label (\"Search\", \"Bag, 2 items\") and their icons are aria-hidden. Colour dots sit in a p with aria-label \"{n} colours\". Review stars are aria-hidden and quotes are figure, blockquote and figcaption."
+      },
+      {
+        "topic": "keyboard",
+        "text": "The mobile menu and the FAQ are native details/summary, so Enter and Space open them. The newsletter field has a label, type=email and required, with a visible focus outline.",
+        "keys": [
+          "Tab",
+          "Enter",
+          "Space"
+        ]
+      },
+      {
+        "topic": "motion",
+        "text": "The hero entry transitions are dropped under reduced motion (motion-reduce:transition-none)."
+      }
+    ]
   },
   "categories": [
     "templates"

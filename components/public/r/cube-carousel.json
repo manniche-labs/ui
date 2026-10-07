@@ -50,6 +50,27 @@
         "required": false,
         "description": null
       }
+    ],
+    "a11y": [
+      {
+        "topic": "keyboard",
+        "text": "ArrowLeft and ArrowRight turn the cube while focus is inside the carousel. The previous and next buttons are native buttons. A drag turns it past 40 px.",
+        "keys": [
+          "Tab",
+          "ArrowLeft",
+          "ArrowRight",
+          "Enter",
+          "Space"
+        ]
+      },
+      {
+        "topic": "screen-reader",
+        "text": "The section is a carousel labelled by label. Each face is a slide group labelled with the slide word and \"i / n\"; faces that are not at the front are aria-hidden and inert. The buttons are named by labels, and a polite live counter reads the position."
+      },
+      {
+        "topic": "motion",
+        "text": "Under reduced motion the turn has no duration and the cube jumps."
+      }
     ]
   },
   "categories": [
