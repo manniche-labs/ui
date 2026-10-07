@@ -218,7 +218,7 @@ export function BubbleChart({
     hint: 'Arrow keys step through the bubbles; Escape lets go.',
     ...labelsProp,
   }
-  const { ref: frameRef, width: frameW, height: frameH, drawn, reduced } = useChartFrame<HTMLDivElement>()
+  const { ref: frameRef, width: frameW, height: frameH, drawn, reduced, fit } = useChartFrame<HTMLDivElement>({ height: height ?? 320 })
   const { say, region } = useAnnounce()
   const hintId = useId()
   const [active, setActive] = useControllable(activeIndex, defaultActiveIndex, onActiveIndexChange)
@@ -478,7 +478,7 @@ export function BubbleChart({
         style={height ? { height } : undefined}
       >
         {layout && (
-          <svg width={W} height={H} viewBox={`0 0 ${W} ${H}`} className="absolute inset-0 block overflow-visible" aria-hidden>
+          <svg width={W} height={H} viewBox={`0 0 ${W} ${H}`} className={cn('absolute inset-0 block overflow-visible', fit && 'h-full w-full')} aria-hidden>
             {axes && (
               <g>
                 {layout.yTicks.map((t, k) => (

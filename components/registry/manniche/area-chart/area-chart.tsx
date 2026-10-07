@@ -139,7 +139,7 @@ export function AreaChart({
   ...rest
 }: AreaChartProps) {
   const labels = { ...LABELS, ...labelsProp }
-  const { ref: frameRef, ...frame } = useChartFrame<HTMLDivElement>()
+  const { ref: frameRef, ...frame } = useChartFrame<HTMLDivElement>({ height: height ?? 300 })
   const { say, region } = useAnnounce()
   const hintId = useId()
   const clipId = useSvgId('area-reveal')
@@ -302,7 +302,7 @@ export function AreaChart({
           style={{ height }}
         >
           {W > 0 && H > 0 && (
-            <svg aria-hidden width={W} height={H} viewBox={`0 0 ${W} ${H}`} className="absolute inset-0 block overflow-visible">
+            <svg aria-hidden width={W} height={H} viewBox={`0 0 ${W} ${H}`} className={cn('absolute inset-0 block overflow-visible', frame.fit && 'h-full w-full')}>
               <defs>
                 <clipPath id={clipId}>
                   <rect
