@@ -11,14 +11,19 @@ export type TradeTicketProps = {
   outcomes: [Outcome, Outcome]
   /** Most someone can spend; the Max chip uses it. */
   balance: number
+  /** The ISO currency code used to format money. Default “USD”. */
   currency?: string
+  /** The language used to format money. Default “en-US”. */
   locale?: string
+  /** Called with the side, the chosen outcome id, the amount and the share count when the form is submitted with an amount above zero. */
   onTrade: (order: TradeOrder) => void
-  labels?: Partial<Record<'buy' | 'sell' | 'amount' | 'toWin' | 'toGet' | 'avg' | 'trade' | 'max', string>>
+  /** Visible text and screen reader text with English defaults, such as buy, sell, amount, outcome and trade. */
+  labels?: Partial<Record<'buy' | 'sell' | 'amount' | 'toWin' | 'toGet' | 'avg' | 'trade' | 'max' | 'outcome', string>>
+  /** Classes for the form. */
   className?: string
 }
 
-const EN = { buy: 'Buy', sell: 'Sell', amount: 'Amount', toWin: 'To win', toGet: 'You get', avg: 'Avg. price', trade: 'Trade', max: 'Max' }
+const EN = { buy: 'Buy', sell: 'Sell', amount: 'Amount', toWin: 'To win', toGet: 'You get', avg: 'Avg. price', trade: 'Trade', max: 'Max', outcome: 'Outcome' }
 const CHIPS = [1, 5, 10, 100]
 
 /** A ticket for buying or selling one of two outcomes, with the payout worked out as you type. */
@@ -66,7 +71,7 @@ export function TradeTicket({ outcomes, balance, currency = 'USD', locale = 'en-
 
         <div className="space-y-3 p-3">
           <LayoutGroup id={`${ids}-outcome`}>
-            <div role="group" aria-label="Outcome" className="grid grid-cols-2 gap-1 rounded-2xl bg-muted p-1">
+            <div role="group" aria-label={t.outcome} className="grid grid-cols-2 gap-1 rounded-2xl bg-muted p-1">
               {outcomes.map((o, i) => {
                 const on = pick === o.id
                 return (
