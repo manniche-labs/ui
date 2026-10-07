@@ -21,6 +21,10 @@ const templates = registry.items.filter((i) => i.categories?.includes('templates
 
 const vite = await createServer({ server: { middlewareMode: true }, appType: 'custom', logLevel: 'error' })
 const { COLOURS, colourVars } = await vite.ssrLoadModule('/src/template-theme.ts')
+// The charts measure themselves in the browser; the static files never run, so they start at this width instead.
+const { StaticChartFrame } = await vite.ssrLoadModule('/registry/manniche/chart-kit/use-chart.tsx')
+const STATIC_CHART_WIDTH = 640
+const still = (element) => createElement(StaticChartFrame.Provider, { value: { width: STATIC_CHART_WIDTH } }, element)
 
 // The base theme lives in src/index.css: light tokens in :root, dark in .dark. The theme block is kept out of
 // the Tailwind build so it stays readable and can be swapped as a whole.
@@ -62,17 +66,19 @@ for (const t of templates) {
   const mod = await vite.ssrLoadModule('/' + entry)
   const Component = Object.values(mod).find((v) => typeof v === 'function')
   // A template that needs data (the dashboards, sections and finance screens) is rendered through its demo, which passes example data.
+  // A component that renders without props can still come out empty (footer-slim needs a brand and an owner), so the
+  // demo comes first and the bare component is only the fallback for a template without one.
   const demo = `registry/manniche/examples/${t.name}-demo.tsx`
-  let body
-  try {
-    body = renderToStaticMarkup(createElement(Component))
-  } catch {
+  let Page = Component
+  if (fs.existsSync(demo)) {
     const demoMod = await vite.ssrLoadModule('/' + demo)
-    body = renderToStaticMarkup(createElement(Object.values(demoMod).find((v) => typeof v === 'function')))
+    Page = Object.values(demoMod).find((v) => typeof v === 'function')
   }
+  const body = renderToStaticMarkup(still(createElement(Page)))
   // Classes from the rendered markup and from the source, so classes that only show in another state are kept too.
   const candidates = scanner.scanFiles([
-    { content: body, extension: 'html' },
+    // renderToStaticMarkup writes ' and & in a class as &#x27; and &amp;, which would turn [grid-template-areas:'a'_'b'] into a class nobody wrote.
+    { content: body.replaceAll('&#x27;', "'").replaceAll('&quot;', '"').replaceAll('&amp;', '&').replaceAll('&gt;', '>').replaceAll('&lt;', '<'), extension: 'html' },
     ...t.files.map((f) => ({ content: fs.readFileSync(f.path, 'utf8'), extension: 'tsx' })),
   ])
   const css = optimize(compiler.build(candidates), { minify: true }).code

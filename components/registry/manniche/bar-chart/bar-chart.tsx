@@ -183,7 +183,7 @@ export function BarChart({
   ...rest
 }: BarChartProps) {
   const labels = { ...LABELS, ...labelsProp }
-  const { ref: frameRef, ...frame } = useChartFrame<HTMLDivElement>()
+  const { ref: frameRef, ...frame } = useChartFrame<HTMLDivElement>({ height: height ?? 208 })
   const { say, region } = useAnnounce()
   const hintId = useId()
   const [active, setActive] = useControllable(activeIndex, defaultActiveIndex, onActiveIndexChange)
@@ -240,6 +240,8 @@ export function BarChart({
   const top = scale.max
   const ticks = empty ? [0, 0.5, 1] : scale.ticks.map((t) => t / top)
   const { slot, bar } = measure(n, plotW, compare)
+  // In a static file the plot's width is a guess, so positions are written as shares of it and follow the real box.
+  const along = (px: number) => (frame.fit && plotW ? `${((px / plotW) * 100).toFixed(3)}%` : px)
 
   // First view and every new shape (period, grouping, compare) rise from the baseline; new values on the same bars glide.
   const shape = `${n}|${compare}|${size}`
@@ -418,17 +420,17 @@ export function BarChart({
                     key={i}
                     aria-hidden
                     className="absolute top-0 bottom-0 flex justify-center gap-[3px]"
-                    style={{ left: i * slot + slot / 2 - groupW / 2, width: groupW }}
+                    style={{ left: along(i * slot + slot / 2 - groupW / 2), width: along(groupW) }}
                   >
                     {two && (
-                      <span className="relative block h-full overflow-hidden rounded-b-[3px]" style={{ width: bar }}>
+                      <span className="relative block h-full overflow-hidden rounded-b-[3px]" style={{ width: frame.fit ? `${(bar / groupW) * 100}%` : bar }}>
                         <i
                           className="absolute inset-0 rounded-[999px_999px_3px_3px]"
                           style={{ background: INK_GHOST, transform: `translateY(${(1 - p) * 100}%)`, opacity: dim ? 0.42 : 1, ...glide(i) }}
                         />
                       </span>
                     )}
-                    <span className="relative block h-full" style={{ width: bar }}>
+                    <span className="relative block h-full" style={{ width: frame.fit ? `${(bar / groupW) * 100}%` : bar }}>
                       <span className="absolute inset-0 overflow-hidden rounded-b-[3px]">
                         <i
                           className="absolute inset-0 rounded-[999px_999px_3px_3px]"
@@ -477,7 +479,7 @@ export function BarChart({
                       'absolute top-0 -translate-x-1/2 font-mono text-[11px] leading-none whitespace-nowrap tabular-nums',
                       i === nowSlot ? 'font-medium text-foreground' : 'text-muted-foreground',
                     )}
-                    style={{ left: i * slot + slot / 2 }}
+                    style={{ left: along(i * slot + slot / 2) }}
                   >
                     {s.label}
                   </span>
