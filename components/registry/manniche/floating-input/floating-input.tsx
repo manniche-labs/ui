@@ -4,7 +4,9 @@ import { useId, type InputHTMLAttributes } from 'react'
 import { cn } from '@/lib/utils'
 
 export type FloatingInputProps = Omit<InputHTMLAttributes<HTMLInputElement>, 'placeholder'> & {
+  /** Text of the label that floats from inside the field up into its border. */
   label: string
+  /** Quiet help text under the field; it is replaced by `error` while there is one. */
   hint?: string
   /** Shown in red under the field, and marks the field invalid. */
   error?: string
@@ -14,7 +16,8 @@ export type FloatingInputProps = Omit<InputHTMLAttributes<HTMLInputElement>, 'pl
 export function FloatingInput({ label, hint, error, className, id, ...props }: FloatingInputProps) {
   const own = useId()
   const fieldId = id ?? own
-  const note = error ?? hint
+  const hintId = `${fieldId}-hint`
+  const errorId = `${fieldId}-error`
 
   return (
     <div className={cn('w-full', className)}>
@@ -23,7 +26,7 @@ export function FloatingInput({ label, hint, error, className, id, ...props }: F
           id={fieldId}
           placeholder=" "
           aria-invalid={error ? true : undefined}
-          aria-describedby={note ? `${fieldId}-note` : undefined}
+          aria-describedby={error ? errorId : hint ? hintId : undefined}
           className={cn(
             'peer h-12 w-full rounded-xl border bg-background px-4 pt-1 outline-none transition-[border-color,box-shadow] duration-200',
             'focus:border-ring focus:ring-3 focus:ring-ring/20',
@@ -44,11 +47,15 @@ export function FloatingInput({ label, hint, error, className, id, ...props }: F
           {label}
         </label>
       </div>
-      {note && (
-        <p id={`${fieldId}-note`} className={cn('mt-1.5 px-1 text-xs', error ? 'text-destructive' : 'text-muted-foreground')}>
-          {note}
+      {hint && !error && (
+        <p id={hintId} className="mt-1.5 px-1 text-xs text-muted-foreground">
+          {hint}
         </p>
       )}
+      {/* Always in the page, so an error that appears while typing is announced; the hint is not part of it. */}
+      <p id={errorId} role="alert" className={cn('px-1 text-xs text-destructive', error && 'mt-1.5')}>
+        {error}
+      </p>
     </div>
   )
 }

@@ -7,9 +7,13 @@ import { cn } from '@/lib/utils'
 export type ListStackItem = { id: string; title: string; detail?: string; meta?: string; icon?: ReactNode }
 
 export type ListStackProps = {
+  /** The rows to show, each with a title and optional detail, meta text and icon. */
   items: ListStackItem[]
+  /** Text on the button that opens the full list. */
   showLabel?: string
+  /** Text on the button that folds the list again. */
   hideLabel?: string
+  /** Classes for the outer column. */
   className?: string
 }
 

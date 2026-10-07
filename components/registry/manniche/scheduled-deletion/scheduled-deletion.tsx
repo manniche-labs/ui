@@ -9,9 +9,13 @@ export type ScheduledDeletionProps = {
   deletedAt: Date
   /** Days it stays recoverable. */
   graceDays?: number
+  /** Called when the restore button is pressed. */
   onRestore: () => void
+  /** Text on the restore button. */
   restoreLabel?: string
+  /** Locale for the deletion date, such as "da-DK". Defaults to the browser locale. */
   locale?: string
+  /** Classes for the outer status box. */
   className?: string
 }
 

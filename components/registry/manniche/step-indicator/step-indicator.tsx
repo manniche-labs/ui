@@ -7,11 +7,15 @@ import { cn } from '@/lib/utils'
 export type StepIndicatorStep = { id: string; label: string; icon?: ReactNode }
 
 export type StepIndicatorProps = {
+  /** The steps, each with an id, a label and an optional icon. */
   steps: StepIndicatorStep[]
   /** Index of the step the person is on. Earlier steps are filled. */
   current: number
+  /** Called with the step index when a bar is pressed. */
   onStepChange?: (index: number) => void
+  /** Accessible name for the navigation. */
   label?: string
+  /** Classes for the outer nav. */
   className?: string
 }
 
@@ -84,7 +88,7 @@ export function StepIndicator({ steps, current, onStepChange, label = 'Progress'
             >
               <span
                 className={cn(
-                  'absolute inset-0 rounded-full transition-colors duration-300',
+                  'absolute inset-0 rounded-full transition-colors duration-300 motion-reduce:transition-none',
                   'group-focus-visible:ring-2 group-focus-visible:ring-ring group-focus-visible:ring-offset-2 group-focus-visible:ring-offset-background',
                   i <= current ? 'bg-foreground' : 'bg-muted',
                   hover === i && i > current && 'bg-muted-foreground/40',

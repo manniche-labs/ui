@@ -6,19 +6,26 @@ import { useEffect, useRef, useState } from 'react'
 import { cn } from '@/lib/utils'
 
 export type SaveToggleProps = {
+  /** Whether the item is saved; the button shows `savedLabel` and is pressed. */
   saved: boolean
   /** Runs the save. The button spins until it settles; a rejection puts it back. */
   onSave: () => Promise<void> | void
+  /** Called when the button is pressed while `saved` is true. */
   onUnsave: () => void
+  /** Text on the button while the item is not saved. */
   label?: string
+  /** Text on the button once saved; also announced when a save finishes. */
   savedLabel?: string
+  /** Spoken name of the button while the save runs and the spinner shows. */
+  savingLabel?: string
+  /** Classes for the button. */
   className?: string
 }
 
 type Phase = 'idle' | 'saving' | 'done'
 
 /** A save button that shrinks to a spinner, pops a check, and widens again as “Saved”. Press again to unsave. */
-export function SaveToggle({ saved, onSave, onUnsave, label = 'Save', savedLabel = 'Saved', className }: SaveToggleProps) {
+export function SaveToggle({ saved, onSave, onUnsave, label = 'Save', savedLabel = 'Saved', savingLabel = 'Saving', className }: SaveToggleProps) {
   const [phase, setPhase] = useState<Phase>('idle')
   const alive = useRef(true)
   useEffect(() => {
@@ -52,6 +59,7 @@ export function SaveToggle({ saved, onSave, onUnsave, label = 'Save', savedLabel
 
   return (
     <MotionConfig reducedMotion="user" transition={{ type: 'spring', stiffness: 260, damping: 22 }}>
+      <>
       <motion.button
         type="button"
         aria-pressed={saved}
@@ -60,17 +68,23 @@ export function SaveToggle({ saved, onSave, onUnsave, label = 'Save', savedLabel
         initial={false}
         animate={{ width: round ? 48 : 116 }}
         className={cn(
-          'relative grid h-12 place-items-center overflow-hidden rounded-full font-medium transition-[background-color,color,box-shadow] duration-200 active:scale-[0.97]',
+          'relative grid h-12 place-items-center overflow-hidden rounded-full font-medium transition-[background-color,color,box-shadow] duration-200 active:scale-[0.97] motion-reduce:transition-none motion-reduce:active:scale-100',
           round ? 'bg-foreground text-background' : saved ? 'bg-card text-foreground ring-2 ring-border' : 'bg-muted text-foreground',
           className,
         )}
       >
         <AnimatePresence mode="popLayout" initial={false}>
           <motion.span key={shown} {...swap} className="col-start-1 row-start-1 flex items-center gap-1.5 whitespace-nowrap">
-            {shown === 'spin' && <LoaderCircle className="size-5 animate-spin motion-reduce:animate-none" aria-hidden />}
+            {shown === 'spin' && (
+              <>
+                <LoaderCircle className="size-5 animate-spin motion-reduce:animate-none" aria-hidden />
+                <span className="sr-only">{savingLabel}</span>
+              </>
+            )}
             {shown === 'check' && (
               <motion.span initial={{ scale: 0.4 }} animate={{ scale: 1 }} transition={{ type: 'spring', stiffness: 500, damping: 14 }}>
                 <Check className="size-5" strokeWidth={3} aria-hidden />
+                <span className="sr-only">{savedLabel}</span>
               </motion.span>
             )}
             {shown === 'saved' && (
@@ -84,10 +98,11 @@ export function SaveToggle({ saved, onSave, onUnsave, label = 'Save', savedLabel
             {shown === 'save' && label}
           </motion.span>
         </AnimatePresence>
-        <span className="sr-only" aria-live="polite">
-          {phase === 'done' ? savedLabel : ''}
-        </span>
       </motion.button>
+      <span role="status" className="sr-only">
+        {phase === 'done' ? savedLabel : ''}
+      </span>
+      </>
     </MotionConfig>
   )
 }

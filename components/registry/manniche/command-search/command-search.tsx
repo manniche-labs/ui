@@ -134,12 +134,15 @@ export type CommandSearchProps = {
   initialLimit?: number
   /** Controls whether the palette is open. Leave it out to let the component keep track. */
   open?: boolean
+  /** Whether the palette starts open when it is not controlled. */
   defaultOpen?: boolean
+  /** Called with the new open state when the palette opens or closes. */
   onOpenChange?: (open: boolean) => void
   /** Controls the text in the field (the trigger and the palette share it). */
   query?: string
   /** The starting text, such as `?q=` from the URL. */
   defaultQuery?: string
+  /** Called with the text each time the query changes. */
   onQueryChange?: (query: string) => void
   /** Where the trigger form sends `?q=` without JavaScript. Default: the current page. */
   action?: string

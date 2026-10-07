@@ -2,10 +2,17 @@ import { Menu, X } from 'lucide-react'
 import { useEffect, useId, useRef, useState, type ReactNode } from 'react'
 import { cn } from '@/lib/utils'
 
-export type GlassNavLink = { href: string; label: string }
+export type GlassNavLink = {
+  /** Where the link goes. */
+  href: string
+  /** Text on the link. */
+  label: string
+}
 
 export type GlassNavbarProps = {
+  /** Logo or name at the start of the bar. */
   brand: ReactNode
+  /** The navigation links, shown in the bar from the sm breakpoint and in the menu below it. */
   links: GlassNavLink[]
   /** The href of the page the visitor is on; that link gets aria-current. */
   current?: string
@@ -18,6 +25,7 @@ export type GlassNavbarProps = {
    *   Use it on a dark or photo hero; the shade keeps the text at 4.5:1 on mid-tone colours.
    */
   variant?: 'frosted' | 'floating' | 'scroll'
+  /** Classes for the sticky header element. */
   className?: string
 }
 
@@ -36,6 +44,9 @@ export function GlassNavbar({ brand, links, current, action, variant = 'frosted'
   const [scrolled, setScrolled] = useState(false)
   const sentinel = useRef<HTMLDivElement>(null)
   const menuId = useId()
+  const toggle = useRef<HTMLButtonElement>(null)
+  const menu = useRef<HTMLDivElement>(null)
+  const touched = useRef(false)
 
   // A one-pixel marker above the bar: once it leaves the view, the page has scrolled.
   // Works inside any scroll container, not only the window.
@@ -46,9 +57,16 @@ export function GlassNavbar({ brand, links, current, action, variant = 'frosted'
     return () => io.disconnect()
   }, [variant])
 
+  // Opening the menu moves focus to its first link; closing it returns focus to the menu button.
+  useEffect(() => {
+    if (!touched.current) return
+    if (open) menu.current?.querySelector<HTMLElement>('a, button')?.focus()
+    else toggle.current?.focus()
+  }, [open])
+
   useEffect(() => {
     if (!open) return
-    const close = (e: KeyboardEvent) => e.key === 'Escape' && setOpen(false)
+    const close = (e: KeyboardEvent) => e.key === 'Escape' && (touched.current = true, setOpen(false))
     addEventListener('keydown', close)
     return () => removeEventListener('keydown', close)
   }, [open])
@@ -88,22 +106,29 @@ export function GlassNavbar({ brand, links, current, action, variant = 'frosted'
             <button
               type="button"
               aria-expanded={open}
+              ref={toggle}
               aria-controls={menuId}
               aria-label={open ? 'Close menu' : 'Open menu'}
-              onClick={() => setOpen((o) => !o)}
+              onClick={() => {
+                touched.current = true
+                setOpen((o) => !o)
+              }}
               className="grid size-11 place-items-center rounded-lg text-foreground sm:hidden group-data-[hero=true]/glass:text-white"
             >
               {open ? <X className="size-5" /> : <Menu className="size-5" />}
             </button>
           </nav>
-          <div id={menuId} hidden={!open} className="border-t border-border/60 px-4 pb-3 sm:hidden">
+          <div id={menuId} ref={menu} hidden={!open} className="border-t border-border/60 px-4 pb-3 sm:hidden">
             <ul className="grid pt-2">
               {links.map((l) => (
                 <li key={l.href}>
                   <a
                     href={l.href}
                     aria-current={l.href === current ? 'page' : undefined}
-                    onClick={() => setOpen(false)}
+                    onClick={() => {
+                      touched.current = true
+                      setOpen(false)
+                    }}
                     className="flex min-h-11 items-center text-base text-muted-foreground aria-[current=page]:font-medium aria-[current=page]:text-foreground"
                   >
                     {l.label}
