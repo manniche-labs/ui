@@ -20,6 +20,55 @@
       "type": "registry:component"
     }
   ],
+  "meta": {
+    "tier": "free",
+    "added": "2026-10-06",
+    "usedIn": [],
+    "props": [
+      {
+        "name": "data",
+        "type": "SpendControlData",
+        "default": null,
+        "required": true,
+        "description": null
+      },
+      {
+        "name": "labels",
+        "type": "SpendControlLabels",
+        "default": null,
+        "required": false,
+        "description": null
+      },
+      {
+        "name": "now",
+        "type": "Date",
+        "default": null,
+        "required": false,
+        "description": null
+      },
+      {
+        "name": "currency",
+        "type": "string",
+        "default": "'EUR'",
+        "required": false,
+        "description": null
+      },
+      {
+        "name": "onUpsell",
+        "type": "() => void",
+        "default": null,
+        "required": false,
+        "description": null
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "default": null,
+        "required": false,
+        "description": null
+      }
+    ]
+  },
   "categories": [
     "templates"
   ],

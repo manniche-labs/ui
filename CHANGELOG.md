@@ -1,5 +1,19 @@
 # Changelog
 
+## 2026-10-07
+
+### Added
+
+- Six gallery building blocks from the "control desk" design, for the coming /lab gallery. Each has a demo that shows its edge states with example data, keeps 44 px targets, animates only transform and opacity, and stands still under reduced motion. Every visible string comes through `labels`.
+  - `badge`: the small label for free, pro, new, category and demo data.
+  - `gallery-card`: a poster card (or a drawn fallback with the name) with a loop video on hover or focus, and one link stretched over the card that is described by its tier and description. `onOpen` opens a detail view on a plain click; Cmd, Ctrl and middle click keep the link.
+  - `filter-bar`: a tier switch (All, Free, Pro, New, keys 1–4) and a scrolling category row. Both are real links, so it filters without JavaScript, and focus stays on the chosen link.
+  - `preview-stage`: a preview frame with a width switch (320, 768, 1440) that scales to fit, light and dark, reload, open in a new tab, and loading and error states. W and T work only with focus inside, and announce the change.
+  - `locked-code`: the locked view of a Pro file, with a blurred placeholder stub, the unlock link and price, and the CLI and MCP commands to copy.
+  - `command-search`: a search field that opens a Cmd+K palette with grouped results, a preview pane, Cmd+Enter to copy the install line, and a no-results state with suggestions.
+  - Single-key shortcuts (`/`, 1–4, W, T) can be turned off with `shortcuts={false}`, which also hides their hints.
+- Registry metadata: `npm run meta` writes `meta.tier`, `added`, `usedIn`, `props` and `extends` into `registry.json` from the code and git history, and `--check` fails when it is out of date. `meta.a11y` (keyboard, screen reader and motion notes) is written by hand; the six new components have it. `npm run lab` now carries these fields to the site.
+
 ## 2026-10-06
 
 ### Added

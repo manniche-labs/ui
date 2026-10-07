@@ -16,6 +16,34 @@
       "type": "registry:component"
     }
   ],
+  "meta": {
+    "tier": "free",
+    "added": "2026-10-05",
+    "usedIn": [],
+    "props": [
+      {
+        "name": "title",
+        "type": "string",
+        "default": "'Danger zone'",
+        "required": false,
+        "description": null
+      },
+      {
+        "name": "actions",
+        "type": "DangerZoneAction[]",
+        "default": null,
+        "required": true,
+        "description": null
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "default": null,
+        "required": false,
+        "description": null
+      }
+    ]
+  },
   "categories": [
     "controls"
   ],

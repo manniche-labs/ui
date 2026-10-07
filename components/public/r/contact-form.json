@@ -14,6 +14,70 @@
       "type": "registry:component"
     }
   ],
+  "meta": {
+    "tier": "free",
+    "added": "2026-10-06",
+    "usedIn": [],
+    "props": [
+      {
+        "name": "heading",
+        "type": "ReactNode",
+        "default": null,
+        "required": true,
+        "description": "The section heading (h2)."
+      },
+      {
+        "name": "intro",
+        "type": "ReactNode",
+        "default": null,
+        "required": false,
+        "description": "One line under the heading."
+      },
+      {
+        "name": "topics",
+        "type": "PillOption[]",
+        "default": null,
+        "required": true,
+        "description": "Topics shown as Pills."
+      },
+      {
+        "name": "maxLength",
+        "type": "number",
+        "default": "800",
+        "required": false,
+        "description": "Message limit in characters. Default 800."
+      },
+      {
+        "name": "consent",
+        "type": "ReactNode",
+        "default": null,
+        "required": false,
+        "description": "Consent line (may hold a privacy link). The checkbox only appears when this is passed."
+      },
+      {
+        "name": "info",
+        "type": "ContactInfo",
+        "default": null,
+        "required": true,
+        "description": "Content of the info tile."
+      },
+      {
+        "name": "onSubmit",
+        "type": "(values: ContactFormValues) => Promise<void> | void",
+        "default": null,
+        "required": false,
+        "description": "Called with the values; the section waits for it. Reject to show the error state."
+      },
+      {
+        "name": "labels",
+        "type": "{ name?: string; email?: string; topic?: string; message?: string; send?: string; sending?: string; sentTitle?: string; sentText?: string; another?: string; errorText?: string; retry?: string; …",
+        "default": "{}",
+        "required": false,
+        "description": null
+      }
+    ],
+    "extends": "Omit<HTMLAttributes<HTMLElement>, 'onSubmit' | 'title'>"
+  },
   "categories": [
     "templates"
   ],

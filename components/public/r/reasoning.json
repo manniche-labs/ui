@@ -16,6 +16,48 @@
       "type": "registry:component"
     }
   ],
+  "meta": {
+    "tier": "free",
+    "added": "2026-10-03",
+    "usedIn": [],
+    "props": [
+      {
+        "name": "children",
+        "type": "ReactNode",
+        "default": null,
+        "required": true,
+        "description": "The model's reasoning so far. Plain text or your own markup."
+      },
+      {
+        "name": "streaming",
+        "type": "boolean",
+        "default": "false",
+        "required": false,
+        "description": "True while the model is still thinking."
+      },
+      {
+        "name": "ms",
+        "type": "number",
+        "default": null,
+        "required": false,
+        "description": "How long the thinking took, in milliseconds. Shown once it is done."
+      },
+      {
+        "name": "defaultOpen",
+        "type": "boolean",
+        "default": null,
+        "required": false,
+        "description": "Start open. By default it is open while streaming and closes when done."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "default": null,
+        "required": false,
+        "description": null
+      }
+    ]
+  },
   "categories": [
     "agent"
   ],

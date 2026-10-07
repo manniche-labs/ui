@@ -18,7 +18,82 @@
     }
   ],
   "meta": {
-    "credit": "Adapted from Watermelon UI (MIT)."
+    "credit": "Adapted from Watermelon UI (MIT).",
+    "tier": "free",
+    "added": "2026-10-04",
+    "usedIn": [],
+    "props": [
+      {
+        "name": "title",
+        "type": "string",
+        "default": null,
+        "required": true,
+        "description": null
+      },
+      {
+        "name": "environment",
+        "type": "string",
+        "default": null,
+        "required": true,
+        "description": null
+      },
+      {
+        "name": "branch",
+        "type": "string",
+        "default": null,
+        "required": true,
+        "description": null
+      },
+      {
+        "name": "commit",
+        "type": "string",
+        "default": null,
+        "required": true,
+        "description": null
+      },
+      {
+        "name": "message",
+        "type": "string",
+        "default": null,
+        "required": true,
+        "description": null
+      },
+      {
+        "name": "steps",
+        "type": "DeploymentStep[]",
+        "default": null,
+        "required": true,
+        "description": null
+      },
+      {
+        "name": "state",
+        "type": "'building' | 'ready' | 'failed'",
+        "default": null,
+        "required": true,
+        "description": "Overall state in the header."
+      },
+      {
+        "name": "stateLabels",
+        "type": "Record<DeploymentCardProps['state'], string>",
+        "default": "{ building: 'Building', ready: 'Ready', failed: 'Failed' }",
+        "required": false,
+        "description": null
+      },
+      {
+        "name": "actions",
+        "type": "ReactNode",
+        "default": null,
+        "required": false,
+        "description": null
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "default": null,
+        "required": false,
+        "description": null
+      }
+    ]
   },
   "categories": [
     "widgets"

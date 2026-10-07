@@ -17,6 +17,70 @@
       "type": "registry:component"
     }
   ],
+  "meta": {
+    "tier": "free",
+    "added": "2026-10-06",
+    "usedIn": [],
+    "props": [
+      {
+        "name": "status",
+        "type": "ServiceStatus",
+        "default": null,
+        "required": true,
+        "description": "How the service is doing."
+      },
+      {
+        "name": "updated",
+        "type": "string",
+        "default": null,
+        "required": false,
+        "description": "When the status was last checked, as text you format: \"14:20\". Shown in mono after \"Updated\"."
+      },
+      {
+        "name": "statusHref",
+        "type": "string",
+        "default": null,
+        "required": false,
+        "description": "Where the full status page lives. Makes the chip a link."
+      },
+      {
+        "name": "version",
+        "type": "{ label: string; href: string }",
+        "default": null,
+        "required": false,
+        "description": "The running version, and the changelog it links to."
+      },
+      {
+        "name": "links",
+        "type": "FooterStatusLink[]",
+        "default": "[]",
+        "required": false,
+        "description": "A short list of links."
+      },
+      {
+        "name": "focusTarget",
+        "type": "string",
+        "default": null,
+        "required": false,
+        "description": "The id of the element at the top of the page that receives focus after \"Back to top\"."
+      },
+      {
+        "name": "legal",
+        "type": "ReactNode",
+        "default": null,
+        "required": false,
+        "description": "A quiet line at the end: © and the like."
+      },
+      {
+        "name": "labels",
+        "type": "{ heading?: string; operational?: string; degraded?: string; outage?: string; updated?: string; version?: string; backToTop?: string; newTab?: string; linksLabel?: string }",
+        "default": null,
+        "required": false,
+        "description": "Interface strings, for translation."
+      }
+    ],
+    "extends": "Omit<ComponentPropsWithoutRef<'footer'>, 'children'>"
+  },
   "categories": [
     "templates"
   ],

@@ -21,6 +21,76 @@
       "type": "registry:hook"
     }
   ],
+  "meta": {
+    "tier": "free",
+    "added": "2026-10-03",
+    "usedIn": [],
+    "props": [
+      {
+        "name": "value",
+        "type": "number",
+        "default": null,
+        "required": false,
+        "description": null
+      },
+      {
+        "name": "defaultValue",
+        "type": "number",
+        "default": "50",
+        "required": false,
+        "description": null
+      },
+      {
+        "name": "onValueChange",
+        "type": "(value: number) => void",
+        "default": null,
+        "required": false,
+        "description": null
+      },
+      {
+        "name": "min",
+        "type": "number",
+        "default": "0",
+        "required": false,
+        "description": null
+      },
+      {
+        "name": "max",
+        "type": "number",
+        "default": "100",
+        "required": false,
+        "description": null
+      },
+      {
+        "name": "step",
+        "type": "number",
+        "default": "1",
+        "required": false,
+        "description": null
+      },
+      {
+        "name": "label",
+        "type": "string",
+        "default": null,
+        "required": true,
+        "description": "Read by screen readers."
+      },
+      {
+        "name": "format",
+        "type": "(value: number) => string",
+        "default": null,
+        "required": false,
+        "description": "Turns the value into text for screen readers, e.g. “40 %”."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "default": null,
+        "required": false,
+        "description": null
+      }
+    ]
+  },
   "categories": [
     "controls"
   ],

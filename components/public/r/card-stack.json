@@ -17,6 +17,87 @@
       "type": "registry:component"
     }
   ],
+  "meta": {
+    "tier": "free",
+    "added": "2026-10-06",
+    "usedIn": [
+      "account-home",
+      "wallet-dashboard"
+    ],
+    "props": [
+      {
+        "name": "data",
+        "type": "StackCard[]",
+        "default": null,
+        "required": true,
+        "description": "The cards, front first."
+      },
+      {
+        "name": "label",
+        "type": "string",
+        "default": null,
+        "required": true,
+        "description": "The accessible name of the stack, such as \"Your cards\"."
+      },
+      {
+        "name": "format",
+        "type": "ValueFormat",
+        "default": "{ decimals: 2 }",
+        "required": false,
+        "description": "The figure's format. Default two decimals; pass a currency for money."
+      },
+      {
+        "name": "value",
+        "type": "string",
+        "default": null,
+        "required": false,
+        "description": "The id of the card in front (controlled)."
+      },
+      {
+        "name": "defaultValue",
+        "type": "string",
+        "default": null,
+        "required": false,
+        "description": "The card in front at first (uncontrolled). Default the first card."
+      },
+      {
+        "name": "onValueChange",
+        "type": "(id: string) => void",
+        "default": null,
+        "required": false,
+        "description": "Called with the new front card's id."
+      },
+      {
+        "name": "cardWidth",
+        "type": "number",
+        "default": null,
+        "required": false,
+        "description": "The widest a card gets, in px. Default 330, or 268 inside a compact tile."
+      },
+      {
+        "name": "renderCard",
+        "type": "(card: StackCard, state: { front: boolean; index: number }) => ReactNode",
+        "default": null,
+        "required": false,
+        "description": "Draw your own card face. The shell (fill, corners, shadow, motion) stays."
+      },
+      {
+        "name": "hideAmount",
+        "type": "boolean",
+        "default": "false",
+        "required": false,
+        "description": "Hide the figure under the fan."
+      },
+      {
+        "name": "labels",
+        "type": "CardStackLabels",
+        "default": null,
+        "required": false,
+        "description": null
+      }
+    ],
+    "extends": "Omit<HTMLAttributes<HTMLDivElement>, 'defaultValue' | 'onChange'>"
+  },
   "categories": [
     "surfaces"
   ],

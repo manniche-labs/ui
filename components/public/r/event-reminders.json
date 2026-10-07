@@ -23,7 +23,68 @@
     }
   ],
   "meta": {
-    "credit": "Adapted from Watermelon UI (MIT)."
+    "credit": "Adapted from Watermelon UI (MIT).",
+    "tier": "free",
+    "added": "2026-10-03",
+    "usedIn": [],
+    "props": [
+      {
+        "name": "title",
+        "type": "string",
+        "default": null,
+        "required": true,
+        "description": null
+      },
+      {
+        "name": "when",
+        "type": "string",
+        "default": null,
+        "required": true,
+        "description": "Already formatted, e.g. “Thursday 9 October, 14:00”."
+      },
+      {
+        "name": "value",
+        "type": "Reminder[]",
+        "default": null,
+        "required": false,
+        "description": "Controlled list. Leave it out and the card keeps its own."
+      },
+      {
+        "name": "defaultValue",
+        "type": "Reminder[]",
+        "default": "[]",
+        "required": false,
+        "description": null
+      },
+      {
+        "name": "onChange",
+        "type": "(reminders: Reminder[]) => void",
+        "default": null,
+        "required": false,
+        "description": null
+      },
+      {
+        "name": "max",
+        "type": "number",
+        "default": "5",
+        "required": false,
+        "description": "Most reminders one event can have."
+      },
+      {
+        "name": "labels",
+        "type": "Partial<Record<ReminderChannel | ReminderUnit | \"before\" | \"add\" | \"remove\" | \"more\" | \"fewer\", string>>",
+        "default": "{}",
+        "required": false,
+        "description": null
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "default": null,
+        "required": false,
+        "description": null
+      }
+    ]
   },
   "categories": [
     "widgets"

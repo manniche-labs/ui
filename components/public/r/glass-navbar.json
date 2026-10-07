@@ -16,6 +16,55 @@
       "type": "registry:component"
     }
   ],
+  "meta": {
+    "tier": "free",
+    "added": "2026-10-06",
+    "usedIn": [],
+    "props": [
+      {
+        "name": "brand",
+        "type": "ReactNode",
+        "default": null,
+        "required": true,
+        "description": null
+      },
+      {
+        "name": "links",
+        "type": "GlassNavLink[]",
+        "default": null,
+        "required": true,
+        "description": null
+      },
+      {
+        "name": "current",
+        "type": "string",
+        "default": null,
+        "required": false,
+        "description": "The href of the page the visitor is on; that link gets aria-current."
+      },
+      {
+        "name": "action",
+        "type": "ReactNode",
+        "default": null,
+        "required": false,
+        "description": "A button or link at the end, e.g. \"Book a call\"."
+      },
+      {
+        "name": "variant",
+        "type": "'frosted' | 'floating' | 'scroll'",
+        "default": "'frosted'",
+        "required": false,
+        "description": "frosted: a full-width bar, always glass. floating: a pill that floats clear of the edges. scroll: over the hero with white text on a soft shade, glass once the page has scrolled. Use it on a dark or photo hero; the shade keeps the text at 4.5:1 on mid-tone colours."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "default": null,
+        "required": false,
+        "description": null
+      }
+    ]
+  },
   "categories": [
     "navigation"
   ],

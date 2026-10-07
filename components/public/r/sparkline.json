@@ -14,6 +14,123 @@
       "type": "registry:component"
     }
   ],
+  "meta": {
+    "tier": "free",
+    "added": "2026-10-06",
+    "usedIn": [
+      "bento-metrics",
+      "business-finance",
+      "widget-wall"
+    ],
+    "props": [
+      {
+        "name": "data",
+        "type": "readonly (number | SparkPoint)[]",
+        "default": null,
+        "required": true,
+        "description": "The values, oldest first: plain numbers or `{ value, label? }`."
+      },
+      {
+        "name": "label",
+        "type": "string",
+        "default": null,
+        "required": true,
+        "description": "The chart's accessible name, such as \"Savings, last 30 days\". The trend is read after it."
+      },
+      {
+        "name": "format",
+        "type": "ValueFormat",
+        "default": null,
+        "required": false,
+        "description": "How values are written in the tooltip, the summary and the table."
+      },
+      {
+        "name": "width",
+        "type": "number",
+        "default": null,
+        "required": false,
+        "description": "A fixed width in px. Default the container's full width."
+      },
+      {
+        "name": "height",
+        "type": "number",
+        "default": null,
+        "required": false,
+        "description": "The height in px. Default 30, and 24 in a compact tile."
+      },
+      {
+        "name": "current",
+        "type": "number | null",
+        "default": null,
+        "required": false,
+        "description": "The index of the point marked with the signal dot. Default the last point; null for none."
+      },
+      {
+        "name": "domain",
+        "type": "[number, number]",
+        "default": null,
+        "required": false,
+        "description": "The values at the bottom and top of the box, to put several sparklines on one scale. Default each line's own min and max."
+      },
+      {
+        "name": "interactive",
+        "type": "boolean",
+        "default": "true",
+        "required": false,
+        "description": "Show a tooltip and read points by hover, touch and keyboard. Off draws a still image. Default true."
+      },
+      {
+        "name": "table",
+        "type": "boolean",
+        "default": "true",
+        "required": false,
+        "description": "Put the points in a hidden table for screen readers. Turn it off inside a table row. Default true."
+      },
+      {
+        "name": "delay",
+        "type": "number",
+        "default": "0",
+        "required": false,
+        "description": "Wait this long (ms, at most 300) before the first-view wipe, to stagger several lines. Default 0."
+      },
+      {
+        "name": "loading",
+        "type": "boolean",
+        "default": "false",
+        "required": false,
+        "description": "Show a breathing placeholder line instead of data."
+      },
+      {
+        "name": "activeIndex",
+        "type": "number | null",
+        "default": null,
+        "required": false,
+        "description": "The highlighted point (an index into `data`), or null."
+      },
+      {
+        "name": "defaultActiveIndex",
+        "type": "number | null",
+        "default": "null",
+        "required": false,
+        "description": "The highlighted point to start with, when `activeIndex` is not controlled. Default null."
+      },
+      {
+        "name": "onActiveIndexChange",
+        "type": "(index: number | null) => void",
+        "default": null,
+        "required": false,
+        "description": "Called when hover, a finger or the keyboard picks another point, and with null when it lets go."
+      },
+      {
+        "name": "labels",
+        "type": "SparklineLabels",
+        "default": null,
+        "required": false,
+        "description": "Every visible and spoken string that is not data."
+      }
+    ],
+    "extends": "Omit<ComponentProps<'div'>, 'children'>"
+  },
   "categories": [
     "widgets"
   ],

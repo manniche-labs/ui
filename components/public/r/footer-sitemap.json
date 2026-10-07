@@ -18,6 +18,70 @@
       "type": "registry:component"
     }
   ],
+  "meta": {
+    "tier": "free",
+    "added": "2026-10-06",
+    "usedIn": [],
+    "props": [
+      {
+        "name": "brand",
+        "type": "ReactNode",
+        "default": null,
+        "required": true,
+        "description": "The wordmark or logo slot."
+      },
+      {
+        "name": "description",
+        "type": "ReactNode",
+        "default": null,
+        "required": false,
+        "description": "One sentence about the site, under the brand."
+      },
+      {
+        "name": "groups",
+        "type": "SitemapGroup[]",
+        "default": null,
+        "required": true,
+        "description": "The link groups, in order. Five to seven read best."
+      },
+      {
+        "name": "regions",
+        "type": "SitemapRegion[]",
+        "default": null,
+        "required": false,
+        "description": "Regions or languages, as links. Left out, the picker is left out."
+      },
+      {
+        "name": "legal",
+        "type": "ReactNode",
+        "default": null,
+        "required": false,
+        "description": "The legal line: ©, terms, privacy."
+      },
+      {
+        "name": "collapseBelow",
+        "type": "number",
+        "default": "640",
+        "required": false,
+        "description": "Width of the footer's box, in px, below which the groups fold. Default 640."
+      },
+      {
+        "name": "defaultOpen",
+        "type": "string[]",
+        "default": "[]",
+        "required": false,
+        "description": "Groups that start open when folded. Default none."
+      },
+      {
+        "name": "labels",
+        "type": "{ heading?: string; regions?: string; newTab?: string }",
+        "default": null,
+        "required": false,
+        "description": "Interface strings, for translation."
+      }
+    ],
+    "extends": "Omit<ComponentPropsWithoutRef<'footer'>, 'children'>"
+  },
   "categories": [
     "templates"
   ],

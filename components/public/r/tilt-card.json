@@ -13,6 +13,28 @@
       "type": "registry:component"
     }
   ],
+  "meta": {
+    "tier": "free",
+    "added": "2026-10-06",
+    "usedIn": [],
+    "props": [
+      {
+        "name": "max",
+        "type": "number",
+        "default": "10",
+        "required": false,
+        "description": "The largest tilt in degrees, reached at the card's edges."
+      },
+      {
+        "name": "glare",
+        "type": "boolean",
+        "default": "true",
+        "required": false,
+        "description": "A soft glare that follows the pointer."
+      }
+    ],
+    "extends": "HTMLAttributes<HTMLDivElement>"
+  },
   "categories": [
     "surfaces"
   ],

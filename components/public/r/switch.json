@@ -16,6 +16,62 @@
       "type": "registry:component"
     }
   ],
+  "meta": {
+    "tier": "free",
+    "added": "2026-10-03",
+    "usedIn": [],
+    "props": [
+      {
+        "name": "checked",
+        "type": "boolean",
+        "default": null,
+        "required": false,
+        "description": "Controlled state."
+      },
+      {
+        "name": "defaultChecked",
+        "type": "boolean",
+        "default": "false",
+        "required": false,
+        "description": null
+      },
+      {
+        "name": "onChange",
+        "type": "(checked: boolean) => void",
+        "default": null,
+        "required": false,
+        "description": null
+      },
+      {
+        "name": "label",
+        "type": "string",
+        "default": null,
+        "required": false,
+        "description": "Visible label. Leave it out and pass `aria-label` instead."
+      },
+      {
+        "name": "aria-label",
+        "type": "string",
+        "default": null,
+        "required": false,
+        "description": null
+      },
+      {
+        "name": "disabled",
+        "type": "boolean",
+        "default": null,
+        "required": false,
+        "description": null
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "default": null,
+        "required": false,
+        "description": null
+      }
+    ]
+  },
   "categories": [
     "controls"
   ],

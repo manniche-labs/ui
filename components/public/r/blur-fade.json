@@ -13,6 +13,55 @@
       "type": "registry:component"
     }
   ],
+  "meta": {
+    "tier": "free",
+    "added": "2026-10-03",
+    "usedIn": [],
+    "props": [
+      {
+        "name": "children",
+        "type": "ReactNode",
+        "default": null,
+        "required": true,
+        "description": null
+      },
+      {
+        "name": "delay",
+        "type": "number",
+        "default": "0",
+        "required": false,
+        "description": "Delay in milliseconds. Use small steps (40 to 80 ms) to stagger a group."
+      },
+      {
+        "name": "offset",
+        "type": "number",
+        "default": "12",
+        "required": false,
+        "description": "How far it rises, in pixels."
+      },
+      {
+        "name": "immediate",
+        "type": "boolean",
+        "default": "false",
+        "required": false,
+        "description": "Show at once instead of waiting for the element to scroll into view."
+      },
+      {
+        "name": "as",
+        "type": "'div' | 'section' | 'li' | 'span'",
+        "default": "'div'",
+        "required": false,
+        "description": null
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "default": null,
+        "required": false,
+        "description": null
+      }
+    ]
+  },
   "categories": [
     "motion"
   ],

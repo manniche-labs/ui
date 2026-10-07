@@ -16,6 +16,62 @@
       "type": "registry:component"
     }
   ],
+  "meta": {
+    "tier": "free",
+    "added": "2026-10-03",
+    "usedIn": [],
+    "props": [
+      {
+        "name": "outcomes",
+        "type": "[Outcome, Outcome]",
+        "default": null,
+        "required": true,
+        "description": "Two outcomes, usually yes and no."
+      },
+      {
+        "name": "balance",
+        "type": "number",
+        "default": null,
+        "required": true,
+        "description": "Most someone can spend; the Max chip uses it."
+      },
+      {
+        "name": "currency",
+        "type": "string",
+        "default": "'USD'",
+        "required": false,
+        "description": null
+      },
+      {
+        "name": "locale",
+        "type": "string",
+        "default": "'en-US'",
+        "required": false,
+        "description": null
+      },
+      {
+        "name": "onTrade",
+        "type": "(order: TradeOrder) => void",
+        "default": null,
+        "required": true,
+        "description": null
+      },
+      {
+        "name": "labels",
+        "type": "Partial<Record<'buy' | 'sell' | 'amount' | 'toWin' | 'toGet' | 'avg' | 'trade' | 'max', string>>",
+        "default": "{}",
+        "required": false,
+        "description": null
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "default": null,
+        "required": false,
+        "description": null
+      }
+    ]
+  },
   "categories": [
     "widgets"
   ],

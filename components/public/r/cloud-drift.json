@@ -19,6 +19,48 @@
       "type": "registry:hook"
     }
   ],
+  "meta": {
+    "tier": "free",
+    "added": "2026-10-03",
+    "usedIn": [],
+    "props": [
+      {
+        "name": "color",
+        "type": "string",
+        "default": "'#ffffff'",
+        "required": false,
+        "description": "Cloud colour as a hex value."
+      },
+      {
+        "name": "cover",
+        "type": "number",
+        "default": "0.5",
+        "required": false,
+        "description": "0 to 1: how much of the sky is cloud."
+      },
+      {
+        "name": "speed",
+        "type": "number",
+        "default": "1",
+        "required": false,
+        "description": "Drift speed; 1 is a calm breeze."
+      },
+      {
+        "name": "children",
+        "type": "ReactNode",
+        "default": null,
+        "required": false,
+        "description": "Content shown on top of the sky."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "default": null,
+        "required": false,
+        "description": null
+      }
+    ]
+  },
   "categories": [
     "surfaces"
   ],

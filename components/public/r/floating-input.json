@@ -15,7 +15,34 @@
     }
   ],
   "meta": {
-    "credit": "Adapted from Watermelon UI (MIT)."
+    "credit": "Adapted from Watermelon UI (MIT).",
+    "tier": "free",
+    "added": "2026-10-04",
+    "usedIn": [],
+    "props": [
+      {
+        "name": "label",
+        "type": "string",
+        "default": null,
+        "required": true,
+        "description": null
+      },
+      {
+        "name": "hint",
+        "type": "string",
+        "default": null,
+        "required": false,
+        "description": null
+      },
+      {
+        "name": "error",
+        "type": "string",
+        "default": null,
+        "required": false,
+        "description": "Shown in red under the field, and marks the field invalid."
+      }
+    ],
+    "extends": "Omit<InputHTMLAttributes<HTMLInputElement>, 'placeholder'>"
   },
   "categories": [
     "controls"

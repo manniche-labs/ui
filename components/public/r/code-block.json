@@ -16,6 +16,55 @@
       "type": "registry:component"
     }
   ],
+  "meta": {
+    "tier": "free",
+    "added": "2026-10-03",
+    "usedIn": [],
+    "props": [
+      {
+        "name": "code",
+        "type": "string",
+        "default": null,
+        "required": true,
+        "description": "The code as text. This is what the copy button copies."
+      },
+      {
+        "name": "language",
+        "type": "string",
+        "default": null,
+        "required": false,
+        "description": "Shown in the header, e.g. \"tsx\" or \"bash\"."
+      },
+      {
+        "name": "filename",
+        "type": "string",
+        "default": null,
+        "required": false,
+        "description": "Shown in the header instead of the language, e.g. \"src/app.tsx\"."
+      },
+      {
+        "name": "children",
+        "type": "ReactNode",
+        "default": null,
+        "required": false,
+        "description": "Already highlighted markup (from Shiki or similar). Without it the plain code is shown."
+      },
+      {
+        "name": "lineNumbers",
+        "type": "boolean",
+        "default": "false",
+        "required": false,
+        "description": "Number the lines."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "default": null,
+        "required": false,
+        "description": null
+      }
+    ]
+  },
   "categories": [
     "agent"
   ],

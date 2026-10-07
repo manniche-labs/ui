@@ -26,6 +26,77 @@
       "type": "registry:hook"
     }
   ],
+  "meta": {
+    "tier": "free",
+    "added": "2026-10-06",
+    "usedIn": [],
+    "props": [
+      {
+        "name": "slides",
+        "type": "ReactNode[]",
+        "default": null,
+        "required": true,
+        "description": "One picture per slide. An img or an SVG fills the frame edge to edge."
+      },
+      {
+        "name": "label",
+        "type": "string",
+        "default": null,
+        "required": true,
+        "description": "Read by screen readers, e.g. “Post by Ada Lovelace”."
+      },
+      {
+        "name": "header",
+        "type": "ReactNode",
+        "default": null,
+        "required": false,
+        "description": "The row above the pictures, e.g. an avatar and a name."
+      },
+      {
+        "name": "children",
+        "type": "ReactNode",
+        "default": null,
+        "required": false,
+        "description": "The text under the pictures."
+      },
+      {
+        "name": "aspect",
+        "type": "number",
+        "default": "4 / 5",
+        "required": false,
+        "description": "Picture width over height."
+      },
+      {
+        "name": "index",
+        "type": "number",
+        "default": null,
+        "required": false,
+        "description": "Controlled: the picture in view."
+      },
+      {
+        "name": "defaultIndex",
+        "type": "number",
+        "default": null,
+        "required": false,
+        "description": "The picture in view at first, when uncontrolled."
+      },
+      {
+        "name": "onIndexChange",
+        "type": "(index: number) => void",
+        "default": null,
+        "required": false,
+        "description": "Called when the post heads for a new picture: on release, a key or a button."
+      },
+      {
+        "name": "labels",
+        "type": "Partial<Record<'previous' | 'next' | 'picture' | 'of' | 'pictures', string>>",
+        "default": "{}",
+        "required": false,
+        "description": null
+      }
+    ],
+    "extends": "Omit<HTMLAttributes<HTMLElement>, 'onChange'>"
+  },
   "categories": [
     "widgets"
   ],

@@ -13,6 +13,21 @@
       "type": "registry:component"
     }
   ],
+  "meta": {
+    "tier": "free",
+    "added": "2026-10-03",
+    "usedIn": [],
+    "props": [
+      {
+        "name": "size",
+        "type": "number",
+        "default": "340",
+        "required": false,
+        "description": "Radius of the light in pixels."
+      }
+    ],
+    "extends": "HTMLAttributes<HTMLDivElement>"
+  },
   "categories": [
     "surfaces"
   ],

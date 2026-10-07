@@ -16,6 +16,84 @@
       "type": "registry:component"
     }
   ],
+  "meta": {
+    "tier": "free",
+    "added": "2026-10-06",
+    "usedIn": [],
+    "props": [
+      {
+        "name": "image",
+        "type": "ReactNode",
+        "default": null,
+        "required": true,
+        "description": "The picture at the top: an img or an SVG. It fills the frame and is shown in grey until it blooms."
+      },
+      {
+        "name": "title",
+        "type": "ReactNode",
+        "default": null,
+        "required": true,
+        "description": "The card's title. With `href` it is the link, stretched over the whole card."
+      },
+      {
+        "name": "eyebrow",
+        "type": "ReactNode",
+        "default": null,
+        "required": false,
+        "description": "A small mono line above the title."
+      },
+      {
+        "name": "children",
+        "type": "ReactNode",
+        "default": null,
+        "required": false,
+        "description": "A short caption under the title."
+      },
+      {
+        "name": "footer",
+        "type": "ReactNode",
+        "default": null,
+        "required": false,
+        "description": "A row at the bottom, under a hairline, e.g. two small facts."
+      },
+      {
+        "name": "href",
+        "type": "string",
+        "default": null,
+        "required": false,
+        "description": "Makes the whole card a link."
+      },
+      {
+        "name": "linkProps",
+        "type": "Omit<AnchorHTMLAttributes<HTMLAnchorElement>, 'href' | 'children'>",
+        "default": null,
+        "required": false,
+        "description": "Extra attributes for the link, e.g. `target` or `onClick`."
+      },
+      {
+        "name": "action",
+        "type": "ReactNode",
+        "default": null,
+        "required": false,
+        "description": "What sits in the notch. Pass your own button for a second action; with `href` the default is an arrow."
+      },
+      {
+        "name": "notch",
+        "type": "'top-right' | 'top-left'",
+        "default": "'top-right'",
+        "required": false,
+        "description": "Which top corner the notch is cut from."
+      },
+      {
+        "name": "bloom",
+        "type": "boolean",
+        "default": null,
+        "required": false,
+        "description": "Controlled: show the image in colour, e.g. for a selected card."
+      }
+    ],
+    "extends": "Omit<HTMLAttributes<HTMLDivElement>, 'title'>"
+  },
   "categories": [
     "surfaces"
   ],

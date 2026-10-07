@@ -125,6 +125,12 @@ There is also a hosted MCP server just for this registry, with no key: `https://
 | `card-stack` | Fanned payment cards: drag, tap or key the front one away and the next comes forward |
 | `transaction-list` | Payments by day with the day's net; incoming, pending and failed shown with more than colour |
 | `week-schedule` | A week by the hour: overlapping events in lanes, 44 px blocks, a now line, day tabs when narrow |
+| `badge` | Small label for tier, category, new and demo data |
+| `gallery-card` | Catalogue card: poster or drawn fallback, loop video on hover/focus, one stretched link |
+| `filter-bar` | Tier switch (keys 1–4) and a scrolling category chip row; plain links without JS |
+| `preview-stage` | Measured preview frame: width switch with ruler and shutters, scale to fit, light/dark, reload, open in new tab, loading and error states |
+| `locked-code` | A locked Pro file: blurred stub, unlock link with price, and CLI/MCP commands to copy once you have a key |
+| `command-search` | A search field that opens a Cmd+K palette, with grouped results, a preview pane and a no-results state with suggestions |
 | `use-reduced-motion` | Hook: true when the visitor asked for less motion |
 | `use-carousel-engine` | Hook: drag with momentum, trackpad, snapping and glides for your own carousel; you draw each frame |
 | `use-gl-stage` | Hook: a WebGL canvas that handles its context, size, theme colours and pausing, plus a texture atlas for pictures |

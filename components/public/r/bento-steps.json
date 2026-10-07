@@ -13,6 +13,56 @@
       "type": "registry:component"
     }
   ],
+  "meta": {
+    "tier": "free",
+    "added": "2026-10-06",
+    "usedIn": [],
+    "props": [
+      {
+        "name": "heading",
+        "type": "ReactNode",
+        "default": null,
+        "required": true,
+        "description": "The section's `h2`."
+      },
+      {
+        "name": "intro",
+        "type": "ReactNode",
+        "default": null,
+        "required": false,
+        "description": "A short line under the heading."
+      },
+      {
+        "name": "eyebrow",
+        "type": "ReactNode",
+        "default": null,
+        "required": false,
+        "description": "A small mono label above the heading."
+      },
+      {
+        "name": "steps",
+        "type": "readonly BentoStep[]",
+        "default": null,
+        "required": true,
+        "description": "The steps, three to five."
+      },
+      {
+        "name": "current",
+        "type": "number",
+        "default": null,
+        "required": false,
+        "description": "The index (from 0) of the step that is happening now. Steps before it are done. Leave it out to show no progress."
+      },
+      {
+        "name": "labels",
+        "type": "BentoStepsLabels",
+        "default": null,
+        "required": false,
+        "description": "Every visible and spoken string that is not content."
+      }
+    ],
+    "extends": "Omit<ComponentProps<'section'>, 'children' | 'title'>"
+  },
   "categories": [
     "templates"
   ],
