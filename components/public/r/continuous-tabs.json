@@ -17,7 +17,54 @@
     }
   ],
   "meta": {
-    "credit": "Adapted from Watermelon UI (MIT)."
+    "credit": "Adapted from Watermelon UI (MIT).",
+    "tier": "free",
+    "added": "2026-10-03",
+    "usedIn": [],
+    "props": [
+      {
+        "name": "tabs",
+        "type": "ContinuousTab[]",
+        "default": null,
+        "required": true,
+        "description": null
+      },
+      {
+        "name": "value",
+        "type": "string",
+        "default": null,
+        "required": false,
+        "description": "Controlled active tab."
+      },
+      {
+        "name": "defaultValue",
+        "type": "string",
+        "default": null,
+        "required": false,
+        "description": null
+      },
+      {
+        "name": "onChange",
+        "type": "(id: string) => void",
+        "default": null,
+        "required": false,
+        "description": null
+      },
+      {
+        "name": "label",
+        "type": "string",
+        "default": null,
+        "required": false,
+        "description": "Read aloud for the whole row, e.g. \"Sections\"."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "default": null,
+        "required": false,
+        "description": null
+      }
+    ]
   },
   "categories": [
     "navigation"

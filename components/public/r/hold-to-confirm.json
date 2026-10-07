@@ -21,6 +21,55 @@
       "type": "registry:hook"
     }
   ],
+  "meta": {
+    "tier": "free",
+    "added": "2026-10-03",
+    "usedIn": [],
+    "props": [
+      {
+        "name": "children",
+        "type": "ReactNode",
+        "default": null,
+        "required": true,
+        "description": null
+      },
+      {
+        "name": "duration",
+        "type": "number",
+        "default": "1200",
+        "required": false,
+        "description": "Milliseconds the button must be held."
+      },
+      {
+        "name": "onConfirm",
+        "type": "() => void",
+        "default": null,
+        "required": true,
+        "description": null
+      },
+      {
+        "name": "doneLabel",
+        "type": "ReactNode",
+        "default": "'Done'",
+        "required": false,
+        "description": null
+      },
+      {
+        "name": "hint",
+        "type": "string",
+        "default": "'Press and hold to confirm'",
+        "required": false,
+        "description": "Said to screen readers, since holding is not obvious."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "default": null,
+        "required": false,
+        "description": null
+      }
+    ]
+  },
   "categories": [
     "controls"
   ],

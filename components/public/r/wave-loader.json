@@ -19,6 +19,34 @@
       "type": "registry:hook"
     }
   ],
+  "meta": {
+    "tier": "free",
+    "added": "2026-10-03",
+    "usedIn": [],
+    "props": [
+      {
+        "name": "bars",
+        "type": "number",
+        "default": "9",
+        "required": false,
+        "description": "Number of bars."
+      },
+      {
+        "name": "label",
+        "type": "string",
+        "default": "'Loading'",
+        "required": false,
+        "description": "Read by screen readers."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "default": null,
+        "required": false,
+        "description": null
+      }
+    ]
+  },
   "categories": [
     "motion"
   ],

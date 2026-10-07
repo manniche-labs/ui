@@ -17,7 +17,47 @@
     }
   ],
   "meta": {
-    "credit": "Adapted from Watermelon UI (MIT)."
+    "credit": "Adapted from Watermelon UI (MIT).",
+    "tier": "free",
+    "added": "2026-10-04",
+    "usedIn": [],
+    "props": [
+      {
+        "name": "items",
+        "type": "DockItem[]",
+        "default": null,
+        "required": true,
+        "description": null
+      },
+      {
+        "name": "value",
+        "type": "string | null",
+        "default": null,
+        "required": true,
+        "description": null
+      },
+      {
+        "name": "onValueChange",
+        "type": "(id: string) => void",
+        "default": null,
+        "required": true,
+        "description": null
+      },
+      {
+        "name": "label",
+        "type": "string",
+        "default": "'Dock'",
+        "required": false,
+        "description": "Accessible name for the toolbar."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "default": null,
+        "required": false,
+        "description": null
+      }
+    ]
   },
   "categories": [
     "navigation"

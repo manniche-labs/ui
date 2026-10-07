@@ -18,6 +18,27 @@
       "type": "registry:hook"
     }
   ],
+  "meta": {
+    "tier": "free",
+    "added": "2026-10-03",
+    "usedIn": [],
+    "props": [
+      {
+        "name": "children",
+        "type": "string",
+        "default": null,
+        "required": true,
+        "description": "Plain text. Each word lights up as the paragraph scrolls past."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "default": null,
+        "required": false,
+        "description": null
+      }
+    ]
+  },
   "categories": [
     "motion"
   ],

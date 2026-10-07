@@ -18,7 +18,96 @@
     }
   ],
   "meta": {
-    "credit": "Adapted from Watermelon UI (MIT)."
+    "credit": "Adapted from Watermelon UI (MIT).",
+    "tier": "free",
+    "added": "2026-10-04",
+    "usedIn": [],
+    "props": [
+      {
+        "name": "onSubmit",
+        "type": "(data: { rating: FeedbackRating; text: string }) => Promise<void> | void",
+        "default": null,
+        "required": true,
+        "description": null
+      },
+      {
+        "name": "title",
+        "type": "string",
+        "default": "'Share feedback'",
+        "required": false,
+        "description": null
+      },
+      {
+        "name": "upPrompt",
+        "type": "string",
+        "default": "'What did you like most?'",
+        "required": false,
+        "description": null
+      },
+      {
+        "name": "downPrompt",
+        "type": "string",
+        "default": "'What could be better?'",
+        "required": false,
+        "description": null
+      },
+      {
+        "name": "placeholder",
+        "type": "string",
+        "default": "'Optional'",
+        "required": false,
+        "description": null
+      },
+      {
+        "name": "sendLabel",
+        "type": "string",
+        "default": "'Send'",
+        "required": false,
+        "description": null
+      },
+      {
+        "name": "sendingLabel",
+        "type": "string",
+        "default": "'Sending…'",
+        "required": false,
+        "description": null
+      },
+      {
+        "name": "thanksLabel",
+        "type": "string",
+        "default": "'Thanks for the feedback'",
+        "required": false,
+        "description": null
+      },
+      {
+        "name": "upLabel",
+        "type": "string",
+        "default": "'Helpful'",
+        "required": false,
+        "description": null
+      },
+      {
+        "name": "downLabel",
+        "type": "string",
+        "default": "'Not helpful'",
+        "required": false,
+        "description": null
+      },
+      {
+        "name": "closeLabel",
+        "type": "string",
+        "default": "'Close'",
+        "required": false,
+        "description": null
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "default": null,
+        "required": false,
+        "description": null
+      }
+    ]
   },
   "categories": [
     "widgets"

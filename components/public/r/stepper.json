@@ -23,7 +23,68 @@
     }
   ],
   "meta": {
-    "credit": "Adapted from Watermelon UI (MIT)."
+    "credit": "Adapted from Watermelon UI (MIT).",
+    "tier": "free",
+    "added": "2026-10-03",
+    "usedIn": [],
+    "props": [
+      {
+        "name": "value",
+        "type": "number",
+        "default": null,
+        "required": false,
+        "description": "Controlled value. Leave it out and the stepper keeps its own."
+      },
+      {
+        "name": "defaultValue",
+        "type": "number",
+        "default": "0",
+        "required": false,
+        "description": null
+      },
+      {
+        "name": "min",
+        "type": "number",
+        "default": "0",
+        "required": false,
+        "description": null
+      },
+      {
+        "name": "max",
+        "type": "number",
+        "default": "99",
+        "required": false,
+        "description": null
+      },
+      {
+        "name": "step",
+        "type": "number",
+        "default": "1",
+        "required": false,
+        "description": null
+      },
+      {
+        "name": "label",
+        "type": "string",
+        "default": null,
+        "required": true,
+        "description": "Read aloud by screen readers, e.g. \"Guests\"."
+      },
+      {
+        "name": "onChange",
+        "type": "(value: number) => void",
+        "default": null,
+        "required": false,
+        "description": null
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "default": null,
+        "required": false,
+        "description": null
+      }
+    ]
   },
   "categories": [
     "controls"

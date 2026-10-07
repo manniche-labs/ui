@@ -13,6 +13,34 @@
       "type": "registry:component"
     }
   ],
+  "meta": {
+    "tier": "free",
+    "added": "2026-10-03",
+    "usedIn": [],
+    "props": [
+      {
+        "name": "text",
+        "type": "string",
+        "default": null,
+        "required": true,
+        "description": "The text so far. Append to it as tokens arrive."
+      },
+      {
+        "name": "streaming",
+        "type": "boolean",
+        "default": "false",
+        "required": false,
+        "description": "True while more text is coming. Shows the caret."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "default": null,
+        "required": false,
+        "description": null
+      }
+    ]
+  },
   "categories": [
     "agent"
   ],

@@ -19,6 +19,62 @@
       "type": "registry:hook"
     }
   ],
+  "meta": {
+    "tier": "free",
+    "added": "2026-10-06",
+    "usedIn": [],
+    "props": [
+      {
+        "name": "variant",
+        "type": "'dots' | 'lines'",
+        "default": "'dots'",
+        "required": false,
+        "description": "Dots at each crossing, or the grid lines themselves."
+      },
+      {
+        "name": "gap",
+        "type": "number",
+        "default": "28",
+        "required": false,
+        "description": "Distance between grid points in CSS pixels."
+      },
+      {
+        "name": "reach",
+        "type": "number",
+        "default": "180",
+        "required": false,
+        "description": "How far from the pointer the pull reaches, in CSS pixels."
+      },
+      {
+        "name": "strength",
+        "type": "number",
+        "default": "1",
+        "required": false,
+        "description": "How hard points are pulled; 1 is a gentle well."
+      },
+      {
+        "name": "gridClassName",
+        "type": "string",
+        "default": null,
+        "required": false,
+        "description": "Classes for the grid layer; its text colour colours the grid, e.g. `text-primary/50`."
+      },
+      {
+        "name": "children",
+        "type": "ReactNode",
+        "default": null,
+        "required": false,
+        "description": "Content shown on top of the grid."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "default": null,
+        "required": false,
+        "description": null
+      }
+    ]
+  },
   "categories": [
     "surfaces"
   ],

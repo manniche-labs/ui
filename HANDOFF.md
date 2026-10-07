@@ -1,6 +1,6 @@
 # Handoff: Manniche UI (manniche-labs/ui)
 
-Updated 2026-10-06 in the evening by the Windows steering session, for the Work Mac on 7/10. Everything the next session needs is in this repo; nothing depends on files on the Windows machine.
+Updated 2026-10-07 by the Work Mac session (phase 1 of the /lab plan). Everything the next session needs is in this repo; nothing depends on files on the Windows machine.
 
 ## The plan
 
@@ -41,6 +41,12 @@ One Vite server and one browser per machine.
 - Preview: `/preview.html?c=<name>&full=1` (add `&mode=dark` or `&mini=1`). Use the component name, not `<name>-demo`.
 - Browser lock: `mkdir ../.browser-laas` before you open a browser and `rmdir` it when you close it. Always close the browser in `finally`.
 
+## Status after 7/10
+
+- Phase 1 of the /lab plan (Notion: "Plan: /lab og Manniche UI Pro fra start til slut"): six gallery building blocks from Mikkel's chosen design, "Kontrolpulten" (bid 2): `badge`, `gallery-card`, `filter-bar`, `preview-stage`, `locked-code` and `command-search`. Phase 2 rebuilds the /lab gallery from them.
+- `npm run meta` (`scripts/registry-meta.mjs`) writes `meta.tier`, `added`, `usedIn`, `props` and `extends` into `registry.json`. Run it after adding or changing a component; `--check` fails when it is stale. `meta.a11y` is hand-written and so far only the six new components have it; `chart-kit` has no props type, so it gets no props.
+- Not verified: Safari, real screen readers, FilterBar with JavaScript off in a browser, and the GalleryCard loop with a real video.
+
 ## Status after 6/10 evening
 
 - WebKit (the Safari engine, via Playwright) has been run on all 35 templates and 26 widgets at 1440 and 320 px. Only `changelog-page` failed, and it is fixed (#41). `lollipop` and `bubble-chart` look right inside the templates at 320 px; there was nothing to fix.
@@ -59,7 +65,7 @@ One Vite server and one browser per machine.
 From `components/`:
 
 ```
-npm run lint && npx tsc -p tsconfig.app.json --noEmit && npm run build && npx shadcn build
+npm run lint && npx tsc -p tsconfig.app.json --noEmit && npm run build && npx shadcn build && npm run meta -- --check
 ```
 
 `npx shadcn build` writes `public/r/*.json`. Those files are tracked: commit them with every new or changed component, or `shadcn add` gives a 404 after publish.

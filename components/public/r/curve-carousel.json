@@ -31,6 +31,84 @@
       "type": "registry:hook"
     }
   ],
+  "meta": {
+    "tier": "free",
+    "added": "2026-10-06",
+    "usedIn": [],
+    "props": [
+      {
+        "name": "slides",
+        "type": "ReactNode[]",
+        "default": null,
+        "required": true,
+        "description": "One card per slide. An img or an SVG fills its card edge to edge. In the shingle layout each card sets `--curve-shift` (px); content that translates by it pans inside its card, e.g. `[translate:var(--curve-shift,0px)_0]` on an img a little wider than the card."
+      },
+      {
+        "name": "label",
+        "type": "string",
+        "default": null,
+        "required": true,
+        "description": "Read by screen readers, e.g. “Recent work”."
+      },
+      {
+        "name": "layout",
+        "type": "CurveLayoutName | CurveLayout",
+        "default": "'coverflow'",
+        "required": false,
+        "description": "The curve the cards sit on: one of the built-in layouts, or your own."
+      },
+      {
+        "name": "loop",
+        "type": "boolean",
+        "default": null,
+        "required": false,
+        "description": "Wrap round from the last card to the first. Ring layouts wrap by default."
+      },
+      {
+        "name": "index",
+        "type": "number",
+        "default": null,
+        "required": false,
+        "description": "Controlled: the card in focus."
+      },
+      {
+        "name": "defaultIndex",
+        "type": "number",
+        "default": null,
+        "required": false,
+        "description": "The card in focus at first, when uncontrolled."
+      },
+      {
+        "name": "onIndexChange",
+        "type": "(index: number) => void",
+        "default": null,
+        "required": false,
+        "description": "Called when the carousel heads for a new card: on release, a key, a button or a click."
+      },
+      {
+        "name": "aspect",
+        "type": "number",
+        "default": null,
+        "required": false,
+        "description": "Card width over height. Each layout has its own default."
+      },
+      {
+        "name": "controls",
+        "type": "boolean",
+        "default": "true",
+        "required": false,
+        "description": "Show the previous and next buttons and the position rule."
+      },
+      {
+        "name": "labels",
+        "type": "Partial<Record<'previous' | 'next' | 'slide' | 'of' | 'slides', string>>",
+        "default": "{}",
+        "required": false,
+        "description": null
+      }
+    ],
+    "extends": "Omit<HTMLAttributes<HTMLElement>, 'onChange'>"
+  },
   "categories": [
     "widgets"
   ],

@@ -16,6 +16,62 @@
       "type": "registry:component"
     }
   ],
+  "meta": {
+    "tier": "free",
+    "added": "2026-10-06",
+    "usedIn": [],
+    "props": [
+      {
+        "name": "data",
+        "type": "WalletCurrency[]",
+        "default": null,
+        "required": true,
+        "description": null
+      },
+      {
+        "name": "defaultCurrency",
+        "type": "string",
+        "default": null,
+        "required": false,
+        "description": null
+      },
+      {
+        "name": "title",
+        "type": "string",
+        "default": "'Currency wallet'",
+        "required": false,
+        "description": null
+      },
+      {
+        "name": "note",
+        "type": "string",
+        "default": "'Example data.'",
+        "required": false,
+        "description": null
+      },
+      {
+        "name": "now",
+        "type": "Date",
+        "default": null,
+        "required": false,
+        "description": null
+      },
+      {
+        "name": "labels",
+        "type": "{ currency?: string; balance?: string; rewards?: string; spending?: string; allocation?: string; points?: string; toNext?: (n: number, tier: string) => string }",
+        "default": null,
+        "required": false,
+        "description": null
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "default": null,
+        "required": false,
+        "description": null
+      }
+    ]
+  },
   "categories": [
     "templates"
   ],

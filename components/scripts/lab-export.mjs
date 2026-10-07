@@ -59,6 +59,13 @@ for (const item of registry.items) {
     registryDependencies: item.registryDependencies ?? [],
     // Set on items adapted from another MIT library; the page names the source.
     credit: item.meta?.credit ?? null,
+    // Written by scripts/registry-meta.mjs (npm run meta); the page shows them in the gallery card and the API table.
+    tier: item.meta?.tier ?? null,
+    added: item.meta?.added ?? null,
+    usedIn: item.meta?.usedIn ?? [],
+    props: item.meta?.props ?? [],
+    extends: item.meta?.extends ?? null,
+    a11y: item.meta?.a11y ?? [],
     files,
     demo: demoCode && { code: demoCode, html: await html(demoCode, 'tsx') },
   })

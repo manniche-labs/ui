@@ -17,7 +17,33 @@
     }
   ],
   "meta": {
-    "credit": "Adapted from Watermelon UI (MIT)."
+    "credit": "Adapted from Watermelon UI (MIT).",
+    "tier": "free",
+    "added": "2026-10-03",
+    "usedIn": [],
+    "props": [
+      {
+        "name": "value",
+        "type": "number",
+        "default": null,
+        "required": true,
+        "description": null
+      },
+      {
+        "name": "locale",
+        "type": "string",
+        "default": null,
+        "required": false,
+        "description": "Passed to Intl.NumberFormat, e.g. \"da-DK\". Leave it out for plain digits."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "default": null,
+        "required": false,
+        "description": null
+      }
+    ]
   },
   "categories": [
     "motion"

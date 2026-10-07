@@ -18,7 +18,40 @@
     }
   ],
   "meta": {
-    "credit": "Adapted from Watermelon UI (MIT)."
+    "credit": "Adapted from Watermelon UI (MIT).",
+    "tier": "free",
+    "added": "2026-10-03",
+    "usedIn": [],
+    "props": [
+      {
+        "name": "steps",
+        "type": "ChecklistStep[]",
+        "default": null,
+        "required": true,
+        "description": null
+      },
+      {
+        "name": "title",
+        "type": "string",
+        "default": "'Getting started'",
+        "required": false,
+        "description": null
+      },
+      {
+        "name": "defaultOpen",
+        "type": "boolean",
+        "default": "false",
+        "required": false,
+        "description": null
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "default": null,
+        "required": false,
+        "description": null
+      }
+    ]
   },
   "categories": [
     "widgets"

@@ -16,6 +16,62 @@
       "type": "registry:component"
     }
   ],
+  "meta": {
+    "tier": "free",
+    "added": "2026-10-05",
+    "usedIn": [],
+    "props": [
+      {
+        "name": "subject",
+        "type": "string",
+        "default": null,
+        "required": true,
+        "description": "What is going away, e.g. “The project Spring sale”."
+      },
+      {
+        "name": "deletedAt",
+        "type": "Date",
+        "default": null,
+        "required": true,
+        "description": "When it was marked for deletion."
+      },
+      {
+        "name": "graceDays",
+        "type": "number",
+        "default": "14",
+        "required": false,
+        "description": "Days it stays recoverable."
+      },
+      {
+        "name": "onRestore",
+        "type": "() => void",
+        "default": null,
+        "required": true,
+        "description": null
+      },
+      {
+        "name": "restoreLabel",
+        "type": "string",
+        "default": "'Restore'",
+        "required": false,
+        "description": null
+      },
+      {
+        "name": "locale",
+        "type": "string",
+        "default": null,
+        "required": false,
+        "description": null
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "default": null,
+        "required": false,
+        "description": null
+      }
+    ]
+  },
   "categories": [
     "controls"
   ],

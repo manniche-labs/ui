@@ -23,7 +23,47 @@
     }
   ],
   "meta": {
-    "credit": "Adapted from Watermelon UI (MIT)."
+    "credit": "Adapted from Watermelon UI (MIT).",
+    "tier": "free",
+    "added": "2026-10-03",
+    "usedIn": [],
+    "props": [
+      {
+        "name": "value",
+        "type": "OpeningDay[]",
+        "default": null,
+        "required": false,
+        "description": "Controlled week. Times are \"HH:MM\", as a time input gives them."
+      },
+      {
+        "name": "defaultValue",
+        "type": "OpeningDay[]",
+        "default": "[]",
+        "required": false,
+        "description": null
+      },
+      {
+        "name": "onChange",
+        "type": "(days: OpeningDay[]) => void",
+        "default": null,
+        "required": false,
+        "description": null
+      },
+      {
+        "name": "labels",
+        "type": "{ from?: string; to?: string; add?: string; remove?: string }",
+        "default": "{}",
+        "required": false,
+        "description": null
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "default": null,
+        "required": false,
+        "description": null
+      }
+    ]
   },
   "categories": [
     "widgets"

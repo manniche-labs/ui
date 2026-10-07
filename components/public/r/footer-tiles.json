@@ -17,6 +17,70 @@
       "type": "registry:component"
     }
   ],
+  "meta": {
+    "tier": "free",
+    "added": "2026-10-06",
+    "usedIn": [],
+    "props": [
+      {
+        "name": "address",
+        "type": "FooterTilesAddress",
+        "default": null,
+        "required": true,
+        "description": null
+      },
+      {
+        "name": "hours",
+        "type": "FooterTilesHours",
+        "default": null,
+        "required": true,
+        "description": null
+      },
+      {
+        "name": "links",
+        "type": "FooterTilesLink[]",
+        "default": null,
+        "required": true,
+        "description": "Links tile: a short list of pages."
+      },
+      {
+        "name": "social",
+        "type": "FooterTilesSocial[]",
+        "default": null,
+        "required": true,
+        "description": "Social tile: each with an icon and text."
+      },
+      {
+        "name": "owner",
+        "type": "string",
+        "default": null,
+        "required": true,
+        "description": "The name after the © sign."
+      },
+      {
+        "name": "legalLinks",
+        "type": "FooterTilesLink[]",
+        "default": "[]",
+        "required": false,
+        "description": "Legal links under the tiles."
+      },
+      {
+        "name": "now",
+        "type": "Date",
+        "default": null,
+        "required": false,
+        "description": "The moment to judge \"open now\" by. When absent the real time is used after mount and refreshed every 30 s."
+      },
+      {
+        "name": "labels",
+        "type": "FooterTilesLabels",
+        "default": null,
+        "required": false,
+        "description": "UI strings, for translation."
+      }
+    ],
+    "extends": "Omit<ComponentPropsWithoutRef<'footer'>, 'children'>"
+  },
   "categories": [
     "templates"
   ],

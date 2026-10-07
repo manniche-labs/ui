@@ -17,6 +17,56 @@
       "type": "registry:component"
     }
   ],
+  "meta": {
+    "tier": "free",
+    "added": "2026-10-06",
+    "usedIn": [],
+    "props": [
+      {
+        "name": "heading",
+        "type": "ReactNode",
+        "default": null,
+        "required": true,
+        "description": "The section's `h2`."
+      },
+      {
+        "name": "intro",
+        "type": "ReactNode",
+        "default": null,
+        "required": false,
+        "description": "A short line under the heading."
+      },
+      {
+        "name": "eyebrow",
+        "type": "ReactNode",
+        "default": null,
+        "required": false,
+        "description": "A small mono label above the heading."
+      },
+      {
+        "name": "note",
+        "type": "ReactNode",
+        "default": null,
+        "required": false,
+        "description": "A fine-print line under the grid, such as \"Example data.\" or the source and date of real figures."
+      },
+      {
+        "name": "metrics",
+        "type": "readonly BentoMetric[]",
+        "default": null,
+        "required": true,
+        "description": "The figure tiles, two to six."
+      },
+      {
+        "name": "roll",
+        "type": "boolean",
+        "default": "true",
+        "required": false,
+        "description": "Roll the figures in when the section first comes into view. Never under reduced motion. Default true."
+      }
+    ],
+    "extends": "Omit<ComponentProps<'section'>, 'children' | 'title'>"
+  },
   "categories": [
     "templates"
   ],

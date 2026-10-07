@@ -17,7 +17,47 @@
     }
   ],
   "meta": {
-    "credit": "Adapted from Watermelon UI (MIT)."
+    "credit": "Adapted from Watermelon UI (MIT).",
+    "tier": "free",
+    "added": "2026-10-04",
+    "usedIn": [],
+    "props": [
+      {
+        "name": "steps",
+        "type": "StepIndicatorStep[]",
+        "default": null,
+        "required": true,
+        "description": null
+      },
+      {
+        "name": "current",
+        "type": "number",
+        "default": null,
+        "required": true,
+        "description": "Index of the step the person is on. Earlier steps are filled."
+      },
+      {
+        "name": "onStepChange",
+        "type": "(index: number) => void",
+        "default": null,
+        "required": false,
+        "description": null
+      },
+      {
+        "name": "label",
+        "type": "string",
+        "default": "'Progress'",
+        "required": false,
+        "description": null
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "default": null,
+        "required": false,
+        "description": null
+      }
+    ]
   },
   "categories": [
     "navigation"

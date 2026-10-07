@@ -16,6 +16,41 @@
       "type": "registry:component"
     }
   ],
+  "meta": {
+    "tier": "free",
+    "added": "2026-10-06",
+    "usedIn": [],
+    "props": [
+      {
+        "name": "words",
+        "type": "string[]",
+        "default": null,
+        "required": true,
+        "description": "The words to cycle through. The first one is shown under reduced motion."
+      },
+      {
+        "name": "interval",
+        "type": "number",
+        "default": "2600",
+        "required": false,
+        "description": "Milliseconds each word stays."
+      },
+      {
+        "name": "rounds",
+        "type": "number",
+        "default": "3",
+        "required": false,
+        "description": "How many rounds before it stops on the last word, so it never moves forever. 0 keeps going."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "default": null,
+        "required": false,
+        "description": null
+      }
+    ]
+  },
   "categories": [
     "motion"
   ],

@@ -18,7 +18,61 @@
     }
   ],
   "meta": {
-    "credit": "Adapted from Watermelon UI (MIT)."
+    "credit": "Adapted from Watermelon UI (MIT).",
+    "tier": "free",
+    "added": "2026-10-03",
+    "usedIn": [],
+    "props": [
+      {
+        "name": "options",
+        "type": "TagOption[]",
+        "default": null,
+        "required": true,
+        "description": null
+      },
+      {
+        "name": "value",
+        "type": "string[]",
+        "default": null,
+        "required": false,
+        "description": "Controlled ids of the picked tags, in the order they were picked."
+      },
+      {
+        "name": "defaultValue",
+        "type": "string[]",
+        "default": "[]",
+        "required": false,
+        "description": null
+      },
+      {
+        "name": "onChange",
+        "type": "(ids: string[]) => void",
+        "default": null,
+        "required": false,
+        "description": null
+      },
+      {
+        "name": "label",
+        "type": "string",
+        "default": "'Tags'",
+        "required": false,
+        "description": null
+      },
+      {
+        "name": "placeholder",
+        "type": "string",
+        "default": "'Pick a few below'",
+        "required": false,
+        "description": "Shown in the empty box before anything is picked."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "default": null,
+        "required": false,
+        "description": null
+      }
+    ]
   },
   "categories": [
     "controls"

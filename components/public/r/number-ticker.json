@@ -18,6 +18,62 @@
       "type": "registry:hook"
     }
   ],
+  "meta": {
+    "tier": "free",
+    "added": "2026-10-03",
+    "usedIn": [],
+    "props": [
+      {
+        "name": "value",
+        "type": "number",
+        "default": null,
+        "required": true,
+        "description": null
+      },
+      {
+        "name": "from",
+        "type": "number",
+        "default": "0",
+        "required": false,
+        "description": "Where the count starts the first time."
+      },
+      {
+        "name": "duration",
+        "type": "number",
+        "default": "1200",
+        "required": false,
+        "description": "Milliseconds for one count."
+      },
+      {
+        "name": "locale",
+        "type": "string",
+        "default": null,
+        "required": false,
+        "description": "Passed to Intl.NumberFormat, e.g. \"da-DK\". Defaults to the browser's language."
+      },
+      {
+        "name": "format",
+        "type": "Intl.NumberFormatOptions",
+        "default": null,
+        "required": false,
+        "description": null
+      },
+      {
+        "name": "startOnView",
+        "type": "boolean",
+        "default": "true",
+        "required": false,
+        "description": "Start counting first when the number scrolls into view."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "default": null,
+        "required": false,
+        "description": null
+      }
+    ]
+  },
   "categories": [
     "motion"
   ],

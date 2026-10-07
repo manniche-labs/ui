@@ -14,6 +14,100 @@
       "type": "registry:component"
     }
   ],
+  "meta": {
+    "tier": "free",
+    "added": "2026-10-06",
+    "usedIn": [
+      "spend-control"
+    ],
+    "props": [
+      {
+        "name": "data",
+        "type": "BubbleDatum[]",
+        "default": null,
+        "required": true,
+        "description": "One entry per bubble: `{ label, value, x?, y?, group?, color? }`."
+      },
+      {
+        "name": "label",
+        "type": "string",
+        "default": null,
+        "required": true,
+        "description": "What the chart shows, such as \"Merchants by visits and average spend\". Names the plot and the hidden table."
+      },
+      {
+        "name": "format",
+        "type": "ValueFormat",
+        "default": null,
+        "required": false,
+        "description": "How `value` is written. Default: a plain whole number in en-GB."
+      },
+      {
+        "name": "xFormat",
+        "type": "ValueFormat",
+        "default": null,
+        "required": false,
+        "description": "How `x` is written. Default: a plain number."
+      },
+      {
+        "name": "yFormat",
+        "type": "ValueFormat",
+        "default": null,
+        "required": false,
+        "description": "How `y` is written, on the side axis too. Default: a plain number."
+      },
+      {
+        "name": "height",
+        "type": "number",
+        "default": null,
+        "required": false,
+        "description": "The plot's height in px. Default 280 below 560 px wide and 320 above (240/280 in compact density)."
+      },
+      {
+        "name": "maxRadius",
+        "type": "number",
+        "default": null,
+        "required": false,
+        "description": "The largest bubble's radius in px. Default 40 (30 below 560 px wide, 22 below 400), and never more than an eighth of the height."
+      },
+      {
+        "name": "activeIndex",
+        "type": "number | null",
+        "default": null,
+        "required": false,
+        "description": "The bubble that is active (its tooltip shows), as an index into `data`, or null. Makes the selection controlled."
+      },
+      {
+        "name": "defaultActiveIndex",
+        "type": "number | null",
+        "default": "null",
+        "required": false,
+        "description": "The bubble active on first render when uncontrolled. Default null."
+      },
+      {
+        "name": "onActiveIndexChange",
+        "type": "(index: number | null) => void",
+        "default": null,
+        "required": false,
+        "description": "Called with the new index (or null) when the pointer or the keyboard moves the selection."
+      },
+      {
+        "name": "labels",
+        "type": "BubbleLabels",
+        "default": null,
+        "required": false,
+        "description": "Words for i18n."
+      },
+      {
+        "name": "density",
+        "type": "'comfortable' | 'compact'",
+        "default": null,
+        "required": false,
+        "description": "\"compact\" makes the plot shorter. Inside a DataTile it follows the tile's density on its own."
+      }
+    ],
+    "extends": "Omit<HTMLAttributes<HTMLDivElement>, 'children'>"
+  },
   "categories": [
     "widgets"
   ],
