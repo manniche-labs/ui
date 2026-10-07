@@ -11,6 +11,7 @@ export type ReasoningProps = {
   ms?: number
   /** Start open. By default it is open while streaming and closes when done. */
   defaultOpen?: boolean
+  /** Classes for the outer element. */
   className?: string
 }
 
@@ -44,11 +45,11 @@ export function Reasoning({ children, streaming = false, ms, defaultOpen, classN
           touched.current = true
           setOpen((o) => !o)
         }}
-        className="-ml-2 inline-flex min-h-11 items-center gap-2 rounded-xl px-2 text-muted-foreground transition-colors duration-150 hover:text-foreground"
+        className="-ml-2 inline-flex min-h-11 items-center gap-2 rounded-xl px-2 text-muted-foreground transition-colors duration-150 hover:text-foreground motion-reduce:transition-none"
       >
         <Brain className={cn('size-4', streaming && 'animate-pulse motion-reduce:animate-none')} aria-hidden />
         <span>{label}</span>
-        <ChevronRight className={cn('size-4 transition-transform duration-150 ease-out-quint', open && 'rotate-90')} aria-hidden />
+        <ChevronRight className={cn('size-4 transition-transform duration-150 ease-out-quint motion-reduce:transition-none', open && 'rotate-90')} aria-hidden />
       </button>
       <div
         id={id}

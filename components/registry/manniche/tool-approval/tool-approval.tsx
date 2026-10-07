@@ -15,8 +15,11 @@ export type ToolApprovalProps = {
   risky?: boolean
   /** Controlled state. Leave it out and the card keeps its own. */
   state?: ToolApprovalState
+  /** Called when the person approves the call. */
   onApprove?: () => void
+  /** Called when the person denies the call. */
   onDeny?: () => void
+  /** Classes for the outer section. */
   className?: string
 }
 
@@ -53,21 +56,25 @@ export function ToolApproval({ tool, summary, args, risky = false, state, onAppr
 
       {args && (
         <details className="group border-t">
-          <summary className="flex min-h-11 cursor-pointer list-none items-center gap-1.5 px-4 text-sm text-muted-foreground transition-colors duration-150 hover:text-foreground [&::-webkit-details-marker]:hidden">
-            <ChevronRight className="size-4 transition-transform duration-150 group-open:rotate-90" aria-hidden />
+          <summary className="flex min-h-11 cursor-pointer list-none items-center gap-1.5 px-4 text-sm text-muted-foreground transition-colors duration-150 hover:text-foreground motion-reduce:transition-none [&::-webkit-details-marker]:hidden">
+            <ChevronRight className="size-4 transition-transform duration-150 group-open:rotate-90 motion-reduce:transition-none" aria-hidden />
             Arguments
           </summary>
           <pre className="max-h-64 overflow-auto bg-muted/60 px-4 py-3 font-mono text-[0.8125rem] leading-5">{JSON.stringify(args, null, 2)}</pre>
         </details>
       )}
 
-      <footer className="flex items-center justify-end gap-2 border-t bg-muted/40 p-3" aria-live="polite">
+      <footer className="flex items-center justify-end gap-2 border-t bg-muted/40 p-3">
+        {/* Always in the DOM, so the decision is read out when it lands. It never wraps the buttons. */}
+        <p role="status" className="sr-only">
+          {current === 'approved' ? 'Approved' : current === 'denied' ? 'Denied. The agent was told not to run it.' : ''}
+        </p>
         {current === 'pending' ? (
           <>
             <button
               type="button"
               onClick={() => decide('denied')}
-              className="min-h-11 rounded-xl border bg-card px-4 text-sm font-medium transition-[background-color,transform] duration-150 ease-out-quint hover:bg-muted active:scale-[0.97]"
+              className="min-h-11 rounded-xl border bg-card px-4 text-sm font-medium transition-[background-color,transform] duration-150 ease-out-quint hover:bg-muted active:scale-[0.97] motion-reduce:transition-none motion-reduce:active:scale-100"
             >
               Deny
             </button>
@@ -75,8 +82,8 @@ export function ToolApproval({ tool, summary, args, risky = false, state, onAppr
               type="button"
               onClick={() => decide('approved')}
               className={cn(
-                'min-h-11 rounded-xl px-4 text-sm font-medium transition-[filter,transform] duration-150 ease-out-quint hover:brightness-110 active:scale-[0.97]',
-                risky ? 'bg-destructive text-white' : 'bg-primary text-primary-foreground',
+                'min-h-11 rounded-xl px-4 text-sm font-medium transition-[filter,transform] duration-150 ease-out-quint hover:brightness-110 active:scale-[0.97] motion-reduce:transition-none motion-reduce:active:scale-100',
+                risky ? 'bg-destructive text-background' : 'bg-primary text-primary-foreground',
               )}
             >
               {risky ? 'Approve anyway' : 'Approve'}
@@ -84,6 +91,7 @@ export function ToolApproval({ tool, summary, args, risky = false, state, onAppr
           </>
         ) : (
           <p
+            aria-hidden
             className={cn(
               'flex min-h-11 items-center gap-1.5 text-sm font-medium',
               current === 'approved' ? 'text-success' : 'text-muted-foreground',
