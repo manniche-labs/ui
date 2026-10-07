@@ -15,7 +15,14 @@ export type PeopleOpsData = {
 
 export type PeopleOpsLabels = { note?: string }
 
-export type PeopleOpsProps = { data: PeopleOpsData; labels?: PeopleOpsLabels; className?: string }
+export type PeopleOpsProps = {
+  /** The hiring funnel, today's schedule, payroll list and attendance matrix to show. */
+  data: PeopleOpsData
+  /** Visible text and screen reader text, with English defaults. Key: note, the footer text on the tiles. */
+  labels?: PeopleOpsLabels
+  /** Classes for the outer container. */
+  className?: string
+}
 
 export function PeopleOps({ data, labels, className }: PeopleOpsProps) {
   const note = labels?.note ?? 'Example data.'

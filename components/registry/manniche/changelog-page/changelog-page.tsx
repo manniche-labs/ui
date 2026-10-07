@@ -262,7 +262,7 @@ export function ChangelogPage() {
 
                     {r.highlight && (
                       <div className="mt-6 overflow-hidden rounded-2xl border bg-muted/50 p-6 sm:p-8">
-                        <div className="mx-auto max-w-xs -rotate-2 rounded-2xl bg-primary p-5 text-primary-foreground shadow-xl shadow-primary/25 transition-transform duration-500 ease-out-quint hover:rotate-0 starting:rotate-6 starting:opacity-0">
+                        <div className="mx-auto max-w-xs -rotate-2 rounded-2xl bg-primary p-5 text-primary-foreground shadow-xl shadow-primary/25 transition-transform duration-500 ease-out-quint hover:rotate-0 starting:rotate-6 starting:opacity-0 motion-reduce:transition-none motion-reduce:hover:-rotate-2 motion-reduce:starting:-rotate-2 motion-reduce:starting:opacity-100">
                           <div className="flex items-center justify-between text-sm">
                             <span className="font-medium">
                               {r.highlight[0]}
@@ -344,7 +344,7 @@ export function ChangelogPage() {
               />
               <button
                 type="submit"
-                className="group/sub inline-flex h-11 items-center justify-center gap-2 rounded-full bg-primary px-5 text-sm font-medium text-primary-foreground transition-transform duration-150 ease-out active:scale-[0.97]"
+                className="group/sub inline-flex h-11 items-center justify-center gap-2 rounded-full bg-primary px-5 text-sm font-medium text-primary-foreground transition-transform duration-150 ease-out active:scale-[0.97] motion-reduce:transition-none motion-reduce:active:scale-100"
               >
                 Subscribe
                 <ArrowRight
