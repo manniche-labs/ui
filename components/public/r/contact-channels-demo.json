@@ -3,6 +3,9 @@
   "name": "contact-channels-demo",
   "title": "Contact Channels demo",
   "description": "How to use Contact Channels.",
+  "dependencies": [
+    "lucide-react"
+  ],
   "registryDependencies": [
     "@manniche/contact-channels"
   ],

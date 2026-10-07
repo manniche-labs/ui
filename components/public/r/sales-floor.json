@@ -17,7 +17,7 @@
   "files": [
     {
       "path": "registry/manniche/sales-floor/sales-floor.tsx",
-      "content": "// A sales-floor screen: a segmented arc dial for the target, a live call card, performance bars and revenue by source.\nimport { Phone } from 'lucide-react'\nimport { cn } from '@/lib/utils'\nimport { BarChart, type BarPoint } from '@/registry/manniche/bar-chart/bar-chart'\nimport type { ValueFormat } from '@/registry/manniche/chart-kit/chart-utils'\nimport { DataTile } from '@/registry/manniche/data-tile/data-tile'\nimport { Dial, type DialZone } from '@/registry/manniche/dial/dial'\nimport { Donut, type DonutDatum } from '@/registry/manniche/donut/donut'\n\nexport type SalesFloorData = {\n  target: { title: string; value: number; max: number; zones: DialZone[]; caption: string; format?: ValueFormat }\n  call: { title: string; contact: string; company: string; status: string; duration: string; action: string }\n  performance: { title: string; points: BarPoint[]; format?: ValueFormat; /** The bar to mark as current, if the bars are periods. Default none. */ current?: number | null }\n  sources: { title: string; items: DonutDatum[]; format?: ValueFormat }\n}\n\nexport type SalesFloorLabels = { note?: string }\n\nexport type SalesFloorProps = { data: SalesFloorData; labels?: SalesFloorLabels; onEndCall?: () => void; className?: string }\n\nexport function SalesFloor({ data, labels, onEndCall, className }: SalesFloorProps) {\n  const note = labels?.note ?? 'Example data.'\n  return (\n    <div className={cn('@container w-full rounded-2xl bg-background p-3 text-foreground', className)}>\n      <div className=\"grid grid-cols-1 gap-3 @2xl:grid-cols-6\">\n        <div className=\"@2xl:col-span-3\">\n          <DataTile className=\"h-full\" title={data.call.title} inverted>\n            <div className=\"flex flex-wrap items-center gap-3\">\n              <span aria-hidden className=\"grid size-11 place-items-center rounded-full bg-muted\">\n                <Phone className=\"size-5\" />\n              </span>\n              <div className=\"min-w-0\">\n                <p className=\"truncate font-medium\">{data.call.contact}</p>\n                <p className=\"truncate text-sm opacity-70\">{data.call.company}</p>\n              </div>\n              <span role=\"status\" className=\"ml-auto text-sm whitespace-nowrap tabular-nums\">\n                {data.call.status} · {data.call.duration}\n              </span>\n            </div>\n            <button\n              type=\"button\"\n              onClick={onEndCall}\n              className=\"mt-4 rounded-full bg-foreground px-4 py-2 text-sm font-medium text-background transition-transform active:scale-[0.97] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring\"\n            >\n              {data.call.action}\n            </button>\n          </DataTile>\n        </div>\n        <div className=\"@2xl:col-span-3\">\n          <DataTile className=\"h-full\" title={data.target.title} footer={note}>\n            <Dial\n              value={data.target.value}\n              max={data.target.max}\n              zones={data.target.zones}\n              label={data.target.title}\n              caption={data.target.caption}\n              format={data.target.format}\n              segments={24}\n            />\n          </DataTile>\n        </div>\n        <div className=\"@2xl:col-span-4\">\n          <DataTile className=\"h-full\" title={data.performance.title} footer={note}>\n            <BarChart data={data.performance.points} label={data.performance.title} format={data.performance.format} current={data.performance.current ?? null} />\n          </DataTile>\n        </div>\n        <div className=\"@2xl:col-span-2\">\n          <DataTile className=\"h-full\" title={data.sources.title} footer={note}>\n            <Donut data={data.sources.items} label={data.sources.title} format={data.sources.format} />\n          </DataTile>\n        </div>\n      </div>\n    </div>\n  )\n}\n",
+      "content": "// A sales-floor screen: a segmented arc dial for the target, a live call card, performance bars and revenue by source.\nimport { Phone } from 'lucide-react'\nimport { cn } from '@/lib/utils'\nimport { BarChart, type BarPoint } from '@/registry/manniche/bar-chart/bar-chart'\nimport type { ValueFormat } from '@/registry/manniche/chart-kit/chart-utils'\nimport { DataTile } from '@/registry/manniche/data-tile/data-tile'\nimport { Dial, type DialZone } from '@/registry/manniche/dial/dial'\nimport { Donut, type DonutDatum } from '@/registry/manniche/donut/donut'\n\nexport type SalesFloorData = {\n  target: { title: string; value: number; max: number; zones: DialZone[]; caption: string; format?: ValueFormat }\n  call: { title: string; contact: string; company: string; status: string; duration: string; action: string }\n  performance: { title: string; points: BarPoint[]; format?: ValueFormat; /** The bar to mark as current, if the bars are periods. Default none. */ current?: number | null }\n  sources: { title: string; items: DonutDatum[]; format?: ValueFormat }\n}\n\nexport type SalesFloorLabels = { note?: string }\n\nexport type SalesFloorProps = {\n  /** The target dial, current call, performance bars and lead sources to show. */\n  data: SalesFloorData\n  /** Visible text and screen reader text, with English defaults. Key: note, the footer text on the tiles. */\n  labels?: SalesFloorLabels\n  /** Called with no arguments when the call tile's end-call button is pressed. */\n  onEndCall?: () => void\n  /** Classes for the outer container. */\n  className?: string\n}\n\nexport function SalesFloor({ data, labels, onEndCall, className }: SalesFloorProps) {\n  const note = labels?.note ?? 'Example data.'\n  return (\n    <div className={cn('@container w-full rounded-2xl bg-background p-3 text-foreground', className)}>\n      <div className=\"grid grid-cols-1 gap-3 @2xl:grid-cols-6\">\n        <div className=\"@2xl:col-span-3\">\n          <DataTile className=\"h-full\" title={data.call.title} inverted>\n            <div className=\"flex flex-wrap items-center gap-3\">\n              <span aria-hidden className=\"grid size-11 place-items-center rounded-full bg-muted\">\n                <Phone className=\"size-5\" />\n              </span>\n              <div className=\"min-w-0\">\n                <p className=\"truncate font-medium\">{data.call.contact}</p>\n                <p className=\"truncate text-sm opacity-70\">{data.call.company}</p>\n              </div>\n              <span role=\"status\" className=\"ml-auto text-sm whitespace-nowrap tabular-nums\">\n                {data.call.status} · {data.call.duration}\n              </span>\n            </div>\n            <button\n              type=\"button\"\n              onClick={onEndCall}\n              className=\"mt-4 rounded-full bg-foreground px-4 py-2 text-sm font-medium text-background transition-transform active:scale-[0.97] motion-reduce:transition-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring\"\n            >\n              {data.call.action}\n            </button>\n          </DataTile>\n        </div>\n        <div className=\"@2xl:col-span-3\">\n          <DataTile className=\"h-full\" title={data.target.title} footer={note}>\n            <Dial\n              value={data.target.value}\n              max={data.target.max}\n              zones={data.target.zones}\n              label={data.target.title}\n              caption={data.target.caption}\n              format={data.target.format}\n              segments={24}\n            />\n          </DataTile>\n        </div>\n        <div className=\"@2xl:col-span-4\">\n          <DataTile className=\"h-full\" title={data.performance.title} footer={note}>\n            <BarChart data={data.performance.points} label={data.performance.title} format={data.performance.format} current={data.performance.current ?? null} />\n          </DataTile>\n        </div>\n        <div className=\"@2xl:col-span-2\">\n          <DataTile className=\"h-full\" title={data.sources.title} footer={note}>\n            <Donut data={data.sources.items} label={data.sources.title} format={data.sources.format} />\n          </DataTile>\n        </div>\n      </div>\n    </div>\n  )\n}\n",
       "type": "registry:component"
     }
   ],
@@ -31,28 +31,28 @@
         "type": "SalesFloorData",
         "default": null,
         "required": true,
-        "description": null
+        "description": "The target dial, current call, performance bars and lead sources to show."
       },
       {
         "name": "labels",
         "type": "SalesFloorLabels",
         "default": null,
         "required": false,
-        "description": null
+        "description": "Visible text and screen reader text, with English defaults. Key: note, the footer text on the tiles."
       },
       {
         "name": "onEndCall",
         "type": "() => void",
         "default": null,
         "required": false,
-        "description": null
+        "description": "Called with no arguments when the call tile's end-call button is pressed."
       },
       {
         "name": "className",
         "type": "string",
         "default": null,
         "required": false,
-        "description": null
+        "description": "Classes for the outer container."
       }
     ],
     "a11y": [
@@ -68,6 +68,10 @@
           "Enter",
           "Space"
         ]
+      },
+      {
+        "topic": "motion",
+        "text": "The button scales on press, and under reduced motion (motion-reduce) it does so without a transition."
       }
     ]
   },

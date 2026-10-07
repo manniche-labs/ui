@@ -52,9 +52,9 @@ There is also a hosted MCP server just for this registry, with no key: `https://
 | `sheet` | A panel from the bottom that can be dragged down to close |
 | `shimmer-button` | Primary button with a slow sheen and an optional lean towards the mouse |
 | `highlighter` | A marker stroke draws behind a phrase when it scrolls into view |
-| `text-reveal` | Words go from faint to full as the reader scrolls |
+| `text-reveal` | Words go from half strength to full as the reader scrolls |
 | `spotlight-card` | A card with a soft light that follows the mouse |
-| `marquee` | Items scroll sideways in a loop and pause on hover or focus |
+| `marquee` | Items scroll sideways in a loop, with a pause button, and pause on hover or focus |
 | `dot-pattern` | A quiet dot grid behind content, CSS only |
 | `rolling-number` | A number whose changed digits roll up or down |
 | `stepper` | Plus and minus counter with rolling digits and arrow keys |
@@ -72,7 +72,7 @@ There is also a hosted MCP server just for this registry, with no key: `https://
 | `hover-highlight` | Grid of cards where one highlight glides to the hovered or focused card |
 | `tag-picker` | Pick tags from a pool; they fly into the box and back |
 | `signature-pad` | Draw or type a signature, get a sharp PNG |
-| `continuous-tabs` | Tab list with a sliding pill and arrow keys |
+| `continuous-tabs` | Tab list with a sliding pill, arrow keys and an optional built-in tab panel |
 | `pagination` | Previous and next with a rolling page number |
 | `onboarding-checklist` | Collapsible getting-started card with progress |
 | `event-reminders` | When and how people are reminded of an event |
@@ -113,7 +113,7 @@ There is also a hosted MCP server just for this registry, with no key: `https://
 | `deployment-card` | Build status with an animated bar per step |
 | `integration-card` | Integrations that open into a card with a connect button |
 | `data-tile` | The tile a figure or chart sits in: name, control, figure, fine print; `inverted` lifts the one that matters, `compact` for dense dashboards |
-| `chart-kit` | Shared parts of the Tiles charts: number formatting, axis ticks, smooth line, one tooltip, the big display figure, change pill, pill switch, screen-reader table |
+| `chart-kit` | Shared parts of the Tiles charts: number formatting, axis ticks, smooth line, one tooltip, the big display figure, change pill, pill switch, screen-reader table, static plots for HTML files |
 | `bar-chart` | Column chart with round caps, today's dot, a pale comparison bar and automatic weekly buckets when bars get thin |
 | `area-chart` | Smooth line over a soft tint, with a dashed comparison line and a crosshair tooltip that reads the difference |
 | `sparkline` | Tiny trend line beside a figure or in a table cell, with a dot on the latest point |

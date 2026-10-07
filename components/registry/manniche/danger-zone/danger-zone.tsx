@@ -12,8 +12,11 @@ export type DangerZoneAction = {
 }
 
 export type DangerZoneProps = {
+  /** Heading of the section. */
   title?: string
+  /** The risky actions, each with a title, a description and the control that runs it. */
   actions: DangerZoneAction[]
+  /** Classes for the outer section. */
   className?: string
 }
 
@@ -46,4 +49,4 @@ export function DangerZone({ title = 'Danger zone', actions, className }: Danger
 
 /** The outlined red button that fits a danger-zone row. Turns solid red only on hover. */
 export const dangerButton =
-  'inline-flex min-h-11 items-center rounded-xl border border-destructive/40 bg-card px-4 text-sm font-medium text-destructive transition-[background-color,color,transform] duration-150 ease-out-quint hover:bg-destructive hover:text-white active:scale-[0.97]'
+  'inline-flex min-h-11 items-center rounded-xl border border-destructive/40 bg-card px-4 text-sm font-medium text-destructive transition-[background-color,color,transform] duration-150 ease-out-quint hover:bg-destructive hover:text-background active:scale-[0.97] motion-reduce:transition-none motion-reduce:active:scale-100'

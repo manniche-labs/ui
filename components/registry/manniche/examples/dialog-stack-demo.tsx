@@ -17,7 +17,7 @@ export default function DialogStackDemo() {
           setSent(false)
           setOpen(true)
         }}
-        className="inline-flex min-h-11 items-center gap-2 rounded-full border bg-card px-6 font-medium shadow-sm transition-transform duration-200 hover:-translate-y-0.5"
+        className="inline-flex min-h-11 items-center gap-2 rounded-full border bg-card px-6 font-medium shadow-sm transition-transform duration-200 hover:-translate-y-0.5 motion-reduce:transition-none motion-reduce:hover:translate-y-0"
       >
         <Gift className="size-5" aria-hidden />
         Send a gift card

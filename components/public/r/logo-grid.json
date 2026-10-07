@@ -10,7 +10,7 @@
   "files": [
     {
       "path": "registry/manniche/logo-grid/logo-grid.tsx",
-      "content": "// Based on Watermelon UI's “Integrations 2” block (MIT, © 2026 Watermelon Platform Contributors,\n// github.com/WatermelonCorp/watermelon-platform). Rewritten with any logos, a phone layout and theme tokens.\nimport type { ReactNode } from 'react'\nimport { cn } from '@/lib/utils'\n\nexport type LogoGridItem = { name: string; logo: ReactNode }\n\nexport type LogoGridProps = {\n  /** Twelve fill the grid around the centre; fewer leave empty cells. */\n  items: LogoGridItem[]\n  title: ReactNode\n  description?: ReactNode\n  /** E.g. a link to all integrations. */\n  action?: ReactNode\n  className?: string\n}\n\n/**\n * A grid of logos around a centre cell with a heading, for integrations or partners.\n * On a phone the heading comes first and the logos fall in two columns below.\n */\nexport function LogoGrid({ items, title, description, action, className }: LogoGridProps) {\n  return (\n    <section className={cn('grid grid-cols-2 border-t border-l sm:grid-cols-4', className)}>\n      <div className=\"relative isolate col-span-2 flex flex-col items-center justify-center gap-3 overflow-hidden border-r border-b px-6 py-10 text-center sm:col-start-2 sm:row-span-2 sm:row-start-2\">\n        {/* Thin diagonal lines behind the text. */}\n        <span aria-hidden className=\"absolute inset-0 -z-10 bg-[repeating-linear-gradient(135deg,var(--color-border)_0_1px,transparent_1px_10px)] opacity-60\" />\n        <h2 className=\"text-2xl font-semibold tracking-tight text-balance\">{title}</h2>\n        {description && <p className=\"max-w-xs text-sm text-pretty text-muted-foreground\">{description}</p>}\n        {action}\n      </div>\n      <ul className=\"contents\">\n        {items.map((item) => (\n          <li key={item.name} className=\"group flex aspect-square flex-col items-center justify-center gap-2 border-r border-b p-4 sm:aspect-auto sm:min-h-32\">\n            <span className=\"grid size-10 place-items-center text-muted-foreground transition-colors duration-200 group-hover:text-foreground [&_svg]:size-7\">{item.logo}</span>\n            <span className=\"text-xs text-muted-foreground\">{item.name}</span>\n          </li>\n        ))}\n      </ul>\n    </section>\n  )\n}\n",
+      "content": "// Based on Watermelon UI's “Integrations 2” block (MIT, © 2026 Watermelon Platform Contributors,\n// github.com/WatermelonCorp/watermelon-platform). Rewritten with any logos, a phone layout and theme tokens.\nimport type { ReactNode } from 'react'\nimport { cn } from '@/lib/utils'\n\nexport type LogoGridItem = { name: string; logo: ReactNode }\n\nexport type LogoGridProps = {\n  /** Twelve fill the grid around the centre; fewer leave empty cells. */\n  items: LogoGridItem[]\n  /** The heading in the centre cell. */\n  title: ReactNode\n  /** A short line under the heading. */\n  description?: ReactNode\n  /** E.g. a link to all integrations. */\n  action?: ReactNode\n  /** Classes for the outer section. */\n  className?: string\n}\n\n/**\n * A grid of logos around a centre cell with a heading, for integrations or partners.\n * On a phone the heading comes first and the logos fall in two columns below.\n */\nexport function LogoGrid({ items, title, description, action, className }: LogoGridProps) {\n  return (\n    <section className={cn('grid grid-cols-2 border-t border-l sm:grid-cols-4', className)}>\n      <div className=\"relative isolate col-span-2 flex flex-col items-center justify-center gap-3 overflow-hidden border-r border-b px-6 py-10 text-center sm:col-start-2 sm:row-span-2 sm:row-start-2\">\n        {/* Thin diagonal lines behind the text. */}\n        <span aria-hidden className=\"absolute inset-0 -z-10 bg-[repeating-linear-gradient(135deg,var(--color-border)_0_1px,transparent_1px_10px)] opacity-60\" />\n        <h2 className=\"text-2xl font-semibold tracking-tight text-balance\">{title}</h2>\n        {description && <p className=\"max-w-xs text-sm text-pretty text-muted-foreground\">{description}</p>}\n        {action}\n      </div>\n      <ul className=\"contents\">\n        {items.map((item) => (\n          <li key={item.name} className=\"group flex aspect-square flex-col items-center justify-center gap-2 border-r border-b p-4 sm:aspect-auto sm:min-h-32\">\n            <span className=\"grid size-10 place-items-center text-muted-foreground transition-colors duration-200 group-hover:text-foreground [&_svg]:size-7\">{item.logo}</span>\n            <span className=\"text-xs text-muted-foreground\">{item.name}</span>\n          </li>\n        ))}\n      </ul>\n    </section>\n  )\n}\n",
       "type": "registry:component"
     }
   ],
@@ -32,14 +32,14 @@
         "type": "ReactNode",
         "default": null,
         "required": true,
-        "description": null
+        "description": "The heading in the centre cell."
       },
       {
         "name": "description",
         "type": "ReactNode",
         "default": null,
         "required": false,
-        "description": null
+        "description": "A short line under the heading."
       },
       {
         "name": "action",
@@ -53,7 +53,7 @@
         "type": "string",
         "default": null,
         "required": false,
-        "description": null
+        "description": "Classes for the outer section."
       }
     ],
     "a11y": [

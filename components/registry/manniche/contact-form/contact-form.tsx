@@ -34,6 +34,7 @@ export type ContactFormProps = Omit<HTMLAttributes<HTMLElement>, 'onSubmit' | 't
   info: ContactInfo
   /** Called with the values; the section waits for it. Reject to show the error state. */
   onSubmit?: (values: ContactFormValues) => Promise<void> | void
+  /** Visible text and screen reader text, with English defaults. */
   labels?: {
     name?: string; email?: string; topic?: string; message?: string; send?: string; sending?: string
     sentTitle?: string; sentText?: string; another?: string; errorText?: string; retry?: string

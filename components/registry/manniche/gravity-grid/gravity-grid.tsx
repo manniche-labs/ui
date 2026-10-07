@@ -15,6 +15,7 @@ export type GravityGridProps = {
   gridClassName?: string
   /** Content shown on top of the grid. */
   children?: ReactNode
+  /** Classes for the outer element. */
   className?: string
 }
 

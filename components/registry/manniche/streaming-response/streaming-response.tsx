@@ -5,6 +5,7 @@ export type StreamingResponseProps = {
   text: string
   /** True while more text is coming. Shows the caret. */
   streaming?: boolean
+  /** Classes for the outer element. */
   className?: string
 }
 
@@ -16,7 +17,7 @@ export function StreamingResponse({ text, streaming = false, className }: Stream
   const paragraphs = text.split(/\n{2,}/)
 
   return (
-    <div className={cn('max-w-[65ch] text-base leading-7 text-pretty', className)} aria-busy={streaming}>
+    <div className={cn('max-w-[65ch] text-base leading-7 text-pretty', className)} aria-live="polite" aria-relevant="additions text" aria-busy={streaming}>
       {paragraphs.map((p, i) => {
         const last = i === paragraphs.length - 1
         return (

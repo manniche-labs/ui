@@ -104,10 +104,13 @@ export type PreviewStageProps = {
   width?: number
   /** The first width when you do not. Defaults to the widest. */
   defaultWidth?: number
+  /** Called with the new width when a width is chosen. */
   onWidthChange?: (width: number) => void
   /** The content's theme, if you control it. */
   theme?: StageTheme
+  /** The starting theme when the theme is not controlled. */
   defaultTheme?: StageTheme
+  /** Called with the new theme when it is switched. */
   onThemeChange?: (theme: StageTheme) => void
   /** Drive the states yourself. Without it, an iframe is loading until it loads, and `children` are ready. */
   status?: StageStatus
@@ -123,6 +126,7 @@ export type PreviewStageProps = {
   shortcuts?: boolean
   /** Every visible and announced string, for other languages. */
   labels?: Partial<PreviewStageLabels>
+  /** Classes for the outer group. */
   className?: string
 }
 

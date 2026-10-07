@@ -7,6 +7,7 @@ export type WaveLoaderProps = {
   bars?: number
   /** Read by screen readers. */
   label?: string
+  /** Classes for the outer span. */
   className?: string
 }
 

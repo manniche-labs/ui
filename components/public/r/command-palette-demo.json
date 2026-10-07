@@ -3,6 +3,9 @@
   "name": "command-palette-demo",
   "title": "Command palette demo",
   "description": "How to use Command palette.",
+  "dependencies": [
+    "lucide-react"
+  ],
   "registryDependencies": [
     "@manniche/command-palette"
   ],

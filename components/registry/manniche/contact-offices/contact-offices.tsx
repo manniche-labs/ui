@@ -31,11 +31,15 @@ export type ContactOffice = {
 }
 
 export type ContactOfficesProps = Omit<HTMLAttributes<HTMLElement>, 'title'> & {
+  /** The section heading (h2). */
   heading: ReactNode
+  /** One line under the heading. */
   intro?: ReactNode
+  /** The offices to list, each with address, hours and time zone. */
   offices: ContactOffice[]
   /** A fixed time; when absent the clock runs after mount. */
   now?: Date
+  /** Visible text and screen reader text, with English defaults. */
   labels?: {
     open?: string; closed?: string; localTime?: string; copyAddress?: string; copied?: string; failed?: string
     directions?: string; newTab?: string; hours?: string; day?: string; closesIn?: (min: number) => string; opensAt?: (day: string, time: string) => string

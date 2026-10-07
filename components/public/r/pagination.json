@@ -13,12 +13,12 @@
   "files": [
     {
       "path": "registry/manniche/pagination/pagination.tsx",
-      "content": "// Based on Watermelon UI's “Pagination” (MIT, © 2026 Watermelon Platform Contributors,\n// github.com/WatermelonCorp/watermelon-platform). Rewritten with a nav landmark and labels.\nimport { ArrowLeft, ArrowRight } from 'lucide-react'\nimport { useState } from 'react'\nimport { RollingNumber } from '@/registry/manniche/rolling-number/rolling-number'\nimport { cn } from '@/lib/utils'\n\nexport type PaginationProps = {\n  total: number\n  /** Controlled page, counted from 1. */\n  page?: number\n  defaultPage?: number\n  onChange?: (page: number) => void\n  /** The words, so the control speaks your language. */\n  labels?: { nav?: string; previous?: string; next?: string; of?: string }\n  className?: string\n}\n\nexport function Pagination({ total, page, defaultPage = 1, onChange, labels = {}, className }: PaginationProps) {\n  const [own, setOwn] = useState(defaultPage)\n  const current = page ?? own\n  const { nav = 'Pages', previous = 'Previous page', next = 'Next page', of = 'of' } = labels\n\n  const go = (to: number) => {\n    const v = Math.min(total, Math.max(1, to))\n    if (v === current) return\n    setOwn(v)\n    onChange?.(v)\n  }\n\n  const btn =\n    'grid size-11 place-items-center rounded-xl bg-card text-foreground shadow-sm transition-[background-color,transform] duration-150 hover:bg-accent active:scale-[0.94] disabled:pointer-events-none disabled:opacity-40'\n\n  return (\n    <nav aria-label={nav} className={cn('inline-flex items-center gap-3 rounded-2xl border bg-muted p-1.5', className)}>\n      <button type=\"button\" className={btn} onClick={() => go(current - 1)} disabled={current <= 1} aria-label={previous}>\n        <ArrowLeft className=\"size-5\" aria-hidden />\n      </button>\n      <p className=\"flex items-baseline gap-1.5 text-base font-semibold text-muted-foreground\" aria-live=\"polite\">\n        <RollingNumber value={current} className=\"text-foreground\" />\n        <span>\n          {of} {total}\n        </span>\n      </p>\n      <button type=\"button\" className={btn} onClick={() => go(current + 1)} disabled={current >= total} aria-label={next}>\n        <ArrowRight className=\"size-5\" aria-hidden />\n      </button>\n    </nav>\n  )\n}\n",
+      "content": "// Based on Watermelon UI's “Pagination” (MIT, © 2026 Watermelon Platform Contributors,\n// github.com/WatermelonCorp/watermelon-platform). Rewritten with a nav landmark and labels.\nimport { ArrowLeft, ArrowRight } from 'lucide-react'\nimport { useState } from 'react'\nimport { RollingNumber } from '@/registry/manniche/rolling-number/rolling-number'\nimport { cn } from '@/lib/utils'\n\nexport type PaginationProps = {\n  /** Number of pages. */\n  total: number\n  /** Controlled page, counted from 1. */\n  page?: number\n  /** Starting page when the control is not controlled, counted from 1. */\n  defaultPage?: number\n  /** Called with the new page number when previous or next is pressed. */\n  onChange?: (page: number) => void\n  /** The words, so the control speaks your language. */\n  labels?: { nav?: string; previous?: string; next?: string; of?: string }\n  /** Classes for the outer nav. */\n  className?: string\n}\n\nexport function Pagination({ total, page, defaultPage = 1, onChange, labels = {}, className }: PaginationProps) {\n  const [own, setOwn] = useState(defaultPage)\n  const current = page ?? own\n  const { nav = 'Pages', previous = 'Previous page', next = 'Next page', of = 'of' } = labels\n\n  const go = (to: number) => {\n    const v = Math.min(total, Math.max(1, to))\n    if (v === current) return\n    setOwn(v)\n    onChange?.(v)\n  }\n\n  const btn =\n    'grid size-11 place-items-center rounded-xl bg-card text-foreground shadow-sm transition-[background-color,transform] duration-150 hover:bg-accent active:scale-[0.94] disabled:pointer-events-none disabled:opacity-40 motion-reduce:transition-none'\n\n  return (\n    <nav aria-label={nav} className={cn('inline-flex items-center gap-3 rounded-2xl border bg-muted p-1.5', className)}>\n      <button type=\"button\" className={btn} onClick={() => go(current - 1)} disabled={current <= 1} aria-label={previous}>\n        <ArrowLeft className=\"size-5\" aria-hidden />\n      </button>\n      <p className=\"flex items-baseline gap-1.5 text-base font-semibold text-muted-foreground\" aria-live=\"polite\">\n        <RollingNumber value={current} className=\"text-foreground\" />\n        <span>\n          {of} {total}\n        </span>\n      </p>\n      <button type=\"button\" className={btn} onClick={() => go(current + 1)} disabled={current >= total} aria-label={next}>\n        <ArrowRight className=\"size-5\" aria-hidden />\n      </button>\n    </nav>\n  )\n}\n",
       "type": "registry:component"
     },
     {
       "path": "registry/manniche/rolling-number/rolling-number.tsx",
-      "content": "// Based on the rolling digits in Watermelon UI's “Stepper” and “Pagination”\n// (MIT, © 2026 Watermelon Platform Contributors, github.com/WatermelonCorp/watermelon-platform).\nimport { AnimatePresence, MotionConfig, motion } from 'motion/react'\nimport { useState } from 'react'\nimport { cn } from '@/lib/utils'\n\nexport type RollingNumberProps = {\n  value: number\n  /** Passed to Intl.NumberFormat, e.g. \"da-DK\". Leave it out for plain digits. */\n  locale?: string\n  className?: string\n}\n\n/** A number whose changed digits roll up or down. Screen readers get the whole number once. */\nexport function RollingNumber({ value, locale, className }: RollingNumberProps) {\n  // Remember the last value in state (not a ref), so the direction survives a double render.\n  const [last, setLast] = useState({ value, dir: 1 })\n  const dir = last.value === value ? last.dir : value > last.value ? 1 : -1\n  if (last.value !== value) setLast({ value, dir })\n  const text = locale ? new Intl.NumberFormat(locale).format(value) : String(value)\n  const chars = text.split('')\n\n  return (\n    <MotionConfig reducedMotion=\"user\">\n      <span className={cn('inline-flex tabular-nums', className)}>\n        <span className=\"sr-only\">{text}</span>\n        <span aria-hidden className=\"inline-flex\">\n          {chars.map((ch, i) => {\n            // Count from the right, so the ones stay the ones when the number grows a digit.\n            const place = chars.length - i\n            return (\n              <span key={place} className=\"relative inline-flex min-w-[1ch] justify-center overflow-hidden\">\n                <AnimatePresence mode=\"popLayout\" initial={false} custom={dir}>\n                  <motion.span\n                    key={ch}\n                    initial={{ y: `${dir * 70}%`, opacity: 0, filter: 'blur(2px)' }}\n                    animate={{ y: 0, opacity: 1, filter: 'blur(0px)' }}\n                    exit={{ y: `${dir * -70}%`, opacity: 0, filter: 'blur(2px)' }}\n                    transition={{ type: 'spring', stiffness: 260, damping: 32 }}\n                    className=\"inline-block\"\n                  >\n                    {ch}\n                  </motion.span>\n                </AnimatePresence>\n              </span>\n            )\n          })}\n        </span>\n      </span>\n    </MotionConfig>\n  )\n}\n",
+      "content": "// Based on the rolling digits in Watermelon UI's “Stepper” and “Pagination”\n// (MIT, © 2026 Watermelon Platform Contributors, github.com/WatermelonCorp/watermelon-platform).\nimport { AnimatePresence, MotionConfig, motion } from 'motion/react'\nimport { useState } from 'react'\nimport { cn } from '@/lib/utils'\n\nexport type RollingNumberProps = {\n  /** The number shown. Each digit rolls when it changes. */\n  value: number\n  /** Passed to Intl.NumberFormat, e.g. \"da-DK\". Leave it out for plain digits. */\n  locale?: string\n  /** Classes for the inner span that holds the digits. */\n  className?: string\n}\n\n/** A number whose changed digits roll up or down. Screen readers get the whole number once. */\nexport function RollingNumber({ value, locale, className }: RollingNumberProps) {\n  // Remember the last value in state (not a ref), so the direction survives a double render.\n  const [last, setLast] = useState({ value, dir: 1 })\n  const dir = last.value === value ? last.dir : value > last.value ? 1 : -1\n  if (last.value !== value) setLast({ value, dir })\n  const text = locale ? new Intl.NumberFormat(locale).format(value) : String(value)\n  const chars = text.split('')\n\n  return (\n    <MotionConfig reducedMotion=\"user\">\n      <span className={cn('inline-flex tabular-nums', className)}>\n        <span className=\"sr-only\">{text}</span>\n        <span aria-hidden className=\"inline-flex\">\n          {chars.map((ch, i) => {\n            // Count from the right, so the ones stay the ones when the number grows a digit.\n            const place = chars.length - i\n            return (\n              <span key={place} className=\"relative inline-flex min-w-[1ch] justify-center overflow-hidden\">\n                <AnimatePresence mode=\"popLayout\" initial={false} custom={dir}>\n                  <motion.span\n                    key={ch}\n                    initial={{ y: `${dir * 70}%`, opacity: 0, filter: 'blur(2px)' }}\n                    animate={{ y: 0, opacity: 1, filter: 'blur(0px)' }}\n                    exit={{ y: `${dir * -70}%`, opacity: 0, filter: 'blur(2px)' }}\n                    transition={{ type: 'spring', stiffness: 260, damping: 32 }}\n                    className=\"inline-block\"\n                  >\n                    {ch}\n                  </motion.span>\n                </AnimatePresence>\n              </span>\n            )\n          })}\n        </span>\n      </span>\n    </MotionConfig>\n  )\n}\n",
       "type": "registry:component"
     }
   ],
@@ -33,7 +33,7 @@
         "type": "number",
         "default": null,
         "required": true,
-        "description": null
+        "description": "Number of pages."
       },
       {
         "name": "page",
@@ -47,14 +47,14 @@
         "type": "number",
         "default": "1",
         "required": false,
-        "description": null
+        "description": "Starting page when the control is not controlled, counted from 1."
       },
       {
         "name": "onChange",
         "type": "(page: number) => void",
         "default": null,
         "required": false,
-        "description": null
+        "description": "Called with the new page number when previous or next is pressed."
       },
       {
         "name": "labels",
@@ -68,7 +68,7 @@
         "type": "string",
         "default": null,
         "required": false,
-        "description": null
+        "description": "Classes for the outer nav."
       }
     ],
     "a11y": [
@@ -84,6 +84,10 @@
       {
         "topic": "screen-reader",
         "text": "The control is a nav named by labels.nav (default Pages). The buttons are named Previous page and Next page, or your labels, with aria-hidden icons. The N of total text is aria-live polite, and the rolling number reads the whole number once."
+      },
+      {
+        "topic": "motion",
+        "text": "The buttons scale on press without a transition under reduced motion (motion-reduce), and the rolling number follows the system setting through Motion."
       }
     ]
   },

@@ -20,6 +20,7 @@ export type PostCarouselProps = Omit<HTMLAttributes<HTMLElement>, 'onChange'> & 
   defaultIndex?: number
   /** Called when the post heads for a new picture: on release, a key or a button. */
   onIndexChange?: (index: number) => void
+  /** Screen reader and button text with English defaults. Keys: `previous`, `next`, `picture`, `of` and `pictures`. */
   labels?: Partial<Record<'previous' | 'next' | 'picture' | 'of' | 'pictures', string>>
 }
 

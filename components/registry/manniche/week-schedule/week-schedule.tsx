@@ -43,7 +43,9 @@ export type ScheduleCategory = {
 export type WeekScheduleLabels = {
   /** The heading of a day, such as "Mon 5 Oct". */
   day?: (date: Date, locale: string) => string
+  /** Read after the name of today’s day. Default “today”. */
   today?: string
+  /** The name of the now line and the spoken time, given the clock time. */
   now?: (time: string) => string
   /** The event count after a day's name. */
   count?: (n: number) => string
@@ -84,6 +86,7 @@ export type WeekScheduleProps = Omit<HTMLAttributes<HTMLDivElement>, 'onSelect'>
   day?: number
   /** The day shown first in day tabs. Default today, else the first day. */
   defaultDay?: number
+  /** Called with the day index when another day tab is chosen. */
   onDayChange?: (day: number) => void
   /** Makes each event a button and is called with it. */
   onSelect?: (event: ScheduleEvent) => void
@@ -91,6 +94,7 @@ export type WeekScheduleProps = Omit<HTMLAttributes<HTMLDivElement>, 'onSelect'>
   legend?: boolean
   /** Number and date language. Default "en-GB". */
   locale?: string
+  /** Text overrides for day names, counts, events and hints, with English defaults. */
   labels?: WeekScheduleLabels
 }
 

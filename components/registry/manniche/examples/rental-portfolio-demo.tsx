@@ -21,7 +21,7 @@ const data: RentalPortfolioData = {
     zones: [
       { label: 'Late', to: 70 },
       { label: 'Mostly in', to: 90 },
-      { label: 'Collected', to: 100 },
+      { label: 'On track', to: 100 },
     ],
   },
   transfers: {

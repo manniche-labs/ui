@@ -80,6 +80,7 @@ export type LockedCodeProps = {
   labels?: LockedCodeLabels
   /** The heading level of "The code is locked", to fit the page outline. Default 3. */
   headingLevel?: 2 | 3 | 4 | 5 | 6
+  /** Classes for the outer section. */
   className?: string
 }
 

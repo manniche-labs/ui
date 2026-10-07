@@ -8,10 +8,13 @@ export type ImageGenerationProps = {
   progress: number
   /** The finished image, usually an <img>. Rendered behind the blur while it sharpens. */
   children?: ReactNode
+  /** The prompt that made the image. It names the image for screen readers once it is ready. */
   prompt?: string
   /** A small badge in the corner, e.g. “1024 × 1024”. */
   size?: string
+  /** Screen reader text with English defaults. Keys: `working` and `ready`. */
   labels?: Partial<Record<'working' | 'ready', string>>
+  /** Classes for the outer figure. */
   className?: string
 }
 

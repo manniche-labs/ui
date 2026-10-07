@@ -2,7 +2,7 @@
 // github.com/WatermelonCorp/watermelon-platform). Rewritten as a list of rows that open into a detail card, with no brand icons.
 import { Check, Plus, X } from 'lucide-react'
 import { AnimatePresence, MotionConfig, motion } from 'motion/react'
-import { useEffect, useId, useRef, useState, type ReactNode } from 'react'
+import { useEffect, useId, useRef, useState, type KeyboardEvent as ReactKeyboardEvent, type ReactNode } from 'react'
 import { cn } from '@/lib/utils'
 
 export type Integration = {
@@ -18,15 +18,25 @@ export type Integration = {
 }
 
 export type IntegrationCardProps = {
+  /** The heading of the list, also the name of the card. Default “Integrations”. */
   title?: string
+  /** The integrations to list; each row opens into a detail dialog. */
   items: Integration[]
+  /** Called with the item id and the new state when the connect button is pressed. The state changes once the returned promise resolves. */
   onConnectChange?: (id: string, connected: boolean) => Promise<void> | void
+  /** The text on the button that connects an integration. Default “Connect”. */
   connectLabel?: string
+  /** The text on the badge of a connected row. Default “Connected”. */
   connectedLabel?: string
+  /** The text on the button that disconnects an integration. Default “Disconnect”. */
   disconnectLabel?: string
+  /** The heading above the triggers list in the dialog. Default “Triggers”. */
   triggersLabel?: string
+  /** The heading above the actions list in the dialog. Default “Actions”. */
   actionsLabel?: string
+  /** The accessible name of the close button in the dialog. Default “Close”. */
   closeLabel?: string
+  /** Classes for the outer section. */
   className?: string
 }
 
@@ -51,9 +61,17 @@ export function IntegrationCard({
   const closeRef = useRef<HTMLButtonElement>(null)
   const open = items.find((i) => i.id === openId)
 
+  // Focus moves into the card when it opens. It depends on the id, so a parent re-render never pulls focus back.
   useEffect(() => {
-    if (open) closeRef.current?.focus()
-  }, [open])
+    if (openId) closeRef.current?.focus()
+  }, [openId])
+
+  // The card sits inline with the page, so it is a non-modal dialog: Tab moves on as usual, and Escape closes it.
+  const onKey = (e: ReactKeyboardEvent<HTMLDivElement>) => {
+    if (e.key !== 'Escape') return
+    e.stopPropagation()
+    close()
+  }
 
   const close = () => {
     const id = openId
@@ -108,7 +126,8 @@ export function IntegrationCard({
                         <span className="block truncate text-xs text-muted-foreground">{it.description}</span>
                       </span>
                       {state[it.id] && (
-                        <span className="inline-flex items-center gap-1 rounded-full bg-success/10 px-2 py-0.5 text-xs font-medium text-success">
+                        // The text is pulled towards the text colour, so it keeps 4.5:1 on the green tint in light and dark.
+                        <span className="inline-flex items-center gap-1 rounded-full bg-success/10 px-2 py-0.5 text-xs font-medium text-[color-mix(in_oklab,var(--success)_75%,var(--foreground))]">
                           <Check className="size-3" strokeWidth={3} aria-hidden />
                           {connectedLabel}
                         </span>
@@ -125,7 +144,7 @@ export function IntegrationCard({
               role="dialog"
               aria-modal="false"
               aria-labelledby={`${base}-title`}
-              onKeyDown={(e) => e.key === 'Escape' && close()}
+              onKeyDown={onKey}
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
@@ -149,7 +168,7 @@ export function IntegrationCard({
                   type="button"
                   onClick={close}
                   aria-label={closeLabel}
-                  className="grid size-9 shrink-0 place-items-center rounded-full hover:bg-muted"
+                  className="grid size-9 relative after:-inset-1 after:absolute after:content-[''] shrink-0 place-items-center rounded-full hover:bg-muted"
                 >
                   <X className="size-4" aria-hidden />
                 </button>

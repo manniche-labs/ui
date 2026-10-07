@@ -14,11 +14,17 @@ export type DialogStackStep = {
 }
 
 export type DialogStackProps = {
+  /** Whether the dialog is shown. */
   open: boolean
+  /** Called with the new open state when the dialog is closed. */
   onOpenChange: (open: boolean) => void
+  /** The pages of the stack, each with an id, a title and a function that renders its content. */
   steps: DialogStackStep[]
+  /** Name of the close button. */
   closeLabel?: string
+  /** Name of the back button. */
   backLabel?: string
+  /** Classes for the dialog element. */
   className?: string
 }
 
@@ -88,7 +94,7 @@ export function DialogStack({ open, onOpenChange, steps, closeLabel = 'Close', b
                         type="button"
                         aria-label={backLabel}
                         onClick={controls.back}
-                        className="grid size-9 place-items-center rounded-full text-muted-foreground hover:bg-muted hover:text-foreground"
+                        className="grid size-9 relative after:-inset-1 after:absolute after:content-[''] place-items-center rounded-full text-muted-foreground hover:bg-muted hover:text-foreground"
                       >
                         <ArrowLeft className="size-4.5" aria-hidden />
                       </button>
@@ -98,7 +104,7 @@ export function DialogStack({ open, onOpenChange, steps, closeLabel = 'Close', b
                       type="button"
                       aria-label={closeLabel}
                       onClick={close}
-                      className="grid size-9 place-items-center rounded-full text-muted-foreground hover:bg-muted hover:text-foreground"
+                      className="grid size-9 relative after:-inset-1 after:absolute after:content-[''] place-items-center rounded-full text-muted-foreground hover:bg-muted hover:text-foreground"
                     >
                       <X className="size-4.5" aria-hidden />
                     </button>

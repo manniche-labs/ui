@@ -77,7 +77,7 @@ export default function DotMatrixDemo() {
       </DataTile>
       <div className="grid gap-4 sm:grid-cols-2">
         <DataTile
-          title="When you pay"
+          title="Card payments by hour"
           density="compact"
           action={
             <span className="inline-flex h-[26px] items-center rounded-full px-2.5 text-[12.5px] font-medium whitespace-nowrap text-muted-foreground shadow-[inset_0_0_0_1px_var(--border)] tabular-nums">

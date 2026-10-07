@@ -2,17 +2,34 @@ import { MotionConfig, motion } from 'motion/react'
 import { useId, useState } from 'react'
 import { cn } from '@/lib/utils'
 
-export type SwitchProps = {
+type SwitchBaseProps = {
   /** Controlled state. */
   checked?: boolean
+  /** Starting state when the switch is not controlled. */
   defaultChecked?: boolean
+  /** Called with the new state each time the switch is flipped. */
   onChange?: (checked: boolean) => void
-  /** Visible label. Leave it out and pass `aria-label` instead. */
-  label?: string
-  'aria-label'?: string
+  /** Turns the switch off for pointer and keyboard. */
   disabled?: boolean
+  /** Classes for the outer span that wraps the switch and its label. */
   className?: string
 }
+
+/** The switch always has a name: pass a visible `label`, or an `aria-label` when there is no room for one. */
+export type SwitchProps = SwitchBaseProps &
+  (
+    | {
+        /** Visible label, linked to the switch. Pass this, `aria-label` or both. */
+        label: string
+        /** Spoken name for screen readers. Required without a label; with one, it replaces the label when read aloud. */
+        'aria-label'?: string
+      }
+    | {
+        label?: undefined
+        /** Spoken name for a switch without a visible label. */
+        'aria-label': string
+      }
+  )
 
 /** A switch whose knob stretches as you press it and springs across, like the one on a phone. */
 export function Switch({ checked, defaultChecked = false, onChange, label, disabled, className, ...aria }: SwitchProps) {
@@ -38,7 +55,7 @@ export function Switch({ checked, defaultChecked = false, onChange, label, disab
           onClick={flip}
           whileTap="pressed"
           className={cn(
-            'relative flex h-8 w-[52px] shrink-0 items-center rounded-full p-[3px] transition-colors duration-200 outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:opacity-40',
+            'relative flex h-8 after:inset-x-0 after:-inset-y-1.5 after:absolute after:content-[""] w-[52px] shrink-0 items-center rounded-full p-[3px] transition-colors duration-200 outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:opacity-40',
             on ? 'justify-end bg-emerald-500' : 'justify-start bg-muted',
           )}
         >

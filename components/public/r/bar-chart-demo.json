@@ -6,7 +6,8 @@
   "registryDependencies": [
     "@manniche/bar-chart",
     "@manniche/chart-kit",
-    "@manniche/data-tile"
+    "@manniche/data-tile",
+    "utils"
   ],
   "files": [
     {

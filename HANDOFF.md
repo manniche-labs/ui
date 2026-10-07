@@ -45,7 +45,9 @@ One Vite server and one browser per machine.
 
 - Phase 1 of the /lab plan (Notion: "Plan: /lab og Manniche UI Pro fra start til slut"): six gallery building blocks from Mikkel's chosen design, "Kontrolpulten" (bid 2): `badge`, `gallery-card`, `filter-bar`, `preview-stage`, `locked-code` and `command-search`. Phase 2 rebuilds the /lab gallery from them.
 - `npm run meta` (`scripts/registry-meta.mjs`) writes `meta.tier`, `added`, `usedIn`, `props` and `extends` into `registry.json`. Run it after adding or changing a component; `--check` fails when it is stale. `meta.a11y` is hand-written; every component and template has it (7/10), and a new component needs it before merge. A kit without one main component (`chart-kit`) gets `meta.parts`, a props list per exported part.
-- `scripts/template-html.mjs` renders a template through its demo when it has one, inside `StaticChartFrame` (from `chart-kit/use-chart.tsx`), so charts draw at 640 px in the static files. Leave the provider out of live apps.
+- `scripts/template-html.mjs` renders a template through its demo when it has one, inside `StaticChartFrame` (from `chart-kit/use-chart.tsx`), so charts draw at 640 px in the static files. `area-chart` and `bubble-chart` use `StaticPlots` (in `chart-kit.tsx`) to carry four widths, and their container shows the one that fits. Leave the provider out of live apps.
+- A11y gap round (7/10): every gap the `meta.a11y` notes listed is fixed, and every prop has a description. Breaking: `switch` needs `label` or `aria-label`; `continuous-tabs` and `marquee` need `label`. `npm run deps` checks that each import in a registry file is declared. Final check: axe (WCAG 2.2 AA and best practice) and console errors on every preview with a demo, in dark, real light and reduced motion at 1024 px, and sideways scroll at 375 px: the first pass over all 128 previews found 10 components with findings (contrast, heading levels, landmarks); all are fixed, and a second full pass found 0. Script: `.wt/huller/slut-akse.mjs` on the Work Mac (outside the repo).
+- Not done: a11y notes for the 60 Manniche UI Pro components (`ui-pro`); /lab/ui/pro shows an empty state for them until then. Waiting on Mikkel's go.
 - Not verified: Safari, real screen readers, FilterBar with JavaScript off in a browser, and the GalleryCard loop with a real video.
 
 ## Status after 6/10 evening
@@ -58,15 +60,16 @@ One Vite server and one browser per machine.
 
 1. `git fetch`, `gh pr list`, and read this file. Nothing should be open.
 2. Optional: check the templates in real Safari on the Mac (WebKit in Playwright is close to it, but not the same browser).
-3. Figma: later, when Mikkel says so.
-4. Pro at launch: put the live payment link in `PRO_KOEB_URL` (site `server/lab-pro-tekster.mjs`), run `node server/lab-sider.mjs .` and deploy.
+3. Figma: the free components go into Figma next, when Mikkel says so.
+4. A11y notes for the Pro components in `ui-pro`, when Mikkel says so.
+5. Pro at launch: put the live payment link in `PRO_KOEB_URL` (site `server/lab-pro-tekster.mjs`), run `node server/lab-sider.mjs .` and deploy.
 
 ## How to check
 
 From `components/`:
 
 ```
-npm run lint && npx tsc -p tsconfig.app.json --noEmit && npm run build && npx shadcn build && npm run meta -- --check
+npm run lint && npx tsc -p tsconfig.app.json --noEmit && npm run build && npx shadcn build && npm run meta -- --check && npm run deps
 ```
 
 `npx shadcn build` writes `public/r/*.json`. Those files are tracked: commit them with every new or changed component, or `shadcn add` gives a 404 after publish.

@@ -3,6 +3,9 @@
   "name": "inline-edit-demo",
   "title": "Inline edit demo",
   "description": "How to use Inline edit.",
+  "dependencies": [
+    "lucide-react"
+  ],
   "registryDependencies": [
     "@manniche/inline-edit"
   ],

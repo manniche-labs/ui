@@ -12,7 +12,7 @@
   "files": [
     {
       "path": "registry/manniche/continuous-tabs/continuous-tabs.tsx",
-      "content": "// Based on Watermelon UI's “Continuous tabs” (MIT, © 2026 Watermelon Platform Contributors,\n// github.com/WatermelonCorp/watermelon-platform). Rewritten as an ARIA tablist with arrow keys.\nimport { LayoutGroup, MotionConfig, motion } from 'motion/react'\nimport { useId, useRef, useState, type KeyboardEvent } from 'react'\nimport { cn } from '@/lib/utils'\n\nexport type ContinuousTab = { id: string; label: string }\n\nexport type ContinuousTabsProps = {\n  tabs: ContinuousTab[]\n  /** Controlled active tab. */\n  value?: string\n  defaultValue?: string\n  onChange?: (id: string) => void\n  /** Read aloud for the whole row, e.g. \"Sections\". */\n  label?: string\n  className?: string\n}\n\n/** Tabs where a pill slides to the one you pick. Arrow keys, Home and End move between them. */\nexport function ContinuousTabs({ tabs, value, defaultValue, onChange, label, className }: ContinuousTabsProps) {\n  const [own, setOwn] = useState(defaultValue ?? tabs[0]?.id)\n  const active = value ?? own\n  const group = useId()\n  const refs = useRef<(HTMLButtonElement | null)[]>([])\n\n  const pick = (id: string) => {\n    setOwn(id)\n    onChange?.(id)\n  }\n\n  const onKey = (e: KeyboardEvent, i: number) => {\n    const n = tabs.length\n    const to = ({ ArrowRight: (i + 1) % n, ArrowLeft: (i - 1 + n) % n, Home: 0, End: n - 1 } as Record<string, number>)[e.key]\n    if (to === undefined) return\n    e.preventDefault()\n    refs.current[to]?.focus()\n    pick(tabs[to].id)\n  }\n\n  return (\n    <MotionConfig reducedMotion=\"user\">\n      <LayoutGroup id={group}>\n        <div role=\"tablist\" aria-label={label} className={cn('inline-flex max-w-full items-center gap-1 overflow-x-auto rounded-2xl border bg-card p-1.5 shadow-sm', className)}>\n          {tabs.map((tab, i) => {\n            const on = tab.id === active\n            return (\n              <button\n                key={tab.id}\n                ref={(el) => {\n                  refs.current[i] = el\n                }}\n                type=\"button\"\n                role=\"tab\"\n                aria-selected={on}\n                tabIndex={on ? 0 : -1}\n                onClick={() => pick(tab.id)}\n                onKeyDown={(e) => onKey(e, i)}\n                className=\"relative min-h-11 shrink-0 rounded-xl px-4 text-sm font-medium outline-none focus-visible:ring-2 focus-visible:ring-ring\"\n              >\n                {on && (\n                  <motion.span\n                    layoutId=\"pill\"\n                    transition={{ type: 'spring', stiffness: 380, damping: 32 }}\n                    className=\"absolute inset-0 rounded-xl bg-foreground\"\n                  />\n                )}\n                <span className={cn('relative transition-colors duration-200', on ? 'text-background' : 'text-muted-foreground hover:text-foreground')}>\n                  {tab.label}\n                </span>\n              </button>\n            )\n          })}\n        </div>\n      </LayoutGroup>\n    </MotionConfig>\n  )\n}\n",
+      "content": "// Based on Watermelon UI's “Continuous tabs” (MIT, © 2026 Watermelon Platform Contributors,\n// github.com/WatermelonCorp/watermelon-platform). Rewritten as an ARIA tablist with arrow keys.\nimport { LayoutGroup, MotionConfig, motion } from 'motion/react'\nimport { useId, useRef, useState, type KeyboardEvent, type ReactNode } from 'react'\nimport { cn } from '@/lib/utils'\n\nexport type ContinuousTab = {\n  /** Stable key for the tab; this is what `value` and `onChange` carry. */\n  id: string\n  /** Text on the tab. */\n  label: string\n  /** Id of a panel you render yourself. It becomes the tab's `aria-controls`; give that panel `role=\"tabpanel\"` and `aria-labelledby` set to the tab's id. */\n  panelId?: string\n}\n\nexport type ContinuousTabsProps = {\n  /** The tabs, in order. */\n  tabs: ContinuousTab[]\n  /** Controlled active tab. */\n  value?: string\n  /** Tab that is active at the start when the tabs are not controlled. */\n  defaultValue?: string\n  /** Called with the tab id each time the active tab changes, by click or arrow key. */\n  onChange?: (id: string) => void\n  /** Read aloud for the whole row, e.g. \"Sections\". */\n  label: string\n  /** Base for the tab and panel ids. Tab buttons get `<id>-tab-<tab id>` and the built-in panel `<id>-panel-<tab id>`; a generated id is used when left out. */\n  id?: string\n  /** Renders the content of the active tab inside a built-in tabpanel that is wired to its tab. */\n  children?: (active: string) => ReactNode\n  /** Classes for the tab row. */\n  className?: string\n}\n\n/** Tabs where a pill slides to the one you pick. Arrow keys, Home and End move between them. */\nexport function ContinuousTabs({ tabs, value, defaultValue, onChange, label, id, children, className }: ContinuousTabsProps) {\n  const [own, setOwn] = useState(defaultValue ?? tabs[0]?.id)\n  const active = value ?? own\n  const group = useId()\n  const base = id ?? group\n  const refs = useRef<(HTMLButtonElement | null)[]>([])\n\n  const pick = (id: string) => {\n    setOwn(id)\n    onChange?.(id)\n  }\n\n  const onKey = (e: KeyboardEvent, i: number) => {\n    const n = tabs.length\n    const to = ({ ArrowRight: (i + 1) % n, ArrowLeft: (i - 1 + n) % n, Home: 0, End: n - 1 } as Record<string, number>)[e.key]\n    if (to === undefined) return\n    e.preventDefault()\n    refs.current[to]?.focus()\n    pick(tabs[to].id)\n  }\n\n  return (\n    <MotionConfig reducedMotion=\"user\">\n      <LayoutGroup id={group}>\n        <>\n        <div role=\"tablist\" aria-label={label} className={cn('inline-flex max-w-full items-center gap-1 overflow-x-auto rounded-2xl border bg-card p-1.5 shadow-sm', className)}>\n          {tabs.map((tab, i) => {\n            const on = tab.id === active\n            return (\n              <button\n                key={tab.id}\n                ref={(el) => {\n                  refs.current[i] = el\n                }}\n                id={`${base}-tab-${tab.id}`}\n                type=\"button\"\n                role=\"tab\"\n                aria-selected={on}\n                aria-controls={children ? (on ? `${base}-panel-${tab.id}` : undefined) : tab.panelId}\n                tabIndex={on ? 0 : -1}\n                onClick={() => pick(tab.id)}\n                onKeyDown={(e) => onKey(e, i)}\n                className=\"relative min-h-11 shrink-0 rounded-xl px-4 text-sm font-medium outline-none focus-visible:ring-2 focus-visible:ring-ring\"\n              >\n                {on && (\n                  <motion.span\n                    layoutId=\"pill\"\n                    transition={{ type: 'spring', stiffness: 380, damping: 32 }}\n                    className=\"absolute inset-0 rounded-xl bg-foreground\"\n                  />\n                )}\n                <span className={cn('relative transition-colors duration-200 motion-reduce:transition-none', on ? 'text-background' : 'text-muted-foreground hover:text-foreground')}>\n                  {tab.label}\n                </span>\n              </button>\n            )\n          })}\n        </div>\n        {children && active && (\n          <div id={`${base}-panel-${active}`} role=\"tabpanel\" aria-labelledby={`${base}-tab-${active}`} tabIndex={0} className=\"outline-none focus-visible:ring-2 focus-visible:ring-ring\">\n            {children(active)}\n          </div>\n        )}\n        </>\n      </LayoutGroup>\n    </MotionConfig>\n  )\n}\n",
       "type": "registry:component"
     }
   ],
@@ -27,7 +27,7 @@
         "type": "ContinuousTab[]",
         "default": null,
         "required": true,
-        "description": null
+        "description": "The tabs, in order."
       },
       {
         "name": "value",
@@ -41,34 +41,48 @@
         "type": "string",
         "default": null,
         "required": false,
-        "description": null
+        "description": "Tab that is active at the start when the tabs are not controlled."
       },
       {
         "name": "onChange",
         "type": "(id: string) => void",
         "default": null,
         "required": false,
-        "description": null
+        "description": "Called with the tab id each time the active tab changes, by click or arrow key."
       },
       {
         "name": "label",
         "type": "string",
         "default": null,
-        "required": false,
+        "required": true,
         "description": "Read aloud for the whole row, e.g. \"Sections\"."
+      },
+      {
+        "name": "id",
+        "type": "string",
+        "default": null,
+        "required": false,
+        "description": "Base for the tab and panel ids. Tab buttons get `<id>-tab-<tab id>` and the built-in panel `<id>-panel-<tab id>`; a generated id is used when left out."
+      },
+      {
+        "name": "children",
+        "type": "(active: string) => ReactNode",
+        "default": null,
+        "required": false,
+        "description": "Renders the content of the active tab inside a built-in tabpanel that is wired to its tab."
       },
       {
         "name": "className",
         "type": "string",
         "default": null,
         "required": false,
-        "description": null
+        "description": "Classes for the tab row."
       }
     ],
     "a11y": [
       {
         "topic": "keyboard",
-        "text": "The row has one Tab stop, on the active tab. ArrowRight and ArrowLeft wrap around, Home and End jump to the ends, and the tab that receives focus is selected at once.",
+        "text": "The row has one Tab stop, on the active tab. ArrowRight and ArrowLeft wrap around, Home and End jump to the ends, and the tab that receives focus is selected at once. The built-in panel is focusable.",
         "keys": [
           "ArrowLeft",
           "ArrowRight",
@@ -79,11 +93,11 @@
       },
       {
         "topic": "screen-reader",
-        "text": "The row is a tablist named by label, and each tab is a button with role tab and aria-selected."
+        "text": "The row is a tablist named by label, which is required. Each tab is a button with role tab, an id and aria-selected. With a children function, the active tab gets aria-controls pointing to a built-in tabpanel that is labelled by that tab. Without it, a tab's panelId becomes its aria-controls."
       },
       {
         "topic": "motion",
-        "text": "The component is wrapped in MotionConfig with reducedMotion set to user, so Motion follows the system setting for the sliding pill."
+        "text": "The component is wrapped in MotionConfig with reducedMotion set to user, so Motion follows the system setting for the sliding pill. The colour transition is off under reduced motion."
       }
     ]
   },
