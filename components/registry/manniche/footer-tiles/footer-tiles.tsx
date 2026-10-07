@@ -79,7 +79,9 @@ export type FooterTilesLabels = {
 }
 
 export type FooterTilesProps = Omit<ComponentPropsWithoutRef<'footer'>, 'children'> & {
+  /** The address tile: place name, address lines and a directions link. */
   address: FooterTilesAddress
+  /** The opening hours tile: the time zone and the weekly schedule behind "open now". */
   hours: FooterTilesHours
   /** Links tile: a short list of pages. */
   links: FooterTilesLink[]
@@ -207,7 +209,7 @@ function dayGroups(schedule: OpeningRange[], days: string[], shut: string) {
 // Pieces --------------------------------------------------------------------------------------------------------
 
 const ROW =
-  'relative flex min-h-11 items-center justify-between gap-3 rounded-md text-sm text-foreground transition-[opacity] duration-200 ease-out-quint hover:opacity-70 focus-visible:opacity-100 focus-visible:outline-offset-0'
+  'relative flex min-h-11 items-center justify-between gap-3 rounded-md text-sm text-foreground transition-[opacity] duration-200 ease-out-quint motion-reduce:transition-none hover:opacity-70 focus-visible:opacity-100 focus-visible:outline-offset-0'
 
 function ext(external?: boolean) {
   return external ? { target: '_blank', rel: 'noopener noreferrer' } : {}
@@ -297,7 +299,7 @@ export function FooterTiles({ address, hours, links, social, owner, legalLinks =
                 href={address.directionsHref}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="-my-1 inline-flex min-h-11 items-center gap-1.5 rounded-md font-medium text-foreground transition-[opacity] duration-200 hover:opacity-70 focus-visible:outline-offset-0"
+                className="-my-1 inline-flex min-h-11 items-center gap-1.5 rounded-md font-medium text-foreground transition-[opacity] duration-200 motion-reduce:transition-none hover:opacity-70 focus-visible:outline-offset-0"
               >
                 {l.directions}
                 <span className="sr-only">
@@ -368,7 +370,7 @@ export function FooterTiles({ address, hours, links, social, owner, legalLinks =
                   <a
                     href={link.href}
                     {...ext(link.external)}
-                    className="relative inline-flex min-h-11 items-center rounded-md text-[13px] text-muted-foreground transition-[color] duration-200 ease-out-quint hover:text-foreground focus-visible:text-foreground focus-visible:outline-offset-0"
+                    className="relative inline-flex min-h-11 items-center rounded-md text-[13px] text-muted-foreground transition-[color] duration-200 ease-out-quint motion-reduce:transition-none hover:text-foreground focus-visible:text-foreground focus-visible:outline-offset-0"
                   >
                     {link.label}
                     {link.external && <span className="sr-only"> {l.newTab}</span>}

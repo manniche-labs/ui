@@ -12,6 +12,7 @@ import { TransactionList, type Transaction } from '@/registry/manniche/transacti
 export type VerificationStep = { id: string; label: string; done: boolean; hint?: string }
 
 export type BusinessFinanceProps = {
+  /** The cash flow, income, growth, stock, activity and verification steps to show. */
   data: {
     /** Income per period, with `previous` holding payments for the same period. */
     cashflow: AreaPoint[]
@@ -25,13 +26,19 @@ export type BusinessFinanceProps = {
     activity: Transaction[]
     verification: VerificationStep[]
   }
+  /** How amounts are formatted. Default euro with no decimals. */
   format?: ValueFormat
+  /** The page heading (h1). Default "Business finance". */
   title?: string
+  /** Footer text on the cash flow tile. Default "Example data." */
   note?: string
+  /** "YYYY-MM-DD" of today, so the activity list reads "Today" and "Yesterday". Default the day of `now`. */
   today?: string
   /** The current time. Used for `today` when that is not given. */
   now?: Date
+  /** Visible text and screen reader text, with English defaults. */
   labels?: { income?: string; payments?: string; growth?: string; /** Under the share in the growth ring. Default "of target". */ ofTarget?: string; stock?: string; activity?: string; verification?: string; stepsDone?: (done: number, total: number) => string; done?: string; todo?: string }
+  /** Classes for the outer container. */
   className?: string
 }
 
