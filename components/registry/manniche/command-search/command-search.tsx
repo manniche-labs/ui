@@ -81,12 +81,14 @@ export type CommandSearchLabels = {
   new?: string
   /** A group's count with an empty field. Default "{shown} of {total}". */
   groupCount?: string
-  /** A group's count while searching. Default "{shown} of {total} hits". */
+  /** A group's count while searching. Defaults "{shown} of {total} hits" and, for one hit, "{shown} of {total} hit". */
   groupHits?: string
+  groupHit?: string
   /** The footer count with an empty field. Default "{count} in total". */
   total?: string
-  /** The footer count while searching. Default "{count} hits of {total}". */
+  /** The footer count while searching. Defaults "{count} hits of {total}" and, for one hit, "{count} hit of {total}". */
   hitsOf?: string
+  hitOf?: string
   /** Read after typing pauses. Defaults "{count} hits" and "{count} hit". */
   hits?: string
   hit?: string
@@ -316,8 +318,10 @@ export function CommandSearch({
     new: 'New',
     groupCount: '{shown} of {total}',
     groupHits: '{shown} of {total} hits',
+    groupHit: '{shown} of {total} hit',
     total: '{count} in total',
     hitsOf: '{count} hits of {total}',
+    hitOf: '{count} hit of {total}',
     hits: '{count} hits',
     hit: '{count} hit',
     noneTitle: 'Nothing matches “{query}”',
@@ -842,7 +846,7 @@ export function CommandSearch({
                     >
                       <b className="font-medium text-foreground/85">{g.label}</b>
                       <span className="tabular-nums">
-                        {fillText(searching ? L.groupHits : L.groupCount, {
+                        {fillText(searching ? (g.matched === 1 ? L.groupHit : L.groupHits) : L.groupCount, {
                           shown: g.shown.length,
                           total: searching ? g.matched : g.size,
                         })}
@@ -1040,7 +1044,7 @@ export function CommandSearch({
               </span>
               <span className="ml-auto tabular-nums">
                 {searching
-                  ? fillText(L.hitsOf, { count: found, total: items.length })
+                  ? fillText(found === 1 ? L.hitOf : L.hitsOf, { count: found, total: items.length })
                   : fillText(L.total, { count: items.length })}
               </span>
             </div>
