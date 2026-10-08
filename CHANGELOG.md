@@ -1,5 +1,13 @@
 # Changelog
 
+## 2026-10-08
+
+### Fixed
+
+- Preview (`?c=<name>`): a demo narrower than the column sits in the middle, as on the cards, instead of at the left edge.
+- `bubble-chart`: the plot is as wide as its box. It had a 280 px floor, so in a narrow card on a 320 px screen the packed bubbles and the axis values stuck out of the card.
+- Preview on a lab detail page: when a demo is taller than the frame, the preview sends its height to the page (`manniche-height`), so the frame grows and the page scrolls instead of the frame. Before the frame grows, every box sized by the viewport (`h-dvh`, `min-h-dvh`, `h-[70vh]` and the like) is held at the size it has in the normal frame, so a scene as tall as the screen keeps its height and the frame grows around the whole demo. The preview's own page is marked `data-fills-frame` and still fills the frame, so a small demo stays in the middle. Templates (`?full`), `?mini` and `text-reveal`, which scrolls on purpose, send nothing, and nothing is sent when the preview is opened on its own.
+
 ## 2026-10-07
 
 ### Added
