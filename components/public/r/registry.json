@@ -12417,6 +12417,156 @@
       ]
     },
     {
+      "name": "empty-state",
+      "type": "registry:component",
+      "title": "Empty state",
+      "description": "Says that a page, panel or tile is empty: an icon on a raised key, a title, a line on what goes there, example labels and the action that starts things; dashed card or plain inside a tile, and spoken once after a search with live.",
+      "registryDependencies": [
+        "utils",
+        "@manniche/badge"
+      ],
+      "files": [
+        {
+          "path": "registry/manniche/empty-state/empty-state.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "categories": [
+        "surfaces"
+      ],
+      "meta": {
+        "tier": "free",
+        "added": "2026-10-08",
+        "usedIn": [],
+        "props": [
+          {
+            "name": "icon",
+            "type": "ReactNode",
+            "default": null,
+            "required": false,
+            "description": "A decorative icon, such as a lucide icon element. Hidden from screen readers."
+          },
+          {
+            "name": "title",
+            "type": "ReactNode",
+            "default": null,
+            "required": true,
+            "description": "What is empty, as a short line: \"No segments yet\"."
+          },
+          {
+            "name": "description",
+            "type": "ReactNode",
+            "default": null,
+            "required": false,
+            "description": "One line on what goes here and why it is worth starting."
+          },
+          {
+            "name": "headingLevel",
+            "type": "2 | 3 | 4 | 5 | 6",
+            "default": "3",
+            "required": false,
+            "description": "The heading level of the title, to fit the page outline. Default 3."
+          },
+          {
+            "name": "examples",
+            "type": "string[]",
+            "default": null,
+            "required": false,
+            "description": "A few short example phrases, shown as demo labels. Not clickable."
+          },
+          {
+            "name": "action",
+            "type": "ReactNode",
+            "default": null,
+            "required": false,
+            "description": "The main action, one button or link."
+          },
+          {
+            "name": "secondaryAction",
+            "type": "ReactNode",
+            "default": null,
+            "required": false,
+            "description": "A quiet extra action, such as a link to the docs."
+          },
+          {
+            "name": "variant",
+            "type": "'card' | 'plain'",
+            "default": "'card'",
+            "required": false,
+            "description": "\"card\" has the dashed frame, \"plain\" has none, for use inside a tile. Default \"card\"."
+          },
+          {
+            "name": "density",
+            "type": "'comfortable' | 'compact'",
+            "default": null,
+            "required": false,
+            "description": "\"compact\" tightens the padding and the icon. Default follows the tile."
+          },
+          {
+            "name": "live",
+            "type": "boolean",
+            "default": "false",
+            "required": false,
+            "description": "Speak the title and description once when the empty state appears, such as after a search with no results."
+          },
+          {
+            "name": "labels",
+            "type": "EmptyStateLabels",
+            "default": null,
+            "required": false,
+            "description": "Text overrides, with English defaults."
+          },
+          {
+            "name": "className",
+            "type": "string",
+            "default": null,
+            "required": false,
+            "description": "Classes for the outer box."
+          }
+        ],
+        "a11y": [
+          {
+            "topic": "screen-reader",
+            "text": "The title is a real heading (headingLevel, default h3), the description a paragraph and the examples a list named by labels.examples (default \"Examples\"). The icon is aria-hidden. With live, an empty status region is in place first and gets the title and description a moment later, so they are spoken once when the empty state appears or its title changes; the heading itself is not live, so it is not read twice."
+          },
+          {
+            "topic": "keyboard",
+            "text": "The component adds no tab stops of its own. The examples are labels, not buttons. Only the action and secondaryAction you pass are focusable, in that order."
+          },
+          {
+            "topic": "motion",
+            "text": "Nothing moves."
+          },
+          {
+            "topic": "other",
+            "text": "Long example labels wrap instead of running out of the box at 320 px. Text is 15 and 13.5 px in foreground and muted-foreground on the card, which keeps 4.5:1 in light and dark."
+          }
+        ]
+      }
+    },
+    {
+      "name": "empty-state-demo",
+      "type": "registry:example",
+      "title": "Empty state demo",
+      "description": "How to use Empty state.",
+      "dependencies": [
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "@manniche/empty-state",
+        "@manniche/data-tile"
+      ],
+      "files": [
+        {
+          "path": "registry/manniche/examples/empty-state-demo.tsx",
+          "type": "registry:example"
+        }
+      ],
+      "categories": [
+        "surfaces"
+      ]
+    },
+    {
       "name": "bar-chart",
       "type": "registry:component",
       "title": "Bar chart",
@@ -14372,6 +14522,7 @@
         "added": "2026-10-07",
         "usedIn": [
           "command-search",
+          "empty-state",
           "gallery-card",
           "locked-code"
         ],
