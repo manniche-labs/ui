@@ -1,6 +1,6 @@
 # Handoff: Manniche UI (manniche-labs/ui)
 
-Updated 2026-10-07 by the Work Mac session (phase 1 of the /lab plan). Everything the next session needs is in this repo; nothing depends on files on the Windows machine.
+Updated 2026-10-08 by the Windows session (EmptyState, #49). Everything the next session needs is in this repo; nothing depends on files on the Windows machine.
 
 ## The plan
 
@@ -15,11 +15,11 @@ The scrolltide-inspired plan for Manniche UI, built in our own **Tiles** design 
 | Templates | 13 screen templates built from the phase 5 primitives | **All 13 merged 6/10**: dashboards #25, the rest #31, finance #32. Not on /lab yet |
 | 6 | 17 page sections (footers, bento, CTA, contact) | **All 17 merged 6/10**: bento + CTA #26, footers #28, contact #27. Not on /lab yet |
 
-All seven parts of the plan are merged. Not on /lab yet: #25, #26, #27, #28, #31, #32, #34 and #35. Deploying needs Mikkel's yes.
+All seven parts of the plan are merged. Not on /lab yet: #25, #26, #27, #28, #31, #32, #34, #35 and `empty-state` (#49). Deploying needs Mikkel's yes.
 
 ## Open PRs
 
-None. The primitive fixes are merged too: #34 (bubble-chart closes on Escape after hover, `Pills` at 44 px, week-schedule fits 7 days at 320 px, colour transitions removed) and #35 (dot-matrix tooltip opens below the top rows, donut legend names wrap, `data-tile` `headingLevel`). Both were checked in Chromium at 1440 and 320 px.
+None after #49. The primitive fixes are merged too: #34 (bubble-chart closes on Escape after hover, `Pills` at 44 px, week-schedule fits 7 days at 320 px, colour transitions removed) and #35 (dot-matrix tooltip opens below the top rows, donut legend names wrap, `data-tile` `headingLevel`). Both were checked in Chromium at 1440 and 320 px.
 
 ## How the lead merges (one PR at a time)
 
@@ -38,8 +38,25 @@ One Vite server and one browser per machine.
 
 - Run the server from a detached worktree of `main` (`ui-qa`): `npx vite --force --port 5173 --strictPort`. Use `--force`, otherwise the prebundled deps can go missing (504 on `motion_react.js`).
 - Copy the files a check needs into that worktree; do not start a second server.
-- Preview: `/preview.html?c=<name>&full=1` (add `&mode=dark` or `&mini=1`). Use the component name, not `<name>-demo`.
+- Preview: `/preview.html?c=<name>&full=1` (add `&mode=light` or `&mode=dark`, or `&mini=1`). The preview starts in dark, so a light check needs `&mode=light`. Use the component name, not `<name>-demo`.
 - Browser lock: `mkdir ../.browser-laas` before you open a browser and `rmdir` it when you close it. Always close the browser in `finally`.
+
+## Status after 8/10
+
+- `empty-state` (free, category surfaces) is merged in #49. It was moved from NP-Flow and restyled to Tiles:
+  - a dashed frame in `border-foreground/25`;
+  - the icon on the raised key from Badge "new";
+  - examples as `Badge variant="demo"` in a named list (not clickable);
+  - `headingLevel` 2–6, default 3;
+  - `variant` card or plain;
+  - `density` that follows the tile through `group-data-[density=compact]/tile`;
+  - `labels.examples`;
+  - `live`, which speaks the title and description once through a polite status region.
+- It was checked in Chromium at 1440 and 320 px, in light and dark. axe found 0 WCAG 2.2 AA issues, and there was no sideways scroll and no console error.
+- **Not on /lab yet.**
+- NP-Flow and ManiLens still use their own EmptyState. Switching them over is a separate task, and it needs a yes.
+- Places it fits: `placeholder` in `dot-matrix`, `empty` in `transaction-list`, and the empty gallery grid under `filter-bar`.
+- #47 and #48: the preview now centres demos and grows the frame to fit them, and page-critic 1.1.1 no longer scrolls sideways on a phone.
 
 ## Status after 7/10
 
@@ -59,10 +76,11 @@ One Vite server and one browser per machine.
 ## Next steps
 
 1. `git fetch`, `gh pr list`, and read this file. Nothing should be open.
-2. Optional: check the templates in real Safari on the Mac (WebKit in Playwright is close to it, but not the same browser).
-3. Figma: the free components go into Figma next, when Mikkel says so.
-4. A11y notes for the Pro components in `ui-pro`, when Mikkel says so.
-5. Pro at launch: put the live payment link in `PRO_KOEB_URL` (site `server/lab-pro-tekster.mjs`), run `node server/lab-sider.mjs .` and deploy.
+2. /lab: deploy the merged templates, page sections and `empty-state`, but only when Mikkel says yes. In the site repo, run `node server/lab-sider.mjs .`, then `server/udrul.sh`.
+3. Optional: check the templates in real Safari on the Mac. WebKit in Playwright is close to it, but it is not the same browser.
+4. Figma: the free components go into Figma next, when Mikkel says so.
+5. A11y notes for the Pro components in `ui-pro`, when Mikkel says so.
+6. Pro at launch: put the live payment link in `PRO_KOEB_URL` (site `server/lab-pro-tekster.mjs`), run `node server/lab-sider.mjs .` and deploy.
 
 ## How to check
 

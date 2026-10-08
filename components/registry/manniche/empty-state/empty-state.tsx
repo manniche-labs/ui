@@ -62,17 +62,21 @@ function useLiveText(on: boolean, title: RefObject<HTMLElement | null>, descript
   const said = useRef('')
   const timer = useRef(0)
   useEffect(() => {
-    window.clearTimeout(timer.current)
     if (!on) {
+      window.clearTimeout(timer.current)
       said.current = ''
       timer.current = window.setTimeout(() => setText(''), 0)
       return
     }
     const next = [title.current?.textContent, description.current?.textContent].filter(Boolean).join('. ').trim()
     if (!next || next === said.current) return
-    said.current = next
-    // Filled a moment after the region is in the page, so it exists empty first and the text is spoken.
-    timer.current = window.setTimeout(() => setText(next), 60)
+    window.clearTimeout(timer.current)
+    // Filled a moment after the region is in the page, so it exists empty first and the text is spoken. `said` is set
+    // only when the text lands, so a re-render that cancels this timer schedules it again.
+    timer.current = window.setTimeout(() => {
+      said.current = next
+      setText(next)
+    }, 60)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [on, title, description, ...deps])
   useEffect(() => () => window.clearTimeout(timer.current), [])
@@ -128,8 +132,8 @@ export function EmptyState({
       )}
       {examples && examples.length > 0 && (
         <ul aria-label={labels.examples} className="mt-1 flex max-w-full flex-wrap justify-center gap-2">
-          {examples.map((example) => (
-            <li key={example} className="flex max-w-full min-w-0">
+          {examples.map((example, i) => (
+            <li key={`${i}-${example}`} className="flex max-w-full min-w-0">
               <Badge variant="demo" className="h-auto min-h-[22px] max-w-full py-1 whitespace-normal">
                 {example}
               </Badge>
