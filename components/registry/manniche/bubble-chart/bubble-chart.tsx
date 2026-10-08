@@ -4,7 +4,7 @@
 // (packed) wherever the label fits; the rest are named by the tooltip.
 //
 // How it works: the layout is worked out in pixels from the measured size, so labels, radii and ticks stay readable
-// from 280 to 1200 px. Labels on axes try eight spots around their bubble and keep the one that hits nothing; packed
+// from 220 to 1200 px. Labels on axes try eight spots around their bubble and keep the one that hits nothing; packed
 // bubbles are placed largest first, each in the free spot nearest the middle. The plot is one Tab stop: arrow keys,
 // Home and End step through the bubbles (left to right on axes, largest first when packed), Escape lets go. Hover
 // and a finger scrubbing across the plot pick the bubble under it and show the same tooltip, and the page still
@@ -239,7 +239,8 @@ function BubbleChartPlot({
 
   const n = data.length
   const axes = n > 0 && data.every((d) => Number.isFinite(d.x) && Number.isFinite(d.y))
-  const W = Math.max(280, frameW)
+  // The plot is as wide as its box. A floor here would push it out of a narrow card on a small phone.
+  const W = frameW
   const H = frameH
   const ready = frameW > 0 && H > 0
 

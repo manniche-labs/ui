@@ -1,6 +1,7 @@
 import { StrictMode, Suspense, lazy, useEffect, useLayoutEffect, useRef, useState, type ComponentType, type ReactNode } from 'react'
 import { createRoot } from 'react-dom/client'
 import './preview.css'
+import { reportHeight } from './frame-height'
 import { colourById, colourVars, type Mode } from './template-theme'
 
 // One page that shows one demo, chosen by ?c=<name>. The lab pages on mikkelmanniche.dk load it in an iframe,
@@ -100,6 +101,9 @@ function Fit({ children }: { children: ReactNode }) {
 function Preview() {
   const [run, setRun] = useState(0)
 
+  // On a detail page the frame grows to fit the demo. Templates are whole pages and scroll like one.
+  useEffect(() => (FULL || MINI || SCROLL.has(name) ? undefined : reportHeight()), [])
+
   useEffect(() => {
     if (!MINI) return
     const onMessage = (e: MessageEvent) => {
@@ -127,7 +131,7 @@ function Preview() {
     )
 
   return (
-    <main className="relative min-h-dvh">
+    <main data-fills-frame className="relative min-h-dvh">
       <button
         type="button"
         onClick={() => setRun((n) => n + 1)}
@@ -142,8 +146,9 @@ function Preview() {
           <div className="h-[70dvh]" />
         </div>
       ) : (
-        <div className="grid min-h-dvh place-items-center px-6 py-14">
-          <div className="w-full min-w-0 max-w-xl">{demo}</div>
+        <div data-fills-frame className="grid min-h-dvh place-items-center px-6 py-14">
+          {/* A demo narrower than the column sits in the middle, as on the cards. */}
+          <div className="demo-col grid w-full min-w-0 max-w-xl grid-cols-[minmax(0,1fr)] justify-items-center">{demo}</div>
         </div>
       )}
     </main>
