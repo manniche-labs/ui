@@ -1,0 +1,24 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "empty-state-demo",
+  "title": "Empty state demo",
+  "description": "How to use Empty state.",
+  "dependencies": [
+    "lucide-react"
+  ],
+  "registryDependencies": [
+    "@manniche/empty-state",
+    "@manniche/data-tile"
+  ],
+  "files": [
+    {
+      "path": "registry/manniche/examples/empty-state-demo.tsx",
+      "content": "import { useState } from 'react'\nimport { Filter, Users } from 'lucide-react'\nimport { DataTile } from '@/registry/manniche/data-tile/data-tile'\nimport { EmptyState } from '@/registry/manniche/empty-state/empty-state'\n\nconst button =\n  'inline-flex min-h-11 items-center rounded-xl bg-primary px-4 text-sm font-medium text-primary-foreground outline-offset-2 focus-visible:outline-2 focus-visible:outline-ring'\nconst quiet =\n  'inline-flex min-h-11 items-center rounded-xl px-3 text-sm font-medium text-muted-foreground underline-offset-4 hover:text-foreground hover:underline outline-offset-2 focus-visible:outline-2 focus-visible:outline-ring'\n\nexport default function EmptyStateDemo() {\n  const [query, setQuery] = useState('')\n  return (\n    <section aria-label=\"Empty states\" className=\"grid w-full gap-4\">\n      <EmptyState\n        icon={<Users />}\n        title=\"No segments yet\"\n        description=\"A segment picks contacts by rules, so a campaign only reaches the people it is for.\"\n        examples={['Bought in the last 90 days', 'Customer tag: VIP', 'Opened a mail this month']}\n        action={\n          <button type=\"button\" className={button}>\n            New segment\n          </button>\n        }\n      />\n      <div className=\"grid gap-4 sm:grid-cols-2\">\n        <EmptyState\n          density=\"compact\"\n          icon={<Filter />}\n          title=\"No saved filters\"\n          description=\"Save a filter from the list view to come back to it in one click.\"\n          action={\n            <button type=\"button\" className={button}>\n              Open the list\n            </button>\n          }\n          secondaryAction={\n            <a href=\"#filters\" className={quiet}>\n              How filters work\n            </a>\n          }\n        />\n        <EmptyState density=\"compact\" title=\"Nothing to review\" description=\"New drafts show up here as soon as someone asks for a review.\" />\n      </div>\n      <DataTile title=\"Customers\">\n        <label className=\"mb-3 flex flex-col gap-1.5 text-[13.5px] text-muted-foreground\">\n          Search customers\n          <input\n            type=\"search\"\n            value={query}\n            onChange={(e) => setQuery(e.target.value)}\n            placeholder=\"Try any name\"\n            className=\"min-h-11 rounded-xl border border-border bg-background px-3 text-sm text-foreground\"\n          />\n        </label>\n        <EmptyState\n          variant=\"plain\"\n          live={query !== ''}\n          title={query ? `No customers match \"${query}\"` : 'No customers yet'}\n          description={query ? 'Check the spelling, or search by email instead.' : 'Customers appear here after their first order.'}\n        />\n      </DataTile>\n    </section>\n  )\n}\n",
+      "type": "registry:example"
+    }
+  ],
+  "categories": [
+    "surfaces"
+  ],
+  "type": "registry:example"
+}

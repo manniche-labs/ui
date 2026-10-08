@@ -2,6 +2,10 @@
 
 ## 2026-10-08
 
+### Added
+
+- `empty-state` (surfaces): says that a page, panel or tile is empty, with an icon on the raised key from Badge "new", a title, one line on what goes there, example labels as Badge "demo" and the action that starts things. Moved from NP-Flow and restyled to Tiles: `headingLevel` (default 3), a dashed `card` or a `plain` variant for inside a data-tile, `density` that follows the tile, `live` to speak it once after a search or a filter, and `labels.examples`.
+
 ### Fixed
 
 - Preview (`?c=<name>`): a demo narrower than the column sits in the middle, as on the cards, instead of at the left edge.
