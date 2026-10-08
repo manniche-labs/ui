@@ -608,7 +608,8 @@ figure{ margin:0; display:flex; flex-direction:column; gap:6px; min-width:0; }
 figcaption{ font-family:var(--mono); font-size:12px; color:var(--muted); }
 .frame{ max-height:560px; overflow:auto; border:1px solid var(--line); background:var(--bg); }
 .frame img{ display:block; width:100%; height:auto; }
-li figure{ margin-top:10px; max-width:320px; }
+li figure{ margin-top:10px; max-width:min(320px,100%); }
+.state li{ overflow-wrap:anywhere; }
 .last{ max-width:640px; }
 .last.narrow{ max-width:300px; }
 ul{ margin:0; padding-left:20px; display:flex; flex-direction:column; gap:12px; max-width:70ch; }
