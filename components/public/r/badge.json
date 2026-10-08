@@ -18,6 +18,7 @@
     "added": "2026-10-07",
     "usedIn": [
       "command-search",
+      "empty-state",
       "gallery-card",
       "locked-code"
     ],
