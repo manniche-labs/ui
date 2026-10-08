@@ -1,0 +1,130 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "empty-state",
+  "title": "Empty state",
+  "description": "Says that a page, panel or tile is empty: an icon on a raised key, a title, a line on what goes there, example labels and the action that starts things; dashed card or plain inside a tile, and spoken once after a search with live.",
+  "registryDependencies": [
+    "utils",
+    "@manniche/badge"
+  ],
+  "files": [
+    {
+      "path": "registry/manniche/empty-state/empty-state.tsx",
+      "content": "// A page, panel or tile with nothing in it yet: an icon on a raised key, a title, one line on what goes here, a few\n// example labels and the action that starts things. The dashed edge is the Tiles sign for \"not real yet\". `plain`\n// drops the frame, so it can sit inside a data-tile or a chart's placeholder without a frame in a frame.\n// Screen readers meet it as a heading with its text, then a list of examples, then the buttons. With `live`, the title\n// and the description are also spoken once when it appears (after a search or a filter); the heading itself is not a\n// live region, so it is not read twice.\nimport { useEffect, useRef, useState, type ReactNode, type RefObject } from 'react'\nimport { cn } from '@/lib/utils'\nimport { Badge } from '@/registry/manniche/badge/badge'\n\nexport type EmptyStateLabels = {\n  /** The name of the list of examples, for screen readers. Default \"Examples\". */\n  examples?: string\n}\n\nexport type EmptyStateProps = {\n  /** A decorative icon, such as a lucide icon element. Hidden from screen readers. */\n  icon?: ReactNode\n  /** What is empty, as a short line: \"No segments yet\". */\n  title: ReactNode\n  /** One line on what goes here and why it is worth starting. */\n  description?: ReactNode\n  /** The heading level of the title, to fit the page outline. Default 3. */\n  headingLevel?: 2 | 3 | 4 | 5 | 6\n  /** A few short example phrases, shown as demo labels. Not clickable. */\n  examples?: string[]\n  /** The main action, one button or link. */\n  action?: ReactNode\n  /** A quiet extra action, such as a link to the docs. */\n  secondaryAction?: ReactNode\n  /** \"card\" has the dashed frame, \"plain\" has none, for use inside a tile. Default \"card\". */\n  variant?: 'card' | 'plain'\n  /** \"compact\" tightens the padding and the icon. Default follows the tile. */\n  density?: 'comfortable' | 'compact'\n  /** Speak the title and description once when the empty state appears, such as after a search with no results. */\n  live?: boolean\n  /** Text overrides, with English defaults. */\n  labels?: EmptyStateLabels\n  /** Classes for the outer box. */\n  className?: string\n}\n\nconst DEFAULT_LABELS: Required<EmptyStateLabels> = { examples: 'Examples' }\n\n// Sizes as variables, so a compact tile (or the prop) can swap them in one place.\nconst METRICS =\n  '[--es-py:48px] [--es-px:24px] [--es-gap:10px] [--es-ic:44px] [--es-icr:12px] ' +\n  'group-data-[density=compact]/tile:[--es-py:28px] group-data-[density=compact]/tile:[--es-px:16px] ' +\n  'group-data-[density=compact]/tile:[--es-gap:8px] group-data-[density=compact]/tile:[--es-ic:36px] group-data-[density=compact]/tile:[--es-icr:10px]'\nconst DENSITY = {\n  comfortable: '[--es-py:48px] [--es-px:24px] [--es-gap:10px] [--es-ic:44px] [--es-icr:12px]',\n  compact: '[--es-py:28px] [--es-px:16px] [--es-gap:8px] [--es-ic:36px] [--es-icr:10px]',\n}\n\n// The raised key from Badge \"new\", at icon size.\nconst KEY =\n  'bg-muted text-foreground shadow-[inset_0_1px_0_color-mix(in_oklab,var(--foreground)_7%,transparent),inset_0_-1.5px_0_rgb(0_0_0/0.14),0_0_0_1px_color-mix(in_oklab,var(--foreground)_8%,transparent)] dark:shadow-[inset_0_1px_0_color-mix(in_oklab,var(--foreground)_7%,transparent),inset_0_-1.5px_0_rgb(0_0_0/0.45),0_0_0_1px_color-mix(in_oklab,var(--foreground)_8%,transparent)]'\n\n/** The text of the title and description, read from the page once React has drawn them. */\nfunction useLiveText(on: boolean, title: RefObject<HTMLElement | null>, description: RefObject<HTMLElement | null>, deps: unknown[]) {\n  const [text, setText] = useState('')\n  const said = useRef('')\n  const timer = useRef(0)\n  useEffect(() => {\n    if (!on) {\n      window.clearTimeout(timer.current)\n      said.current = ''\n      timer.current = window.setTimeout(() => setText(''), 0)\n      return\n    }\n    const next = [title.current?.textContent, description.current?.textContent].filter(Boolean).join('. ').trim()\n    if (!next || next === said.current) return\n    window.clearTimeout(timer.current)\n    // Filled a moment after the region is in the page, so it exists empty first and the text is spoken. `said` is set\n    // only when the text lands, so a re-render that cancels this timer schedules it again.\n    timer.current = window.setTimeout(() => {\n      said.current = next\n      setText(next)\n    }, 60)\n    // eslint-disable-next-line react-hooks/exhaustive-deps\n  }, [on, title, description, ...deps])\n  useEffect(() => () => window.clearTimeout(timer.current), [])\n  return text\n}\n\n/** Says that something is empty, what goes there and how to start. */\nexport function EmptyState({\n  icon,\n  title,\n  description,\n  headingLevel = 3,\n  examples,\n  action,\n  secondaryAction,\n  variant = 'card',\n  density,\n  live = false,\n  labels: labelsProp,\n  className,\n}: EmptyStateProps) {\n  const labels = { ...DEFAULT_LABELS, ...labelsProp }\n  const Heading = `h${headingLevel}` as const\n  const titleRef = useRef<HTMLHeadingElement>(null)\n  const descriptionRef = useRef<HTMLParagraphElement>(null)\n  const spoken = useLiveText(live, titleRef, descriptionRef, [title, description])\n\n  return (\n    <div\n      data-variant={variant}\n      className={cn(\n        'flex min-w-0 flex-col items-center gap-(--es-gap) px-(--es-px) py-(--es-py) text-center',\n        density ? DENSITY[density] : METRICS,\n        variant === 'card' && 'rounded-[calc(var(--radius)*2+2px)] border border-dashed border-foreground/25 bg-card text-card-foreground',\n        className,\n      )}\n    >\n      {icon && (\n        <span\n          aria-hidden=\"true\"\n          className={cn('mb-1 grid size-(--es-ic) flex-none place-items-center rounded-(--es-icr) [&_svg]:size-5', KEY)}\n        >\n          {icon}\n        </span>\n      )}\n      <Heading ref={titleRef} className=\"text-[15px] leading-[1.2] font-medium tracking-[-0.01em] text-balance\">\n        {title}\n      </Heading>\n      {description && (\n        <p ref={descriptionRef} className=\"max-w-[46ch] text-[13.5px] leading-normal text-pretty text-muted-foreground\">\n          {description}\n        </p>\n      )}\n      {examples && examples.length > 0 && (\n        <ul aria-label={labels.examples} className=\"mt-1 flex max-w-full flex-wrap justify-center gap-2\">\n          {examples.map((example, i) => (\n            <li key={`${i}-${example}`} className=\"flex max-w-full min-w-0\">\n              <Badge variant=\"demo\" className=\"h-auto min-h-[22px] max-w-full py-1 whitespace-normal\">\n                {example}\n              </Badge>\n            </li>\n          ))}\n        </ul>\n      )}\n      {(action || secondaryAction) && (\n        <div className=\"mt-2 flex flex-wrap items-center justify-center gap-2\">\n          {action}\n          {secondaryAction}\n        </div>\n      )}\n      {live && (\n        <span role=\"status\" aria-live=\"polite\" aria-atomic=\"true\" className=\"sr-only\">\n          {spoken}\n        </span>\n      )}\n    </div>\n  )\n}\n",
+      "type": "registry:component"
+    }
+  ],
+  "meta": {
+    "tier": "free",
+    "added": "2026-10-08",
+    "usedIn": [],
+    "props": [
+      {
+        "name": "icon",
+        "type": "ReactNode",
+        "default": null,
+        "required": false,
+        "description": "A decorative icon, such as a lucide icon element. Hidden from screen readers."
+      },
+      {
+        "name": "title",
+        "type": "ReactNode",
+        "default": null,
+        "required": true,
+        "description": "What is empty, as a short line: \"No segments yet\"."
+      },
+      {
+        "name": "description",
+        "type": "ReactNode",
+        "default": null,
+        "required": false,
+        "description": "One line on what goes here and why it is worth starting."
+      },
+      {
+        "name": "headingLevel",
+        "type": "2 | 3 | 4 | 5 | 6",
+        "default": "3",
+        "required": false,
+        "description": "The heading level of the title, to fit the page outline. Default 3."
+      },
+      {
+        "name": "examples",
+        "type": "string[]",
+        "default": null,
+        "required": false,
+        "description": "A few short example phrases, shown as demo labels. Not clickable."
+      },
+      {
+        "name": "action",
+        "type": "ReactNode",
+        "default": null,
+        "required": false,
+        "description": "The main action, one button or link."
+      },
+      {
+        "name": "secondaryAction",
+        "type": "ReactNode",
+        "default": null,
+        "required": false,
+        "description": "A quiet extra action, such as a link to the docs."
+      },
+      {
+        "name": "variant",
+        "type": "'card' | 'plain'",
+        "default": "'card'",
+        "required": false,
+        "description": "\"card\" has the dashed frame, \"plain\" has none, for use inside a tile. Default \"card\"."
+      },
+      {
+        "name": "density",
+        "type": "'comfortable' | 'compact'",
+        "default": null,
+        "required": false,
+        "description": "\"compact\" tightens the padding and the icon. Default follows the tile."
+      },
+      {
+        "name": "live",
+        "type": "boolean",
+        "default": "false",
+        "required": false,
+        "description": "Speak the title and description once when the empty state appears, such as after a search with no results."
+      },
+      {
+        "name": "labels",
+        "type": "EmptyStateLabels",
+        "default": null,
+        "required": false,
+        "description": "Text overrides, with English defaults."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "default": null,
+        "required": false,
+        "description": "Classes for the outer box."
+      }
+    ],
+    "a11y": [
+      {
+        "topic": "screen-reader",
+        "text": "The title is a real heading (headingLevel, default h3), the description a paragraph and the examples a list named by labels.examples (default \"Examples\"). The icon is aria-hidden. With live, an empty status region is in place first and gets the title and description a moment later, so they are spoken once when the empty state appears or its title changes; the heading itself is not live, so it is not read twice."
+      },
+      {
+        "topic": "keyboard",
+        "text": "The component adds no tab stops of its own. The examples are labels, not buttons. Only the action and secondaryAction you pass are focusable, in that order."
+      },
+      {
+        "topic": "motion",
+        "text": "Nothing moves."
+      },
+      {
+        "topic": "other",
+        "text": "Long example labels wrap instead of running out of the box at 320 px. Text is 15 and 13.5 px in foreground and muted-foreground on the card, which keeps 4.5:1 in light and dark."
+      }
+    ]
+  },
+  "categories": [
+    "surfaces"
+  ],
+  "type": "registry:component"
+}
