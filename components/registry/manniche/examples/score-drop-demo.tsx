@@ -9,7 +9,7 @@ export default function ScoreDropDemo() {
   const [i, setI] = useState(0)
   const [focus, setFocus] = useState(72)
   return (
-    <div className="mx-auto grid w-full max-w-[680px] justify-items-center gap-6 py-10 sm:grid-cols-2 sm:items-start">
+    <div className="mx-auto grid w-full max-w-[680px] justify-items-center gap-6 px-4 py-10 sm:grid-cols-2 sm:items-start">
       <div className="grid w-full justify-items-center gap-3">
         <ScoreDrop
           value={SCORES[i]}
