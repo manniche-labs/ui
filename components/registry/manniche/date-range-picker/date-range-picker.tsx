@@ -550,7 +550,7 @@ function Panel({
               'flex shrink-0',
               layout.side
                 ? 'w-44 flex-col gap-0.5 border-r border-border p-2'
-                : 'flex-wrap gap-1.5 border-b border-border px-3 pt-3 pb-3 sm:px-4',
+                : 'flex-wrap gap-1.5 border-b border-border p-3 sm:px-4',
             )}
           >
             {shownPresets.map((p, i) => {
@@ -576,14 +576,14 @@ function Panel({
                   }}
                   onKeyDown={(e) => onPresetKey(e, i)}
                   className={cn(
-                    'relative flex min-h-10 cursor-pointer items-center gap-2 text-left text-[13.5px] font-medium transition-[background-color,color,scale] duration-150 ease-out-quint active:scale-[0.97] disabled:cursor-not-allowed disabled:opacity-40 motion-reduce:transition-none motion-reduce:active:scale-100',
+                    'relative flex cursor-pointer items-center gap-1.5 text-left text-[13.5px] font-medium transition-[background-color,color,scale] duration-150 ease-out-quint active:scale-[0.97] disabled:cursor-not-allowed disabled:opacity-40 motion-reduce:transition-none motion-reduce:active:scale-100',
                     FOCUS,
-                    layout.side ? 'justify-between rounded-[var(--radius)] px-3' : 'rounded-full px-3.5',
+                    layout.side ? 'min-h-10 justify-between rounded-[var(--radius)] px-3' : 'min-h-9 rounded-full px-3',
                     on
                       ? layout.side
                         ? 'bg-muted text-foreground'
                         : 'bg-foreground text-background'
-                      : 'text-muted-foreground hover:bg-muted hover:text-foreground',
+                      : cn('text-muted-foreground hover:bg-muted hover:text-foreground', !layout.side && 'shadow-[inset_0_0_0_1px_var(--border)]'),
                   )}
                 >
                   {L[p]}
@@ -782,7 +782,8 @@ function MonthGrid({
             <tr key={r}>
               {Array.from({ length: 7 }, (_, c) => {
                 const d = addDays(gridStart, r * 7 + c)
-                if (d.getMonth() !== month.getMonth()) return <td key={c} role="gridcell" className="p-0" />
+                // Days of other months stay empty, but keep their height, so the panel does not jump between months.
+                if (d.getMonth() !== month.getMonth()) return <td key={c} role="gridcell" className="h-10 p-0" />
                 const disabled = isDisabled(d)
                 const isToday = sameDay(d, today)
                 const lo = shown?.start
