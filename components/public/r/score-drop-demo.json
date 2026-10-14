@@ -1,0 +1,23 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "score-drop-demo",
+  "title": "Score drop demo",
+  "description": "How to use Score drop.",
+  "dependencies": [
+    "lucide-react"
+  ],
+  "registryDependencies": [
+    "@manniche/score-drop"
+  ],
+  "files": [
+    {
+      "path": "registry/manniche/examples/score-drop-demo.tsx",
+      "content": "import { useState } from 'react'\nimport { RotateCcw } from 'lucide-react'\nimport { ScoreDrop } from '@/registry/manniche/score-drop/score-drop'\n\n// Example scores for the demo, not real data.\nconst SCORES = [58, 73, 91, 64, 47, 86]\n\nexport default function ScoreDropDemo() {\n  const [i, setI] = useState(0)\n  const [focus, setFocus] = useState(72)\n  return (\n    <div className=\"mx-auto grid w-full max-w-[680px] justify-items-center gap-6 px-4 py-10 sm:grid-cols-2 sm:items-start\">\n      <div className=\"grid w-full justify-items-center gap-3\">\n        <ScoreDrop\n          value={SCORES[i]}\n          title={\n            <>\n              How calm did <strong>the team</strong> feel this week?\n            </>\n          }\n          caption=\"out of 100\"\n          glow=\"oklch(0.7 0.19 48)\"\n        />\n        <button\n          type=\"button\"\n          onClick={() => setI((n) => (n + 1) % SCORES.length)}\n          className=\"inline-flex min-h-11 items-center gap-2 rounded-full bg-muted px-4 text-sm font-medium text-foreground transition-transform duration-150 ease-out-quint active:scale-[0.96] motion-reduce:transition-none\"\n        >\n          <RotateCcw className=\"size-4\" strokeWidth={2} aria-hidden />\n          Next week\n        </button>\n      </div>\n      <div className=\"grid w-full justify-items-center gap-3\">\n        <ScoreDrop\n          value={focus}\n          onValueChange={setFocus}\n          title={\n            <>\n              Rate <strong>today’s focus</strong>\n            </>\n          }\n          caption=\"Drag the ruler or use the arrow keys\"\n          valueText={(v) => `${v} out of 100`}\n        />\n        <p className=\"text-center text-[13px] text-muted-foreground\">Example data.</p>\n      </div>\n    </div>\n  )\n}\n",
+      "type": "registry:example"
+    }
+  ],
+  "categories": [
+    "widgets"
+  ],
+  "type": "registry:example"
+}

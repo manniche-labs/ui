@@ -1,5 +1,13 @@
 # Changelog
 
+## 2026-10-14
+
+### Added
+
+- `date-range-picker` (controls): a button that opens two months side by side with quick ranges (Today, Yesterday, Last 7 and 30 days, This and Last month, Custom), a range band, a switch that compares with the previous period of equal length and shows it, and Cancel and Apply. `DateRangePanel` is the same panel inline; it shows two months from 620 px and one below. Dates are plain local calendar days with no date library, names come from `Intl`, and `min`, `max` and `isDateDisabled` close days and the quick ranges that would land on them.
+- `score-drop` (widgets): a score card with a question, a tick ruler with a needle and a big number whose digits drop in one by one with a spring. In dark a light in the `glow` colour rises from the bottom as the score grows; light is a plain card. Read-only it is a meter; with `onValueChange` or `interactive` it is a slider you drag or key.
+- `prompt-input`: `variant="glass"` (a frosted panel for photos and video, with a solid fallback under reduced transparency, more contrast or no `backdrop-filter`), `collapsed` (rests as a small pill and grows into the full box when focused or filled, shrinks back when empty) and `attachIcon`. New props only; the default output is unchanged. New demo `prompt-input-glass-demo`.
+
 ## 2026-10-08
 
 ### Added
