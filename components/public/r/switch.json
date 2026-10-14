@@ -19,7 +19,9 @@
   "meta": {
     "tier": "free",
     "added": "2026-10-03",
-    "usedIn": [],
+    "usedIn": [
+      "date-range-picker"
+    ],
     "props": [
       {
         "name": "checked",

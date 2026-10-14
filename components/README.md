@@ -37,7 +37,7 @@ There is also a hosted MCP server just for this registry, with no key: `https://
 
 | Name | What it does |
 |---|---|
-| `prompt-input` | Chat input that grows with the text, takes files and turns into a stop button while the agent writes; optional `halo` lights the ring while there is something to send |
+| `prompt-input` | Chat input that grows with the text, takes files and turns into a stop button while the agent writes; optional `halo` lights the ring while there is something to send; `variant="glass"` frosts it for photos and `collapsed` rests it as a small pill that grows when focused |
 | `tool-approval` | Asks before the agent runs a tool, shows the arguments in full, marks risky calls |
 | `agent-activity` | The agent's steps: waiting, running, done or failed, with timings |
 | `streaming-response` | A reply as it is written, with a caret at the end |
@@ -59,6 +59,7 @@ There is also a hosted MCP server just for this registry, with no key: `https://
 | `rolling-number` | A number whose changed digits roll up or down |
 | `stepper` | Plus and minus counter with rolling digits and arrow keys |
 | `switch` | On and off switch whose knob stretches when pressed |
+| `date-range-picker` | Two months side by side with quick ranges, a compare-to-previous switch and Cancel/Apply, as a popover or inline panel |
 | `copy-button` | Copies a value; icon and label roll over to say it worked or failed |
 | `timed-undo` | Delete button that counts down and can be undone first |
 | `hold-to-confirm` | Fills while held and fires when full |
@@ -121,6 +122,7 @@ There is also a hosted MCP server just for this registry, with no key: `https://
 | `dot-matrix` | A days × hours grid of dots that grow with the value, with a now cell and keyboard reading |
 | `donut` | Ring of rounded segments with a centre figure and a legend list that light each other; optional target mark |
 | `dial` | Segmented arc that lights up to a value, or a three-zone gauge with a needle; read-only or a slider |
+| `score-drop` | Score card with a tick ruler and needle; the digits drop in with a bounce and a light rises in dark; read-only or a slider |
 | `bubble-chart` | Bubbles sized by value, on x/y axes or packed, with direct labels, a tooltip and keyboard stepping |
 | `lollipop` | Ranked lollipop list: stems, big heads, ranks that stay with their row, sorting that slides |
 | `card-stack` | Fanned payment cards: drag, tap or key the front one away and the next comes forward |
