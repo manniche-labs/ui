@@ -217,7 +217,8 @@ export function ScoreDrop({
       />
       <div
         className={cn(
-          '@container relative flex flex-col items-center overflow-hidden rounded-[calc(var(--radius)*2+2px)] bg-card px-5 pt-5 pb-4 text-card-foreground',
+          // Near square: the card grows if a long title needs more room, never shrinks the number.
+          '@container relative flex aspect-[20/21] flex-col items-center overflow-hidden rounded-[calc(var(--radius)*2+2px)] bg-card px-5 pt-6 pb-5 text-card-foreground',
           'shadow-[0_0_0_1px_color-mix(in_oklab,var(--foreground)_9%,transparent),0_1px_2px_rgba(0,0,0,0.03)]',
           'forced-colors:border forced-colors:border-[CanvasText]',
         )}
@@ -255,7 +256,7 @@ export function ScoreDrop({
           aria-valuenow={f2(v)}
           aria-valuetext={text}
           className={cn(
-            'relative mt-3 flex w-full flex-col items-center rounded-2xl outline-offset-4 focus-visible:outline-2 focus-visible:outline-ring',
+            'relative mt-3 flex w-full flex-1 flex-col items-center rounded-2xl outline-offset-4 focus-visible:outline-2 focus-visible:outline-ring',
             canAdjust && 'cursor-ew-resize touch-none select-none',
           )}
           {...pointer}
@@ -309,7 +310,7 @@ export function ScoreDrop({
           <span
             aria-hidden
             className={cn(
-              'relative mt-2 flex justify-center text-[clamp(60px,34cqi,104px)] leading-none font-semibold tracking-[-0.045em] tabular-nums',
+              'relative mt-auto flex justify-center pt-2 text-[clamp(60px,36cqi,112px)] leading-none font-semibold tracking-[-0.045em] tabular-nums',
               // In dark the digits pick up a little of the light at their feet.
               'dark:[--sd-ink:linear-gradient(to_bottom,var(--foreground)_45%,color-mix(in_oklab,var(--sd-glow)_35%,var(--foreground)))]',
             )}
