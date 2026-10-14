@@ -330,7 +330,7 @@ function Panel({
   // The day with the grid's one tab stop, and the first month on show.
   const [focused, setFocused] = useState<Date>(() => clamp(applied?.end ?? today))
   const [view, setView] = useState<Date>(() => {
-    const anchor = applied?.end ?? today
+    const anchor = clamp(applied?.end ?? today)
     const v = addMonths(startOfMonth(anchor), -(monthCount - 1))
     return applied && before(v, startOfMonth(applied.start)) && monthsBetween(applied.start, anchor) < monthCount ? startOfMonth(applied.start) : v
   })
@@ -353,7 +353,7 @@ function Panel({
     setPreview(null)
     if (applied) {
       setFocused(clamp(applied.end))
-      showMonth(applied.end)
+      showMonth(clamp(applied.end))
     }
   }
 
@@ -945,16 +945,18 @@ export function DateRangePicker({
     }
   }, [open, place])
 
+  // Track the width even while closed, so the popover opens in the layout that fits now.
+  useEffect(() => {
+    const onResize = () => setVw(document.documentElement.clientWidth)
+    addEventListener('resize', onResize)
+    return () => removeEventListener('resize', onResize)
+  }, [])
   useEffect(() => {
     if (!open) return
-    const onResize = () => {
-      setVw(document.documentElement.clientWidth)
-      place()
-    }
-    addEventListener('resize', onResize)
+    addEventListener('resize', place)
     addEventListener('scroll', place, true)
     return () => {
-      removeEventListener('resize', onResize)
+      removeEventListener('resize', place)
       removeEventListener('scroll', place, true)
     }
   }, [open, place])
