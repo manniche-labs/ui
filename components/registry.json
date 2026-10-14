@@ -115,7 +115,7 @@
       "name": "prompt-input",
       "type": "registry:component",
       "title": "Prompt input",
-      "description": "A chat input that grows with the text, takes files, and turns into a stop button while the agent writes. With `halo`, a band of primary light runs round the border while there is something to send.",
+      "description": "A chat input that grows with the text, takes files, and turns into a stop button while the agent writes. With `halo`, a band of primary light runs round the border while there is something to send. With `variant=\"glass\"` it is a frosted panel for photos, and with `collapsed` it rests as a small pill until focused.",
       "dependencies": [
         "lucide-react"
       ],
@@ -200,6 +200,27 @@
             "description": "Lights the border while there is something to send: a band of primary light runs round the ring. Off by default."
           },
           {
+            "name": "variant",
+            "type": "'default' | 'glass'",
+            "default": "'default'",
+            "required": false,
+            "description": "\"glass\" draws a frosted panel for use over photos and video: the background shows through blurred, behind a thin light edge. Without backdrop-filter, with reduced transparency or with more contrast it falls back to the card. Default \"default\"."
+          },
+          {
+            "name": "collapsed",
+            "type": "boolean",
+            "default": "false",
+            "required": false,
+            "description": "Start as a small pill with the attach button and the placeholder. It grows into the full box with send when it is focused or holds text or files, and shrinks back when it is empty and loses focus. The pill is 20rem wide; set `--prompt-pill-width` to change it. Off by default."
+          },
+          {
+            "name": "attachIcon",
+            "type": "ReactNode",
+            "default": null,
+            "required": false,
+            "description": "The attach button's icon. Default a paperclip."
+          },
+          {
             "name": "className",
             "type": "string",
             "default": null,
@@ -210,7 +231,7 @@
         "a11y": [
           {
             "topic": "keyboard",
-            "text": "Enter sends and Shift+Enter makes a new line. Enter never sends while an IME is composing. After a send, focus goes back to the text field. Attach, remove, send and stop are native buttons.",
+            "text": "Enter sends and Shift+Enter makes a new line. Enter never sends while an IME is composing. After a send, focus goes back to the text field. Attach, remove, send and stop are native buttons. With collapsed, the pill is the text field itself; Tab into it opens the box, and the order stays field, attach, footer, send. The box closes only when focus leaves the whole form and it is empty.",
             "keys": [
               "Enter",
               "Shift+Enter",
@@ -219,15 +240,15 @@
           },
           {
             "topic": "screen-reader",
-            "text": "The textarea is named by label (default Message) and described by a screen-reader-only hint: Enter sends. Shift and Enter makes a new line. Attach files, Send, Stop and each Remove <file name> button carry an aria-label, and their icons are aria-hidden. Attached files sit in a list labelled Attached files. The file input is aria-hidden and out of the tab order. Attach files shows only with accept. Send is disabled until there is text or a file."
+            "text": "The textarea is named by label (default Message) and described by a screen-reader-only hint: Enter sends. Shift and Enter makes a new line. Attach files, Send, Stop and each Remove <file name> button carry an aria-label, and their icons are aria-hidden. Attached files sit in a list labelled Attached files. The file input is aria-hidden and out of the tab order. Attach files shows only with accept. Send is disabled until there is text or a file. While collapsed and closed, the row with send and the footer is inert, so it is neither focusable nor read out."
           },
           {
             "topic": "motion",
-            "text": "With halo on, under reduced motion the ring stops spinning and stays at a fixed angle, and its fades and the arrow's shift have no transition. The buttons scale on press without a transition."
+            "text": "With halo on, under reduced motion the ring stops spinning and stays at a fixed angle, and its fades and the arrow's shift have no transition. The buttons scale on press without a transition. Under reduced motion the pill opens and closes at once, with no grow transition."
           },
           {
             "topic": "other",
-            "text": "In forced colors mode the frame becomes a real border and the focus ring a real outline, because box-shadow is dropped there."
+            "text": "In forced colors mode the frame becomes a real border and the focus ring a real outline, because box-shadow is dropped there. The glass variant falls back to the solid card under prefers-reduced-transparency, prefers-contrast: more and in browsers without backdrop-filter."
           }
         ]
       }
@@ -1551,6 +1572,27 @@
       ]
     },
     {
+      "name": "prompt-input-glass-demo",
+      "type": "registry:example",
+      "title": "Prompt input glass demo",
+      "description": "Prompt input as a frosted pill over a blurred scene that grows into the full box.",
+      "dependencies": [
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "@manniche/prompt-input"
+      ],
+      "files": [
+        {
+          "path": "registry/manniche/examples/prompt-input-glass-demo.tsx",
+          "type": "registry:example"
+        }
+      ],
+      "categories": [
+        "agent"
+      ]
+    },
+    {
       "name": "tool-approval-demo",
       "type": "registry:example",
       "title": "Tool approval demo",
@@ -2109,7 +2151,9 @@
       "meta": {
         "tier": "free",
         "added": "2026-10-03",
-        "usedIn": [],
+        "usedIn": [
+          "date-range-picker"
+        ],
         "props": [
           {
             "name": "checked",
@@ -2193,6 +2237,254 @@
       "files": [
         {
           "path": "registry/manniche/examples/switch-demo.tsx",
+          "type": "registry:example"
+        }
+      ],
+      "categories": [
+        "controls"
+      ]
+    },
+    {
+      "name": "date-range-picker",
+      "type": "registry:component",
+      "title": "Date range picker",
+      "description": "A button that opens two months side by side, with quick ranges such as Last 7 days, a switch to compare with the previous period of equal length, and Cancel and Apply. DateRangePanel shows the same panel inline.",
+      "dependencies": [
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "utils",
+        "@manniche/switch"
+      ],
+      "files": [
+        {
+          "path": "registry/manniche/date-range-picker/date-range-picker.tsx",
+          "type": "registry:component"
+        },
+        {
+          "path": "registry/manniche/date-range-picker/dates.ts",
+          "type": "registry:lib"
+        },
+        {
+          "path": "registry/manniche/hooks/use-reduced-motion.ts",
+          "type": "registry:hook"
+        }
+      ],
+      "categories": [
+        "controls"
+      ],
+      "meta": {
+        "tier": "free",
+        "added": "2026-10-14",
+        "usedIn": [],
+        "props": [
+          {
+            "name": "value",
+            "type": "DateRange | null",
+            "default": null,
+            "required": false,
+            "description": "The applied range (controlled). `null` for none. Leave it out to let the panel keep track."
+          },
+          {
+            "name": "defaultValue",
+            "type": "DateRange | null",
+            "default": "null",
+            "required": false,
+            "description": "The range applied at the start when not controlled."
+          },
+          {
+            "name": "onChange",
+            "type": "(range: DateRange) => void",
+            "default": null,
+            "required": false,
+            "description": "Called with the range when Apply is pressed."
+          },
+          {
+            "name": "onApply",
+            "type": "(detail: DateRangeApplyDetail) => void",
+            "default": null,
+            "required": false,
+            "description": "Called on Apply with the range, the active quick range, the compare state and the previous period."
+          },
+          {
+            "name": "onCancel",
+            "type": "() => void",
+            "default": null,
+            "required": false,
+            "description": "Called on Cancel. The panel goes back to the applied range."
+          },
+          {
+            "name": "compare",
+            "type": "boolean",
+            "default": null,
+            "required": false,
+            "description": "Whether comparing to the previous period is on (controlled). Changes are handed back on Apply."
+          },
+          {
+            "name": "defaultCompare",
+            "type": "boolean",
+            "default": "false",
+            "required": false,
+            "description": "Whether compare starts on when not controlled. Default false."
+          },
+          {
+            "name": "onCompareChange",
+            "type": "(compare: boolean) => void",
+            "default": null,
+            "required": false,
+            "description": "Called with the new compare state on Apply, when it changed."
+          },
+          {
+            "name": "presets",
+            "type": "DateRangePreset[]",
+            "default": null,
+            "required": false,
+            "description": "Which quick ranges to show, in order. Default all seven. Leave \"custom\" out to hide it."
+          },
+          {
+            "name": "weekStartsOn",
+            "type": "Weekday",
+            "default": null,
+            "required": false,
+            "description": "The first day of the week, 0 for Sunday to 6 for Saturday. Default 1 (Monday)."
+          },
+          {
+            "name": "locale",
+            "type": "string",
+            "default": null,
+            "required": false,
+            "description": "BCP 47 locale for month and weekday names and the range text, such as \"de\" or \"en-GB\". Default \"en\"."
+          },
+          {
+            "name": "min",
+            "type": "Date",
+            "default": null,
+            "required": false,
+            "description": "The earliest day that can be picked."
+          },
+          {
+            "name": "max",
+            "type": "Date",
+            "default": null,
+            "required": false,
+            "description": "The last day that can be picked, such as today for data that only goes back."
+          },
+          {
+            "name": "isDateDisabled",
+            "type": "(date: Date) => boolean",
+            "default": null,
+            "required": false,
+            "description": "Return true for days that cannot be picked. A range may still run across them."
+          },
+          {
+            "name": "today",
+            "type": "Date",
+            "default": null,
+            "required": false,
+            "description": "The day the quick ranges count from. Default the real today; pass one to pin it in tests and demos."
+          },
+          {
+            "name": "months",
+            "type": "1 | 2",
+            "default": null,
+            "required": false,
+            "description": "Show one or two months. Default: two, or one when the panel is narrower than about 640 px."
+          },
+          {
+            "name": "labels",
+            "type": "Partial<DateRangePickerLabels>",
+            "default": null,
+            "required": false,
+            "description": "Text for other languages. Missing keys fall back to English."
+          },
+          {
+            "name": "className",
+            "type": "string",
+            "default": null,
+            "required": false,
+            "description": "Classes for the outer panel."
+          },
+          {
+            "name": "open",
+            "type": "boolean",
+            "default": null,
+            "required": false,
+            "description": "Whether the popover is open (controlled)."
+          },
+          {
+            "name": "defaultOpen",
+            "type": "boolean",
+            "default": "false",
+            "required": false,
+            "description": "Whether the popover starts open when not controlled."
+          },
+          {
+            "name": "onOpenChange",
+            "type": "(open: boolean) => void",
+            "default": null,
+            "required": false,
+            "description": "Called with the new open state."
+          },
+          {
+            "name": "align",
+            "type": "'start' | 'end'",
+            "default": "'start'",
+            "required": false,
+            "description": "Which edge of the button the popover lines up with. Default \"start\"."
+          },
+          {
+            "name": "panelClassName",
+            "type": "string",
+            "default": null,
+            "required": false,
+            "description": "Classes for the popover panel."
+          }
+        ],
+        "a11y": [
+          {
+            "topic": "keyboard",
+            "text": "The days form a grid with one tab stop. The arrows move by day and week, Home and End go to the start and end of the week, and PageUp and PageDown move a month (with Shift, a year). Enter or Space picks the start and then the end. The quick ranges are a radio group: the arrows move and pick. In the popover, Tab stays inside, and Escape closes it and puts focus back on the button. Inline, Escape drops a half-picked range.",
+            "keys": [
+              "Arrow keys",
+              "Home",
+              "End",
+              "PageUp",
+              "PageDown",
+              "Shift+PageUp",
+              "Shift+PageDown",
+              "Enter",
+              "Space",
+              "Tab",
+              "Escape"
+            ]
+          },
+          {
+            "topic": "screen-reader",
+            "text": "Each month is a grid labelled by its name, with full weekday names on the column headers. Each day reads its full date, then start or end of range, in range, in the comparison period, today or unavailable. Picked days are aria-selected, and today has aria-current=\"date\". A polite status says what was picked: \"Start October 5. Now pick the end date.\" and then \"Oct 5 – 9, 2026, 5 days.\" The button reads \"Date range:\" and the range, and has aria-haspopup=\"dialog\" and aria-expanded. The popover is a modal dialog, so the page behind it is inert."
+          },
+          {
+            "topic": "motion",
+            "text": "The popover fades and scales in from 97% over 160 ms. It does not animate when opened with the keyboard, or when the system asks for less motion. Days change colour over 150 ms, and nothing else moves. Under reduced motion every transition is off, and the panel works the same."
+          },
+          {
+            "topic": "other",
+            "text": "Dates are local calendar days (year, month, day) with no library and no milliseconds, so nothing shifts across time zones or daylight saving. Month and weekday names come from Intl for the given locale. Days outside min and max, and days rejected by isDateDisabled, cannot be picked, and quick ranges that would land on them are disabled. All text can be replaced through labels."
+          }
+        ]
+      }
+    },
+    {
+      "name": "date-range-picker-demo",
+      "type": "registry:example",
+      "title": "Date range picker demo",
+      "description": "How to use Date range picker.",
+      "registryDependencies": [
+        "@manniche/date-range-picker",
+        "@manniche/data-tile"
+      ],
+      "files": [
+        {
+          "path": "registry/manniche/examples/date-range-picker-demo.tsx",
           "type": "registry:example"
         }
       ],
@@ -13657,6 +13949,173 @@
       "files": [
         {
           "path": "registry/manniche/examples/dial-demo.tsx",
+          "type": "registry:example"
+        }
+      ],
+      "categories": [
+        "widgets"
+      ]
+    },
+    {
+      "name": "score-drop",
+      "type": "registry:component",
+      "title": "Score drop",
+      "description": "A card with a question, a tick ruler with a needle and a big score whose digits drop in one by one with a springy bounce; in dark a light in the score’s colour rises from the bottom as the score grows. Read-only, or a slider you can drag or key.",
+      "dependencies": [
+        "motion"
+      ],
+      "registryDependencies": [
+        "utils"
+      ],
+      "files": [
+        {
+          "path": "registry/manniche/score-drop/score-drop.tsx",
+          "type": "registry:component"
+        },
+        {
+          "path": "registry/manniche/hooks/use-reduced-motion.ts",
+          "type": "registry:hook"
+        }
+      ],
+      "categories": [
+        "widgets"
+      ],
+      "meta": {
+        "tier": "free",
+        "added": "2026-10-14",
+        "usedIn": [],
+        "props": [
+          {
+            "name": "value",
+            "type": "number",
+            "default": null,
+            "required": true,
+            "description": "The score. With `onValueChange` it is controlled; with `interactive` alone it is only the starting value."
+          },
+          {
+            "name": "onValueChange",
+            "type": "(value: number) => void",
+            "default": null,
+            "required": false,
+            "description": "Called with the new value when a key or a drag changes it. Passing it makes the card interactive."
+          },
+          {
+            "name": "interactive",
+            "type": "boolean",
+            "default": null,
+            "required": false,
+            "description": "Turn the ruler into a slider you can drag or key. Default: true when `onValueChange` is set."
+          },
+          {
+            "name": "title",
+            "type": "ReactNode",
+            "default": null,
+            "required": true,
+            "description": "The question or title at the top. Wrap words in `<strong>` to set them in full ink: `How <strong>calm</strong> was it?`"
+          },
+          {
+            "name": "label",
+            "type": "string",
+            "default": null,
+            "required": false,
+            "description": "The accessible name, when the title is not plain enough to read out. Default: the title's text."
+          },
+          {
+            "name": "caption",
+            "type": "ReactNode",
+            "default": null,
+            "required": false,
+            "description": "A small line under the ruler, such as \"out of 100\"."
+          },
+          {
+            "name": "min",
+            "type": "number",
+            "default": "0",
+            "required": false,
+            "description": "The value at the left end of the ruler. Default 0."
+          },
+          {
+            "name": "max",
+            "type": "number",
+            "default": "100",
+            "required": false,
+            "description": "The value at the right end of the ruler. Default 100."
+          },
+          {
+            "name": "step",
+            "type": "number",
+            "default": "1",
+            "required": false,
+            "description": "How far one arrow key or one tick of a drag moves the value. Default 1."
+          },
+          {
+            "name": "glow",
+            "type": "string",
+            "default": "'var(--primary)'",
+            "required": false,
+            "description": "Any CSS colour for the light that rises in dark mode and the needle's tip. Default `var(--primary)`."
+          },
+          {
+            "name": "ends",
+            "type": "[ReactNode, ReactNode] | false",
+            "default": null,
+            "required": false,
+            "description": "The labels under the two ends of the ruler. Default `min` and `max`; false hides them."
+          },
+          {
+            "name": "valueText",
+            "type": "(value: number) => string",
+            "default": null,
+            "required": false,
+            "description": "The value as words for screen readers. Default `${value} out of ${max}`."
+          }
+        ],
+        "extends": "Omit<HTMLAttributes<HTMLDivElement>, 'children' | 'title' | 'onChange'>",
+        "a11y": [
+          {
+            "topic": "keyboard",
+            "text": "When it has onValueChange or interactive it is one Tab stop. ArrowRight and ArrowUp add a step, ArrowLeft and ArrowDown remove one, Page Up and Page Down move by ten steps, Home and End go to the ends. Dragging along the ruler sets the value.",
+            "keys": [
+              "Tab",
+              "ArrowRight",
+              "ArrowLeft",
+              "ArrowUp",
+              "ArrowDown",
+              "PageUp",
+              "PageDown",
+              "Home",
+              "End"
+            ]
+          },
+          {
+            "topic": "screen-reader",
+            "text": "Read-only it is a meter; interactive it is a slider. It is named by the title (or label), described by the caption, and carries aria-valuemin, aria-valuemax, aria-valuenow and aria-valuetext (from valueText, default \"58 out of 100\"). The big digits, the ruler, the needle and the end labels are aria-hidden, so the score is read once."
+          },
+          {
+            "topic": "motion",
+            "text": "Under reduced motion it shows the final state at once: no drop, no needle swing, no rising light and no tick stagger. Otherwise the digits drop in when the card scrolls into view and when the value changes; changes made by key or drag use a short, calm swap instead of the full drop."
+          },
+          {
+            "topic": "other",
+            "text": "The rising light is dark mode only; light mode is a plain card. In forced colors mode the frame becomes a real border. The focus ring is a real outline around the ruler and number."
+          }
+        ]
+      }
+    },
+    {
+      "name": "score-drop-demo",
+      "type": "registry:example",
+      "title": "Score drop demo",
+      "description": "How to use Score drop.",
+      "dependencies": [
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "@manniche/score-drop"
+      ],
+      "files": [
+        {
+          "path": "registry/manniche/examples/score-drop-demo.tsx",
           "type": "registry:example"
         }
       ],

@@ -1,0 +1,21 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "date-range-picker-demo",
+  "title": "Date range picker demo",
+  "description": "How to use Date range picker.",
+  "registryDependencies": [
+    "@manniche/date-range-picker",
+    "@manniche/data-tile"
+  ],
+  "files": [
+    {
+      "path": "registry/manniche/examples/date-range-picker-demo.tsx",
+      "content": "import { useState } from 'react'\nimport { DataTile } from '@/registry/manniche/data-tile/data-tile'\nimport {\n  DateRangePanel,\n  DateRangePicker,\n  type DateRange,\n  type DateRangeApplyDetail,\n} from '@/registry/manniche/date-range-picker/date-range-picker'\nimport { presetRange, previousPeriod } from '@/registry/manniche/date-range-picker/dates'\n\n// A fixed \"today\", so the demo looks the same on every day it is opened.\nconst TODAY = new Date(2026, 9, 14)\nconst fmt = new Intl.DateTimeFormat('en', { day: 'numeric', month: 'short' })\nconst span = (r: DateRange) => fmt.formatRange(r.start, r.end)\n\nexport default function DateRangePickerDemo() {\n  const [range, setRange] = useState<DateRange | null>(() => presetRange('last7', TODAY))\n  const [compare, setCompare] = useState(true)\n  const [inline, setInline] = useState<DateRangeApplyDetail | null>(null)\n\n  return (\n    <div className=\"mx-auto grid w-full max-w-5xl gap-6 px-4 py-8 sm:px-6 sm:py-10\">\n      <div className=\"flex flex-wrap items-center justify-between gap-3\">\n        <div className=\"min-w-0\">\n          <h2 className=\"text-[15px] font-semibold tracking-tight\">Traffic</h2>\n          <p className=\"text-[13.5px] text-muted-foreground\">\n            {range ? span(range) : 'No period'}\n            {range && compare && ` compared with ${span(previousPeriod(range))}`}\n          </p>\n        </div>\n        <DateRangePicker\n          align=\"end\"\n          today={TODAY}\n          max={TODAY}\n          value={range}\n          onChange={setRange}\n          compare={compare}\n          onCompareChange={setCompare}\n        />\n      </div>\n\n      <DataTile\n        title=\"Report period\"\n        footer={\n          <span aria-live=\"polite\">\n            {inline\n              ? `Applied ${span(inline.range)}${inline.compare ? `, compared with ${span(inline.previous)}` : ''}.`\n              : 'Nothing applied yet. Example data.'}\n          </span>\n        }\n      >\n        <DateRangePanel\n          today={TODAY}\n          max={TODAY}\n          defaultValue={presetRange('lastMonth', TODAY)}\n          onApply={setInline}\n          onCancel={() => setInline(null)}\n          className=\"shadow-none\"\n        />\n      </DataTile>\n    </div>\n  )\n}\n",
+      "type": "registry:example"
+    }
+  ],
+  "categories": [
+    "controls"
+  ],
+  "type": "registry:example"
+}
