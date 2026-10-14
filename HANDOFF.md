@@ -1,6 +1,6 @@
 # Handoff: Manniche UI (manniche-labs/ui)
 
-Updated 2026-10-08 by the Windows session (EmptyState, #49). Everything the next session needs is in this repo; nothing depends on files on the Windows machine.
+Updated 2026-10-14 by the Work Mac session (riff round, #50). Before that 2026-10-08 by the Windows session (EmptyState, #49). Everything the next session needs is in this repo; nothing depends on files on the Windows machine.
 
 ## The plan
 
@@ -16,6 +16,14 @@ The scrolltide-inspired plan for Manniche UI, built in our own **Tiles** design 
 | 6 | 17 page sections (footers, bento, CTA, contact) | **All 17 merged 6/10**: bento + CTA #26, footers #28, contact #27. Not on /lab yet |
 
 All seven parts of the plan are merged. Not on /lab yet: #25, #26, #27, #28, #31, #32, #34, #35 and `empty-state` (#49). Deploying needs Mikkel's yes.
+
+## Riff round (14/10, merged in #50)
+
+Nine elements built after Figma Community riffs Mikkel sent (inspiration only: our own names, no logos or texts from the riffs). The tier call, with reasons, was shown to Mikkel on one page (artifact "Riff-runden 14/10").
+
+- **Free, here:** `date-range-picker` (controls; presets, two months, compare-to-previous), `score-drop` (widgets; dial family), and a glass variant of `prompt-input` (new props only, collapsed pill that grows; demo `prompt-input-glass-demo`).
+- **Pro, in ui-pro (#16):** `signal-hub` and `logo-bloom` (first built here, moved because they are signature effects), plus `glyph-trail`, `glitch-type`, `gloss-type`, `dither-badge`.
+- Not on /lab yet. Deploying needs Mikkel's yes.
 
 ## Open PRs
 
