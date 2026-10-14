@@ -12,10 +12,10 @@ The scrolltide-inspired plan for Manniche UI, built in our own **Tiles** design 
 | Pro move | Six components moved to Manniche UI Pro | Merged (#19) |
 | 5 | Tiles data primitives: chart-kit, data-tile + 11 primitives | Merged (#21). Live on mikkelmanniche.dk/lab (site PR #109) |
 | Tiles pass 2–4 | Nine phase 2–4 components restyled to Tiles | Merged (#20); live on /lab |
-| Templates | 13 screen templates built from the phase 5 primitives | **All 13 merged 6/10**: dashboards #25, the rest #31, finance #32. Not on /lab yet |
-| 6 | 17 page sections (footers, bento, CTA, contact) | **All 17 merged 6/10**: bento + CTA #26, footers #28, contact #27. Not on /lab yet |
+| Templates | 13 screen templates built from the phase 5 primitives | **All 13 merged 6/10**: dashboards #25, the rest #31, finance #32. Live on /lab |
+| 6 | 17 page sections (footers, bento, CTA, contact) | **All 17 merged 6/10**: bento + CTA #26, footers #28, contact #27. Live on /lab |
 
-All seven parts of the plan are merged. Not on /lab yet: #25, #26, #27, #28, #31, #32, #34, #35 and `empty-state` (#49). Deploying needs Mikkel's yes.
+All seven parts of the plan are merged and live on /lab. `empty-state` (#49) went live 14/10 with the riff round (site PR #191).
 
 ## Riff round (14/10, merged in #50)
 
@@ -23,7 +23,7 @@ Nine elements built after Figma Community riffs Mikkel sent (inspiration only: o
 
 - **Free, here:** `date-range-picker` (controls; presets, two months, compare-to-previous), `score-drop` (widgets; dial family), and a glass variant of `prompt-input` (new props only, collapsed pill that grows; demo `prompt-input-glass-demo`).
 - **Pro, in ui-pro (#16):** `signal-hub` and `logo-bloom` (first built here, moved because they are signature effects), plus `glyph-trail`, `glitch-type`, `gloss-type`, `dither-badge`.
-- Not on /lab yet. Deploying needs Mikkel's yes.
+- **Live on /lab 14/10** (site PR #191, Mikkel's yes): free count 97 → 100, Pro 60 → 66, Danish and German descriptions for all nine in the site's `server/lab-ui-tekster.mjs` and `server/lab-pro-tekster.mjs`.
 
 ## Open PRs
 
@@ -61,7 +61,7 @@ One Vite server and one browser per machine.
   - `labels.examples`;
   - `live`, which speaks the title and description once through a polite status region.
 - It was checked in Chromium at 1440 and 320 px, in light and dark. axe found 0 WCAG 2.2 AA issues, and there was no sideways scroll and no console error.
-- **Not on /lab yet.**
+- Live on /lab since 14/10 (site PR #191).
 - NP-Flow and ManiLens still use their own EmptyState. Switching them over is a separate task, and it needs a yes.
 - Places it fits: `placeholder` in `dot-matrix`, `empty` in `transaction-list`, and the empty gallery grid under `filter-bar`.
 - #47 and #48: the preview now centres demos and grows the frame to fit them, and page-critic 1.1.1 no longer scrolls sideways on a phone.
@@ -84,7 +84,7 @@ One Vite server and one browser per machine.
 ## Next steps
 
 1. `git fetch`, `gh pr list`, and read this file. Nothing should be open.
-2. /lab: deploy the merged templates, page sections and `empty-state`, but only when Mikkel says yes. In the site repo, run `node server/lab-sider.mjs .`, then `server/udrul.sh`.
+2. /lab is up to date with main (site PR #191, 14/10). Next time: `npm run lab -- <site worktree>` in `components/`, add Danish and German text for new names in the site's `server/lab-ui-tekster.mjs` (`BESKRIVELSE`), run `node server/lab-sider.mjs .`, open a site PR, then `bash server/udrul.sh` and `--live`.
 3. Optional: check the templates in real Safari on the Mac. WebKit in Playwright is close to it, but it is not the same browser.
 4. Figma: the free components go into Figma next, when Mikkel says so.
 5. A11y notes for the Pro components in `ui-pro`, when Mikkel says so.
