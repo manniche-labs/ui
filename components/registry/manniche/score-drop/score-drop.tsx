@@ -71,7 +71,8 @@ const f2 = (v: number) => Number(v.toFixed(2))
 const clamp = (v: number, lo: number, hi: number) => Math.min(hi, Math.max(lo, v))
 
 // A full drop from above the card on view and on new values; a short one for changes made by hand.
-const DROP = { from: '-260%', spring: { type: 'spring' as const, stiffness: 430, damping: 17, mass: 1 }, gap: 0.085 }
+// Damped so the bounce lands about a sixth of a digit past its line and never leaves the card.
+const DROP = { from: '-240%', spring: { type: 'spring' as const, stiffness: 400, damping: 26, mass: 1 }, gap: 0.085 }
 const NUDGE = { from: '-45%', spring: { type: 'spring' as const, stiffness: 760, damping: 38, mass: 0.7 }, gap: 0 }
 
 export function ScoreDrop({
