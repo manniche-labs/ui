@@ -9,7 +9,7 @@ Every page gets three separate scores. They are never averaged into one.
 | Layer | Question | Who answers |
 |---|---|---|
 | 1. Does it work? | Can the user finish the task without doubt: copy, forms, states, feedback, wayfinding, mobile | An agent reading screenshots, code and the measurement |
-| 2. Does it hold up? | Contrast, keyboard and focus, touch targets, narrow screens, form errors, console errors, LCP, CLS and INP, reduced motion | `scripts/measure.mjs` in a real browser |
+| 2. Does it hold up? | Contrast, keyboard and focus, touch targets, narrow screens, form errors, console errors, LCP, CLS and INP, reduced motion, dead scroll and content that never shows up while scrolling | `scripts/measure.mjs` in a real browser |
 | 3. Is it delightful? | Typography, spacing, depth, states for every element, the motion that exists and the motion that is missing | An agent reading screenshots, CSS and the measurement |
 
 Around the three layers:
@@ -63,7 +63,7 @@ Windows (PowerShell):
     npm install
     npm test
 
-`npm test` measures the skill's own test pages in a real browser and takes four to five minutes. It ends with a line like `444 of 444 checks passed.` This version passes on macOS. Version 1.0 was tested on Windows 11. Linux has not been tried yet.
+`npm test` measures the skill's own test pages in a real browser and takes four to five minutes. It ends with a line like `483 of 483 checks passed.` This version passes on macOS. Version 1.0 was tested on Windows 11. Linux has not been tried yet.
 
 ## Use
 

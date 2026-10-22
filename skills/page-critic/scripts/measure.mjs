@@ -15,12 +15,12 @@
 //   }
 // Steps: goto (path), fill [selector, value], click (selector), submit (selector of a form; skips the browser's own validation),
 // press (key), wait (selector or milliseconds), js (code run in the page).
-// Per page: "performance": false skips the speed measurement; "errorState": true says the state shows a form error
+// Per page: "scrollWalk": false skips the scroll walk (dead scroll, content that never shows up); "performance": false skips the speed measurement; "errorState": true says the state shows a form error
 // (otherwise it is guessed from a submit step and a status code between 400 and 499); "inp": [selectors] are extra things to press in the INP measurement.
 //
 // --base runs the same plan against another address than the plan's "base" (first the demo, then a local run with the fixes).
 // --check only reads the plan and says whether it is valid. No browser, and --out is not needed.
-// --quick skips what takes time or needs extra loads: three speed runs (only one), INP, stress tests,
+// --quick skips what takes time or needs extra loads: the scroll walk, three speed runs (only one), INP, stress tests,
 // double click on submit, the not-found page and the reload with "reduce motion".
 //
 // If the folder already has a measurement.json, it is moved to measurement-previous.json, so compare.mjs can show before and after.
@@ -31,6 +31,7 @@ import { spawnSync } from "node:child_process";
 import { readFileSync, writeFileSync, mkdirSync, existsSync, renameSync } from "node:fs";
 import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
+import { readPng } from "./png.mjs";
 import { LABEL, GROUP_METRICS, NO_BROWSER, browserChoice, fails } from "./common.mjs";
 
 const here = dirname(fileURLToPath(import.meta.url));
@@ -55,6 +56,8 @@ if (duplicates.length) reject(`Two pages may not have the same name (the screens
 const STEPS = ["goto", "fill", "click", "submit", "press", "wait", "js"];
 const unknown = [...(plan.login || []), ...plan.pages.flatMap((p) => p.steps || [])].filter((t) => !t || Object.keys(t).length !== 1 || !STEPS.includes(Object.keys(t)[0]));
 if (unknown.length) reject(`Every step must be exactly one of: ${STEPS.join(", ")}. Cannot read: ${JSON.stringify(unknown)}`);
+const badWalk = plan.pages.filter((p) => "scrollWalk" in p && typeof p.scrollWalk !== "boolean");
+if (badWalk.length) reject();
 const noReason = (plan.ignore || []).filter((i) => !i.metric || !i.why);
 if (noReason.length) reject(`Every entry in "ignore" needs both "metric" and "why". Missing in: ${JSON.stringify(noReason)}`);
 const unknownMetrics = (plan.ignore || []).filter((i) => !(i.metric in LABEL) && !/^aiLook:\w+$/.test(i.metric));
@@ -129,6 +132,124 @@ async function scrollThrough(page) {
   await page.waitForTimeout(350);
 }
 
+// Scroll walk: goes through the page from top to bottom in fixed steps and sees what happens between the places a snapshot happens to hit.
+// The idea is borrowed from scroll-craft (MIT): a page that is scrolled cannot be checked by looking at it in two places.
+// It measures three things: stretches where scrolling does not change the picture (dead scroll), content that never shows up, and the same with reduced motion.
+// Every pass runs on a fresh load (for pages without steps), so content that only shows once when scrolled is not already shown.
+const WALK_POSITIONS = 24, DEAD_SHARE = 0.0004, MIN_STEP = 0.25;
+const shareChanged = (a, b) => {
+  if (a.row !== b.row || a.height !== b.height) return 1;
+  const x = a.pixels, y = b.pixels;
+  let n = 0;
+  for (let i = 0; i < x.length; i++) if (Math.abs(x[i] - y[i]) > 12) n++;
+  return n / x.length;
+};
+async function walkPass(page, { pictures }) {
+  const s = measureIn(page);
+  await page.evaluate(() => { window.__pc.walkNew(); window.scrollTo({ top: 0, left: 0, behavior: "instant" }); });
+  await page.waitForTimeout(200);
+  const { vh, max } = await page.evaluate(() => ({ vh: innerHeight, max: Math.max(0, Math.round(document.documentElement.scrollHeight - innerHeight)) }));
+  const step = Math.max(Math.round(vh * 0.6), Math.ceil(max / (WALK_POSITIONS - 1)));
+  const ys = [];
+  for (let y = 0; y < max; y += step) ys.push(y);
+  ys.push(max);
+  const frames = [];
+  let previous = null;
+  for (const y of ys) {
+    await page.evaluate((y) => window.scrollTo({ top: y, left: 0, behavior: "instant" }), y);
+    await page.waitForTimeout(250);
+    let sn = await s("walkSnap");
+    // An image that is fetched and then fades in gets time.
+    for (let n = 0; n < 3 && sn.pending > 0; n++) { await page.waitForTimeout(400); sn = await s("walkSnap"); }
+    await s("walkKeep");
+    if (!pictures) continue;
+    const actual = await page.evaluate(() => Math.round(scrollY));
+    const png = readPng(await page.screenshot({ type: "png" }));
+    const jpg = (await page.screenshot({ type: "jpeg", quality: 55 })).toString("base64");
+    let dead = false;
+    if (previous && actual - previous.y >= MIN_STEP * vh) dead = shareChanged(previous.png, png) < DEAD_SHARE;
+    frames.push({ y: actual, jpg, dead });
+    previous = { y: actual, png };
+  }
+  // At the end back to the top after a longer pause: what is fetched or fades in late gets a last chance.
+  await page.evaluate(() => window.scrollTo({ top: 0, left: 0, behavior: "instant" }));
+  await page.waitForTimeout(900);
+  await s("walkSnap");
+  await s("walkKeep");
+  const answer = await s("walkAnswer");
+  // Dead stretches: every frame that looks like the one before belongs to a stretch from the previous frame's place. Stretches that touch are merged.
+  const dead = [];
+  frames.forEach((f, i) => {
+    if (!f.dead) return;
+    const from = frames[i - 1].y, to = f.y, last = dead[dead.length - 1];
+    if (last && last.to === from) last.to = to;
+    else dead.push({ from, to });
+  });
+  for (const d of dead) d.vh = Math.round(((d.to - d.from) / vh) * 10) / 10;
+  return { vh, max, positions: ys.length, dead, found: answer.found, frames };
+}
+
+async function walkSheet(ctx, frames, { columns, width, title, file }) {
+  const p = await ctx.newPage();
+  try {
+    await p.setViewportSize({ width, height: 800 });
+    const esc = (t) => String(t).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]);
+    const cells = frames.map((f, i) => {
+      const note = f.dead ? ` · DEAD SCROLL from ${frames[i - 1].y} px` : "";
+      return `<figure style="margin:0;border:4px solid ${f.dead ? "#ff3b3b" : "#3a3f4a"};background:#000"><img style="width:100%;display:block" src="data:image/jpeg;base64,${f.jpg}"><figcaption style="padding:4px 6px;color:${f.dead ? "#ff9a9a" : "#cfd3da"}">${i + 1}. y = ${f.y} px${note}</figcaption></figure>`;
+    }).join("");
+    await p.setContent(`<!doctype html><meta charset="utf-8"><body style="margin:0;background:#15171c;font:13px/1.3 system-ui,sans-serif;color:#fff"><div style="padding:10px 12px;font-weight:600">${esc(title)}</div><div style="display:grid;grid-template-columns:repeat(${columns},1fr);gap:10px;padding:0 10px 10px">${cells}</div>`);
+    await p.evaluate(() => Promise.all([...document.images].map((i) => i.decode().catch(() => {}))));
+    await p.screenshot({ path: file, fullPage: true });
+  } finally { await p.close().catch(() => {}); }
+}
+
+// Runs the scroll walk for one page on desktop, mobile and with reduced motion.
+async function scrollWalk(ctx, page0, usedPage, keep) {
+  const fresh = (page0.steps || []).length === 0;
+  const r = { freshLoad: fresh, positions: {}, deadScroll: [], neverShows: [], neverShowsReduced: [], images: {} };
+  const open = async (viewport, reduced) => {
+    if (fresh) {
+      const p = await ctx.newPage();
+      await p.setViewportSize(viewport);
+      await p.emulateMedia({ reducedMotion: reduced ? "reduce" : "no-preference", colorScheme: "light" });
+      await p.goto(address(page0.path), { waitUntil: "domcontentloaded", timeout: 30000 });
+      await settle(p);
+      return p;
+    }
+    // A flow with steps (sign-in, form) is not played again: the walk runs on the page that is open.
+    await usedPage.emulateMedia({ reducedMotion: reduced ? "reduce" : "no-preference", colorScheme: "light" });
+    await usedPage.setViewportSize(viewport);
+    await usedPage.waitForTimeout(400);
+    return usedPage;
+  };
+  const run = async (viewport, reduced, pictures) => {
+    const p = await open(viewport, reduced);
+    try { return await walkPass(p, { pictures }); }
+    finally { if (p !== usedPage) await p.close().catch(() => {}); }
+  };
+  const add = (list, vp, found) => { for (const f of found) list.push({ element: f.element, count: f.count, example: f.example, viewport: vp }); };
+  for (const [vp, viewport, columns, width] of [["desk", DESK, 4, 1760], ["mobile", MOBILE, 8, 1500]]) {
+    const pass = await run(viewport, false, true);
+    r.positions[vp] = pass.positions;
+    for (const d of pass.dead) r.deadScroll.push({ viewport: vp, element: `${vp} ${d.from}-${d.to} px`, from: d.from, to: d.to, vh: d.vh });
+    add(r.neverShows, vp, pass.found);
+    const file = `${page0.name}-walk${vp === "mobile" ? "-mobile" : ""}.png`;
+    await walkSheet(ctx, pass.frames, { columns, width, title: `${page0.name} · ${vp} ${viewport.width} px · scroll walk from top to bottom. Red frame: the picture looks like the one before, although the page was scrolled.`, file: join(out, file) });
+    r.images[vp === "mobile" ? "walkMobile" : "walk"] = file;
+  }
+  // Reduced motion: everything must be visible. What is not seen in the normal run is already counted and is not counted again.
+  const reduced = await run(DESK, true, false);
+  r.positions.reduced = reduced.positions;
+  const normal = new Set(r.neverShows.map((f) => f.element));
+  add(r.neverShowsReduced, "reduced", reduced.found.filter((f) => !normal.has(f.element)));
+  // The plan's exceptions.
+  r.deadScroll = keep("deadScroll", r.deadScroll);
+  r.neverShows = keep("neverShows", r.neverShows);
+  r.neverShowsReduced = keep("neverShowsReduced", r.neverShowsReduced);
+  return r;
+}
+
 // Walks the page with Tab and notes every stop: is focus visible, and does the order follow the eye?
 // The walk is done when focus lands on an element it has been on before. The ceiling guards against a page that keeps making new stops.
 const TAB_CEILING = 600;
@@ -174,7 +295,7 @@ async function keyboard(page, clickableCount) {
   }
   // Inside a frame the frame's own page draws focus. That cannot be seen from here, so the frame is not judged.
   const judged = stops.filter((s) => !s.frame);
-  return { stops: stops.length, interrupted, trapped, invisibleFocus: judged.filter((s) => !s.visible).map((s) => s.element), obscured: judged.filter((s) => s.obscured).map((s) => s.element), offscreen: judged.filter((s) => s.offscreen).map((s) => s.element), jumpsBack: backwards, reached: numbers, span };
+  return { stops: stops.length, interrupted, trapped, invisibleFocus: judged.filter((s) => !s.visible).map((s) => s.element), obscured: judged.filter((s) => s.obscured).map((s) => s.element), offscreen: judged.filter((s) => s.offscreen).map((s) => s.element), transparent: judged.filter((s) => s.transparent).map((s) => s.element), jumpsBack: backwards, reached: numbers, span };
 }
 
 // Hovers over every clickable element and presses down on it (without releasing on the element, so nothing gets clicked).
@@ -570,6 +691,8 @@ async function measurePage(browser, ctx, page0) {
   // The same goes for the four other focus findings. A ticker that stops when a link in it gets focus cannot be seen by the measurement; the plan can take it out.
   r.keyboard.obscured = keep("focusObscured", r.keyboard.obscured);
   r.keyboard.offscreen = keep("focusOffscreen", r.keyboard.offscreen);
+  r.keyboard.focusTransparent = keep("focusTransparent", r.keyboard.transparent);
+  delete r.keyboard.transparent;
   r.keyboard.jumpsBack = keep("focusJumpsBack", r.keyboard.jumpsBack);
   r.keyboard.trapped = keep("focusTrapped", r.keyboard.trapped);
   delete r.keyboard.reached;
@@ -628,6 +751,16 @@ async function measurePage(browser, ctx, page0) {
     r.dark = { exists: true, contrast: await s("contrast") };
   } else r.dark = { exists: false };
 
+  // Scroll walk (see scrollWalk() above). Skipped with --quick and with "scrollWalk": false in the plan.
+  if (QUICK || page0.scrollWalk === false) r.scrollWalk = { skipped: true };
+  else {
+    try {
+      await page.emulateMedia({ colorScheme: null, reducedMotion: null });
+      r.scrollWalk = await scrollWalk(ctx, page0, page, keep);
+      Object.assign(r.images, r.scrollWalk.images);
+    } catch (e) { r.scrollWalk = { skipped: true, error: short(e) }; }
+  }
+
   r.consoleErrors = keep("consoleErrors", [...new Set(console0)]);
   r.failedRequests = keep("failedRequests", [...new Set(failed)]);
   await page.close();
@@ -654,7 +787,10 @@ async function measurePage(browser, ctx, page0) {
     textUnder12px: Math.max(sum(keep("textUnder12px", r.typography.textUnder12px)), sum(keep("textUnder12px", r.typography.textUnder12pxMobile))),
     tightLineHeight: keep("tightLineHeight", r.typography.tightLineHeight).length,
     invisibleFocus: r.keyboard.invisibleFocus.length, notReachedByKeyboard: r.keyboard.notReached.length,
-    focusObscured: r.keyboard.obscured.length, focusOffscreen: r.keyboard.offscreen.length, focusJumpsBack: r.keyboard.jumpsBack.length, focusTrapped: r.keyboard.trapped.length,
+    focusObscured: r.keyboard.obscured.length, focusOffscreen: r.keyboard.offscreen.length, focusJumpsBack: r.keyboard.jumpsBack.length, focusTrapped: r.keyboard.trapped.length, focusTransparent: r.keyboard.focusTransparent.length,
+    deadScroll: r.scrollWalk.skipped ? null : r.scrollWalk.deadScroll.length,
+    neverShows: r.scrollWalk.skipped ? null : new Set(r.scrollWalk.neverShows.map((f) => f.element)).size,
+    neverShowsReduced: r.scrollWalk.skipped ? null : new Set(r.scrollWalk.neverShowsReduced.map((f) => f.element)).size,
     formGaps: r.form ? Object.values(r.form.gaps).filter(Boolean).length : null,
     doubleSubmits: r.doubleSubmit && r.doubleSubmit.submits ? Math.max(0, r.doubleSubmit.submits - 1) : null,
     noHover: r.mouse.noHover.length, noPressed: r.mouse.noPressed.length,

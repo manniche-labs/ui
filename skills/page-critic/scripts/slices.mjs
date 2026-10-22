@@ -23,7 +23,7 @@ const folder = join(OUT, "slices");
 rmSync(folder, { recursive: true, force: true });
 const short = (e) => String(e?.message || e).split("\n")[0];
 let tall = 0, errors = 0;
-for (const file of readdirSync(OUT).filter((f) => /\.png$/i.test(f)).sort()) {
+for (const file of readdirSync(OUT).filter((f) => /\.png$/i.test(f) && !/-walk(-mobile)?\.png$/i.test(f)).sort()) {
   try {
     const size = imageSize(join(OUT, file)), plan = size ? slicePlan(size.width, size.height) : [];
     if (!plan.length) continue;

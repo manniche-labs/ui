@@ -2,6 +2,14 @@
 
 Newest first.
 
+## 1.2.0 — 2026-10-22
+
+- **The scroll walk.** The measurement now scrolls each page from top to bottom (up to 24 stops, 250 ms each, desktop and phone) and looks for two things Tab and screenshots miss. **Dead scroll:** a stretch where the page moves by at least a quarter of a screen and the picture does not change (a pinned section that never plays). **Content that never shows up:** an element that stands on screen at every stop where it belongs and is never seen (opacity under 0.9, hidden, or under a fifth of it visible), for example a reveal that waits for an observer that never fires. It is judged where the element would stand without any transform, so a slide-in that never runs still counts. Carousels, tickers, fixed bars, closed panels and skip links are left out. A second pass with reduced motion only looks at what was not already missing, and fails Calm.
+- **Focus on something transparent.** A stop in the Tab walk whose effective opacity is under 0.85 now counts (`keyboard.focusTransparent`) and fails Keyboard.
+- New metrics: `deadScroll`, `neverShows`, `neverShowsReduced`, `focusTransparent`. Errors fails on the first two, Calm on the third and Keyboard on the last. Contact sheets of the walk (`<page>-walk.png`, `<page>-walk-mobile.png`) go in the report and are not cut into slices.
+- `"scrollWalk": false` on a page in the plan switches the walk off. `--quick` skips it. Both show as "not measured".
+- Five new test pages (`scroll-clean`, `-dead`, `-missing`, `-reduced`, `-invisible`). The self-test has 483 checks (39 new). The scroll-walk idea comes from the MIT-licensed scroll-craft verify checklist.
+
 ## 1.1.1 — 2026-10-08
 
 - **The report no longer scrolls sideways on a phone.** A screenshot in a list item could be 16 px wider than the item, and a long word quoted from a stress test could not wrap. Images in lists now fit their item, and text in the page sections wraps anywhere. Found in a real review at 390 px.

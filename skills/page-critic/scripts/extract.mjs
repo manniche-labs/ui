@@ -43,19 +43,19 @@ const FIELDS3 = [
   ["mouse", "motion.hoverRules", "motion.hoverWithoutMedia", "motion.activeRules", "motion.focusVisibleRules"],
   ["motion.transitionAll", "motion.layoutProperties", "motion.keyframesWithLayout", "motion.overThreeHundred", "motion.linear", "motion.bouncyCurves",
     "motion.durations", "motion.curves", "motion.offscreen", "motion.reducedMotionRules", "motion.disabled", "reducedMotion.stillRunning", "reducedMotion.onlyFadeOrColour"],
-  ["motion.transitions", "motion.keyframes", "motion.onLoad", "motion.onScroll", "motion.entrances", "motion.viewTransitions", "motion.scrollDriven"],
+  ["motion.transitions", "motion.keyframes", "motion.onLoad", "motion.onScroll", "motion.entrances", "motion.viewTransitions", "motion.scrollDriven", "scrollWalk.deadScroll", "scrollWalk.neverShows", "scrollWalk.neverShowsReduced", "scrollWalk.positions"],
   ["aiLook.clear", "aiLook.suspect", "structure.imagesWithoutSize", "performance.cls", "notFoundPage"],
 ];
 // What lies behind the numbers in each group in layer 2.
 const FIELDS2 = {
-  errors: ["consoleErrors", "failedRequests", "structure.brokenImages"],
+  errors: ["consoleErrors", "failedRequests", "structure.brokenImages", "scrollWalk.deadScroll", "scrollWalk.neverShows"],
   narrowScreen: ["overflow.320", "overflow.390"],
   fingers: ["targets", "fieldsMobile"],
   readability: ["contrast", "axe", "fields", "structure.viewport"],
   keyboard: ["keyboard"],
   form: ["form"],
   speed: ["performance"],
-  calm: ["reducedMotion.stillRunning", "structure.imagesWithoutSize"],
+  calm: ["reducedMotion.stillRunning", "structure.imagesWithoutSize", "scrollWalk.neverShowsReduced"],
 };
 const NONE = "(no fields in the measurement; see the screenshots)";
 const NOTE = { Mobile: "(see the mobile screenshot; horizontal scroll, tap targets and field text size are under layer 2)" };
@@ -108,7 +108,7 @@ function imageLines(file, what) {
 
 function header(m) {
   const b = m.images || {};
-  const images = [[b.mobile, "390 px"], [b.desk, "1440 px"], [b.dark, "dark mode"]].filter(([file]) => file);
+  const images = [[b.mobile, "390 px"], [b.desk, "1440 px"], [b.dark, "dark mode"], [b.walk, "scroll walk, desktop (red frame = dead scroll)"], [b.walkMobile, "scroll walk, mobile"]].filter(([file]) => file);
   const failed = m.layer2.failed.map((g) => GROUP[g]);
   const notMeasured = Object.keys(GROUP).filter((g) => !isMeasured(m, g)).map((g) => GROUP[g]);
   const about = (k) => [LABEL[k], k in LIMIT ? `at most ${LIMIT[k]}` : "", NEUTRAL.has(k) ? "a count" : ""].filter(Boolean).join(", ");

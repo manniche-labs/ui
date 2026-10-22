@@ -11,6 +11,8 @@ export const LABEL = {
   textUnder12px: "Text under 12 px", tightLineHeight: "Paragraphs with tight line height",
   invisibleFocus: "Stops without visible focus", notReachedByKeyboard: "Not reachable by keyboard",
   focusObscured: "Focus hidden behind something else", focusOffscreen: "Focus ends up off screen", focusJumpsBack: "Focus jumps back", focusTrapped: "Places Tab cannot leave",
+  focusTransparent: "Focus on something transparent",
+  deadScroll: "Stretches with dead scroll", neverShows: "Content that never shows up", neverShowsReduced: "Content that never shows up with reduced motion",
   formGaps: "Gaps in the form's error state", doubleSubmits: "Extra submits on double click",
   noHover: "No hover state", noPressed: "No pressed state", hoverWithoutMedia: "Hover motion outside (hover: hover)",
   transitionAll: "transition: all", animatesLayout: "Animates layout properties", over300ms: "Transitions over 300 ms",
@@ -35,14 +37,14 @@ export const GROUP = {
 
 // Which metrics can fail each group. Only metrics with a published threshold are listed (see templates/checklist.md).
 export const GROUP_METRICS = {
-  errors: ["consoleErrors", "failedRequests", "brokenImages"],
+  errors: ["consoleErrors", "failedRequests", "brokenImages", "deadScroll", "neverShows"],
   narrowScreen: ["hScroll320", "hScroll390"],
   fingers: ["targetFails", "fieldsUnder16px"],
   readability: ["contrastErrors", "axeErrors", "fieldsWithoutLabel", "zoomDisabled"],
-  keyboard: ["invisibleFocus", "notReachedByKeyboard", "focusObscured", "focusOffscreen", "focusJumpsBack", "focusTrapped"],
+  keyboard: ["invisibleFocus", "notReachedByKeyboard", "focusObscured", "focusOffscreen", "focusJumpsBack", "focusTrapped", "focusTransparent"],
   form: ["formGaps"],
   speed: ["lcpMs", "cls", "inpMs"],
-  calm: ["motionDespiteReduced", "imagesWithoutSize"],
+  calm: ["motionDespiteReduced", "imagesWithoutSize", "neverShowsReduced"],
 };
 // The metrics that may be above zero. Every other metric in a group must be 0. A metric that was not measured (null) does not fail.
 export const LIMIT = { lcpMs: 2500, cls: 0.1, inpMs: 200 };

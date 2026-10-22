@@ -1182,7 +1182,9 @@ window.__pc = (() => {
     const frame = /^(IFRAME|FRAME|OBJECT|EMBED)$/.test(el.tagName);
     // The position is read last, when the element's own transitions are fast-forwarded. An invisible field and a frame have no position to judge.
     const where = shows && !frame ? position(el) : { offscreen: false, obscured: false, moving: false };
-    return { i: i === null ? null : Number(i), element: label(el), y: Math.round(r.top + scrollY), x: Math.round(r.left), right: Math.round(r.right), fixed: fixedOnScreen(el), frame, same, round, swallowed, visible: ring || changed.length > 0 || appeared, ring, changed: changed.slice(0, 8), ...where };
+    // Transparent: combined opacity (with the parents) under 0.85. A field that is itself hidden and shows its focus on what surrounds it (a custom checkbox) is styled, not transparent.
+    const op = opacityOf(el), transparent = op < 0.85 && !(op <= 0.05 && changed.some((x) => x.startsWith("around ")));
+    return { i: i === null ? null : Number(i), element: label(el), transparent, y: Math.round(r.top + scrollY), x: Math.round(r.left), right: Math.round(r.right), fixed: fixedOnScreen(el), frame, same, round, swallowed, visible: ring || changed.length > 0 || appeared, ring, changed: changed.slice(0, 8), ...where };
   };
   // Reads the position again once the page stands still: the element's box and the scroll must be the same three times in a row.
   // Used when the first reading says obscured or out of sight, because the page may itself have started a scroll or a transition.
@@ -1523,5 +1525,130 @@ window.__pc = (() => {
     };
   };
 
-  return { contrast, overflow, clipped, targets, fields, form, structure, typography, alignment, system, motion, running, record, recorded, offscreen, entrances, aiLook, mark, rest, change, underMouse, focus, focusSettled, startWalk, endWalk, sheetsWithLoss, copy, lengthen, longWord, screen, control };
+  // ---------- scroll walk ----------
+  //
+  // walkSnap() reads which content elements are on screen at the place the page stands, and whether they can be seen.
+  // walkKeep() adds that reading to the totals. walkAnswer() says which elements were on screen often enough and could never be seen.
+  // An element is judged where it would stand without any transform (so a slide-in that never runs is still "on screen"),
+  // and it cannot be seen when its combined opacity is under 0.9, its visibility is hidden, or under a fifth of its box is visible after clipping.
+  const WALK_EXEMPT = '[hidden], [aria-hidden="true"], [inert], dialog, [popover], [role="menu"], [role="menubar"], [role="dialog"], [role="alertdialog"], [role="listbox"], [role="tooltip"], [role="presentation"], [role="none"]';
+  const WALK_BAND = /(^|[\s_-])(carousel|slider|swiper|slick|marquee|ticker|splide|glide|flickity|embla)([\s_-]|$)/i;
+  const WALK_CANDIDATE = "h1,h2,h3,h4,h5,h6,p,li,blockquote,figcaption,td,th,dt,dd,label,span,a[href],button,img,video,canvas,svg,input,select,textarea,summary";
+  const walkId = new Map();
+  const walkEntries = new Map();
+  let walkLast = [], walkPositions = 0;
+  const walkNew = () => { walkId.clear(); walkEntries.clear(); walkLast = []; walkPositions = 0; };
+  const opacityOf = (el) => {
+    let o = 1;
+    for (let p = el; p && p.nodeType === 1; p = up(p)) o *= parseFloat(getComputedStyle(p).opacity);
+    return o;
+  };
+  const clipTo = (el, r) => {
+    // Cuts a box to the screen and to every parent that clips its content.
+    let x1 = Math.max(r.left, 0), y1 = Math.max(r.top, 0), x2 = Math.min(r.right, innerWidth), y2 = Math.min(r.bottom, innerHeight);
+    for (let p = up(el); p && p.nodeType === 1 && p !== document.documentElement && p !== document.body; p = up(p)) {
+      const s = getComputedStyle(p);
+      if (s.position === "fixed") continue;
+      if (/(hidden|clip|auto|scroll)/.test(s.overflowX + s.overflowY)) {
+        const b = p.getBoundingClientRect();
+        if (/(hidden|clip|auto|scroll)/.test(s.overflowX)) { x1 = Math.max(x1, b.left); x2 = Math.min(x2, b.right); }
+        if (/(hidden|clip|auto|scroll)/.test(s.overflowY)) { y1 = Math.max(y1, b.top); y2 = Math.min(y2, b.bottom); }
+      }
+    }
+    return { w: Math.max(0, x2 - x1), h: Math.max(0, y2 - y1) };
+  };
+  const walkSnap = () => {
+    try { for (const a of document.getAnimations()) if (a instanceof CSSTransition) a.finish(); } catch {}
+    forgetSeen();
+    const closed = new Set();
+    for (const k of document.querySelectorAll('[aria-expanded="false"][aria-controls]')) for (const id of k.getAttribute("aria-controls").split(/\s+/)) { const m = document.getElementById(id); if (m) closed.add(m); }
+    const entries = [];
+    let pending = 0, count = 0;
+    for (const el of document.body.querySelectorAll(WALK_CANDIDATE)) {
+      if (count >= 700) break;
+      const t = el.tagName;
+      const bound = /^(IMG|VIDEO|CANVAS|SVG|INPUT|SELECT|TEXTAREA)$/i.test(t);
+      if (!bound && !ownText(el) && !/^(BUTTON|A|SUMMARY)$/.test(t)) continue;
+      if (/^(BUTTON|A|SUMMARY)$/.test(t) && !el.textContent.trim() && !el.querySelector("img,svg") && !el.getAttribute("aria-label")) continue;
+      if (t === "IMG" && el.getAttribute("alt") === "") continue;
+      if (t === "INPUT" && el.type === "hidden") continue;
+      // A custom checkbox, radio button or file picker hides the field itself and shows its state on what surrounds it.
+      if (t === "INPUT" && /^(checkbox|radio|file)$/.test(el.type) && parseFloat(getComputedStyle(el).opacity) < 0.1) continue;
+      const r0 = el.getBoundingClientRect();
+      if (r0.width < 2 || r0.height < 2) continue;
+      if ((t === "IMG" || t === "svg" || t === "VIDEO" || t === "CANVAS") && (r0.width < 48 || r0.height < 24)) continue;
+      if (el.closest(WALK_EXEMPT)) continue;
+      if (el.checkVisibility && !el.checkVisibility()) continue;
+      let inside = false;
+      for (const l of closed) if (l.contains(el)) { inside = true; break; }
+      if (inside) continue;
+      // The chain upwards: fixed position, bands and transforms. Content in a fixed bar, a menu or a band is not judged.
+      const chain = [];
+      let fixed = false, band = false;
+      for (let p = el; p && p.nodeType === 1; p = up(p)) {
+        const s = getComputedStyle(p);
+        if (s.position === "fixed") { fixed = true; break; }
+        if (p.className && typeof p.className === "string" && WALK_BAND.test(p.className)) { band = true; break; }
+        if (p.getAttribute && /carousel|slideshow/i.test(p.getAttribute("aria-roledescription") || "")) { band = true; break; }
+        chain.push({ p, s });
+      }
+      if (fixed || band) continue;
+      if (t === "A" && /^#/.test(el.getAttribute("href") || "") && /skip|jump|go to/i.test(el.textContent)) continue;
+      count++;
+      // Where would the box stand without any transform?
+      const moved = chain.filter(({ s }) => (s.transform && s.transform !== "none") || (s.translate && s.translate !== "none") || (s.rotate && s.rotate !== "none") || (s.scale && s.scale !== "none"));
+      const saved = moved.map(({ p }) => [p, p.style.getPropertyValue("transform"), p.style.getPropertyPriority("transform"), p.style.getPropertyValue("translate"), p.style.getPropertyPriority("translate"), p.style.getPropertyValue("rotate"), p.style.getPropertyPriority("rotate"), p.style.getPropertyValue("scale"), p.style.getPropertyPriority("scale")]);
+      let neutral;
+      if (moved.length) {
+        for (const { p } of moved) for (const e of ["transform", "translate", "rotate", "scale"]) p.style.setProperty(e, "none", "important");
+        const nr = el.getBoundingClientRect();
+        neutral = { r: nr, k: clipTo(el, nr) };
+        for (const g of saved) { const p = g[0]; ["transform", "translate", "rotate", "scale"].forEach((e, n) => { p.style.removeProperty(e); if (g[1 + n * 2]) p.style.setProperty(e, g[1 + n * 2], g[2 + n * 2]); }); }
+      } else neutral = { r: r0, k: clipTo(el, r0) };
+      const full = r0.width * r0.height;
+      const area = neutral.k.w * neutral.k.h;
+      // On screen: enough of the box stands on screen, where it would stand without any transform.
+      if (neutral.k.h < Math.min(0.5 * neutral.r.height, 0.3 * innerHeight) || neutral.k.w < Math.min(0.5 * neutral.r.width, 40) || area <= 0 || full <= 0) continue;
+      const actual = clipTo(el, r0);
+      const visibleArea = actual.w * actual.h;
+      const o = chain.reduce((x, { s }) => x * parseFloat(s.opacity), 1);
+      const hiddenVis = chain.some(({ s }) => s.visibility === "hidden" || s.visibility === "collapse") && getComputedStyle(el).visibility !== "visible";
+      const hidden = o < 0.9 || hiddenVis || visibleArea < 0.2 * area;
+      if (hidden && t === "IMG" && !el.complete) pending++;
+      // The root: the outermost parent that is itself transparent or moved. The whole group counts as one finding.
+      let root = el;
+      for (const { p, s } of chain) if (parseFloat(s.opacity) < 0.9 || (s.transform && s.transform !== "none") || (s.translate && s.translate !== "none")) root = p;
+      if (!walkId.has(el)) walkId.set(el, walkId.size + 1);
+      if (!walkId.has(root)) walkId.set(root, walkId.size + 1);
+      entries.push({ el, root, hidden });
+    }
+    walkLast = entries;
+    return { pending };
+  };
+  const walkKeep = () => {
+    walkPositions++;
+    for (const { el, root, hidden } of walkLast) {
+      const id = walkId.get(el);
+      let p = walkEntries.get(id);
+      if (!p) walkEntries.set(id, (p = { el, root, onScreen: 0, hidden: 0 }));
+      p.onScreen++;
+      if (hidden) p.hidden++;
+    }
+    walkLast = [];
+  };
+  const walkAnswer = () => {
+    // One finding per root. If the page is short (few samples), one sample is enough.
+    const need = walkPositions < 4 ? 1 : 2;
+    const roots = new Map();
+    for (const p of walkEntries.values()) {
+      if (p.onScreen < need || p.hidden < p.onScreen) continue;
+      const k = walkId.get(p.root);
+      const r = roots.get(k) || { root: label(p.root), count: 0, example: label(p.el) };
+      r.count++;
+      roots.set(k, r);
+    }
+    return { positions: walkPositions, found: [...roots.values()].map((r) => ({ element: r.root, count: r.count, example: r.example })) };
+  };
+
+  return { contrast, overflow, clipped, targets, fields, form, structure, typography, alignment, system, motion, running, record, recorded, offscreen, entrances, aiLook, mark, rest, change, underMouse, focus, focusSettled, walkNew, walkSnap, walkKeep, walkAnswer, startWalk, endWalk, sheetsWithLoss, copy, lengthen, longWord, screen, control };
 })();
