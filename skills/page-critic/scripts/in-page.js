@@ -1593,6 +1593,8 @@ window.__pc = (() => {
         chain.push({ p, s });
       }
       if (fixed || band) continue;
+      // If anything in the chain is mid-animation or mid-transition (a step that just switched, say), it is not shown yet, but it is not "never" either. The sample does not count. A loop that runs forever still counts.
+      if (chain.some(({ p }) => p.getAnimations && p.getAnimations().some((x) => x.playState === "running" && x.effect?.getTiming?.().iterations !== Infinity))) continue;
       if (t === "A" && /^#/.test(el.getAttribute("href") || "") && /skip|jump|go to/i.test(el.textContent)) continue;
       count++;
       // Where would the box stand without any transform?

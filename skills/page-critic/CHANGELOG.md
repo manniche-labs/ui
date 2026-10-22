@@ -2,6 +2,10 @@
 
 Newest first.
 
+## 1.2.2 — 2026-10-22
+
+- **The scroll walk does not judge what is mid-fade.** On a real page, a step panel that switches during the scroll fades in over 550 ms and its words over about a second, while the walk waits 250 ms per stop, so the words were reported as "never shows up". A stop where the element or a parent has a running animation or transition no longer counts; a loop that runs forever still does. The clean test page has a sticky box that fades in on every nudge as a counter-test (it fails without the fix).
+
 ## 1.2.1 — 2026-10-22
 
 - **The scroll walk no longer reports deliberate translucency.** Tried on a real page, a stamp kept at 80% opacity at every stop was reported as "never shows up". An element with the same opacity of at least 0.5 at every stop is now treated as design. A "Sent" stamp that only appears after a form still looks like a reveal that never fires and belongs in `ignore`; the checklist says so. The clean test page has a muted note as a counter-test (it fails without the fix).

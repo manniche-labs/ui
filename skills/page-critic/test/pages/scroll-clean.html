@@ -41,6 +41,25 @@
 <p>This is section number 8 on the page, and it says something different from all the others: the number 296 is here, so no two stretches ever look alike.</p>
 <h2>A picture</h2>
 <img class="picture" loading="lazy" width="600" height="200" alt="A blue field" src="data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='600' height='200'%3E%3Crect width='600' height='200' fill='%230b4f6c'/%3E%3C/svg%3E" onload="this.classList.add('ready')">
+<h2>A step that fades in</h2>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+<div>
+<p>The column scrolls past step 1: the number 53 stands here, and the text differs from every other piece, so the picture changes at every nudge.</p>
+<p>The column scrolls past step 2: the number 106 stands here, and the text differs from every other piece, so the picture changes at every nudge.</p>
+<p>The column scrolls past step 3: the number 159 stands here, and the text differs from every other piece, so the picture changes at every nudge.</p>
+<p>The column scrolls past step 4: the number 212 stands here, and the text differs from every other piece, so the picture changes at every nudge.</p>
+<p>The column scrolls past step 5: the number 265 stands here, and the text differs from every other piece, so the picture changes at every nudge.</p>
+<p>The column scrolls past step 6: the number 318 stands here, and the text differs from every other piece, so the picture changes at every nudge.</p>
+<p>The column scrolls past step 7: the number 371 stands here, and the text differs from every other piece, so the picture changes at every nudge.</p>
+<p>The column scrolls past step 8: the number 424 stands here, and the text differs from every other piece, so the picture changes at every nudge.</p>
+<p>The column scrolls past step 9: the number 477 stands here, and the text differs from every other piece, so the picture changes at every nudge.</p>
+<p>The column scrolls past step 10: the number 530 stands here, and the text differs from every other piece, so the picture changes at every nudge.</p>
+<p>The column scrolls past step 11: the number 583 stands here, and the text differs from every other piece, so the picture changes at every nudge.</p>
+<p>The column scrolls past step 12: the number 636 stands here, and the text differs from every other piece, so the picture changes at every nudge.</p>
+</div>
+<div><p id="step" style="position:sticky;top:90px;margin:0">The box stays put while the column scrolls, and fades in again on every nudge over two seconds. It is mid-fade at every stop, but it does show up.</p></div>
+</div>
+<script>addEventListener("scroll", () => document.getElementById("step").animate([{ opacity: 0 }, { opacity: 1 }], { duration: 2000 }), { passive: true });</script>
 <h2>Section 9</h2>
 <p>This is section number 9 on the page, and it says something different from all the others: the number 333 is here, so no two stretches ever look alike.</p>
 <h2>Section 10</h2>
