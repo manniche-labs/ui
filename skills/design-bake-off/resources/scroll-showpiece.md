@@ -33,7 +33,7 @@ GSAP is free including all plugins (licence "Standard no-charge", not MIT). Fine
 ## Pinned versions
 
 - GSAP 3.15 (core, ScrollTrigger, SplitText)
-- Lenis 1.3.21. Older 1.1.x does not respect reduced motion by default, so always pin the version.
+- Lenis 1.3.21. Lenis has no reduced-motion option of its own (checked in its source), so `gsap.matchMedia()` must keep it switched off. See below.
 
 Put the version in the URL, never `latest`.
 
@@ -47,7 +47,6 @@ const mm = gsap.matchMedia();
 mm.add('(prefers-reduced-motion: no-preference)', () => {
   const lenis = new Lenis({
     anchors: true,               // #anchor links scroll smoothly
-    respectReducedMotion: true,  // Lenis' own switch
     // no syncTouch: touch stays native scroll
   });
 
@@ -65,20 +64,20 @@ mm.add('(prefers-reduced-motion: no-preference)', () => {
 });
 ```
 
-Recommended CSS (from Lenis):
+Lenis' own CSS (`lenis@1.3.21/dist/lenis.css`):
 
 ```css
 html.lenis, html.lenis body { height: auto; }
-.lenis.lenis-smooth { scroll-behavior: auto !important; }
-.lenis.lenis-smooth [data-lenis-prevent] { overscroll-behavior: contain; }
-.lenis.lenis-stopped { overflow: clip; }
+.lenis:not(.lenis-autoToggle).lenis-stopped { overflow: clip; }
+.lenis [data-lenis-prevent], .lenis [data-lenis-prevent-wheel], .lenis [data-lenis-prevent-touch],
+.lenis [data-lenis-prevent-vertical], .lenis [data-lenis-prevent-horizontal] { overscroll-behavior: contain; }
+.lenis.lenis-smooth iframe { pointer-events: none; }
+.lenis.lenis-autoToggle { transition-property: overflow; transition-duration: 1ms; transition-behavior: allow-discrete; }
 ```
 
 ## Reduced motion
 
-Two layers, both required:
-1. `gsap.matchMedia()` runs the animations only at `no-preference`. Otherwise the page shows its static end state: all content visible, no pinning, no extra scroll length.
-2. Lenis' own `respectReducedMotion`.
+`gsap.matchMedia()` is the only layer: Lenis and the animations start only at `no-preference`. Otherwise the page keeps native scroll and shows its static end state: all content visible, no pinning, no extra scroll length. Lenis has no setting for this itself.
 
 Never hide content in CSS ("start invisible") unless the JS also sets the end state. That also keeps the page working without JS.
 
