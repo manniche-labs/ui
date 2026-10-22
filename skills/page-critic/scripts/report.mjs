@@ -193,7 +193,7 @@ const lastScreen = (c) => {
   return name ? join(c.folder, name) : null;
 };
 const images = await loadImages([
-  ...measured.flatMap((m) => [m.images?.desk, m.images?.mobile, m.images?.dark, ...stressImages(m)]),
+  ...measured.flatMap((m) => [m.images?.desk, m.images?.mobile, m.images?.dark, m.images?.walk, m.images?.walkMobile, ...stressImages(m)]),
   measurement.notFoundPage?.image,
   ...customers.map(lastScreen),
 ]);
@@ -216,7 +216,10 @@ function reasons(m, g) {
     const ignored = new Set(l(m.ignored).filter((i) => i.metric === k).map((i) => i.what));
     out.push(`${LABEL[k]}: ${t[k]}${ex(examples.map(String).filter((e) => !ignored.has(e)))}`);
   };
-  if (g === "errors") { add("consoleErrors", l(m.consoleErrors)); add("failedRequests", l(m.failedRequests)); add("brokenImages", l(m.structure?.brokenImages)); }
+  if (g === "errors") { add("consoleErrors", l(m.consoleErrors)); add("failedRequests", l(m.failedRequests)); add("brokenImages", l(m.structure?.brokenImages));
+    add("deadScroll", l(m.scrollWalk?.deadScroll).map((d) => `${d.viewport} ${d.from}-${d.to} px (${num(d.vh)} screen heights)`));
+    add("neverShows", [...new Set(l(m.scrollWalk?.neverShows).map((f) => f.element))]);
+  }
   if (g === "narrowScreen") for (const w of [320, 390]) {
     const o = m.overflow?.[w];
     if (o?.hScroll) out.push(`Horizontal scroll at ${w} px: the content is ${o.content} px wide${ex(l(o.culprits), 2)}`);
@@ -236,6 +239,7 @@ function reasons(m, g) {
     add("notReachedByKeyboard", l(m.keyboard?.notReached));
     add("focusObscured", l(m.keyboard?.obscured));
     add("focusOffscreen", l(m.keyboard?.offscreen));
+    add("focusTransparent", l(m.keyboard?.focusTransparent));
     add("focusJumpsBack", l(m.keyboard?.jumpsBack));
     if (t.focusTrapped) out.push(`Tab cannot get past: ${l(m.keyboard?.trapped).map(escape).join(", ")}`);
   }
@@ -251,6 +255,7 @@ function reasons(m, g) {
   if (g === "calm") {
     add("motionDespiteReduced", l(m.reducedMotion?.stillRunning).map((a) => `${a.name} on ${a.element}`));
     add("imagesWithoutSize", l(m.structure?.imagesWithoutSize));
+    add("neverShowsReduced", [...new Set(l(m.scrollWalk?.neverShowsReduced).map((f) => f.element))]);
   }
   return out;
 }
@@ -491,6 +496,7 @@ function pageSection(p) {
   ${b.dontAnimate ? `<p><b>Should not be animated:</b> ${text(b.dontAnimate)}</p>` : ""}
   ${form(m)}
   ${stress(m)}
+  ${m.images?.walk ? `<details><summary>Scroll walk${l(m.scrollWalk?.deadScroll).length ? `: ${m.scrollWalk.deadScroll.length} ${m.scrollWalk.deadScroll.length === 1 ? "stretch" : "stretches"} with dead scroll` : ""}</summary><p class="meta">The page was scrolled from top to bottom in fixed steps. Red frame: the picture looks like the one before, although the page was scrolled.</p>${image(m.images.walk, `${p.title}, scroll walk at 1440 px`, "Scroll walk, 1440 px")}${image(m.images.walkMobile, `${p.title}, scroll walk at 390 px`, "Scroll walk, 390 px")}${l(m.scrollWalk?.neverShows).length ? `<p><b>Never shows up:</b> ${[...new Set(m.scrollWalk.neverShows.map((f) => f.element))].map(escape).join("; ")}</p>` : ""}${l(m.scrollWalk?.neverShowsReduced).length ? `<p><b>Does not show up with reduced motion:</b> ${[...new Set(m.scrollWalk.neverShowsReduced.map((f) => f.element))].map(escape).join("; ")}</p>` : ""}</details>` : ""}
   ${m.images?.dark ? `<details><summary>Dark mode</summary>${image(m.images.dark, `${p.title} in dark mode`, "Dark mode, 1440 px")}</details>` : ""}
   ${l(m.ignored).length ? `<details><summary>Ignored by the plan: ${m.ignored.length}</summary><ul>${m.ignored.map((i) => `<li><code>${escape(i.metric)}</code>: ${escape(i.what)}. ${text(i.why)}</li>`).join("")}</ul></details>` : ""}
 </section>`;

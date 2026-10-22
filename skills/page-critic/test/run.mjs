@@ -3,7 +3,7 @@
 // and stays quiet on the page without. Then the comparison, the fix list, the preview and the report are tried on the same measurement,
 // then the blind customer (browse.mjs) against the same test pages, then the extract of the measurement (extract.mjs) and the slices of tall images (slices.mjs),
 // then the pattern catalogue (templates/patterns.md): the code in it must be readable by the browser and pass the measurement,
-// and last the Tab walk on a long page and its counter-tests.
+// the Tab walk on a long page and its counter-tests, and last the scroll walk (dead scroll, content that never shows up).
 //
 //   npm test                     (needs Google Chrome, or set PC_BROWSER=chromium)
 //   node test/run.mjs --keep     (keeps the measurement folder and says where it is)
@@ -29,11 +29,11 @@ const plan = {
   base, impeccable: false, ...BROWSER,
   pages: [
     { name: "faults", path: "/faults" },
-    { name: "faults-form", path: "/faults", performance: false, steps: submit("input[name=mail]") },
+    { name: "faults-form", path: "/faults", performance: false, scrollWalk: false, steps: submit("input[name=mail]") },
     { name: "clean", path: "/clean" },
     { name: "clean-form", path: "/clean", performance: false, steps: submit("#mail") },
-    { name: "tight", path: "/tight", performance: false },
-    { name: "ignored", path: "/faults", performance: false },
+    { name: "tight", path: "/tight", performance: false, scrollWalk: false },
+    { name: "ignored", path: "/faults", performance: false, scrollWalk: false },
   ],
   ignore: [
     { metric: "aiLook:emojiAsIcon", page: "ignored", why: "Test: a whole AI-look rule is ignored" },
@@ -76,11 +76,29 @@ if (catalogRun.status !== 0) {
 
 // The pages for the Tab walk are also measured on their own: a long, calm page, a short page with the counter-tests, a table with more stops than the walk goes,
 // and a page with links that can be seen and links hidden in different ways.
-writeFileSync(join(out, "plan-walk.json"), JSON.stringify({ base, impeccable: false, notFoundPage: false, ...BROWSER, pages: [{ name: "walk", path: "/walk", performance: false }, { name: "walk-faults", path: "/walk-faults", performance: false }, { name: "walk-long", path: "/walk-long", performance: false }, { name: "visible", path: "/visible", performance: false }] }, null, 2));
+writeFileSync(join(out, "plan-walk.json"), JSON.stringify({ base, impeccable: false, notFoundPage: false, ...BROWSER, pages: [{ name: "walk", path: "/walk", performance: false }, { name: "walk-faults", path: "/walk-faults", performance: false, scrollWalk: false }, { name: "walk-long", path: "/walk-long", performance: false }, { name: "visible", path: "/visible", performance: false, scrollWalk: false }] }, null, 2));
 const walkRun = await withServer("measure.mjs", "--plan", join(out, "plan-walk.json"), "--out", join(out, "walk"));
 if (walkRun.status !== 0) {
   console.error(walkRun.text);
   console.error("The measurement of the pages for the Tab walk could not run.");
+  process.exit(1);
+}
+
+// The scroll walk: five pages with a fault each (or none), and one page where the walk is switched off. A quick measurement must skip it.
+const scrollPage = (name, extra = {}) => ({ name: `scroll-${name}`, path: `/scroll-${name}`, performance: false, ...extra });
+const scrollPlan = (pages) => JSON.stringify({ base, impeccable: false, notFoundPage: false, ...BROWSER, pages }, null, 2);
+writeFileSync(join(out, "plan-scroll.json"), scrollPlan([scrollPage("clean"), scrollPage("dead"), scrollPage("missing"), scrollPage("reduced"), scrollPage("invisible"), { ...scrollPage("dead"), name: "scroll-off", scrollWalk: false }]));
+const scrollRun = await withServer("measure.mjs", "--plan", join(out, "plan-scroll.json"), "--out", join(out, "scroll"));
+if (scrollRun.status !== 0) {
+  console.error(scrollRun.text);
+  console.error("The measurement of the pages for the scroll walk could not run.");
+  process.exit(1);
+}
+writeFileSync(join(out, "plan-scroll-quick.json"), scrollPlan([scrollPage("dead")]));
+const scrollQuick = await withServer("measure.mjs", "--plan", join(out, "plan-scroll-quick.json"), "--out", join(out, "scroll-quick"), "--quick");
+if (scrollQuick.status !== 0) {
+  console.error(scrollQuick.text);
+  console.error("The quick measurement of the scroll walk could not run.");
   process.exit(1);
 }
 
@@ -674,7 +692,7 @@ try {
   check("extract layer 3: what the mouse could not hit, and the transition that is turned off, are there",
     three.out.includes('  notHit (1):\n    - button.runaway "Catch me"') && three.out.includes("motion.disabled (1): .off"), three.out);
   // A field the extract cannot find stands as "not measured". Here only the speed is skipped, so everything else must have a value.
-  same("extract: every path in layers 1 and 3 exists in the measurement", notMeasured(k.out + "\n" + three.out), ["performance.inpMs: not measured", "performance.cls: not measured"]);
+  same("extract: every path in layers 1 and 3 exists in the measurement", notMeasured(k.out + "\n" + three.out), ["performance.inpMs: not measured", "scrollWalk.deadScroll: not measured", "scrollWalk.neverShows: not measured", "scrollWalk.neverShowsReduced: not measured", "scrollWalk.positions: not measured", "performance.cls: not measured"]);
 
   k = extract("--page", "faults-form", "--layer", "2");
   same("extract layer 2: the eight groups with result", (k.out.match(/^### .+$/gm) || []).map((l) => l.slice(4)),
@@ -976,6 +994,52 @@ try {
   check("walk: the report makes a reservation for the interrupted walk", h.includes("The Tab walk was interrupted after 600 stops. 42 clickable elements were not tried."), k.out);
   k = exec("extract.mjs", "--out", wout, "--page", "walk-long", "--layer", "1");
   check("walk: the extract for layer 1 says the walk is interrupted", k.out.includes("keyboard.interrupted: true") && k.out.includes("keyboard.notTried: 42") && k.out.includes("keyboard.trapped: none"), k.out.split("\n").filter((x) => x.startsWith("keyboard.")));
+}
+
+// 15. The scroll walk. Each page has its own fault, and the clean page and the long, calm pages from the other tests must give no findings.
+{
+  const r = Object.fromEntries(JSON.parse(readFileSync(join(out, "scroll", "measurement.json"), "utf8")).pages.map((x) => [x.name, x]));
+  for (const n of ["scroll-clean", "scroll-dead", "scroll-missing", "scroll-reduced", "scroll-invisible", "scroll-off"]) check(`${n} was seen`, !!r[n] && !r[n].notSeen, r[n]?.notSeen);
+  // The main measurement's pages: a clean page (fresh load) and a clean page after a flow with steps (scrolled without a reload).
+  for (const n of ["clean", "clean-form"]) same(`${n}: no findings from the scroll walk`, [page[n].metrics.deadScroll, page[n].metrics.neverShows, page[n].metrics.neverShowsReduced, page[n].metrics.focusTransparent], [0, 0, 0, 0]);
+  same("clean-form: the flow with steps is not reloaded", [page["clean"].scrollWalk.freshLoad, page["clean-form"].scrollWalk.freshLoad], [true, false]);
+  const zero = (n) => [r[n].metrics.deadScroll, r[n].metrics.neverShows, r[n].metrics.neverShowsReduced, r[n].metrics.focusTransparent];
+  // Clean page: static content, a sticky header and a lazy image that fades in once loaded.
+  same("scroll-clean: no dead stretches, nothing missing, no transparent focus", zero("scroll-clean"), [0, 0, 0, 0]);
+  check("scroll-clean: layer 2 passes in Errors, Calm and Keyboard", !r["scroll-clean"].layer2.failed.some((g) => ["errors", "calm", "keyboard"].includes(g)), r["scroll-clean"].layer2.failed);
+  check("scroll-clean: the contact sheets exist", existsSync(join(out, "scroll", "scroll-clean-walk.png")) && existsSync(join(out, "scroll", "scroll-clean-walk-mobile.png")), r["scroll-clean"].images);
+  check("scroll-clean: the contact sheets are not cut into slices", !readdirSync(join(out, "scroll", "slices")).some((f) => /-walk/.test(f)), readdirSync(join(out, "scroll", "slices")));
+  // Pinned section: four screens tall, and nothing in it changes.
+  const d = r["scroll-dead"].scrollWalk.deadScroll;
+  same("scroll-dead: one dead stretch on desktop and one on mobile", d.map((x) => x.viewport), ["desk", "mobile"]);
+  check("scroll-dead: the desktop stretch is about three screen heights", d[0].vh >= 2.5 && d[0].vh <= 3.5 && d[0].from < d[0].to, d[0]);
+  check("scroll-dead: the mobile stretch is about two and a half screen heights", d[1].vh >= 2 && d[1].vh <= 3, d[1]);
+  same("scroll-dead: only dead scroll", [r["scroll-dead"].metrics.neverShows, r["scroll-dead"].metrics.neverShowsReduced], [0, 0]);
+  same("scroll-dead: Errors fails", r["scroll-dead"].layer2.failed.includes("errors"), true);
+  // Content that never shows up: only the section the observer does not know. What fades in does not count.
+  same("scroll-missing: one section never shows up", [r["scroll-missing"].metrics.neverShows, r["scroll-missing"].metrics.deadScroll], [1, 0]);
+  check("scroll-missing: the right section is named, and the one that fades in is not", r["scroll-missing"].scrollWalk.neverShows.every((f) => f.element.includes("never")), r["scroll-missing"].scrollWalk.neverShows);
+  // Reduced motion: only the one run fails.
+  same("scroll-reduced: nothing is missing normally, one section is missing with reduced motion", [r["scroll-reduced"].metrics.neverShows, r["scroll-reduced"].metrics.neverShowsReduced], [0, 1]);
+  same("scroll-reduced: Calm fails", r["scroll-reduced"].layer2.failed.includes("calm"), true);
+  // Focus on something transparent.
+  same("scroll-invisible: one stop is transparent", r["scroll-invisible"].keyboard.focusTransparent, ['a.hidden-link "A link nobody can see"']);
+  same("scroll-invisible: Keyboard fails", r["scroll-invisible"].layer2.failed.includes("keyboard"), true);
+  // Switched off in the plan and skipped with --quick: the numbers are not measured, and nothing fails on them.
+  same("scroll-off: scrollWalk false means not measured", [r["scroll-off"].scrollWalk.skipped, r["scroll-off"].metrics.deadScroll, r["scroll-off"].metrics.neverShows, r["scroll-off"].metrics.neverShowsReduced], [true, null, null, null]);
+  check("scroll-off: no contact sheet", !r["scroll-off"].images.walk && !existsSync(join(out, "scroll", "scroll-off-walk.png")), r["scroll-off"].images);
+  const q = JSON.parse(readFileSync(join(out, "scroll-quick", "measurement.json"), "utf8")).pages[0];
+  same("--quick skips the scroll walk", [q.scrollWalk.skipped, q.metrics.deadScroll, q.layer2.failed.includes("errors")], [true, null, false]);
+  // The long, calm pages from the Tab walk are measured with the scroll walk and must give no findings (sticky header, skip link).
+  const v = JSON.parse(readFileSync(join(out, "walk", "measurement.json"), "utf8")).pages.filter((x) => ["walk", "walk-long"].includes(x.name));
+  for (const x of v) same(`${x.name}: no dead scroll and nothing missing`, [x.metrics.deadScroll, x.metrics.neverShows, x.metrics.neverShowsReduced], [0, 0, 0]);
+  // Report and extract.
+  const sout = join(out, "scroll");
+  let k = exec("report.mjs", "--out", sout, "--no-images");
+  const h = k.status === 0 ? readFileSync(join(sout, "report.html"), "utf8") : "";
+  check("scroll: the report names the dead stretches, the missing content and the transparent focus", h.includes("Stretches with dead scroll: 2") && h.includes("Content that never shows up: 1") && h.includes("Content that never shows up with reduced motion: 1") && h.includes("Focus on something transparent: 1"), k.out);
+  k = exec("extract.mjs", "--out", sout, "--page", "scroll-dead", "--layer", "2");
+  check("scroll: the extract shows the stretches and points to the contact sheets", k.out.includes("scrollWalk.deadScroll (2)") && k.out.includes("scroll-dead-walk.png") && k.out.includes("scroll-dead-walk-mobile.png"), k.out.split("\n").filter((x) => /walk/i.test(x)));
 }
 
 console.log(`\n${count - failures} of ${count} checks passed.`);

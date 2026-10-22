@@ -11,6 +11,7 @@
 //   GET  /walk-faults  the counter-tests: focus that cannot be seen, is covered, is off screen, jumps back or is trapped
 //   GET  /walk-long    a table with 640 cells that can take focus: more stops than the walk goes
 //   GET  /visible      links that can be seen and links hidden in different ways: tests what the measurement counts as visible
+//   GET  /scroll-<name>  the pages for the scroll walk: clean, dead, missing, reduced and invisible
 //   anything else      404 as plain text
 //
 // Next to it, an extra server listens on its own port. It answers with a small stylesheet without CORS headers, whatever the path.
@@ -90,6 +91,8 @@ export function start(port = 0) {
     if (path === "/walk-faults") return html(200, read("walk-faults.html"));
     if (path === "/walk-long") return html(200, walkLong());
     if (path === "/visible") return html(200, read("visible.html"));
+    // The pages for the scroll walk: /scroll-<name> is pages/scroll-<name>.html.
+    if (/^\/scroll-[a-z]+$/.test(path)) return html(200, read(`${path.slice(1)}.html`));
     res.writeHead(404, { "content-type": "text/plain; charset=utf-8" });
     res.end("Not found");
   });

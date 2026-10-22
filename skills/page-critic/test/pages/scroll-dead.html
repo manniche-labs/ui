@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Scroll walk: pinned section</title>
+<style>
+  * { box-sizing: border-box; }
+  body { margin: 0; font-family: Georgia, serif; font-size: 18px; line-height: 1.55; color: #1c1f26; background: #fff; }
+  header { position: sticky; top: 0; z-index: 10; background: #fff; border-bottom: 1px solid #6b7280; padding: 14px 16px; font-family: Verdana, sans-serif; }
+  header a { color: #0b4f6c; padding: 8px 4px; display: inline-block; }
+  main { max-width: 640px; margin: 0 auto; padding: 16px; }
+  h1 { font-size: 34px; line-height: 1.15; margin: 16px 0; }
+  h2 { font-family: Verdana, sans-serif; font-size: 20px; margin: 32px 0 8px; }
+  p { margin: 0 0 16px; }
+  :focus-visible { outline: 3px solid #0b4f6c; outline-offset: 2px; }
+  .pinned { height: 400vh; position: relative; }
+  .pinned > div { position: sticky; top: 0; height: 100vh; background: #0b4f6c; color: #fff; display: flex; align-items: center; justify-content: center; padding: 16px; }
+  .pinned h2 { font-size: 40px; margin: 0; }
+</style>
+</head>
+<body>
+<header><a href="#start">Start</a> <a href="#end">End</a></header>
+<main id="start">
+<h1>A page with a pinned section</h1>
+<h2>Section 1</h2>
+<p>This is section number 1 on the page, and it says something different from all the others: the number 37 is here, so no two stretches ever look alike.</p>
+<h2>Section 2</h2>
+<p>This is section number 2 on the page, and it says something different from all the others: the number 74 is here, so no two stretches ever look alike.</p>
+<h2>Section 3</h2>
+<p>This is section number 3 on the page, and it says something different from all the others: the number 111 is here, so no two stretches ever look alike.</p>
+<div class="pinned" style="margin: 0 -16px"><div><h2>Nothing happens here, however far you scroll</h2></div></div>
+<h2>Section 4</h2>
+<p>This is section number 4 on the page, and it says something different from all the others: the number 148 is here, so no two stretches ever look alike.</p>
+<h2>Section 5</h2>
+<p>This is section number 5 on the page, and it says something different from all the others: the number 185 is here, so no two stretches ever look alike.</p>
+<h2>Section 6</h2>
+<p>This is section number 6 on the page, and it says something different from all the others: the number 222 is here, so no two stretches ever look alike.</p>
+<p id="end"><a style="display:inline-block;padding:12px 0" href="#start">Back to top</a></p>
+</main>
+
+</body>
+</html>

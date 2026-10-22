@@ -16,7 +16,7 @@ If it is only one page, the flow is the same with one group. Keep the plan small
 | Layer | Question | Who answers | Score |
 |---|---|---|---|
 | 1. Does it work | Can the user complete their task without doubt? | Agent: screenshots, code and measurement | Ten items, 1 to 5 |
-| 2. Does it hold up | Contrast, keyboard, fingers, narrow screen, speed, errors | `scripts/measure.mjs` in a real browser | 5 minus one per failing group |
+| 2. Does it hold up | Contrast, keyboard, fingers, narrow screen, speed, errors, scroll walk (dead scroll, content that never shows up) | `scripts/measure.mjs` in a real browser | 5 minus one per failing group |
 | 3. Is it delightful | Typography, spacing, depth, states, motion, details | Agent: screenshots, CSS and measurement | Eight items, 1 to 5 |
 
 Next to them stands **the blind customer**: a fresh agent that gets one goal and a browser and knows neither the code nor the measurement. It gives no score, only a result and the places where it stumbled.
