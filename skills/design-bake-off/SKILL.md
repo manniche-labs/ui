@@ -18,6 +18,7 @@ Three competing directions beat one safe one. Each agent gets the same brief but
 - All effects are plain JS/CSS with no React and no build step, so they port to any stack.
 - `prefers-reduced-motion` gives a static end state. No horizontal scroll and no console errors.
 - **Manniche UI first.** If [Manniche UI](https://github.com/manniche-labs/ui/tree/main/components/registry/manniche) has the component, the agents recreate that one instead of another library's version of the effect. Its source is the `components/registry/manniche/` folder of the clone this skill is linked from (find it with `realpath $DB`); if the skill was copied out on its own, read it on GitHub. Effects from other libraries are rebuilt from scratch.
+- **Film-style scroll is opt-in.** A direction may use GSAP/Lenis scroll only if the brief says showcase (never for forms or quote flows). Read `$DB/resources/scroll-showpiece.md` first.
 - **Dangerous actions** (delete, close, cancel a plan) follow the six rules under "Dangerous actions" in [components/README.md](https://github.com/manniche-labs/ui/blob/main/components/README.md#dangerous-actions):
   - Buttons name the verb and the thing ("Delete project" / "Keep project"), never "Yes" or "OK".
   - The safe button has focus, and the destructive one sits away from where "OK" usually is.
@@ -86,6 +87,7 @@ Use `$DB/templates/agent-port.md`. The key points:
 | `templates/agent-direction.md` | Prompt for each of the three design agents |
 | `templates/agent-port.md` | Prompt for the port agent |
 | `resources/effects.html` | Blur fade, text reveal, highlighter, number ticker, spotlight cards, marquee, dot pattern, shimmer button, toast, command palette and bottom sheet in plain JS/CSS |
+| `resources/scroll-showpiece.md` | Optional recipe for film-style scroll (GSAP, ScrollTrigger, Lenis): when, budget, config, traps and checks |
 | `fetch-magicui.sh` | Clones the Magic UI source (MIT) for reference |
 
 ## Sources outside the folder
