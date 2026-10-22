@@ -1613,26 +1613,30 @@ window.__pc = (() => {
       const visibleArea = actual.w * actual.h;
       const o = chain.reduce((x, { s }) => x * parseFloat(s.opacity), 1);
       const hiddenVis = chain.some(({ s }) => s.visibility === "hidden" || s.visibility === "collapse") && getComputedStyle(el).visibility !== "visible";
-      const hidden = o < 0.9 || hiddenVis || visibleArea < 0.2 * area;
+      const other = hiddenVis || visibleArea < 0.2 * area;
+      const hidden = o < 0.9 || other;
       if (hidden && t === "IMG" && !el.complete) pending++;
       // The root: the outermost parent that is itself transparent or moved. The whole group counts as one finding.
       let root = el;
       for (const { p, s } of chain) if (parseFloat(s.opacity) < 0.9 || (s.transform && s.transform !== "none") || (s.translate && s.translate !== "none")) root = p;
       if (!walkId.has(el)) walkId.set(el, walkId.size + 1);
       if (!walkId.has(root)) walkId.set(root, walkId.size + 1);
-      entries.push({ el, root, hidden });
+      entries.push({ el, root, hidden, o, other });
     }
     walkLast = entries;
     return { pending };
   };
   const walkKeep = () => {
     walkPositions++;
-    for (const { el, root, hidden } of walkLast) {
+    for (const { el, root, hidden, o, other } of walkLast) {
       const id = walkId.get(el);
       let p = walkEntries.get(id);
-      if (!p) walkEntries.set(id, (p = { el, root, onScreen: 0, hidden: 0 }));
+      if (!p) walkEntries.set(id, (p = { el, root, onScreen: 0, hidden: 0, oMin: 1, oMax: 0, other: false }));
       p.onScreen++;
       if (hidden) p.hidden++;
+      p.oMin = Math.min(p.oMin, o);
+      p.oMax = Math.max(p.oMax, o);
+      if (other) p.other = true;
     }
     walkLast = [];
   };
@@ -1642,6 +1646,8 @@ window.__pc = (() => {
     const roots = new Map();
     for (const p of walkEntries.values()) {
       if (p.onScreen < need || p.hidden < p.onScreen) continue;
+      // The same clear translucency at every stop (a stamp at 0.8, say) is design, not a reveal that never arrives.
+      if (!p.other && p.oMin >= 0.5 && p.oMax - p.oMin < 0.02) continue;
       const k = walkId.get(p.root);
       const r = roots.get(k) || { root: label(p.root), count: 0, example: label(p.el) };
       r.count++;
