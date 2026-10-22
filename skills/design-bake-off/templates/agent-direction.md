@@ -13,6 +13,7 @@ READ FIRST:
 - <PREVIOUS ROUND'S FILES AND SCREENSHOTS, if any>
 - <DB>/resources/effects.html: UI-library effects (blur fade, text reveal, highlighter, number ticker, spotlight cards, marquee, dot pattern, shimmer button, toast, command palette, bottom sheet) in plain JS/CSS. Reuse its techniques.
 - <IF CLONED> Magic UI source: <MAGICUI>/apps/www/registry/magicui/*.tsx (<RELEVANT COMPONENTS>). Port what you use to plain JS/CSS.
+- ONLY IF this direction uses film-style scroll (GSAP/ScrollTrigger/Lenis; the brief must say showcase): <DB>/resources/scroll-showpiece.md. Follow its pinned versions, config and reduced-motion rules, and check the page with scroll screenshots (step through the page at 1440 and 390 px and with reduced motion; look for dead scroll, content that never appears, focus on invisible elements). Otherwise do not use it.
 - <INSTALLED DESIGN SKILLS, e.g. frontend-design>: read and apply them.
 
 DIRECTION "<NAME>" (file: <N>-<slug>.html):

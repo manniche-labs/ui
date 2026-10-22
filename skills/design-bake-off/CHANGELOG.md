@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.3.0 — 2026-10-22
+
+- Optional recipe for film-style scroll on showcase pages: `resources/scroll-showpiece.md` (GSAP + ScrollTrigger + Lenis with pinned versions, budget, reduced motion, CSP note, GSAP traps from greensock/gsap-skills, hero-depth ideas and a scroll check).
+- Rule in `SKILL.md`: only when the brief says showcase. Short pointers in the direction and port prompts.
+
 ## 1.2.0 — 2026-10-06
 
 - Manniche UI first: the design agents prefer the components in this repo (recreated in plain JS/CSS) over other libraries' versions of an effect.

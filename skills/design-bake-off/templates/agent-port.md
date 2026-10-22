@@ -18,7 +18,8 @@ HARD CONSTRAINTS
 5. Tests: keep existing ones green, update page tests, add tests for new routes or endpoints, the empty database and escaping. Run typecheck and tests.
 6. Visual check: run the app locally, take headless screenshots at 1440 and 390, compare with the mockup, and iterate. Stop the dev server afterwards.
 7. Update the changelog (not yet deployed). Match the repo's language and comment style.
-8. Stay inside the repo and the scratch folder. Clean up temp files.
+8. Film-style scroll (only if the mockup uses GSAP/ScrollTrigger/Lenis): read <DB>/resources/scroll-showpiece.md. Check the CSP first: with 'self'-only scripts, self-host the pinned files (GSAP licence "Standard no-charge", Lenis MIT) from the app instead of the CDN, and do not loosen the CSP. Measure the bundle (core + ScrollTrigger is about 46 KB gzip) and report it. Verify with scroll screenshots at 1440 and 390 px and with reduced motion.
+9. Stay inside the repo and the scratch folder. Clean up temp files.
 
 REPORT BACK (concise): files, how each effect was ported, deviations and why, test output, screenshot paths, commit hash, anything unverified.
 ```

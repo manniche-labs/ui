@@ -38,6 +38,7 @@ Screenshots use Playwright (`npx playwright`), so Node.js is needed. The agents 
 | `SKILL.md` | The recipe Claude follows |
 | `templates/` | The brief and the prompts for the design agents and the port agent |
 | `resources/effects.html` | Effects known from Magic UI, Aceternity, React Bits, Sonner, cmdk and Vaul, rewritten in plain JS/CSS. Open it in a browser to see them |
+| `resources/scroll-showpiece.md` | Optional recipe for film-style scroll on showcase pages: GSAP, ScrollTrigger and Lenis with pinned versions, budget, traps and a scroll check |
 | `fetch-magicui.sh` | Optional: clones the [Magic UI](https://github.com/magicuidesign/magicui) source for the agents to read |
 
 ## Recommended companion skills
