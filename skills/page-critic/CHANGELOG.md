@@ -2,6 +2,10 @@
 
 Newest first.
 
+## 1.2.1 — 2026-10-22
+
+- **The scroll walk no longer reports deliberate translucency.** Tried on a real page, a stamp kept at 80% opacity at every stop was reported as "never shows up". An element with the same opacity of at least 0.5 at every stop is now treated as design. A "Sent" stamp that only appears after a form still looks like a reveal that never fires and belongs in `ignore`; the checklist says so. The clean test page has a muted note as a counter-test (it fails without the fix).
+
 ## 1.2.0 — 2026-10-22
 
 - **The scroll walk.** The measurement now scrolls each page from top to bottom (up to 24 stops, 250 ms each, desktop and phone) and looks for two things Tab and screenshots miss. **Dead scroll:** a stretch where the page moves by at least a quarter of a screen and the picture does not change (a pinned section that never plays). **Content that never shows up:** an element that stands on screen at every stop where it belongs and is never seen (opacity under 0.9, hidden, or under a fifth of it visible), for example a reveal that waits for an observer that never fires. It is judged where the element would stand without any transform, so a slide-in that never runs still counts. Carousels, tickers, fixed bars, closed panels and skip links are left out. A second pass with reduced motion only looks at what was not already missing, and fails Calm.
