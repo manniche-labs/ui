@@ -1,0 +1,20 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "before-after-demo",
+  "title": "Before and after demo",
+  "description": "How to use Before and after.",
+  "registryDependencies": [
+    "@manniche/before-after"
+  ],
+  "files": [
+    {
+      "path": "registry/manniche/examples/before-after-demo.tsx",
+      "content": "import { useState } from 'react'\nimport { BeforeAfter } from '@/registry/manniche/before-after/before-after'\n\n// A garden before and after a new terrace. Both photos are small SVG drawings made here from the same viewpoint,\n// so the demo fetches nothing and the wipe lines up. The Danish labels show how to replace the text.\n\nconst svg = (body: string) => `data:image/svg+xml;charset=utf-8,${encodeURIComponent(`<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 960 720\">${body}</svg>`)}`\n\nconst HOUSE = `<rect width=\"960\" height=\"720\" fill=\"#cfdbe6\"/>\n  <rect x=\"120\" y=\"150\" width=\"720\" height=\"300\" fill=\"#b5654a\"/>\n  <path d=\"M90 160 480 40 870 160z\" fill=\"#4a4b50\"/>\n  <rect x=\"220\" y=\"230\" width=\"120\" height=\"110\" fill=\"#e8eef3\" stroke=\"#fff\" stroke-width=\"10\"/>\n  <rect x=\"620\" y=\"230\" width=\"120\" height=\"110\" fill=\"#e8eef3\" stroke=\"#fff\" stroke-width=\"10\"/>\n  <rect x=\"420\" y=\"250\" width=\"120\" height=\"200\" fill=\"#e8eef3\" stroke=\"#fff\" stroke-width=\"10\"/>`\n\nconst BEFORE = svg(\n  `${HOUSE}\n  <rect y=\"450\" width=\"960\" height=\"270\" fill=\"#8a8a62\"/>\n  ${Array.from({ length: 40 }, (_, i) => `<path d=\"M${(i * 97) % 960} ${470 + ((i * 53) % 240)}l10 -28 10 28\" fill=\"none\" stroke=\"#6b6b47\" stroke-width=\"5\"/>`).join('')}\n  <rect x=\"300\" y=\"520\" width=\"160\" height=\"70\" rx=\"10\" fill=\"#9a958c\"/>\n  <rect x=\"560\" y=\"600\" width=\"120\" height=\"50\" rx=\"8\" fill=\"#a29d93\"/>`,\n)\n\nconst AFTER = svg(\n  `${HOUSE}\n  <rect y=\"450\" width=\"960\" height=\"270\" fill=\"#6f9a52\"/>\n  <path d=\"M60 450h840l40 170H20z\" fill=\"#9b6a41\"/>\n  ${Array.from({ length: 12 }, (_, i) => `<path d=\"M${55 - i * 3} ${464 + i * 14}h${850 + i * 6}\" stroke=\"#7d5232\" stroke-width=\"3\"/>`).join('')}\n  <rect x=\"20\" y=\"620\" width=\"920\" height=\"26\" fill=\"#5f3d23\"/>\n  <rect x=\"700\" y=\"400\" width=\"160\" height=\"60\" fill=\"#5f3d23\"/>\n  <circle cx=\"740\" cy=\"390\" r=\"30\" fill=\"#5b8f3e\"/><circle cx=\"800\" cy=\"380\" r=\"36\" fill=\"#4f8236\"/>`,\n)\n\nexport default function BeforeAfterDemo() {\n  const [pos, setPos] = useState(50)\n\n  return (\n    <div className=\"grid w-full max-w-2xl gap-6\">\n      <BeforeAfter\n        before={{ src: BEFORE, alt: 'The garden before: worn grass and loose paving stones in front of the house.' }}\n        after={{ src: AFTER, alt: 'The garden after: a wooden terrace with a step and a planter in front of the house.' }}\n        onChange={setPos}\n      />\n      <p className=\"text-sm text-muted-foreground\">Handle at {Math.round(pos)} %. Drag it, click the picture, or Tab to it and use the arrow keys.</p>\n\n      <BeforeAfter\n        before={{ src: BEFORE, alt: 'Haven før: slidt græs og løse fliser foran huset.' }}\n        after={{ src: AFTER, alt: 'Haven efter: en træterrasse med trin og plantekasse foran huset.' }}\n        initial={30}\n        aspectRatio=\"16 / 9\"\n        labels={{ before: 'Før', after: 'Efter', slider: 'Sammenlign før og efter', value: '{n} % før' }}\n      />\n    </div>\n  )\n}\n",
+      "type": "registry:example"
+    }
+  ],
+  "categories": [
+    "widgets"
+  ],
+  "type": "registry:example"
+}
