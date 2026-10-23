@@ -132,7 +132,7 @@ const fill = (text: string, count: number, locale: string) => text.replace('{cou
 
 // Buttons on the inverted bar: 44 px tall, quiet until hovered, an outline in the bar's text colour on focus.
 const BAR_BUTTON =
-  'relative inline-flex h-11 shrink-0 items-center justify-center gap-1.5 rounded-[10px] px-3 text-[13.5px] font-medium whitespace-nowrap text-background/90 outline-none transition-colors duration-150 hover:bg-background/12 hover:text-background focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-background aria-expanded:bg-background/12 disabled:pointer-events-none disabled:opacity-45 motion-reduce:transition-none [&_svg]:size-4 [&_svg]:shrink-0'
+  'relative inline-flex h-11 shrink-0 items-center justify-center gap-1.5 rounded-[10px] px-3 text-[13.5px] font-medium whitespace-nowrap text-background/90 outline-none transition-colors duration-150 hover:bg-background/12 hover:text-background focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-background aria-expanded:bg-background/12 disabled:pointer-events-none disabled:opacity-45 aria-disabled:opacity-45 motion-reduce:transition-none [&_svg]:size-4 [&_svg]:shrink-0'
 const ICON_BUTTON = 'w-11 px-0'
 const SEPARATOR = 'mx-1 h-5 w-px shrink-0 bg-background/20 @max-[22rem]:mx-0.5'
 
@@ -183,13 +183,15 @@ type MenuProps = {
   buttonContent: ReactNode
   buttonClassName: string
   disabled?: boolean
+  /** An action is running: the button keeps focus but does nothing. */
+  busy?: boolean
   title?: string
   tabIndex: number
   onFocus: () => void
 }
 
 /** A menu that opens upwards from its button: arrow keys, Home and End move, Enter picks, Esc closes back to the button. */
-function BarMenu({ items, heading, align, buttonLabel, buttonContent, buttonClassName, disabled, title, tabIndex, onFocus }: MenuProps) {
+function BarMenu({ items, heading, align, buttonLabel, buttonContent, buttonClassName, disabled, busy, title, tabIndex, onFocus }: MenuProps) {
   const [open, setOpen] = useState(false)
   const button = useRef<HTMLButtonElement>(null)
   const menu = useRef<HTMLDivElement>(null)
@@ -249,7 +251,8 @@ function BarMenu({ items, heading, align, buttonLabel, buttonContent, buttonClas
         aria-label={buttonLabel}
         title={title}
         disabled={disabled}
-        onClick={() => setOpen((o) => !o)}
+        aria-disabled={busy || undefined}
+        onClick={() => !busy && setOpen((o) => !o)}
         onKeyDown={(e) => {
           if (e.key === 'ArrowUp' || e.key === 'ArrowDown') {
             e.preventDefault()
@@ -404,6 +407,8 @@ export function SelectionBar({
   const undo = async () => {
     if (!notice?.undo) return
     const fn = notice.undo
+    // The Undo button leaves the page without a blur, so the pause it set is lifted here.
+    setPaused(false)
     setNotice({ ...notice, undo: undefined, message: notice.message })
     try {
       await fn()
@@ -440,10 +445,14 @@ export function SelectionBar({
   ]
 
   // Index of each focusable control, for the roving tab stop.
+  // Actions come first, then More and Clear, which are never disabled.
+  const usable = (i: number) => i < actions.length + 2 && !actions[i]?.disabled
+  const firstUsable = actions.findIndex((a) => !a.disabled)
+  const active = usable(focusAt) ? focusAt : firstUsable < 0 ? actions.length : firstUsable
   let index = 0
   const stop = () => {
     const i = index++
-    return { tabIndex: i === focusAt ? 0 : -1, onFocus: () => setFocusAt(i) }
+    return { tabIndex: i === active ? 0 : -1, onFocus: () => setFocusAt(i) }
   }
 
   return (
@@ -491,7 +500,10 @@ export function SelectionBar({
             <button
               type="button"
               aria-label={labels.dismiss}
-              onClick={() => setNotice(null)}
+              onClick={() => {
+                setPaused(false)
+                setNotice(null)
+              }}
               className="grid size-10 shrink-0 place-items-center rounded-lg text-muted-foreground outline-none hover:bg-muted hover:text-foreground focus-visible:outline-2 focus-visible:outline-ring"
             >
               <X className="size-4" aria-hidden />
@@ -534,7 +546,8 @@ export function SelectionBar({
                       heading={action.menuLabel ? fill(action.menuLabel, count, locale) : undefined}
                       buttonLabel={name}
                       title={action.disabled ? action.disabledReason : undefined}
-                      disabled={action.disabled || busy}
+                      disabled={action.disabled}
+                      busy={busy}
                       buttonClassName={cn(BAR_BUTTON, 'px-2.5')}
                       buttonContent={
                         <>
@@ -557,7 +570,8 @@ export function SelectionBar({
                     onFocus={onFocus}
                     aria-label={name}
                     title={action.disabled ? action.disabledReason : undefined}
-                    disabled={action.disabled || busy}
+                    disabled={action.disabled}
+                    aria-disabled={busy || undefined}
                     onClick={() => trigger(action)}
                     className={cn(BAR_BUTTON, action.icon && '@max-[26rem]:w-11 @max-[26rem]:px-0')}
                   >
@@ -572,7 +586,7 @@ export function SelectionBar({
                 {...stop()}
                 align="end"
                 buttonLabel={labels.more}
-                disabled={busy}
+                busy={busy}
                 buttonClassName={cn(BAR_BUTTON, ICON_BUTTON)}
                 buttonContent={<MoreHorizontal aria-hidden />}
                 items={moreItems}

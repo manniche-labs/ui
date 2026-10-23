@@ -248,7 +248,8 @@ export function SettingsWindow({
     </nav>
   )
 
-  const body = shown && (typeof shown.content === 'function' ? (shown.content as () => ReactNode)() : shown.content)
+  // Its own component, keyed by section, so hooks inside a content function stay with that section.
+  const body = shown && (typeof shown.content === 'function' ? <SectionContent key={shown.id} render={shown.content} /> : shown.content)
 
   return (
     <dialog
@@ -375,4 +376,8 @@ export function SettingsRow({ label, description, children, stacked = false, cla
 export function SettingsHeading({ children, level = 4, className }: { children: ReactNode; level?: 3 | 4 | 5; className?: string }) {
   const Tag = `h${level}` as 'h4'
   return <Tag className={cn('mt-6 mb-1 text-xs font-semibold tracking-wide text-muted-foreground uppercase first:mt-0', className)}>{children}</Tag>
+}
+
+function SectionContent({ render }: { render: () => ReactNode }) {
+  return <>{render()}</>
 }
