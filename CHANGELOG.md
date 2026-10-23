@@ -1,5 +1,11 @@
 # Changelog
 
+## 2026-10-24
+
+### Added
+
+- `before-after` (widgets): two photos of the same place on top of each other, with a handle that wipes from before to after. Drag anywhere on the picture or click to jump the handle there; a vertical swipe still scrolls the page on a phone (`touch-action: pan-y`). The keyboard and screen readers use a real range input (arrows 1 %, Page Up/Down 10 %, Home and End), read as "40 % before"; focus shows as a ring on the 44 px handle. `aspectRatio`, `initial`, `onChange` and `labels` (for other languages). Nothing animates by itself. Made for the carpenter demo for P. Jokumsen Tømrer.
+
 ## 2026-10-23
 
 ### Added
