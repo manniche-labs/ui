@@ -13,6 +13,10 @@
 - `selection-bar`, found in review before merge (#57): a running action marked the focused button `disabled`, so after Enter or a menu pick the keyboard focus fell to the page. Busy now uses `aria-disabled`, and focus stays in the bar. The roving Tab stop could point past the last control or at a disabled one, which left the bar without a Tab stop; it now falls back to the first usable control. After Undo or Dismiss the focused button left the page without a blur, so the notice stayed paused and "Undone" never went away; both lift the pause.
 - `settings-window`: a section whose `content` is a function was called inside the window's own render, so hooks in it belonged to the window and switching sections could crash React ("Rendered more hooks"). It now renders as its own component, keyed by section.
 
+### Changed
+
+- The three new components are live on [mikkelmanniche.dk/lab/ui](https://mikkelmanniche.dk/lab/ui) (site PR #221 and #222), so the site now lists 103 components. `HANDOFF.md` said /lab was last updated on 14/10 with site PR #191, which was no longer true; it now points to the 23/10 update.
+
 ## 2026-10-14
 
 ### Added
