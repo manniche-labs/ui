@@ -33,7 +33,7 @@ Three patterns from the NoPain Studio Notion/Figma redesign (Studio PR #219), bu
 - `settings-window` (overlays): settings in one `<dialog>`, list + section, two steps under 720 px, `useSettingsShortcut` (Cmd+, / Ctrl+,).
 - `grouped-list` (surfaces): Today / This week / Later / No date with sticky foldable headings and "Show N more"; `onVisibleChange` feeds `selection-bar`.
 
-ManiLens found no rule or security issues; four minor correctness findings were fixed before merge (see CHANGELOG 23/10, Fixed) and checked with the keyboard in Chrome. **Not on /lab yet**: going live needs Mikkel's yes, then Danish and German texts in the site's `server/lab-ui-tekster.mjs` (free count 100 → 103).
+ManiLens found no rule or security issues; four minor correctness findings were fixed before merge (see CHANGELOG 23/10, Fixed) and checked with the keyboard in Chrome. **Not on /lab yet**: going live needs Mikkel's yes, then Danish and German texts in the site's `server/lab-ui-tekster.mjs`.
 
 ## Open PRs
 
