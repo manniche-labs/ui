@@ -12729,7 +12729,9 @@
       "meta": {
         "tier": "free",
         "added": "2026-10-08",
-        "usedIn": [],
+        "usedIn": [
+          "grouped-list"
+        ],
         "props": [
           {
             "name": "icon",
@@ -15904,6 +15906,573 @@
       ],
       "categories": [
         "overlays"
+      ]
+    },
+    {
+      "name": "selection-bar",
+      "type": "registry:component",
+      "title": "Selection bar",
+      "description": "A toolbar that rises while rows are ticked: the count, one-click actions with Undo, More and Clear (Esc). Big or partly hidden changes ask first.",
+      "dependencies": [
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "utils"
+      ],
+      "files": [
+        {
+          "path": "registry/manniche/selection-bar/selection-bar.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "categories": [
+        "controls"
+      ],
+      "meta": {
+        "tier": "free",
+        "added": "2026-10-23",
+        "usedIn": [],
+        "props": [
+          {
+            "name": "count",
+            "type": "number",
+            "default": null,
+            "required": true,
+            "description": "How many rows are picked. The bar shows while it is above 0 (and while a notice is up)."
+          },
+          {
+            "name": "onClear",
+            "type": "() => void",
+            "default": null,
+            "required": true,
+            "description": "Called by Clear, Esc and the More menu's Clear item."
+          },
+          {
+            "name": "actions",
+            "type": "SelectionBarAction[]",
+            "default": null,
+            "required": true,
+            "description": "The quick actions, shown as buttons; one with `options` is a menu."
+          },
+          {
+            "name": "more",
+            "type": "SelectionBarAction[]",
+            "default": "[]",
+            "required": false,
+            "description": "Actions under More (…), as menu items. Clear selection is always added at the end."
+          },
+          {
+            "name": "maxInstant",
+            "type": "number",
+            "default": "10",
+            "required": false,
+            "description": "One click changes at most this many rows; above it the change goes to onNeedsConfirm. Default 10."
+          },
+          {
+            "name": "hiddenCount",
+            "type": "number",
+            "default": "0",
+            "required": false,
+            "description": "Picked rows that are not on screen. When above 0, a change goes to onNeedsConfirm. Default 0."
+          },
+          {
+            "name": "onNeedsConfirm",
+            "type": "(request: SelectionBarConfirmRequest) => void",
+            "default": null,
+            "required": false,
+            "description": "Called instead of a change that is too big or reaches rows off screen. Without it, such a change runs."
+          },
+          {
+            "name": "onSelectAll",
+            "type": "() => void",
+            "default": null,
+            "required": false,
+            "description": "Adds \"Select all {count}\" to More while fewer than that are picked."
+          },
+          {
+            "name": "selectAllCount",
+            "type": "number",
+            "default": null,
+            "required": false,
+            "description": "How many rows \"Select all\" would pick."
+          },
+          {
+            "name": "escapeClears",
+            "type": "boolean",
+            "default": "true",
+            "required": false,
+            "description": "Esc clears the selection, unless focus is in a text field or a dialog is open. Default true."
+          },
+          {
+            "name": "undoSeconds",
+            "type": "number",
+            "default": "8",
+            "required": false,
+            "description": "Seconds the notice with Undo stays, paused while hovered or focused. Default 8."
+          },
+          {
+            "name": "placement",
+            "type": "'sticky' | 'fixed'",
+            "default": "'sticky'",
+            "required": false,
+            "description": "\"sticky\" sits at the bottom of the scrolling box, in the flow; \"fixed\" sits at the bottom of the screen and leaves a spacer of its height. Default \"sticky\"."
+          },
+          {
+            "name": "locale",
+            "type": "string",
+            "default": "'en'",
+            "required": false,
+            "description": "BCP 47 locale for numbers. Default \"en\"."
+          },
+          {
+            "name": "labels",
+            "type": "SelectionBarLabels",
+            "default": null,
+            "required": false,
+            "description": "Visible and spoken text, with English defaults."
+          },
+          {
+            "name": "className",
+            "type": "string",
+            "default": null,
+            "required": false,
+            "description": "Classes for the bar."
+          }
+        ],
+        "a11y": [
+          {
+            "topic": "keyboard",
+            "text": "The bar is a toolbar with one Tab stop: ArrowLeft and ArrowRight move between its buttons, Home and End jump to the ends. A menu button opens with Enter, Space or ArrowUp/ArrowDown; in the menu the arrows, Home and End move, Enter picks and Esc closes it back to its button without clearing the selection. Esc anywhere else clears the selection, except in a text field or an open dialog.",
+            "keys": [
+              "Tab",
+              "ArrowLeft",
+              "ArrowRight",
+              "Home",
+              "End",
+              "ArrowUp",
+              "ArrowDown",
+              "Enter",
+              "Escape"
+            ]
+          },
+          {
+            "topic": "screen-reader",
+            "text": "A screen-reader-only polite status says \"N selected\" a moment after the count settles, so a quick run of ticks is read once, and \"Selection cleared\" when it goes. The notice after a change is a status (an alert when an undo fails). Icon-only buttons keep their label as the accessible name, and a disabled action reads its reason. The toolbar is aria-busy while an action runs."
+          },
+          {
+            "topic": "motion",
+            "text": "The bar and its notice rise 10 px and fade in over 220 ms and leave in 160 ms; menus fade up 4 px. Only opacity and transform move. Under reduced motion they appear and go at once."
+          },
+          {
+            "topic": "other",
+            "text": "Every target is 44 px tall. The bar sits at the bottom of its scroll box (sticky) or of the screen (fixed, with a spacer of its height), above the safe area. Above maxInstant rows, or when some ticked rows are off screen, a change calls onNeedsConfirm instead of running, so nobody changes rows they cannot see with one click."
+          }
+        ]
+      }
+    },
+    {
+      "name": "selection-bar-demo",
+      "type": "registry:example",
+      "title": "Selection bar demo",
+      "description": "How to use Selection bar.",
+      "dependencies": [
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "@manniche/selection-bar",
+        "@manniche/confirm-dialog"
+      ],
+      "files": [
+        {
+          "path": "registry/manniche/examples/selection-bar-demo.tsx",
+          "type": "registry:example"
+        }
+      ],
+      "categories": [
+        "controls"
+      ]
+    },
+    {
+      "name": "settings-window",
+      "type": "registry:component",
+      "title": "Settings window",
+      "description": "Settings in one modal window on the native dialog: sections on the left and the chosen one on the right, a list then a section with Back on phones, deep links by section, and Cmd+,.",
+      "dependencies": [
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "utils"
+      ],
+      "files": [
+        {
+          "path": "registry/manniche/settings-window/settings-window.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "categories": [
+        "overlays"
+      ],
+      "meta": {
+        "tier": "free",
+        "added": "2026-10-23",
+        "usedIn": [],
+        "props": [
+          {
+            "name": "open",
+            "type": "boolean",
+            "default": null,
+            "required": true,
+            "description": "Shows the window as a modal dialog."
+          },
+          {
+            "name": "onOpenChange",
+            "type": "(open: boolean) => void",
+            "default": null,
+            "required": true,
+            "description": "Called with false on Esc, the close button or a click on the backdrop."
+          },
+          {
+            "name": "sections",
+            "type": "SettingsSection[]",
+            "default": null,
+            "required": true,
+            "description": "The sections, in the order they list."
+          },
+          {
+            "name": "section",
+            "type": "string | null",
+            "default": null,
+            "required": true,
+            "description": "The section on show, controlled. null shows the list step on a narrow screen and the first section on a wide one."
+          },
+          {
+            "name": "onSectionChange",
+            "type": "(section: string | null) => void",
+            "default": null,
+            "required": true,
+            "description": "Called when a section is picked, or with null for Back."
+          },
+          {
+            "name": "title",
+            "type": "string",
+            "default": "'Settings'",
+            "required": false,
+            "description": "The window's title. Default \"Settings\"."
+          },
+          {
+            "name": "footer",
+            "type": "ReactNode",
+            "default": null,
+            "required": false,
+            "description": "Under the section list on wide screens and under the list step on narrow ones, such as a version line."
+          },
+          {
+            "name": "narrowBelow",
+            "type": "number",
+            "default": "720",
+            "required": false,
+            "description": "Below this width in px the window fills the screen and works in two steps. Default 720."
+          },
+          {
+            "name": "labels",
+            "type": "SettingsWindowLabels",
+            "default": null,
+            "required": false,
+            "description": "Visible and spoken text, with English defaults."
+          },
+          {
+            "name": "className",
+            "type": "string",
+            "default": null,
+            "required": false,
+            "description": null
+          }
+        ],
+        "a11y": [
+          {
+            "topic": "keyboard",
+            "text": "It is a native modal dialog, so focus stays inside, Esc closes it and focus goes back to what opened it. In the section list ArrowUp, ArrowDown, Home and End move between sections; on a wide screen the pane follows. On a narrow screen focus lands on the first section (or the one you came back from) in the list step and on Back inside a section. useSettingsShortcut opens it on Cmd+, or Ctrl+,.",
+            "keys": [
+              "Tab",
+              "ArrowUp",
+              "ArrowDown",
+              "Home",
+              "End",
+              "Enter",
+              "Escape"
+            ]
+          },
+          {
+            "topic": "screen-reader",
+            "text": "The dialog is named by its title (an h2). The section list is a nav with aria-current=\"page\" on the open section, and the section is a region named by its h3 title. A badge is read after the section's name. SettingsRow can hand its label and description ids to the control for aria-labelledby and aria-describedby."
+          },
+          {
+            "topic": "motion",
+            "text": "The window fades up 8 px over 220 ms when it opens. Under reduced motion it appears at once."
+          },
+          {
+            "topic": "other",
+            "text": "Below narrowBelow (720 px) it fills the screen, keeps clear of the safe areas, and section buttons are 48 px tall; on wide screens 40 px with 44 px rows in the pane."
+          }
+        ]
+      }
+    },
+    {
+      "name": "settings-window-demo",
+      "type": "registry:example",
+      "title": "Settings window demo",
+      "description": "How to use Settings window.",
+      "dependencies": [
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "@manniche/settings-window",
+        "@manniche/switch"
+      ],
+      "files": [
+        {
+          "path": "registry/manniche/examples/settings-window-demo.tsx",
+          "type": "registry:example"
+        }
+      ],
+      "categories": [
+        "overlays"
+      ]
+    },
+    {
+      "name": "grouped-list",
+      "type": "registry:component",
+      "title": "Grouped list",
+      "description": "A list in date groups (Today, This week, Later, No date) or your own, with folding headings, counts, \"Show N more\" paging and an empty state. Pairs with selection-bar.",
+      "dependencies": [
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "utils",
+        "@manniche/empty-state"
+      ],
+      "files": [
+        {
+          "path": "registry/manniche/grouped-list/grouped-list.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "categories": [
+        "surfaces"
+      ],
+      "meta": {
+        "tier": "free",
+        "added": "2026-10-23",
+        "usedIn": [],
+        "props": [
+          {
+            "name": "items",
+            "type": "T[]",
+            "default": null,
+            "required": true,
+            "description": "The rows, in the order they should show inside each group."
+          },
+          {
+            "name": "getKey",
+            "type": "(item: T) => string",
+            "default": null,
+            "required": true,
+            "description": "A stable key per row."
+          },
+          {
+            "name": "renderItem",
+            "type": "(item: T, info: { group: GroupedListGroup; index: number }) => ReactNode",
+            "default": null,
+            "required": true,
+            "description": "Draws one row. Render the row's content, not an <li>: the list adds that."
+          },
+          {
+            "name": "getDate",
+            "type": "(item: T) => Date | string | number | null | undefined",
+            "default": null,
+            "required": false,
+            "description": "The date a row is due, for the default date split. Rows without one go in No date."
+          },
+          {
+            "name": "groupBy",
+            "type": "(item: T) => string",
+            "default": null,
+            "required": false,
+            "description": "Your own split: return a group id from `groups`. Replaces the date split."
+          },
+          {
+            "name": "groups",
+            "type": "GroupedListGroup[]",
+            "default": null,
+            "required": false,
+            "description": "The groups in the order they show, with their names. Required with groupBy; for the date split it renames or reorders today, week, later and none."
+          },
+          {
+            "name": "today",
+            "type": "Date",
+            "default": null,
+            "required": false,
+            "description": "The day the date split counts from. Default the day the list first showed."
+          },
+          {
+            "name": "weekStartsOn",
+            "type": "0 | 1",
+            "default": "1",
+            "required": false,
+            "description": "First day of the week for \"This week\": 0 Sunday, 1 Monday. Default 1."
+          },
+          {
+            "name": "pageSize",
+            "type": "number",
+            "default": "50",
+            "required": false,
+            "description": "Rows shown per group before \"Show more\". Default 50."
+          },
+          {
+            "name": "moreStep",
+            "type": "number",
+            "default": "100",
+            "required": false,
+            "description": "Rows each \"Show more\" adds. Default 100."
+          },
+          {
+            "name": "collapsed",
+            "type": "string[]",
+            "default": null,
+            "required": false,
+            "description": "Folded group ids, controlled."
+          },
+          {
+            "name": "defaultCollapsed",
+            "type": "string[]",
+            "default": "[]",
+            "required": false,
+            "description": "Folded group ids at first. Default none."
+          },
+          {
+            "name": "onCollapsedChange",
+            "type": "(collapsed: string[]) => void",
+            "default": null,
+            "required": false,
+            "description": "Called with the folded group ids when a heading is pressed."
+          },
+          {
+            "name": "resetKey",
+            "type": "string | number",
+            "default": null,
+            "required": false,
+            "description": "Change it (a filter, a search) to set paging back to the first page."
+          },
+          {
+            "name": "onVisibleChange",
+            "type": "(keys: string[]) => void",
+            "default": null,
+            "required": false,
+            "description": "Called with the keys of the rows on screen, in order, whenever that changes."
+          },
+          {
+            "name": "label",
+            "type": "string",
+            "default": null,
+            "required": true,
+            "description": "Name of the list for screen readers."
+          },
+          {
+            "name": "empty",
+            "type": "ReactNode",
+            "default": null,
+            "required": false,
+            "description": "Shown when there are no rows at all. Default a plain empty state."
+          },
+          {
+            "name": "headingLevel",
+            "type": "2 | 3 | 4",
+            "default": "3",
+            "required": false,
+            "description": "Heading level of the group headings. Default 3."
+          },
+          {
+            "name": "stickyTop",
+            "type": "string",
+            "default": "'0px'",
+            "required": false,
+            "description": "Where the headings stick while their group scrolls, as a CSS length. Default 0."
+          },
+          {
+            "name": "variant",
+            "type": "'card' | 'plain'",
+            "default": "'card'",
+            "required": false,
+            "description": "\"card\" draws a bordered box; \"plain\" sits on the page. The sticky headings take the background from `--grouped-list-bg`, so set it (`[--grouped-list-bg:var(--card)]`) when a plain list sits on a card. Default \"card\"."
+          },
+          {
+            "name": "locale",
+            "type": "string",
+            "default": "'en'",
+            "required": false,
+            "description": "BCP 47 locale for numbers and the \"Until\" date. Default \"en\"."
+          },
+          {
+            "name": "labels",
+            "type": "GroupedListLabels",
+            "default": null,
+            "required": false,
+            "description": "Visible and spoken text, with English defaults."
+          },
+          {
+            "name": "className",
+            "type": "string",
+            "default": null,
+            "required": false,
+            "description": null
+          }
+        ],
+        "a11y": [
+          {
+            "topic": "keyboard",
+            "text": "Each group heading holds a button that folds and unfolds the group with Enter or Space. After \"Show N more\", focus moves to the first new row, so the keyboard carries on where it was.",
+            "keys": [
+              "Tab",
+              "Enter",
+              "Space"
+            ]
+          },
+          {
+            "topic": "screen-reader",
+            "text": "Each group is a section named by its label and count, with a real heading (headingLevel, default h3). The heading button has aria-expanded and aria-controls, and says the count as \"N items\" while the visible number is aria-hidden. A polite status says \"N more shown\" after paging."
+          },
+          {
+            "topic": "motion",
+            "text": "Only the chevron turns, with a 200 ms transform. Under reduced motion it snaps. Groups open and close at once, with no height animation."
+          },
+          {
+            "topic": "other",
+            "text": "Headings are 44 px tall and stick to the top of the scroll box (stickyTop). onVisibleChange gives the keys on screen, so selection-bar can ask first when ticked rows are folded away or past \"Show more\"."
+          }
+        ]
+      }
+    },
+    {
+      "name": "grouped-list-demo",
+      "type": "registry:example",
+      "title": "Grouped list demo",
+      "description": "How to use Grouped list.",
+      "dependencies": [
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "@manniche/grouped-list",
+        "@manniche/selection-bar",
+        "@manniche/confirm-dialog"
+      ],
+      "files": [
+        {
+          "path": "registry/manniche/examples/grouped-list-demo.tsx",
+          "type": "registry:example"
+        }
+      ],
+      "categories": [
+        "surfaces"
       ]
     }
   ]
