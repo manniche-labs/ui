@@ -17,7 +17,9 @@
   "meta": {
     "tier": "free",
     "added": "2026-10-08",
-    "usedIn": [],
+    "usedIn": [
+      "grouped-list"
+    ],
     "props": [
       {
         "name": "icon",
