@@ -1,0 +1,127 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "settings-window",
+  "title": "Settings window",
+  "description": "Settings in one modal window on the native dialog: sections on the left and the chosen one on the right, a list then a section with Back on phones, deep links by section, and Cmd+,.",
+  "dependencies": [
+    "lucide-react"
+  ],
+  "registryDependencies": [
+    "utils"
+  ],
+  "files": [
+    {
+      "path": "registry/manniche/settings-window/settings-window.tsx",
+      "content": "// Settings as one window over the app, on the native <dialog>: the sections on the left, the chosen one on the right.\n// On a narrow screen it fills the screen and works in two steps, the list of sections first and then one section\n// with Back. The section is controlled (`section` and `onSectionChange`), so a link or a warning elsewhere can open\n// the window straight on \"Connections\". Sections can carry an icon and a badge, such as \"Login rejected\", and the\n// window has a footer slot. `useSettingsShortcut` opens it on Cmd+, or Ctrl+, as desktop apps do.\n// Also exports SettingsRow (a label, a line under it and a control, 44 px or taller) and SettingsHeading.\nimport { ChevronLeft, ChevronRight, X } from 'lucide-react'\nimport { useEffect, useId, useLayoutEffect, useRef, useSyncExternalStore, type KeyboardEvent as ReactKeyboardEvent, type ReactNode } from 'react'\nimport { cn } from '@/lib/utils'\n\nexport type SettingsSection = {\n  id: string\n  label: string\n  icon?: ReactNode\n  /** A short word beside the label, such as \"Login rejected\" or \"New\". */\n  badge?: string\n  /** \"warning\" draws the badge in the destructive colour, for something that needs a look. Default \"neutral\". */\n  badgeTone?: 'neutral' | 'warning'\n  /** A line under the section's title. */\n  description?: string\n  /** Sections with the same group sit together under that small heading in the list. */\n  group?: string\n  /** What the section holds. A function is only called while the section shows. */\n  content: ReactNode | (() => ReactNode)\n}\n\nexport type SettingsWindowLabels = {\n  /** Name of the close button. Default \"Close settings\". */\n  close?: string\n  /** The Back button on narrow screens. Default \"All settings\". */\n  back?: string\n  /** Name of the section list. Default \"Sections\". */\n  sections?: string\n}\n\nexport type SettingsWindowProps = {\n  /** Shows the window as a modal dialog. */\n  open: boolean\n  /** Called with false on Esc, the close button or a click on the backdrop. */\n  onOpenChange: (open: boolean) => void\n  /** The sections, in the order they list. */\n  sections: SettingsSection[]\n  /** The section on show, controlled. null shows the list step on a narrow screen and the first section on a wide one. */\n  section: string | null\n  /** Called when a section is picked, or with null for Back. */\n  onSectionChange: (section: string | null) => void\n  /** The window's title. Default \"Settings\". */\n  title?: string\n  /** Under the section list on wide screens and under the list step on narrow ones, such as a version line. */\n  footer?: ReactNode\n  /** Below this width in px the window fills the screen and works in two steps. Default 720. */\n  narrowBelow?: number\n  /** Visible and spoken text, with English defaults. */\n  labels?: SettingsWindowLabels\n  className?: string\n}\n\nconst DEFAULT_LABELS: Required<SettingsWindowLabels> = {\n  close: 'Close settings',\n  back: 'All settings',\n  sections: 'Sections',\n}\n\nfunction useNarrow(below: number) {\n  const query = `(max-width: ${below - 0.02}px)`\n  return useSyncExternalStore(\n    (cb) => {\n      const mq = window.matchMedia(query)\n      mq.addEventListener('change', cb)\n      return () => mq.removeEventListener('change', cb)\n    },\n    () => window.matchMedia(query).matches,\n    () => false,\n  )\n}\n\n/** Calls `onOpen` on Cmd+, (Mac) or Ctrl+, (elsewhere), the shortcut desktop apps use for settings. */\nexport function useSettingsShortcut(onOpen: () => void, { enabled = true }: { enabled?: boolean } = {}) {\n  const latest = useRef(onOpen)\n  useLayoutEffect(() => {\n    latest.current = onOpen\n  })\n  useEffect(() => {\n    if (!enabled) return\n    const onKey = (e: KeyboardEvent) => {\n      if ((e.metaKey || e.ctrlKey) && !e.altKey && !e.shiftKey && e.key === ',') {\n        e.preventDefault()\n        latest.current()\n      }\n    }\n    document.addEventListener('keydown', onKey)\n    return () => document.removeEventListener('keydown', onKey)\n  }, [enabled])\n}\n\nconst CONTROL_FOCUS = 'outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring'\n\n/** The settings window. Focus stays inside while it is open and goes back where it was when it closes. */\nexport function SettingsWindow({\n  open,\n  onOpenChange,\n  sections,\n  section,\n  onSectionChange,\n  title = 'Settings',\n  footer,\n  narrowBelow = 720,\n  labels: labelsProp,\n  className,\n}: SettingsWindowProps) {\n  const labels = { ...DEFAULT_LABELS, ...labelsProp }\n  const dialog = useRef<HTMLDialogElement>(null)\n  const nav = useRef<HTMLDivElement>(null)\n  const pane = useRef<HTMLDivElement>(null)\n  const back = useRef<HTMLButtonElement>(null)\n  const opener = useRef<HTMLElement | null>(null)\n  const titleId = useId()\n  const sectionTitleId = useId()\n  const narrow = useNarrow(narrowBelow)\n\n  const known = sections.find((s) => s.id === section)\n  const shown = known ?? (narrow ? undefined : sections[0])\n  // Narrow screens show the list step until a section is picked.\n  const step: 'list' | 'section' = narrow && !known ? 'list' : 'section'\n\n  // A layout effect, so the dialog is shown before the focus effect below runs in the same commit.\n  useLayoutEffect(() => {\n    const d = dialog.current\n    if (!d) return\n    if (open && !d.open) {\n      opener.current = document.activeElement as HTMLElement | null\n      d.showModal()\n    } else if (!open && d.open) d.close()\n  }, [open])\n\n  // The section last opened on a narrow screen, so Back lands on it in the list.\n  const lastOpened = useRef<string | null>(null)\n  useEffect(() => {\n    if (known) lastOpened.current = known.id\n  }, [known])\n\n  // Focus on open and on each step: the current section in the list, or Back inside a section on a narrow screen.\n  useLayoutEffect(() => {\n    if (!open) return\n    if (narrow && step === 'section') return back.current?.focus()\n    const items = Array.from(nav.current?.querySelectorAll<HTMLElement>('button[data-section]') ?? [])\n    const target = narrow ? lastOpened.current : shown?.id\n    ;(items.find((b) => b.dataset.section === target) ?? items[0])?.focus()\n    // Only on open and on a change of step; picking a section with the mouse keeps focus where it is.\n    // eslint-disable-next-line react-hooks/exhaustive-deps\n  }, [open, narrow, step])\n\n  // A new section starts at the top.\n  useLayoutEffect(() => {\n    pane.current?.scrollTo?.({ top: 0 })\n  }, [shown?.id])\n\n  const onClose = () => {\n    onOpenChange(false)\n    const el = opener.current\n    opener.current = null\n    if (el?.isConnected) requestAnimationFrame(() => el.focus())\n  }\n\n  // Up, Down, Home and End move between sections, as in a list.\n  const onNavKey = (e: ReactKeyboardEvent<HTMLDivElement>) => {\n    if (!['ArrowDown', 'ArrowUp', 'Home', 'End'].includes(e.key)) return\n    const items = Array.from(nav.current?.querySelectorAll<HTMLElement>('button[data-section]') ?? [])\n    const at = items.indexOf(document.activeElement as HTMLElement)\n    if (at < 0) return\n    e.preventDefault()\n    const next = e.key === 'Home' ? 0 : e.key === 'End' ? items.length - 1 : (at + (e.key === 'ArrowDown' ? 1 : -1) + items.length) % items.length\n    items[next].focus()\n    // On a wide screen the pane follows the focus, as in a desktop settings window.\n    if (!narrow) onSectionChange(items[next].dataset.section!)\n  }\n\n  const groups: { name?: string; items: SettingsSection[] }[] = []\n  for (const s of sections) {\n    const last = groups[groups.length - 1]\n    if (last && last.name === s.group) last.items.push(s)\n    else groups.push({ name: s.group, items: [s] })\n  }\n\n  const closeButton = (\n    <button\n      type=\"button\"\n      onClick={onClose}\n      aria-label={labels.close}\n      className={cn(\n        'relative grid size-9 shrink-0 place-items-center rounded-lg text-muted-foreground after:absolute after:-inset-1 hover:bg-muted hover:text-foreground',\n        CONTROL_FOCUS,\n      )}\n    >\n      <X className=\"size-4\" aria-hidden />\n    </button>\n  )\n\n  const list = (\n    <nav aria-label={labels.sections} className=\"flex min-h-0 flex-1 flex-col\">\n      <div ref={nav} onKeyDown={onNavKey} className=\"min-h-0 flex-1 overflow-y-auto p-2\">\n        {groups.map((g, gi) => (\n          <div key={`${g.name ?? ''}-${gi}`} className={cn(gi > 0 && 'mt-3')}>\n            {g.name && <p className=\"px-2.5 pt-1 pb-1.5 text-xs font-medium text-muted-foreground\">{g.name}</p>}\n            <ul className=\"m-0 grid list-none grid-cols-[minmax(0,1fr)] gap-0.5 p-0\">\n              {g.items.map((s) => {\n                const current = !narrow && shown?.id === s.id\n                return (\n                  <li key={s.id}>\n                    <button\n                      type=\"button\"\n                      data-section={s.id}\n                      aria-current={current ? 'page' : undefined}\n                      onClick={() => onSectionChange(s.id)}\n                      className={cn(\n                        'flex w-full items-center gap-2.5 rounded-lg px-2.5 text-left text-sm',\n                        narrow ? 'min-h-12' : 'min-h-10',\n                        'text-foreground/85 hover:bg-muted hover:text-foreground aria-[current=page]:bg-muted aria-[current=page]:font-medium aria-[current=page]:text-foreground',\n                        'outline-none focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-ring',\n                        '[&>svg]:size-4 [&>svg]:shrink-0 [&>svg]:text-muted-foreground',\n                      )}\n                    >\n                      {s.icon}\n                      <span className=\"min-w-0 flex-1 truncate\">{s.label}</span>\n                      {s.badge && (\n                        <span\n                          className={cn(\n                            'shrink-0 rounded-md px-1.5 text-[11px] leading-5 font-medium whitespace-nowrap',\n                            s.badgeTone === 'warning'\n                              ? 'bg-destructive/12 text-[color-mix(in_oklab,var(--destructive)_78%,var(--foreground))]'\n                              : 'bg-muted text-muted-foreground',\n                          )}\n                        >\n                          <span className=\"sr-only\">, </span>\n                          {s.badge}\n                        </span>\n                      )}\n                      {narrow && <ChevronRight aria-hidden className=\"!size-4 text-muted-foreground\" />}\n                    </button>\n                  </li>\n                )\n              })}\n            </ul>\n          </div>\n        ))}\n      </div>\n      {footer && <div className=\"border-t px-4 py-3 text-xs text-muted-foreground\">{footer}</div>}\n    </nav>\n  )\n\n  const body = shown && (typeof shown.content === 'function' ? (shown.content as () => ReactNode)() : shown.content)\n\n  return (\n    <dialog\n      ref={dialog}\n      onClose={onClose}\n      onClick={(e) => e.target === dialog.current && onClose()}\n      aria-labelledby={titleId}\n      className={cn(\n        'm-auto max-w-none overflow-hidden border-0 bg-card p-0 text-card-foreground backdrop:bg-black/45',\n        narrow\n          ? 'h-dvh max-h-none w-screen rounded-none'\n          : 'h-[min(42.5rem,calc(100dvh-4rem))] w-[min(65rem,calc(100vw-4rem))] rounded-2xl border shadow-2xl',\n        'open:animate-[manniche-pop_220ms_cubic-bezier(0.23,1,0.32,1)] motion-reduce:open:animate-none',\n        className,\n      )}\n    >\n      <style href=\"manniche-pop\" precedence=\"default\">\n        {'@keyframes manniche-pop { from { opacity: 0; transform: translateY(8px) scale(.98) } }'}\n      </style>\n      {open && (\n        <div className={cn('flex h-full min-h-0', narrow && 'flex-col pt-[env(safe-area-inset-top)] pb-[env(safe-area-inset-bottom)]')}>\n          {(!narrow || step === 'list') && (\n            <div className={cn('flex min-h-0 flex-col', narrow ? 'flex-1' : 'w-60 shrink-0 border-r bg-muted/40')}>\n              <div className=\"flex min-h-14 items-center gap-2 px-4\">\n                <h2 id={titleId} className=\"m-0 min-w-0 flex-1 truncate text-base font-semibold\">\n                  {title}\n                </h2>\n                {narrow && closeButton}\n              </div>\n              {list}\n            </div>\n          )}\n          {step === 'section' && shown && (\n            <div className=\"flex min-h-0 min-w-0 flex-1 flex-col\">\n              <div className={cn('flex min-h-14 shrink-0 items-center gap-1 border-b pr-3', narrow ? 'pl-1' : 'pl-6')}>\n                {narrow && (\n                  <>\n                    <h2 id={titleId} className=\"sr-only\">\n                      {title}\n                    </h2>\n                    <button\n                      ref={back}\n                      type=\"button\"\n                      onClick={() => onSectionChange(null)}\n                      className=\"inline-flex min-h-11 items-center gap-1 rounded-lg pr-3 pl-1.5 text-sm font-medium text-muted-foreground outline-none hover:bg-muted hover:text-foreground focus-visible:outline-2 focus-visible:outline-ring\"\n                    >\n                      <ChevronLeft aria-hidden className=\"size-4\" />\n                      {labels.back}\n                    </button>\n                  </>\n                )}\n                {!narrow && (\n                  <h3 id={sectionTitleId} className=\"m-0 min-w-0 flex-1 truncate text-base font-semibold\">\n                    {shown.label}\n                  </h3>\n                )}\n                {narrow && <span className=\"flex-1\" />}\n                {closeButton}\n              </div>\n              <div ref={pane} role=\"region\" aria-labelledby={sectionTitleId} className=\"min-h-0 flex-1 overflow-y-auto overscroll-contain\">\n                <div className={cn('w-full max-w-2xl', narrow ? 'px-4 py-4' : 'px-6 py-5')}>\n                  {narrow && (\n                    <h3 id={sectionTitleId} className=\"m-0 mb-1 text-xl font-semibold\">\n                      {shown.label}\n                    </h3>\n                  )}\n                  {shown.description && <p className=\"mt-0 mb-4 text-sm text-muted-foreground\">{shown.description}</p>}\n                  {body}\n                </div>\n              </div>\n            </div>\n          )}\n        </div>\n      )}\n    </dialog>\n  )\n}\n\nexport type SettingsRowProps = {\n  /** What the setting is called. */\n  label: ReactNode\n  /** One line on what it does. */\n  description?: ReactNode\n  /**\n   * The control. Pass a function to get the ids of the label and the line, for `aria-labelledby` and\n   * `aria-describedby` on the control.\n   */\n  children?: ReactNode | ((ids: { labelId: string; descriptionId?: string }) => ReactNode)\n  /** Puts the control under the text instead of beside it, for wide controls. Default false. */\n  stacked?: boolean\n  className?: string\n}\n\n/** One setting: its name and a line on what it does, with the control at the end. Rows are 44 px or taller, split by hairlines. */\nexport function SettingsRow({ label, description, children, stacked = false, className }: SettingsRowProps) {\n  const id = useId()\n  const labelId = `${id}-label`\n  const descriptionId = description ? `${id}-desc` : undefined\n  const control = typeof children === 'function' ? children({ labelId, descriptionId }) : children\n  return (\n    <div\n      className={cn(\n        'flex min-h-11 gap-x-4 gap-y-2 border-b py-3 last:border-b-0',\n        stacked ? 'flex-col' : 'flex-wrap items-center justify-between',\n        className,\n      )}\n    >\n      <div className=\"min-w-0 flex-[1_1_14rem]\">\n        <div id={labelId} className=\"text-sm font-medium\">\n          {label}\n        </div>\n        {description && (\n          <div id={descriptionId} className=\"mt-0.5 text-[13px] leading-snug text-muted-foreground\">\n            {description}\n          </div>\n        )}\n      </div>\n      {control !== undefined && control !== null && <div className={cn('flex shrink-0 items-center', stacked && 'w-full')}>{control}</div>}\n    </div>\n  )\n}\n\n/** A small heading over a run of rows inside a section. */\nexport function SettingsHeading({ children, level = 4, className }: { children: ReactNode; level?: 3 | 4 | 5; className?: string }) {\n  const Tag = `h${level}` as 'h4'\n  return <Tag className={cn('mt-6 mb-1 text-xs font-semibold tracking-wide text-muted-foreground uppercase first:mt-0', className)}>{children}</Tag>\n}\n",
+      "type": "registry:component"
+    }
+  ],
+  "meta": {
+    "tier": "free",
+    "added": "2026-10-23",
+    "usedIn": [],
+    "props": [
+      {
+        "name": "open",
+        "type": "boolean",
+        "default": null,
+        "required": true,
+        "description": "Shows the window as a modal dialog."
+      },
+      {
+        "name": "onOpenChange",
+        "type": "(open: boolean) => void",
+        "default": null,
+        "required": true,
+        "description": "Called with false on Esc, the close button or a click on the backdrop."
+      },
+      {
+        "name": "sections",
+        "type": "SettingsSection[]",
+        "default": null,
+        "required": true,
+        "description": "The sections, in the order they list."
+      },
+      {
+        "name": "section",
+        "type": "string | null",
+        "default": null,
+        "required": true,
+        "description": "The section on show, controlled. null shows the list step on a narrow screen and the first section on a wide one."
+      },
+      {
+        "name": "onSectionChange",
+        "type": "(section: string | null) => void",
+        "default": null,
+        "required": true,
+        "description": "Called when a section is picked, or with null for Back."
+      },
+      {
+        "name": "title",
+        "type": "string",
+        "default": "'Settings'",
+        "required": false,
+        "description": "The window's title. Default \"Settings\"."
+      },
+      {
+        "name": "footer",
+        "type": "ReactNode",
+        "default": null,
+        "required": false,
+        "description": "Under the section list on wide screens and under the list step on narrow ones, such as a version line."
+      },
+      {
+        "name": "narrowBelow",
+        "type": "number",
+        "default": "720",
+        "required": false,
+        "description": "Below this width in px the window fills the screen and works in two steps. Default 720."
+      },
+      {
+        "name": "labels",
+        "type": "SettingsWindowLabels",
+        "default": null,
+        "required": false,
+        "description": "Visible and spoken text, with English defaults."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "default": null,
+        "required": false,
+        "description": null
+      }
+    ],
+    "a11y": [
+      {
+        "topic": "keyboard",
+        "text": "It is a native modal dialog, so focus stays inside, Esc closes it and focus goes back to what opened it. In the section list ArrowUp, ArrowDown, Home and End move between sections; on a wide screen the pane follows. On a narrow screen focus lands on the first section (or the one you came back from) in the list step and on Back inside a section. useSettingsShortcut opens it on Cmd+, or Ctrl+,.",
+        "keys": [
+          "Tab",
+          "ArrowUp",
+          "ArrowDown",
+          "Home",
+          "End",
+          "Enter",
+          "Escape"
+        ]
+      },
+      {
+        "topic": "screen-reader",
+        "text": "The dialog is named by its title (an h2). The section list is a nav with aria-current=\"page\" on the open section, and the section is a region named by its h3 title. A badge is read after the section's name. SettingsRow can hand its label and description ids to the control for aria-labelledby and aria-describedby."
+      },
+      {
+        "topic": "motion",
+        "text": "The window fades up 8 px over 220 ms when it opens. Under reduced motion it appears at once."
+      },
+      {
+        "topic": "other",
+        "text": "Below narrowBelow (720 px) it fills the screen, keeps clear of the safe areas, and section buttons are 48 px tall; on wide screens 40 px with 44 px rows in the pane."
+      }
+    ]
+  },
+  "categories": [
+    "overlays"
+  ],
+  "type": "registry:component"
+}

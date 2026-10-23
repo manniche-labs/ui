@@ -1,5 +1,13 @@
 # Changelog
 
+## 2026-10-23
+
+### Added
+
+- `selection-bar` (controls): a toolbar that rises at the bottom of a list while rows are ticked. It shows "N selected", quick actions (a menu such as Status changes every picked row in one click), More and Clear (Esc). A one-click change can hand back an undo, shown as a small notice with Undo above the bar that pauses on hover or focus. Above `maxInstant` rows (default 10), or when `hiddenCount` says some picked rows are off screen, a change goes to `onNeedsConfirm` with a `proceed()` instead of running; read-only actions skip the limit. One Tab stop with arrow keys, the count spoken politely once it settles, 44 px targets, sticky or fixed above the safe area, calm rise that is still under reduced motion.
+- `settings-window` (overlays): settings in one modal window on the native `<dialog>`, with the sections on the left and the chosen one on the right. Below 720 px it fills the screen and works in two steps, the list and then a section with Back. `section` and `onSectionChange` are controlled, so an app can open it straight on a section. Sections take an icon, a badge (a `warning` tone for things like "Login rejected") and a group heading, and there is a footer slot. Also exports `useSettingsShortcut` (Cmd+, / Ctrl+,), `SettingsRow` and `SettingsHeading`.
+- `grouped-list` (surfaces): a list split into Today (overdue counted in, with a hint), This week (until the last day of the week), Later and No date, or your own `groupBy` and `groups`. Headings stick, show a count and fold their group; long groups show `pageSize` rows (default 50) with "Show N more", which moves focus to the first new row. Empty groups are left out and an empty list shows `empty-state`. Generic over the row type with `getKey` and `renderItem`; `onVisibleChange` gives the keys on screen so `selection-bar` can ask first about rows that are folded away. Exports `dateBucket`, `endOfWeek` and `groupItems`.
+
 ## 2026-10-14
 
 ### Added

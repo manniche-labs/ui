@@ -66,6 +66,7 @@ There is also a hosted MCP server just for this registry, with no key: `https://
 | `confirm-dialog` | Confirmation where both buttons name the action, the safe one has focus, red only for destructive ones, optional type-to-confirm |
 | `danger-zone` | Red-framed last section of a settings page, one row per action that is hard to undo |
 | `scheduled-deletion` | Banner for something deleted but still recoverable: final date, days left, restore |
+| `selection-bar` | Toolbar that rises while rows are ticked: count, one-click actions with Undo, More and Clear (Esc); big or partly hidden changes ask first |
 | `glass-navbar` | Sticky top bar on frosted glass: full width, floating pill, or see-through until the page scrolls; solid with reduced transparency or more contrast |
 | `tilt-card` | Card that tilts towards the mouse in 3D, with layers floating above it; flat on touch and under reduced motion |
 | `flip-words` | One word in a sentence swaps for the next, pauses on hover, stops after a few rounds |
@@ -104,6 +105,7 @@ There is also a hosted MCP server just for this registry, with no key: `https://
 | `dock` | App icons that bounce when picked, with labels and arrow keys |
 | `inline-edit` | Text that turns into a field in place; Enter saves, Escape cancels |
 | `dialog-stack` | Modal with steps that stack behind each other, on the native `<dialog>` |
+| `settings-window` | Settings in one modal window on the native `<dialog>`: section list and pane, list then section with Back on phones, deep link by section, Cmd+, |
 | `save-toggle` | Save button that shrinks to a spinner and pops a check |
 | `morphing-button` | Button that grows into an email field |
 | `feedback` | Thumbs up or down, then a short comment form |
@@ -115,6 +117,7 @@ There is also a hosted MCP server just for this registry, with no key: `https://
 | `integration-card` | Integrations that open into a card with a connect button |
 | `data-tile` | The tile a figure or chart sits in: name, control, figure, fine print; `inverted` lifts the one that matters, `compact` for dense dashboards |
 | `empty-state` | Says something is empty: icon, title, one line, example labels and the action that starts things; dashed card or `plain` inside a tile, `live` after a search |
+| `grouped-list` | A list in date groups (Today, This week, Later, No date) or your own, with folding headings, counts, Show N more and an empty state; pairs with `selection-bar` |
 | `chart-kit` | Shared parts of the Tiles charts: number formatting, axis ticks, smooth line, one tooltip, the big display figure, change pill, pill switch, screen-reader table, static plots for HTML files |
 | `bar-chart` | Column chart with round caps, today's dot, a pale comparison bar and automatic weekly buckets when bars get thin |
 | `area-chart` | Smooth line over a soft tint, with a dashed comparison line and a crosshair tooltip that reads the difference |

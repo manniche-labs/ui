@@ -1,0 +1,164 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "selection-bar",
+  "title": "Selection bar",
+  "description": "A toolbar that rises while rows are ticked: the count, one-click actions with Undo, More and Clear (Esc). Big or partly hidden changes ask first.",
+  "dependencies": [
+    "lucide-react"
+  ],
+  "registryDependencies": [
+    "utils"
+  ],
+  "files": [
+    {
+      "path": "registry/manniche/selection-bar/selection-bar.tsx",
+      "content": "// A toolbar that rises at the bottom of a list or table while rows are ticked: how many are picked, the actions that\n// apply to all of them (a menu such as \"Status\" changes every row in one click), More for the rest, and Clear (Esc).\n// A one-click change can hand back an undo: the bar shows a small notice with Undo above it for a few seconds.\n// The bulk limit keeps one click small and visible: above `maxInstant` rows, or when some picked rows are not on\n// screen (a collapsed group, past \"Show more\", another filter), a change goes to `onNeedsConfirm` instead, so the app\n// can list the rows in a dialog first. Read-only actions (export, copy) skip the limit.\nimport { Check, ChevronDown, MoreHorizontal, Undo2, X } from 'lucide-react'\nimport { useCallback, useEffect, useId, useLayoutEffect, useRef, useState, type KeyboardEvent as ReactKeyboardEvent, type ReactNode } from 'react'\nimport { cn } from '@/lib/utils'\n\nexport type SelectionBarResult = {\n  /** What happened, said in the notice: \"Moved 3 tasks to Done\". */\n  message: string\n  /** Sets the change back. Leave it out for a notice without Undo. */\n  undo?: () => void | Promise<void>\n}\n\nexport type SelectionBarOption = {\n  id: string\n  label: string\n  icon?: ReactNode\n  /** Marks the value every picked row already has, with a check. */\n  current?: boolean\n}\n\nexport type SelectionBarAction = {\n  id: string\n  /** Visible on wide bars, and always the button's name. */\n  label: string\n  icon?: ReactNode\n  /** Choices in a menu that opens upwards. Picking one runs the action with its id, in one click. */\n  options?: SelectionBarOption[]\n  /** Heading over the options, such as \"Move {count} to\". */\n  menuLabel?: string\n  /**\n   * Runs the action on the picked rows, with the option's id for a menu. Return a result (or a promise of one) to show\n   * a notice, with Undo when it has `undo`.\n   */\n  onSelect: (optionId?: string) => void | SelectionBarResult | Promise<void | SelectionBarResult>\n  /** The action only reads (export, copy), so the bulk limit does not apply. */\n  readOnly?: boolean\n  disabled?: boolean\n  /** Why it is off, read with the button and shown as its tooltip. */\n  disabledReason?: string\n}\n\nexport type SelectionBarConfirmRequest = {\n  action: SelectionBarAction\n  optionId?: string\n  /** Rows picked. */\n  count: number\n  /** Picked rows that are not on screen. */\n  hiddenCount: number\n  /** \"limit\" when more than maxInstant rows are picked, \"hidden\" when some are not on screen. */\n  reason: 'limit' | 'hidden'\n  /** Runs the action after the app's own confirmation, with the same notice and Undo as a one-click change. */\n  proceed: () => Promise<void>\n}\n\nexport type SelectionBarLabels = {\n  /** Name of the toolbar. Default \"Selection\". */\n  toolbar?: string\n  /** The count, with {count}. Default \"{count} selected\". */\n  selected?: string\n  /** Said when the selection is cleared. Default \"Selection cleared\". */\n  cleared?: string\n  /** The Clear button. Default \"Clear selection\". */\n  clear?: string\n  /** The More menu button. Default \"More actions\". */\n  more?: string\n  /** \"Select all\" in the More menu, with {count}. Default \"Select all {count}\". */\n  selectAll?: string\n  /** Default \"Undo\". */\n  undo?: string\n  /** Said after an undo. Default \"Undone\". */\n  undone?: string\n  /** Said when an undo failed. Default \"Could not undo\". */\n  undoFailed?: string\n  /** Name of the notice's close button. Default \"Dismiss\". */\n  dismiss?: string\n}\n\nexport type SelectionBarProps = {\n  /** How many rows are picked. The bar shows while it is above 0 (and while a notice is up). */\n  count: number\n  /** Called by Clear, Esc and the More menu's Clear item. */\n  onClear: () => void\n  /** The quick actions, shown as buttons; one with `options` is a menu. */\n  actions: SelectionBarAction[]\n  /** Actions under More (…), as menu items. Clear selection is always added at the end. */\n  more?: SelectionBarAction[]\n  /** One click changes at most this many rows; above it the change goes to onNeedsConfirm. Default 10. */\n  maxInstant?: number\n  /** Picked rows that are not on screen. When above 0, a change goes to onNeedsConfirm. Default 0. */\n  hiddenCount?: number\n  /** Called instead of a change that is too big or reaches rows off screen. Without it, such a change runs. */\n  onNeedsConfirm?: (request: SelectionBarConfirmRequest) => void\n  /** Adds \"Select all {count}\" to More while fewer than that are picked. */\n  onSelectAll?: () => void\n  /** How many rows \"Select all\" would pick. */\n  selectAllCount?: number\n  /** Esc clears the selection, unless focus is in a text field or a dialog is open. Default true. */\n  escapeClears?: boolean\n  /** Seconds the notice with Undo stays, paused while hovered or focused. Default 8. */\n  undoSeconds?: number\n  /** \"sticky\" sits at the bottom of the scrolling box, in the flow; \"fixed\" sits at the bottom of the screen and leaves a spacer of its height. Default \"sticky\". */\n  placement?: 'sticky' | 'fixed'\n  /** BCP 47 locale for numbers. Default \"en\". */\n  locale?: string\n  /** Visible and spoken text, with English defaults. */\n  labels?: SelectionBarLabels\n  /** Classes for the bar. */\n  className?: string\n}\n\nconst DEFAULT_LABELS: Required<SelectionBarLabels> = {\n  toolbar: 'Selection',\n  selected: '{count} selected',\n  cleared: 'Selection cleared',\n  clear: 'Clear selection',\n  more: 'More actions',\n  selectAll: 'Select all {count}',\n  undo: 'Undo',\n  undone: 'Undone',\n  undoFailed: 'Could not undo',\n  dismiss: 'Dismiss',\n}\n\ntype Notice = { id: number; message: string; undo?: () => void | Promise<void>; tone: 'default' | 'error'; done?: boolean }\n\nconst fill = (text: string, count: number, locale: string) => text.replace('{count}', count.toLocaleString(locale))\n\n// Buttons on the inverted bar: 44 px tall, quiet until hovered, an outline in the bar's text colour on focus.\nconst BAR_BUTTON =\n  'relative inline-flex h-11 shrink-0 items-center justify-center gap-1.5 rounded-[10px] px-3 text-[13.5px] font-medium whitespace-nowrap text-background/90 outline-none transition-colors duration-150 hover:bg-background/12 hover:text-background focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-background aria-expanded:bg-background/12 disabled:pointer-events-none disabled:opacity-45 motion-reduce:transition-none [&_svg]:size-4 [&_svg]:shrink-0'\nconst ICON_BUTTON = 'w-11 px-0'\nconst SEPARATOR = 'mx-1 h-5 w-px shrink-0 bg-background/20 @max-[22rem]:mx-0.5'\n\n/** True when the key press happened where Esc means something else: a text field or an open dialog. */\nfunction escapeBelongsElsewhere(e: KeyboardEvent) {\n  const t = e.target as HTMLElement | null\n  if (t?.closest('dialog[open], [aria-modal=\"true\"]')) return true\n  if (t?.isContentEditable) return true\n  if (t instanceof HTMLTextAreaElement || t instanceof HTMLSelectElement) return true\n  if (t instanceof HTMLInputElement && !['checkbox', 'radio', 'button', 'submit', 'reset', 'range', 'color'].includes(t.type)) return true\n  return false\n}\n\n/** Says the count politely a moment after it settles, so a quick run of ticks is read once. */\nfunction useCountAnnouncement(count: number, labels: Required<SelectionBarLabels>, locale: string) {\n  const [said, setSaid] = useState('')\n  const first = useRef(true)\n  useEffect(() => {\n    if (first.current) {\n      first.current = false\n      if (count === 0) return\n    }\n    const t = window.setTimeout(() => setSaid(count > 0 ? fill(labels.selected, count, locale) : labels.cleared), 350)\n    return () => window.clearTimeout(t)\n  }, [count, labels.selected, labels.cleared, locale])\n  return said\n}\n\n/** Keeps the bar mounted for its leave animation once it should go. */\nfunction usePresence(show: boolean, ms = 160) {\n  const [mounted, setMounted] = useState(show)\n  // Mount at once when it should show (React's \"adjust state while rendering\").\n  if (show && !mounted) setMounted(true)\n  const leaving = mounted && !show\n  useEffect(() => {\n    if (!leaving) return\n    const t = window.setTimeout(() => setMounted(false), ms)\n    return () => window.clearTimeout(t)\n  }, [leaving, ms])\n  return { mounted, leaving }\n}\n\ntype MenuProps = {\n  items: { key: string; label: string; icon?: ReactNode; current?: boolean; disabled?: boolean; hint?: string; onSelect: () => void; separatorBefore?: boolean }[]\n  heading?: string\n  align: 'start' | 'end'\n  buttonLabel: string\n  buttonContent: ReactNode\n  buttonClassName: string\n  disabled?: boolean\n  title?: string\n  tabIndex: number\n  onFocus: () => void\n}\n\n/** A menu that opens upwards from its button: arrow keys, Home and End move, Enter picks, Esc closes back to the button. */\nfunction BarMenu({ items, heading, align, buttonLabel, buttonContent, buttonClassName, disabled, title, tabIndex, onFocus }: MenuProps) {\n  const [open, setOpen] = useState(false)\n  const button = useRef<HTMLButtonElement>(null)\n  const menu = useRef<HTMLDivElement>(null)\n  const id = useId()\n\n  const focusItem = (at: number | 'first' | 'last') => {\n    const list = Array.from(menu.current?.querySelectorAll<HTMLElement>('[role=\"menuitem\"]:not([aria-disabled=\"true\"])') ?? [])\n    if (!list.length) return\n    const i = at === 'first' ? 0 : at === 'last' ? list.length - 1 : (at + list.length) % list.length\n    list[i].focus()\n  }\n\n  useLayoutEffect(() => {\n    if (open) focusItem('first')\n  }, [open])\n\n  useEffect(() => {\n    if (!open) return\n    const onDown = (e: PointerEvent) => {\n      if (!menu.current?.contains(e.target as Node) && !button.current?.contains(e.target as Node)) setOpen(false)\n    }\n    document.addEventListener('pointerdown', onDown)\n    return () => document.removeEventListener('pointerdown', onDown)\n  }, [open])\n\n  const close = (refocus = true) => {\n    setOpen(false)\n    if (refocus) button.current?.focus()\n  }\n\n  const onMenuKey = (e: ReactKeyboardEvent<HTMLDivElement>) => {\n    const list = Array.from(menu.current?.querySelectorAll<HTMLElement>('[role=\"menuitem\"]:not([aria-disabled=\"true\"])') ?? [])\n    const at = list.indexOf(document.activeElement as HTMLElement)\n    if (e.key === 'ArrowDown') focusItem(at + 1)\n    else if (e.key === 'ArrowUp') focusItem(at - 1)\n    else if (e.key === 'Home') focusItem('first')\n    else if (e.key === 'End') focusItem('last')\n    else if (e.key === 'Escape') close()\n    else if (e.key === 'Tab') return setOpen(false)\n    else return\n    e.preventDefault()\n    // The bar's own Esc (clear) and the toolbar's arrows never see it.\n    e.stopPropagation()\n  }\n\n  return (\n    <span className=\"relative flex\">\n      <button\n        ref={button}\n        type=\"button\"\n        data-bar-item=\"\"\n        tabIndex={tabIndex}\n        onFocus={onFocus}\n        aria-haspopup=\"menu\"\n        aria-expanded={open}\n        aria-controls={open ? id : undefined}\n        aria-label={buttonLabel}\n        title={title}\n        disabled={disabled}\n        onClick={() => setOpen((o) => !o)}\n        onKeyDown={(e) => {\n          if (e.key === 'ArrowUp' || e.key === 'ArrowDown') {\n            e.preventDefault()\n            e.stopPropagation()\n            if (open) focusItem(e.key === 'ArrowUp' ? 'last' : 'first')\n            else setOpen(true)\n          }\n        }}\n        className={buttonClassName}\n      >\n        {buttonContent}\n      </button>\n      {open && (\n        <div\n          ref={menu}\n          id={id}\n          role=\"menu\"\n          aria-label={heading ?? buttonLabel}\n          onKeyDown={onMenuKey}\n          className={cn(\n            'absolute bottom-[calc(100%+10px)] z-10 grid w-max min-w-48 max-w-[min(18rem,calc(100vw-2rem))] gap-px rounded-xl border bg-card p-1 text-card-foreground shadow-xl',\n            'animate-[manniche-selbar-menu_160ms_cubic-bezier(0.23,1,0.32,1)] motion-reduce:animate-none',\n            align === 'start' ? 'left-0' : 'right-0',\n          )}\n        >\n          {heading && (\n            <p aria-hidden className=\"px-2.5 pt-1.5 pb-1 text-xs font-medium text-muted-foreground\">\n              {heading}\n            </p>\n          )}\n          {items.map((item) => (\n            <div key={item.key} role=\"none\" className={cn(item.separatorBefore && 'mt-1 border-t pt-1')}>\n              <button\n                type=\"button\"\n                role=\"menuitem\"\n                tabIndex={-1}\n                aria-disabled={item.disabled || undefined}\n                title={item.hint}\n                onClick={() => {\n                  if (item.disabled) return\n                  close()\n                  item.onSelect()\n                }}\n                className={cn(\n                  'flex min-h-10 w-full items-center gap-2.5 rounded-lg px-2.5 text-left text-sm outline-none',\n                  'hover:bg-muted focus-visible:bg-muted focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-ring',\n                  'aria-disabled:cursor-default aria-disabled:opacity-50 aria-disabled:hover:bg-transparent [&_svg]:size-4 [&_svg]:shrink-0 [&_svg]:text-muted-foreground',\n                )}\n              >\n                {item.icon}\n                <span className=\"min-w-0 flex-1 truncate\">{item.label}</span>\n                {item.hint && <span className=\"sr-only\">, {item.hint}</span>}\n                {item.current && <Check aria-hidden className=\"!text-foreground\" />}\n              </button>\n            </div>\n          ))}\n        </div>\n      )}\n    </span>\n  )\n}\n\n/**\n * The toolbar for many rows at once. Put it after the list, inside the same scrolling box. It shows while `count` is\n * above 0, rises in calmly (still under reduced motion), and keeps 44 px targets.\n */\nexport function SelectionBar({\n  count,\n  onClear,\n  actions,\n  more = [],\n  maxInstant = 10,\n  hiddenCount = 0,\n  onNeedsConfirm,\n  onSelectAll,\n  selectAllCount,\n  escapeClears = true,\n  undoSeconds = 8,\n  placement = 'sticky',\n  locale = 'en',\n  labels: labelsProp,\n  className,\n}: SelectionBarProps) {\n  const labels = { ...DEFAULT_LABELS, ...labelsProp }\n  const [notice, setNotice] = useState<Notice | null>(null)\n  const [busy, setBusy] = useState(false)\n  const [focusAt, setFocusAt] = useState(0)\n  const [paused, setPaused] = useState(false)\n  const bar = useRef<HTMLDivElement>(null)\n  const wrap = useRef<HTMLDivElement>(null)\n  const [height, setHeight] = useState(0)\n  const nextId = useRef(1)\n  const said = useCountAnnouncement(count, labels, locale)\n  const { mounted, leaving } = usePresence(count > 0)\n\n  // Esc clears, unless the key belongs to a field, a menu or a dialog.\n  useEffect(() => {\n    if (!escapeClears || count === 0) return\n    const onKey = (e: KeyboardEvent) => {\n      if (e.key !== 'Escape' || e.defaultPrevented || escapeBelongsElsewhere(e)) return\n      e.preventDefault()\n      onClear()\n    }\n    document.addEventListener('keydown', onKey)\n    return () => document.removeEventListener('keydown', onKey)\n  }, [escapeClears, count, onClear])\n\n  // The notice leaves on its own after undoSeconds, paused while it is hovered or holds focus.\n  useEffect(() => {\n    if (!notice || paused) return\n    const t = window.setTimeout(() => setNotice(null), notice.done ? 2500 : notice.undo ? undoSeconds * 1000 : 4000)\n    return () => window.clearTimeout(t)\n  }, [notice, paused, undoSeconds])\n\n  // With placement \"fixed\", a spacer of the bar's height keeps the last rows reachable.\n  useLayoutEffect(() => {\n    if (placement !== 'fixed' || !wrap.current) return\n    const el = wrap.current\n    const ro = new ResizeObserver(() => setHeight(el.offsetHeight))\n    ro.observe(el)\n    return () => ro.disconnect()\n  }, [placement, mounted, notice])\n\n  const show = useCallback((r: void | SelectionBarResult) => {\n    if (!r) return\n    setPaused(false)\n    setNotice({ id: nextId.current++, message: r.message, undo: r.undo, tone: 'default' })\n  }, [])\n\n  const run = useCallback(\n    async (action: SelectionBarAction, optionId?: string) => {\n      setBusy(true)\n      try {\n        show(await action.onSelect(optionId))\n      } finally {\n        setBusy(false)\n      }\n    },\n    [show],\n  )\n\n  const trigger = (action: SelectionBarAction, optionId?: string) => {\n    if (busy || action.disabled) return\n    const reason = action.readOnly ? null : hiddenCount > 0 ? 'hidden' : count > maxInstant ? 'limit' : null\n    if (reason && onNeedsConfirm) {\n      onNeedsConfirm({ action, optionId, count, hiddenCount, reason, proceed: () => run(action, optionId) })\n      return\n    }\n    void run(action, optionId)\n  }\n\n  const undo = async () => {\n    if (!notice?.undo) return\n    const fn = notice.undo\n    setNotice({ ...notice, undo: undefined, message: notice.message })\n    try {\n      await fn()\n      setNotice({ id: nextId.current++, message: labels.undone, tone: 'default', done: true })\n    } catch {\n      setNotice({ id: nextId.current++, message: labels.undoFailed, tone: 'error', done: true })\n    }\n  }\n\n  // Roving focus: one Tab stop in the toolbar, arrows move between its controls (APG toolbar).\n  const onToolbarKey = (e: ReactKeyboardEvent<HTMLDivElement>) => {\n    if (!['ArrowLeft', 'ArrowRight', 'Home', 'End'].includes(e.key)) return\n    const list = Array.from(bar.current?.querySelectorAll<HTMLElement>('[data-bar-item]:not(:disabled)') ?? [])\n    const at = list.indexOf(document.activeElement as HTMLElement)\n    if (at < 0) return\n    e.preventDefault()\n    const next = e.key === 'Home' ? 0 : e.key === 'End' ? list.length - 1 : (at + (e.key === 'ArrowRight' ? 1 : -1) + list.length) % list.length\n    list[next].focus()\n  }\n\n  const moreItems: MenuProps['items'] = [\n    ...more.map((a) => ({\n      key: a.id,\n      label: a.label,\n      icon: a.icon,\n      disabled: a.disabled,\n      hint: a.disabled ? a.disabledReason : undefined,\n      onSelect: () => trigger(a),\n    })),\n    ...(onSelectAll && selectAllCount !== undefined && selectAllCount > count\n      ? [{ key: '__all', label: fill(labels.selectAll, selectAllCount, locale), onSelect: onSelectAll, separatorBefore: more.length > 0 }]\n      : []),\n    { key: '__clear', label: labels.clear, icon: <X />, onSelect: onClear, separatorBefore: true },\n  ]\n\n  // Index of each focusable control, for the roving tab stop.\n  let index = 0\n  const stop = () => {\n    const i = index++\n    return { tabIndex: i === focusAt ? 0 : -1, onFocus: () => setFocusAt(i) }\n  }\n\n  return (\n    <>\n      <style href=\"manniche-selbar\" precedence=\"default\">\n        {'@keyframes manniche-selbar-in { from { opacity: 0; transform: translateY(10px) } }' +\n          '@keyframes manniche-selbar-out { to { opacity: 0; transform: translateY(8px) } }' +\n          '@keyframes manniche-selbar-menu { from { opacity: 0; transform: translateY(4px) scale(.98) } }'}\n      </style>\n      {/* Always in the page, so the count and the notice are spoken when they change. */}\n      <p role=\"status\" className=\"sr-only\">\n        {said}\n      </p>\n      {placement === 'fixed' && mounted && <div aria-hidden style={{ height }} />}\n      <div\n        ref={wrap}\n        className={cn(\n          '@container pointer-events-none z-20 flex flex-col items-center gap-2 px-2',\n          placement === 'sticky' ? 'sticky bottom-[calc(env(safe-area-inset-bottom)+12px)] mt-3' : 'fixed inset-x-0 bottom-[calc(env(safe-area-inset-bottom)+12px)]',\n          !mounted && !notice && 'hidden',\n        )}\n      >\n        {notice && (\n          <div\n            key={notice.id}\n            onPointerEnter={() => setPaused(true)}\n            onPointerLeave={() => setPaused(false)}\n            onFocus={() => setPaused(true)}\n            onBlur={() => setPaused(false)}\n            className=\"pointer-events-auto flex max-w-full items-center gap-1 rounded-xl border bg-card py-1 pr-1 pl-3.5 text-sm text-card-foreground shadow-lg animate-[manniche-selbar-in_220ms_cubic-bezier(0.23,1,0.32,1)] motion-reduce:animate-none\"\n          >\n            <span role={notice.tone === 'error' ? 'alert' : 'status'} className={cn('min-w-0 py-2 pr-1', notice.tone === 'error' && 'text-destructive')}>\n              {notice.message}\n            </span>\n            {notice.undo && (\n              <button\n                type=\"button\"\n                onClick={() => void undo()}\n                className=\"inline-flex h-10 shrink-0 items-center gap-1.5 rounded-lg bg-muted px-3 font-medium outline-none hover:bg-accent focus-visible:outline-2 focus-visible:outline-ring [&_svg]:size-4\"\n              >\n                <Undo2 aria-hidden />\n                {labels.undo}\n              </button>\n            )}\n            <button\n              type=\"button\"\n              aria-label={labels.dismiss}\n              onClick={() => setNotice(null)}\n              className=\"grid size-10 shrink-0 place-items-center rounded-lg text-muted-foreground outline-none hover:bg-muted hover:text-foreground focus-visible:outline-2 focus-visible:outline-ring\"\n            >\n              <X className=\"size-4\" aria-hidden />\n            </button>\n          </div>\n        )}\n        {mounted && (\n          <div\n            ref={bar}\n            role=\"toolbar\"\n            aria-label={labels.toolbar}\n            aria-busy={busy || undefined}\n            onKeyDown={onToolbarKey}\n            className={cn(\n              'pointer-events-auto flex max-w-full items-center rounded-[14px] bg-foreground p-1 text-background shadow-[0_0_0_1px_color-mix(in_oklab,var(--foreground)_80%,transparent),0_12px_32px_rgb(0_0_0/0.28),0_2px_6px_rgb(0_0_0/0.16)]',\n              leaving\n                ? 'animate-[manniche-selbar-out_160ms_ease-in_forwards]'\n                : 'animate-[manniche-selbar-in_220ms_cubic-bezier(0.23,1,0.32,1)]',\n              'motion-reduce:animate-none',\n              className,\n            )}\n          >\n            <span aria-hidden className=\"shrink-0 pr-1.5 pl-2.5 text-[13.5px] font-medium whitespace-nowrap tabular-nums @max-[22rem]:hidden\">\n              {fill(labels.selected, Math.max(count, 1), locale)}\n            </span>\n            {/* Too narrow for the words: the count alone, as a chip. The live region still says it in full. */}\n            <span aria-hidden className=\"mx-1 hidden h-7 min-w-7 shrink-0 place-items-center rounded-lg bg-background/15 px-1.5 text-[13px] font-semibold tabular-nums @max-[22rem]:grid\">\n              {Math.max(count, 1).toLocaleString(locale)}\n            </span>\n            <span aria-hidden className={SEPARATOR} />\n            <div className=\"flex min-w-0 items-center gap-0.5\">\n              {actions.map((action) => {\n                const name = action.disabled && action.disabledReason ? `${action.label}, ${action.disabledReason}` : action.label\n                if (action.options?.length) {\n                  return (\n                    <BarMenu\n                      key={action.id}\n                      {...stop()}\n                      align=\"start\"\n                      heading={action.menuLabel ? fill(action.menuLabel, count, locale) : undefined}\n                      buttonLabel={name}\n                      title={action.disabled ? action.disabledReason : undefined}\n                      disabled={action.disabled || busy}\n                      buttonClassName={cn(BAR_BUTTON, 'px-2.5')}\n                      buttonContent={\n                        <>\n                          {action.icon}\n                          <span className={cn(action.icon && 'hidden @min-[26rem]:inline')}>{action.label}</span>\n                          <ChevronDown aria-hidden className=\"!size-3.5 opacity-70\" />\n                        </>\n                      }\n                      items={action.options.map((o) => ({ key: o.id, label: o.label, icon: o.icon, current: o.current, onSelect: () => trigger(action, o.id) }))}\n                    />\n                  )\n                }\n                const { tabIndex, onFocus } = stop()\n                return (\n                  <button\n                    key={action.id}\n                    type=\"button\"\n                    data-bar-item=\"\"\n                    tabIndex={tabIndex}\n                    onFocus={onFocus}\n                    aria-label={name}\n                    title={action.disabled ? action.disabledReason : undefined}\n                    disabled={action.disabled || busy}\n                    onClick={() => trigger(action)}\n                    className={cn(BAR_BUTTON, action.icon && '@max-[26rem]:w-11 @max-[26rem]:px-0')}\n                  >\n                    {action.icon}\n                    <span aria-hidden className={cn(action.icon && 'hidden @min-[26rem]:inline')}>\n                      {action.label}\n                    </span>\n                  </button>\n                )\n              })}\n              <BarMenu\n                {...stop()}\n                align=\"end\"\n                buttonLabel={labels.more}\n                disabled={busy}\n                buttonClassName={cn(BAR_BUTTON, ICON_BUTTON)}\n                buttonContent={<MoreHorizontal aria-hidden />}\n                items={moreItems}\n              />\n            </div>\n            <span aria-hidden className={SEPARATOR} />\n            <button type=\"button\" data-bar-item=\"\" {...stop()} aria-label={labels.clear} aria-keyshortcuts={escapeClears ? 'Escape' : undefined} title={escapeClears ? `${labels.clear} (Esc)` : undefined} onClick={onClear} className={cn(BAR_BUTTON, ICON_BUTTON)}>\n              <X aria-hidden />\n            </button>\n          </div>\n        )}\n      </div>\n    </>\n  )\n}\n",
+      "type": "registry:component"
+    }
+  ],
+  "meta": {
+    "tier": "free",
+    "added": "2026-10-23",
+    "usedIn": [],
+    "props": [
+      {
+        "name": "count",
+        "type": "number",
+        "default": null,
+        "required": true,
+        "description": "How many rows are picked. The bar shows while it is above 0 (and while a notice is up)."
+      },
+      {
+        "name": "onClear",
+        "type": "() => void",
+        "default": null,
+        "required": true,
+        "description": "Called by Clear, Esc and the More menu's Clear item."
+      },
+      {
+        "name": "actions",
+        "type": "SelectionBarAction[]",
+        "default": null,
+        "required": true,
+        "description": "The quick actions, shown as buttons; one with `options` is a menu."
+      },
+      {
+        "name": "more",
+        "type": "SelectionBarAction[]",
+        "default": "[]",
+        "required": false,
+        "description": "Actions under More (…), as menu items. Clear selection is always added at the end."
+      },
+      {
+        "name": "maxInstant",
+        "type": "number",
+        "default": "10",
+        "required": false,
+        "description": "One click changes at most this many rows; above it the change goes to onNeedsConfirm. Default 10."
+      },
+      {
+        "name": "hiddenCount",
+        "type": "number",
+        "default": "0",
+        "required": false,
+        "description": "Picked rows that are not on screen. When above 0, a change goes to onNeedsConfirm. Default 0."
+      },
+      {
+        "name": "onNeedsConfirm",
+        "type": "(request: SelectionBarConfirmRequest) => void",
+        "default": null,
+        "required": false,
+        "description": "Called instead of a change that is too big or reaches rows off screen. Without it, such a change runs."
+      },
+      {
+        "name": "onSelectAll",
+        "type": "() => void",
+        "default": null,
+        "required": false,
+        "description": "Adds \"Select all {count}\" to More while fewer than that are picked."
+      },
+      {
+        "name": "selectAllCount",
+        "type": "number",
+        "default": null,
+        "required": false,
+        "description": "How many rows \"Select all\" would pick."
+      },
+      {
+        "name": "escapeClears",
+        "type": "boolean",
+        "default": "true",
+        "required": false,
+        "description": "Esc clears the selection, unless focus is in a text field or a dialog is open. Default true."
+      },
+      {
+        "name": "undoSeconds",
+        "type": "number",
+        "default": "8",
+        "required": false,
+        "description": "Seconds the notice with Undo stays, paused while hovered or focused. Default 8."
+      },
+      {
+        "name": "placement",
+        "type": "'sticky' | 'fixed'",
+        "default": "'sticky'",
+        "required": false,
+        "description": "\"sticky\" sits at the bottom of the scrolling box, in the flow; \"fixed\" sits at the bottom of the screen and leaves a spacer of its height. Default \"sticky\"."
+      },
+      {
+        "name": "locale",
+        "type": "string",
+        "default": "'en'",
+        "required": false,
+        "description": "BCP 47 locale for numbers. Default \"en\"."
+      },
+      {
+        "name": "labels",
+        "type": "SelectionBarLabels",
+        "default": null,
+        "required": false,
+        "description": "Visible and spoken text, with English defaults."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "default": null,
+        "required": false,
+        "description": "Classes for the bar."
+      }
+    ],
+    "a11y": [
+      {
+        "topic": "keyboard",
+        "text": "The bar is a toolbar with one Tab stop: ArrowLeft and ArrowRight move between its buttons, Home and End jump to the ends. A menu button opens with Enter, Space or ArrowUp/ArrowDown; in the menu the arrows, Home and End move, Enter picks and Esc closes it back to its button without clearing the selection. Esc anywhere else clears the selection, except in a text field or an open dialog.",
+        "keys": [
+          "Tab",
+          "ArrowLeft",
+          "ArrowRight",
+          "Home",
+          "End",
+          "ArrowUp",
+          "ArrowDown",
+          "Enter",
+          "Escape"
+        ]
+      },
+      {
+        "topic": "screen-reader",
+        "text": "A screen-reader-only polite status says \"N selected\" a moment after the count settles, so a quick run of ticks is read once, and \"Selection cleared\" when it goes. The notice after a change is a status (an alert when an undo fails). Icon-only buttons keep their label as the accessible name, and a disabled action reads its reason. The toolbar is aria-busy while an action runs."
+      },
+      {
+        "topic": "motion",
+        "text": "The bar and its notice rise 10 px and fade in over 220 ms and leave in 160 ms; menus fade up 4 px. Only opacity and transform move. Under reduced motion they appear and go at once."
+      },
+      {
+        "topic": "other",
+        "text": "Every target is 44 px tall. The bar sits at the bottom of its scroll box (sticky) or of the screen (fixed, with a spacer of its height), above the safe area. Above maxInstant rows, or when some ticked rows are off screen, a change calls onNeedsConfirm instead of running, so nobody changes rows they cannot see with one click."
+      }
+    ]
+  },
+  "categories": [
+    "controls"
+  ],
+  "type": "registry:component"
+}
