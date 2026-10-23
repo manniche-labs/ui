@@ -94,7 +94,7 @@ One Vite server and one browser per machine.
 ## Next steps
 
 1. `git fetch`, `gh pr list`, and read this file. Nothing should be open.
-2. /lab is up to date with main (site PR #191, 14/10). Next time: `npm run lab -- <site worktree>` in `components/`, add Danish and German text for new names in the site's `server/lab-ui-tekster.mjs` (`BESKRIVELSE`), run `node server/lab-sider.mjs .`, open a site PR, then `bash server/udrul.sh` and `--live`.
+2. /lab is up to date with main (site PR #221 and #222, 23/10: 103 components, including selection-bar, settings-window and grouped-list). Next time: `npm run lab -- <site worktree>` in `components/`, add Danish and German text for new names in the site's `server/lab-ui-tekster.mjs` (`BESKRIVELSE`), run `node server/lab-sider.mjs .`, open a site PR, then `bash server/udrul.sh` and `--live`.
 3. Optional: check the templates in real Safari on the Mac. WebKit in Playwright is close to it, but it is not the same browser.
 4. Figma: the free components go into Figma next, when Mikkel says so.
 5. A11y notes for the Pro components in `ui-pro`, when Mikkel says so.
