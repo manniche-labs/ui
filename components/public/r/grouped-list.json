@@ -1,0 +1,215 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "grouped-list",
+  "title": "Grouped list",
+  "description": "A list in date groups (Today, This week, Later, No date) or your own, with folding headings, counts, \"Show N more\" paging and an empty state. Pairs with selection-bar.",
+  "dependencies": [
+    "lucide-react"
+  ],
+  "registryDependencies": [
+    "utils",
+    "@manniche/empty-state"
+  ],
+  "files": [
+    {
+      "path": "registry/manniche/grouped-list/grouped-list.tsx",
+      "content": "// A list split into date groups: Today (overdue rows count as today, with a hint), This week (until Sunday), Later\n// and No date. Give your own `groupBy` and `groups` for any other split. Each group has a heading with its count that\n// folds the group, and long groups show `pageSize` rows with \"Show N more\". Empty groups are left out, and an empty\n// list shows an empty state. Pair it with `selection-bar`: `onVisibleChange` tells which rows are on screen, so a bulk\n// change can ask first when picked rows sit in a folded group or past \"Show more\".\nimport { ChevronDown } from 'lucide-react'\nimport { useEffect, useId, useLayoutEffect, useMemo, useRef, useState, type CSSProperties, type ReactNode } from 'react'\nimport { cn } from '@/lib/utils'\nimport { EmptyState } from '@/registry/manniche/empty-state/empty-state'\n\nexport type GroupedListGroup = {\n  id: string\n  label: string\n  /** A quiet line beside the heading, such as \"Until Sunday 25 Oct\". */\n  hint?: string\n}\n\nexport type GroupedListLabels = {\n  /** Spoken count after a heading, with {count}. Default \"{count} items\". */\n  count?: string\n  /** One row. Default \"1 item\". */\n  countOne?: string\n  /** The paging button, with {count} and {total}. Default \"Show {count} more of {total}\". */\n  showMore?: string\n  /** Said after paging, with {count}. Default \"{count} more shown\". */\n  shown?: string\n  /** Hint on Today when it holds overdue rows, with {count}. Default \"Includes {count} overdue\". */\n  overdue?: string\n  /** Hint on This week, with {date}. Default \"Until {date}\". */\n  until?: string\n  /** Group names for the date split. */\n  today?: string\n  week?: string\n  later?: string\n  none?: string\n  /** The empty state. */\n  emptyTitle?: string\n  emptyDescription?: string\n}\n\nexport type GroupedListProps<T> = {\n  /** The rows, in the order they should show inside each group. */\n  items: T[]\n  /** A stable key per row. */\n  getKey: (item: T) => string\n  /** Draws one row. Render the row's content, not an <li>: the list adds that. */\n  renderItem: (item: T, info: { group: GroupedListGroup; index: number }) => ReactNode\n  /** The date a row is due, for the default date split. Rows without one go in No date. */\n  getDate?: (item: T) => Date | string | number | null | undefined\n  /** Your own split: return a group id from `groups`. Replaces the date split. */\n  groupBy?: (item: T) => string\n  /** The groups in the order they show, with their names. Required with groupBy; for the date split it renames or reorders today, week, later and none. */\n  groups?: GroupedListGroup[]\n  /** The day the date split counts from. Default the day the list first showed. */\n  today?: Date\n  /** First day of the week for \"This week\": 0 Sunday, 1 Monday. Default 1. */\n  weekStartsOn?: 0 | 1\n  /** Rows shown per group before \"Show more\". Default 50. */\n  pageSize?: number\n  /** Rows each \"Show more\" adds. Default 100. */\n  moreStep?: number\n  /** Folded group ids, controlled. */\n  collapsed?: string[]\n  /** Folded group ids at first. Default none. */\n  defaultCollapsed?: string[]\n  /** Called with the folded group ids when a heading is pressed. */\n  onCollapsedChange?: (collapsed: string[]) => void\n  /** Change it (a filter, a search) to set paging back to the first page. */\n  resetKey?: string | number\n  /** Called with the keys of the rows on screen, in order, whenever that changes. */\n  onVisibleChange?: (keys: string[]) => void\n  /** Name of the list for screen readers. */\n  label: string\n  /** Shown when there are no rows at all. Default a plain empty state. */\n  empty?: ReactNode\n  /** Heading level of the group headings. Default 3. */\n  headingLevel?: 2 | 3 | 4\n  /** Where the headings stick while their group scrolls, as a CSS length. Default 0. */\n  stickyTop?: string\n  /** \"card\" draws a bordered box; \"plain\" sits on the page. The sticky headings take the background from `--grouped-list-bg`, so set it (`[--grouped-list-bg:var(--card)]`) when a plain list sits on a card. Default \"card\". */\n  variant?: 'card' | 'plain'\n  /** BCP 47 locale for numbers and the \"Until\" date. Default \"en\". */\n  locale?: string\n  /** Visible and spoken text, with English defaults. */\n  labels?: GroupedListLabels\n  className?: string\n}\n\nconst DEFAULT_LABELS: Required<GroupedListLabels> = {\n  count: '{count} items',\n  countOne: '1 item',\n  showMore: 'Show {count} more of {total}',\n  shown: '{count} more shown',\n  overdue: 'Includes {count} overdue',\n  until: 'Until {date}',\n  today: 'Today',\n  week: 'This week',\n  later: 'Later',\n  none: 'No date',\n  emptyTitle: 'Nothing here yet',\n  emptyDescription: 'Items you add show up here, grouped by date.',\n}\n\nexport type DateBucket = 'today' | 'week' | 'later' | 'none'\n\nconst startOfDay = (d: Date) => new Date(d.getFullYear(), d.getMonth(), d.getDate())\n\n/** The last day of the week that holds `today`, at midnight. */\nexport function endOfWeek(today: Date, weekStartsOn: 0 | 1 = 1) {\n  const d = startOfDay(today)\n  const offset = (d.getDay() - weekStartsOn + 7) % 7\n  d.setDate(d.getDate() + (6 - offset))\n  return d\n}\n\n/** Which date group a date falls in: overdue and today give \"today\", the rest of this week \"week\", after it \"later\". */\nexport function dateBucket(value: Date | string | number | null | undefined, today = new Date(), weekStartsOn: 0 | 1 = 1): DateBucket {\n  if (value === null || value === undefined || value === '') return 'none'\n  const date = value instanceof Date ? value : new Date(value)\n  if (Number.isNaN(date.getTime())) return 'none'\n  const day = startOfDay(date).getTime()\n  if (day <= startOfDay(today).getTime()) return 'today'\n  if (day <= endOfWeek(today, weekStartsOn).getTime()) return 'week'\n  return 'later'\n}\n\n/** Sorts rows into groups, keeping their order; leaves out empty groups and rows whose group is not listed. */\nexport function groupItems<T>(items: T[], groupOf: (item: T) => string, groups: GroupedListGroup[]) {\n  const byId = new Map<string, T[]>(groups.map((g) => [g.id, []]))\n  for (const item of items) byId.get(groupOf(item))?.push(item)\n  return groups.map((group) => ({ group, items: byId.get(group.id) ?? [] })).filter((g) => g.items.length > 0)\n}\n\nconst fill = (text: string, values: Record<string, string>) => text.replace(/\\{(\\w+)\\}/g, (m, k: string) => values[k] ?? m)\n\n/**\n * A list in groups with folding headings and paging. Generic over the row type: give `getKey` and `renderItem`.\n */\nexport function GroupedList<T>({\n  items,\n  getKey,\n  renderItem,\n  getDate,\n  groupBy,\n  groups: groupsProp,\n  today,\n  weekStartsOn = 1,\n  pageSize = 50,\n  moreStep = 100,\n  collapsed: collapsedProp,\n  defaultCollapsed = [],\n  onCollapsedChange,\n  resetKey,\n  onVisibleChange,\n  label,\n  empty,\n  headingLevel = 3,\n  stickyTop = '0px',\n  variant = 'card',\n  locale = 'en',\n  labels: labelsProp,\n  className,\n}: GroupedListProps<T>) {\n  const labels = { ...DEFAULT_LABELS, ...labelsProp }\n  const baseId = useId()\n  const [collapsedState, setCollapsedState] = useState(defaultCollapsed)\n  const collapsed = collapsedProp ?? collapsedState\n  const [limits, setLimits] = useState<Record<string, number>>({})\n  const [said, setSaid] = useState('')\n  const focusKey = useRef<string | null>(null)\n  const listRef = useRef<HTMLDivElement>(null)\n  const [openedAt] = useState(() => new Date())\n  const now = today ?? openedAt\n  const dayKey = startOfDay(now).getTime()\n\n  // Paging starts over when the rows are filtered anew.\n  const [seenResetKey, setSeenResetKey] = useState(resetKey)\n  if (seenResetKey !== resetKey) {\n    setSeenResetKey(resetKey)\n    setLimits({})\n  }\n\n  const grouped = useMemo(() => {\n    const day = new Date(dayKey)\n    if (groupBy) return groupItems(items, groupBy, groupsProp ?? [])\n    const bucketOf = (item: T) => dateBucket(getDate?.(item), day, weekStartsOn)\n    const overdue = items.filter((item) => {\n      const v = getDate?.(item)\n      if (v === null || v === undefined || v === '') return false\n      const d = new Date(v instanceof Date ? v.getTime() : v)\n      return !Number.isNaN(d.getTime()) && startOfDay(d).getTime() < dayKey\n    }).length\n    const until = endOfWeek(day, weekStartsOn).toLocaleDateString(locale, { weekday: 'long', day: 'numeric', month: 'short' })\n    const defaults: GroupedListGroup[] = [\n      { id: 'today', label: labels.today, hint: overdue ? fill(labels.overdue, { count: overdue.toLocaleString(locale) }) : undefined },\n      { id: 'week', label: labels.week, hint: fill(labels.until, { date: until }) },\n      { id: 'later', label: labels.later },\n      { id: 'none', label: labels.none },\n    ]\n    // Your groups rename and reorder the four date groups; ones you leave out keep their default.\n    const order = groupsProp?.length\n      ? groupsProp.map((g) => ({ ...defaults.find((d) => d.id === g.id), ...g }))\n      : defaults\n    return groupItems(items, bucketOf, order)\n  }, [items, groupBy, groupsProp, getDate, dayKey, weekStartsOn, locale, labels.today, labels.week, labels.later, labels.none, labels.overdue, labels.until])\n\n  // The rows on screen, for selection-bar's hiddenCount.\n  const visibleKeys = useMemo(\n    () =>\n      grouped.flatMap(({ group, items: rows }) =>\n        collapsed.includes(group.id) ? [] : rows.slice(0, limits[group.id] ?? pageSize).map(getKey),\n      ),\n    [grouped, collapsed, limits, pageSize, getKey],\n  )\n  const visibleSig = visibleKeys.join('\\u0000')\n  const onVisible = useRef(onVisibleChange)\n  useLayoutEffect(() => {\n    onVisible.current = onVisibleChange\n  })\n  useEffect(() => {\n    onVisible.current?.(visibleSig ? visibleSig.split('\\u0000') : [])\n  }, [visibleSig])\n\n  // After \"Show more\", focus moves to the first new row so the keyboard carries on where it was.\n  useEffect(() => {\n    if (!focusKey.current) return\n    const el = listRef.current?.querySelector<HTMLElement>(`[data-row-key=\"${CSS.escape(focusKey.current)}\"]`)\n    focusKey.current = null\n    el?.focus()\n  }, [limits])\n\n  const toggle = (id: string) => {\n    const next = collapsed.includes(id) ? collapsed.filter((c) => c !== id) : [...collapsed, id]\n    if (collapsedProp === undefined) setCollapsedState(next)\n    onCollapsedChange?.(next)\n  }\n\n  const showMore = (id: string, rows: T[], shown: number) => {\n    const add = Math.min(moreStep, rows.length - shown)\n    focusKey.current = getKey(rows[shown])\n    setLimits((l) => ({ ...l, [id]: shown + add }))\n    setSaid(fill(labels.shown, { count: add.toLocaleString(locale) }))\n  }\n\n  const Heading = `h${headingLevel}` as 'h3'\n\n  if (items.length === 0 || grouped.length === 0) {\n    return (\n      <div className={className}>\n        {empty ?? <EmptyState variant=\"plain\" title={labels.emptyTitle} description={labels.emptyDescription} />}\n      </div>\n    )\n  }\n\n  return (\n    <div\n      ref={listRef}\n      className={cn(\n        'min-w-0',\n        variant === 'card' ? 'overflow-clip rounded-2xl border bg-card text-card-foreground [--grouped-list-bg:var(--card)]' : '[--grouped-list-bg:var(--background)]',\n        className,\n      )}\n      style={{ '--grouped-list-top': stickyTop } as CSSProperties}\n    >\n      <p role=\"status\" className=\"sr-only\">\n        {said}\n      </p>\n      <div role=\"group\" aria-label={label}>\n        {grouped.map(({ group, items: rows }, gi) => {\n          const open = !collapsed.includes(group.id)\n          const shown = Math.min(limits[group.id] ?? pageSize, rows.length)\n          const panelId = `${baseId}-${group.id}`\n          const count = rows.length === 1 ? labels.countOne : fill(labels.count, { count: rows.length.toLocaleString(locale) })\n          return (\n            <section key={group.id} aria-label={`${group.label}, ${count}`} className={cn(gi > 0 && 'border-t')}>\n              <Heading\n                className=\"sticky top-(--grouped-list-top) z-[1] m-0 bg-[color-mix(in_oklab,var(--grouped-list-bg)_94%,transparent)] backdrop-blur-sm\"\n              >\n                <button\n                  type=\"button\"\n                  aria-expanded={open}\n                  aria-controls={panelId}\n                  onClick={() => toggle(group.id)}\n                  className={cn(\n                    'flex min-h-11 w-full items-center gap-2 px-3 text-left outline-none sm:px-4',\n                    'hover:bg-muted/60 focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-ring',\n                  )}\n                >\n                  <ChevronDown\n                    aria-hidden\n                    className={cn(\n                      'size-4 shrink-0 text-muted-foreground transition-transform duration-200 ease-[cubic-bezier(0.23,1,0.32,1)] motion-reduce:transition-none',\n                      !open && '-rotate-90',\n                    )}\n                  />\n                  <span className=\"text-[13px] font-semibold\">{group.label}</span>\n                  <span aria-hidden className=\"rounded-full bg-muted px-1.5 text-xs leading-5 font-medium text-muted-foreground tabular-nums\">\n                    {rows.length.toLocaleString(locale)}\n                  </span>\n                  <span className=\"sr-only\">, {count}</span>\n                  {group.hint && <span className=\"ml-auto min-w-0 truncate pl-2 text-xs text-muted-foreground\">{group.hint}</span>}\n                </button>\n              </Heading>\n              {open && (\n                <div id={panelId}>\n                  <ul className=\"m-0 list-none divide-y p-0\">\n                    {rows.slice(0, shown).map((item, index) => {\n                      const key = getKey(item)\n                      return (\n                        <li key={key} data-row-key={key} tabIndex={-1} className=\"outline-none focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-ring\">\n                          {renderItem(item, { group, index })}\n                        </li>\n                      )\n                    })}\n                  </ul>\n                  {shown < rows.length && (\n                    <div className=\"border-t px-3 py-1.5 sm:px-4\">\n                      <button\n                        type=\"button\"\n                        onClick={() => showMore(group.id, rows, shown)}\n                        className=\"inline-flex min-h-11 items-center rounded-lg px-2 text-sm font-medium text-muted-foreground outline-none hover:bg-muted hover:text-foreground focus-visible:outline-2 focus-visible:outline-ring\"\n                      >\n                        {fill(labels.showMore, {\n                          count: Math.min(moreStep, rows.length - shown).toLocaleString(locale),\n                          total: rows.length.toLocaleString(locale),\n                        })}\n                      </button>\n                    </div>\n                  )}\n                </div>\n              )}\n            </section>\n          )\n        })}\n      </div>\n    </div>\n  )\n}\n",
+      "type": "registry:component"
+    }
+  ],
+  "meta": {
+    "tier": "free",
+    "added": "2026-10-23",
+    "usedIn": [],
+    "props": [
+      {
+        "name": "items",
+        "type": "T[]",
+        "default": null,
+        "required": true,
+        "description": "The rows, in the order they should show inside each group."
+      },
+      {
+        "name": "getKey",
+        "type": "(item: T) => string",
+        "default": null,
+        "required": true,
+        "description": "A stable key per row."
+      },
+      {
+        "name": "renderItem",
+        "type": "(item: T, info: { group: GroupedListGroup; index: number }) => ReactNode",
+        "default": null,
+        "required": true,
+        "description": "Draws one row. Render the row's content, not an <li>: the list adds that."
+      },
+      {
+        "name": "getDate",
+        "type": "(item: T) => Date | string | number | null | undefined",
+        "default": null,
+        "required": false,
+        "description": "The date a row is due, for the default date split. Rows without one go in No date."
+      },
+      {
+        "name": "groupBy",
+        "type": "(item: T) => string",
+        "default": null,
+        "required": false,
+        "description": "Your own split: return a group id from `groups`. Replaces the date split."
+      },
+      {
+        "name": "groups",
+        "type": "GroupedListGroup[]",
+        "default": null,
+        "required": false,
+        "description": "The groups in the order they show, with their names. Required with groupBy; for the date split it renames or reorders today, week, later and none."
+      },
+      {
+        "name": "today",
+        "type": "Date",
+        "default": null,
+        "required": false,
+        "description": "The day the date split counts from. Default the day the list first showed."
+      },
+      {
+        "name": "weekStartsOn",
+        "type": "0 | 1",
+        "default": "1",
+        "required": false,
+        "description": "First day of the week for \"This week\": 0 Sunday, 1 Monday. Default 1."
+      },
+      {
+        "name": "pageSize",
+        "type": "number",
+        "default": "50",
+        "required": false,
+        "description": "Rows shown per group before \"Show more\". Default 50."
+      },
+      {
+        "name": "moreStep",
+        "type": "number",
+        "default": "100",
+        "required": false,
+        "description": "Rows each \"Show more\" adds. Default 100."
+      },
+      {
+        "name": "collapsed",
+        "type": "string[]",
+        "default": null,
+        "required": false,
+        "description": "Folded group ids, controlled."
+      },
+      {
+        "name": "defaultCollapsed",
+        "type": "string[]",
+        "default": "[]",
+        "required": false,
+        "description": "Folded group ids at first. Default none."
+      },
+      {
+        "name": "onCollapsedChange",
+        "type": "(collapsed: string[]) => void",
+        "default": null,
+        "required": false,
+        "description": "Called with the folded group ids when a heading is pressed."
+      },
+      {
+        "name": "resetKey",
+        "type": "string | number",
+        "default": null,
+        "required": false,
+        "description": "Change it (a filter, a search) to set paging back to the first page."
+      },
+      {
+        "name": "onVisibleChange",
+        "type": "(keys: string[]) => void",
+        "default": null,
+        "required": false,
+        "description": "Called with the keys of the rows on screen, in order, whenever that changes."
+      },
+      {
+        "name": "label",
+        "type": "string",
+        "default": null,
+        "required": true,
+        "description": "Name of the list for screen readers."
+      },
+      {
+        "name": "empty",
+        "type": "ReactNode",
+        "default": null,
+        "required": false,
+        "description": "Shown when there are no rows at all. Default a plain empty state."
+      },
+      {
+        "name": "headingLevel",
+        "type": "2 | 3 | 4",
+        "default": "3",
+        "required": false,
+        "description": "Heading level of the group headings. Default 3."
+      },
+      {
+        "name": "stickyTop",
+        "type": "string",
+        "default": "'0px'",
+        "required": false,
+        "description": "Where the headings stick while their group scrolls, as a CSS length. Default 0."
+      },
+      {
+        "name": "variant",
+        "type": "'card' | 'plain'",
+        "default": "'card'",
+        "required": false,
+        "description": "\"card\" draws a bordered box; \"plain\" sits on the page. The sticky headings take the background from `--grouped-list-bg`, so set it (`[--grouped-list-bg:var(--card)]`) when a plain list sits on a card. Default \"card\"."
+      },
+      {
+        "name": "locale",
+        "type": "string",
+        "default": "'en'",
+        "required": false,
+        "description": "BCP 47 locale for numbers and the \"Until\" date. Default \"en\"."
+      },
+      {
+        "name": "labels",
+        "type": "GroupedListLabels",
+        "default": null,
+        "required": false,
+        "description": "Visible and spoken text, with English defaults."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "default": null,
+        "required": false,
+        "description": null
+      }
+    ],
+    "a11y": [
+      {
+        "topic": "keyboard",
+        "text": "Each group heading holds a button that folds and unfolds the group with Enter or Space. After \"Show N more\", focus moves to the first new row, so the keyboard carries on where it was.",
+        "keys": [
+          "Tab",
+          "Enter",
+          "Space"
+        ]
+      },
+      {
+        "topic": "screen-reader",
+        "text": "Each group is a section named by its label and count, with a real heading (headingLevel, default h3). The heading button has aria-expanded and aria-controls, and says the count as \"N items\" while the visible number is aria-hidden. A polite status says \"N more shown\" after paging."
+      },
+      {
+        "topic": "motion",
+        "text": "Only the chevron turns, with a 200 ms transform. Under reduced motion it snaps. Groups open and close at once, with no height animation."
+      },
+      {
+        "topic": "other",
+        "text": "Headings are 44 px tall and stick to the top of the scroll box (stickyTop). onVisibleChange gives the keys on screen, so selection-bar can ask first when ticked rows are folded away or past \"Show more\"."
+      }
+    ]
+  },
+  "categories": [
+    "surfaces"
+  ],
+  "type": "registry:component"
+}
