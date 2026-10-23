@@ -8,6 +8,11 @@
 - `settings-window` (overlays): settings in one modal window on the native `<dialog>`, with the sections on the left and the chosen one on the right. Below 720 px it fills the screen and works in two steps, the list and then a section with Back. `section` and `onSectionChange` are controlled, so an app can open it straight on a section. Sections take an icon, a badge (a `warning` tone for things like "Login rejected") and a group heading, and there is a footer slot. Also exports `useSettingsShortcut` (Cmd+, / Ctrl+,), `SettingsRow` and `SettingsHeading`.
 - `grouped-list` (surfaces): a list split into Today (overdue counted in, with a hint), This week (until the last day of the week), Later and No date, or your own `groupBy` and `groups`. Headings stick, show a count and fold their group; long groups show `pageSize` rows (default 50) with "Show N more", which moves focus to the first new row. Empty groups are left out and an empty list shows `empty-state`. Generic over the row type with `getKey` and `renderItem`; `onVisibleChange` gives the keys on screen so `selection-bar` can ask first about rows that are folded away. Exports `dateBucket`, `endOfWeek` and `groupItems`.
 
+### Fixed
+
+- `selection-bar`, found in review before merge (#57): a running action marked the focused button `disabled`, so after Enter or a menu pick the keyboard focus fell to the page. Busy now uses `aria-disabled`, and focus stays in the bar. The roving Tab stop could point past the last control or at a disabled one, which left the bar without a Tab stop; it now falls back to the first usable control. After Undo or Dismiss the focused button left the page without a blur, so the notice stayed paused and "Undone" never went away; both lift the pause.
+- `settings-window`: a section whose `content` is a function was called inside the window's own render, so hooks in it belonged to the window and switching sections could crash React ("Rendered more hooks"). It now renders as its own component, keyed by section.
+
 ## 2026-10-14
 
 ### Added
