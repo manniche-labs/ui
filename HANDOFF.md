@@ -1,6 +1,6 @@
 # Handoff: Manniche UI (manniche-labs/ui)
 
-Updated 2026-10-14 by the Work Mac session (riff round, #50). Before that 2026-10-08 by the Windows session (EmptyState, #49). Everything the next session needs is in this repo; nothing depends on files on the Windows machine.
+Updated 2026-10-23 by the Work Mac session (Studio patterns, #57). Before that 2026-10-14 (riff round, #50). Before that 2026-10-08 by the Windows session (EmptyState, #49). Everything the next session needs is in this repo; nothing depends on files on the Windows machine.
 
 ## The plan
 
@@ -25,9 +25,19 @@ Nine elements built after Figma Community riffs Mikkel sent (inspiration only: o
 - **Pro, in ui-pro (#16):** `signal-hub` and `logo-bloom` (first built here, moved because they are signature effects), plus `glyph-trail`, `glitch-type`, `gloss-type`, `dither-badge`.
 - **Live on /lab 14/10** (site PR #191, Mikkel's yes): free count 97 → 100, Pro 60 → 66, Danish and German descriptions for all nine in the site's `server/lab-ui-tekster.mjs` and `server/lab-pro-tekster.mjs`.
 
+## Studio patterns (23/10, merged in #57)
+
+Three patterns from the NoPain Studio Notion/Figma redesign (Studio PR #219), built as free components:
+
+- `selection-bar` (controls): toolbar for ticked rows, quick actions with Undo, More, Clear (Esc); above `maxInstant` rows or with hidden picked rows it asks first via `onNeedsConfirm`.
+- `settings-window` (overlays): settings in one `<dialog>`, list + section, two steps under 720 px, `useSettingsShortcut` (Cmd+, / Ctrl+,).
+- `grouped-list` (surfaces): Today / This week / Later / No date with sticky foldable headings and "Show N more"; `onVisibleChange` feeds `selection-bar`.
+
+ManiLens found no rule or security issues; four minor correctness findings were fixed before merge (see CHANGELOG 23/10, Fixed) and checked with the keyboard in Chrome. **Not on /lab yet**: going live needs Mikkel's yes, then Danish and German texts in the site's `server/lab-ui-tekster.mjs` (free count 100 → 103).
+
 ## Open PRs
 
-None after #49. The primitive fixes are merged too: #34 (bubble-chart closes on Escape after hover, `Pills` at 44 px, week-schedule fits 7 days at 320 px, colour transitions removed) and #35 (dot-matrix tooltip opens below the top rows, donut legend names wrap, `data-tile` `headingLevel`). Both were checked in Chromium at 1440 and 320 px.
+None after #57. The primitive fixes are merged too: #34 (bubble-chart closes on Escape after hover, `Pills` at 44 px, week-schedule fits 7 days at 320 px, colour transitions removed) and #35 (dot-matrix tooltip opens below the top rows, donut legend names wrap, `data-tile` `headingLevel`). Both were checked in Chromium at 1440 and 320 px.
 
 ## How the lead merges (one PR at a time)
 
