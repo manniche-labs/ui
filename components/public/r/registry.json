@@ -5309,6 +5309,129 @@
       }
     },
     {
+      "name": "before-after",
+      "type": "registry:component",
+      "title": "Before and after",
+      "description": "Two photos of the same place on top of each other, with a handle that wipes from before to after.",
+      "registryDependencies": [
+        "utils"
+      ],
+      "files": [
+        {
+          "path": "registry/manniche/before-after/before-after.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "categories": [
+        "widgets"
+      ],
+      "meta": {
+        "tier": "free",
+        "added": "2026-10-24",
+        "usedIn": [],
+        "props": [
+          {
+            "name": "before",
+            "type": "{ src: string; alt: string }",
+            "default": null,
+            "required": true,
+            "description": "The before photo."
+          },
+          {
+            "name": "after",
+            "type": "{ src: string; alt: string }",
+            "default": null,
+            "required": true,
+            "description": "The after photo, taken from the same spot."
+          },
+          {
+            "name": "initial",
+            "type": "number",
+            "default": "50",
+            "required": false,
+            "description": "Where the handle starts, in per cent from the left."
+          },
+          {
+            "name": "aspectRatio",
+            "type": "string",
+            "default": "'4 / 3'",
+            "required": false,
+            "description": "Width to height of the frame, as CSS `aspect-ratio`. Both photos are cropped to it."
+          },
+          {
+            "name": "onChange",
+            "type": "(position: number) => void",
+            "default": null,
+            "required": false,
+            "description": "Called with the new position (0–100) when it changes."
+          },
+          {
+            "name": "labels",
+            "type": "Partial<BeforeAfterLabels>",
+            "default": "{}",
+            "required": false,
+            "description": "Visible and spoken text."
+          },
+          {
+            "name": "className",
+            "type": "string",
+            "default": null,
+            "required": false,
+            "description": "Classes for the frame."
+          }
+        ],
+        "a11y": [
+          {
+            "topic": "keyboard",
+            "text": "The handle is a real range input, hidden but focusable. Tab focuses it, arrows move 1 %, Page Up and Page Down 10 %, Home and End go to the ends.",
+            "keys": [
+              "Tab",
+              "ArrowLeft",
+              "ArrowRight",
+              "PageUp",
+              "PageDown",
+              "Home",
+              "End"
+            ]
+          },
+          {
+            "topic": "screen-reader",
+            "text": "The input is named by labels.slider and its value is read as labels.value, \"40 % before\" by default. Both photos keep their own alt text, so each is described. The chips and the handle drawing are aria-hidden."
+          },
+          {
+            "topic": "other",
+            "text": "Focus shows as a 2 px ring with offset on the round handle, through peer-focus-visible on the hidden input."
+          },
+          {
+            "topic": "other",
+            "text": "The handle is 44 px. The frame has touch-action pan-y, so a vertical swipe scrolls the page and only a sideways drag moves the handle."
+          },
+          {
+            "topic": "motion",
+            "text": "Nothing animates by itself. The handle only follows the pointer or the key, so reduced motion needs no change."
+          }
+        ]
+      }
+    },
+    {
+      "name": "before-after-demo",
+      "type": "registry:example",
+      "title": "Before and after demo",
+      "description": "How to use Before and after.",
+      "registryDependencies": [
+        "@manniche/before-after"
+      ],
+      "files": [
+        {
+          "path": "registry/manniche/examples/before-after-demo.tsx",
+          "type": "registry:example"
+        }
+      ],
+      "categories": [
+        "widgets"
+      ]
+    },
+    {
       "name": "curve-carousel-demo",
       "type": "registry:example",
       "title": "Curve carousel demo",
