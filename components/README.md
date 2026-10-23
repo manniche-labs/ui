@@ -91,6 +91,7 @@ There is also a hosted MCP server just for this registry, with no key: `https://
 | `lens-strip` | Pictures sliding behind a fixed glass lens that magnifies the one in it and bends it at the rim with faint colour fringes (WebGL) |
 | `sand-edge` | Carousel whose side pictures erode into sand that blows off with the strip's speed and settles to a weathered edge (WebGL) |
 | `wave-ribbon` | Pictures on a ribbon that undulates in depth, neighbours fading into fog in the theme's background (WebGL, CSS 3D fallback) |
+| `before-after` | Two photos of the same place on top of each other; drag, click or key the handle to wipe from before to after |
 | `wave-loader` | A ball hops along bars and sends a spring wave through them |
 | `jelly-slider` | Slider whose soft thumb stretches with drag speed |
 | `notification-stack` | Notifications in a pile that fans out into a list |
