@@ -1,5 +1,11 @@
 # Changelog
 
+## 2026-10-26
+
+### Changed
+
+- The READMEs (root, components, page-critic) now say who made the library and link to mikkelmanniche.dk, like design-bake-off already did.
+
 ## 2026-10-24
 
 ### Added
