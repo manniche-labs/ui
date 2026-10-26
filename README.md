@@ -31,4 +31,4 @@ Each skill's README has the Windows steps and what else it needs.
 
 ## License
 
-MIT. See [LICENSE](LICENSE).
+MIT. See [LICENSE](LICENSE). Made by [Mikkel Manniche](https://mikkelmanniche.dk/en/).

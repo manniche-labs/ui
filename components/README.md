@@ -219,3 +219,7 @@ npx shadcn build         # write the registry to public/r
 ```
 
 Source files live in `registry/manniche/<name>/`, examples in `registry/manniche/examples/<name>-demo.tsx`. Add each new item and its demo to `registry.json`.
+
+## License
+
+MIT. See [LICENSE](../LICENSE). Made by [Mikkel Manniche](https://mikkelmanniche.dk/en/).
