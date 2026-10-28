@@ -1,6 +1,6 @@
 # Handoff: Manniche UI (manniche-labs/ui)
 
-Updated 2026-10-28 by the Windows session: the skills design-bake-off and page-critic were removed from this public repo (#62) and now live, with their history, in the private repo manniche-labs/skills. Older commits here still contain them. Before that 2026-10-23 by the Work Mac session (Studio patterns, #57). Before that 2026-10-14 (riff round, #50). Before that 2026-10-08 by the Windows session (EmptyState, #49). Everything the next session needs is in this repo; nothing depends on files on the Windows machine.
+Updated 2026-10-28 by the Windows session: the skills (design-bake-off, page-critic) and the five agents were taken out of this public repo and its whole history. They live in the private repos manniche-labs/skills and manniche-labs/agents. The old repo with the full history and its PRs is private as manniche-labs/ui-arkiv. Before that 2026-10-23 by the Work Mac session (Studio patterns, #57). Before that 2026-10-14 (riff round, #50). Before that 2026-10-08 by the Windows session (EmptyState, #49). Everything the next session needs is in this repo; nothing depends on files on the Windows machine.
 
 ## The plan
 

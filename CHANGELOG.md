@@ -4,7 +4,8 @@
 
 ### Removed
 
-- The Claude Code skills design-bake-off and page-critic are no longer part of this repository.
+- The Claude Code skills design-bake-off and page-critic and the five Claude Code agents are no longer part of this repository, and they have been removed from its history.
+- lab-export no longer copies agent files to the site.
 
 ## 2026-10-26
 
