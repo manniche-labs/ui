@@ -1,5 +1,11 @@
 # Changelog
 
+## 2026-10-28
+
+### Removed
+
+- The Claude Code skills design-bake-off and page-critic are no longer part of this repository.
+
 ## 2026-10-26
 
 ### Changed
