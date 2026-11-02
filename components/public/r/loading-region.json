@@ -1,0 +1,127 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "loading-region",
+  "title": "Loading region",
+  "description": "A box that handles waiting: nothing for 300 ms, then a skeleton when the layout is known or a spinner when it is not, shown for at least 500 ms; keeps old data and shows a small spinner on reload; busy and status text for screen readers; error and empty at the same height.",
+  "dependencies": [
+    "lucide-react",
+    "motion"
+  ],
+  "registryDependencies": [
+    "utils"
+  ],
+  "files": [
+    {
+      "path": "registry/manniche/loading-region/loading-region.tsx",
+      "content": "// A box that handles the waiting for you. It shows nothing for the first `delay` ms (most answers come faster, and a\n// flash of grey is worse than no grey), then a skeleton when you know what the content looks like, or a spinner when\n// you do not (a screen that may turn out to be A or B must not wear a skeleton of A). Once an indicator has appeared\n// it stays for at least `minDuration`, so it never blinks. When data that is already on screen is fetched again, the\n// old data stays and only a small spinner shows. The box keeps `minHeight` in every state, including error and empty,\n// so nothing around it jumps.\n// For screen readers the box is `aria-busy` while it waits, and a persistent `role=\"status\"` line says \"Loading\",\n// then \"Loaded\" (or the error), and says nothing at all when the answer came before the delay.\nimport { LoaderCircle } from 'lucide-react'\nimport { useEffect, useRef, useState, type ReactNode } from 'react'\nimport { MotionConfig, motion } from 'motion/react'\nimport { cn } from '@/lib/utils'\n\nexport type LoadingRegionStatus = 'loading' | 'ready' | 'empty' | 'error'\n\nexport type LoadingRegionLabels = {\n  /** Spoken while the first load runs, and the name of the spinner. Default \"Loading\". */\n  loading?: string\n  /** Spoken while data that is already shown is fetched again. Default \"Updating\". */\n  reloading?: string\n  /** Spoken when a load that was announced has finished. Default \"Loaded\". */\n  loaded?: string\n  /** Shown and spoken when the load failed and no `error` content is given. Default \"Could not load this.\" */\n  error?: string\n  /** Shown when `status` is \"empty\" and no `empty` content is given. Default \"Nothing here yet.\" */\n  empty?: string\n  /** The text of the retry button. Default \"Try again\". */\n  retry?: string\n}\n\nexport type LoadingRegionProps = {\n  /** Where the data is: \"loading\" (fetching), \"ready\" (show the children), \"empty\" (nothing came) or \"error\". */\n  status: LoadingRegionStatus\n  /** The real content. It stays on screen while the same region loads again. */\n  children: ReactNode\n  /**\n   * A skeleton with the shape and size of the content. Give it when the layout is known before the data is there;\n   * leave it out when it is not, and the region shows a spinner instead.\n   */\n  skeleton?: ReactNode\n  /** The least height of the box in pixels (or any CSS length), kept in every state. Match it to the content. Default 160. */\n  minHeight?: number | string\n  /** Content for \"empty\", such as an `EmptyState`. Default is a line of text. */\n  empty?: ReactNode\n  /** Content for \"error\". Default is the `labels.error` line. */\n  error?: ReactNode\n  /** Called by the retry button. With no handler there is no button. */\n  onRetry?: () => void\n  /** Milliseconds to wait before any indicator shows. Default 300. */\n  delay?: number\n  /** Milliseconds an indicator that has appeared stays at least. Default 500. */\n  minDuration?: number\n  /** Text overrides, with English defaults. */\n  labels?: LoadingRegionLabels\n  /** Classes for the box. */\n  className?: string\n}\n\nconst DEFAULT_LABELS: Required<LoadingRegionLabels> = {\n  loading: 'Loading',\n  reloading: 'Updating',\n  loaded: 'Loaded',\n  error: 'Could not load this.',\n  empty: 'Nothing here yet.',\n  retry: 'Try again',\n}\n\nfunction Spinner({ className }: { className?: string }) {\n  return <LoaderCircle aria-hidden=\"true\" className={cn('motion-safe:animate-spin', className)} />\n}\n\nexport function LoadingRegion({\n  status,\n  children,\n  skeleton,\n  minHeight = 160,\n  empty,\n  error,\n  onRetry,\n  delay = 300,\n  minDuration = 500,\n  labels,\n  className,\n}: LoadingRegionProps) {\n  const t = { ...DEFAULT_LABELS, ...labels }\n  const loading = status === 'loading'\n\n  // Has real content been shown? From then on a new load is a reload, and the old data stays.\n  const [hadContent, setHadContent] = useState(false)\n  // Is an indicator on screen (or held for its least time)? Only a timer turns it on or off, never a render.\n  const [indicator, setIndicator] = useState(false)\n  // Has the load been announced? Then its end is announced too.\n  const [spoke, setSpoke] = useState(false)\n  const [prev, setPrev] = useState(status)\n  const shownAt = useRef(0)\n\n  if (prev !== status) {\n    setPrev(status)\n    if (loading) setSpoke(false)\n  }\n\n  const waiting = loading || indicator\n  if (!waiting && status === 'ready' && !hadContent) setHadContent(true)\n\n  useEffect(() => {\n    if (loading) {\n      if (indicator) return\n      const id = window.setTimeout(() => {\n        shownAt.current = performance.now()\n        setIndicator(true)\n        setSpoke(true)\n      }, delay)\n      return () => window.clearTimeout(id)\n    }\n    if (!indicator) return\n    const rest = Math.max(0, minDuration - (performance.now() - shownAt.current))\n    const id = window.setTimeout(() => setIndicator(false), rest)\n    return () => window.clearTimeout(id)\n  }, [loading, indicator, delay, minDuration])\n\n  const reload = hadContent && waiting\n  const first = waiting && !hadContent\n\n  let body: ReactNode = null\n  let key = 'blank'\n  if (first) {\n    // Before the delay is over the box is simply empty, at full height.\n    if (indicator) {\n      key = skeleton ? 'skeleton' : 'spinner'\n      body = skeleton ?? (\n        <div className=\"flex h-full min-h-[inherit] items-center justify-center gap-2.5 text-sm text-muted-foreground\">\n          <Spinner className=\"size-5\" />\n          <span aria-hidden=\"true\">{t.loading}</span>\n        </div>\n      )\n    }\n  } else if (status === 'error') {\n    key = 'error'\n    body = (\n      <div className=\"flex min-h-[inherit] flex-col items-center justify-center gap-3 px-4 py-6 text-center text-sm text-muted-foreground\">\n        {error ?? <p>{t.error}</p>}\n        {onRetry && (\n          <button\n            type=\"button\"\n            onClick={onRetry}\n            className=\"inline-flex min-h-11 items-center rounded-xl bg-primary px-4 text-sm font-medium text-primary-foreground outline-offset-2 focus-visible:outline-2 focus-visible:outline-ring\"\n          >\n            {t.retry}\n          </button>\n        )}\n      </div>\n    )\n  } else if (status === 'empty') {\n    key = 'empty'\n    body = (\n      <div className=\"flex min-h-[inherit] items-center justify-center px-4 py-6 text-center text-sm text-muted-foreground\">\n        {empty ?? <p>{t.empty}</p>}\n      </div>\n    )\n  } else {\n    key = 'content'\n    body = children\n  }\n\n  const announce = indicator\n    ? reload\n      ? t.reloading\n      : t.loading\n    : spoke && !loading\n      ? status === 'error'\n        ? t.error\n        : status === 'empty'\n          ? t.empty\n          : t.loaded\n      : ''\n\n  return (\n    <MotionConfig reducedMotion=\"user\">\n      <div\n        aria-busy={waiting}\n        className={cn('relative', className)}\n        style={{ minHeight: typeof minHeight === 'number' ? `${minHeight}px` : minHeight }}\n      >\n        <motion.div\n          key={key}\n          initial={key === 'blank' || key === 'content' ? false : { opacity: 0 }}\n          animate={{ opacity: 1 }}\n          transition={{ duration: 0.18, ease: 'easeOut' }}\n          className=\"min-h-[inherit]\"\n        >\n          {body}\n        </motion.div>\n        {reload && indicator && (\n          <span className=\"pointer-events-none absolute right-2 top-2 flex size-7 items-center justify-center rounded-full bg-background/80 text-muted-foreground shadow-[0_0_0_1px_color-mix(in_oklab,var(--foreground)_10%,transparent)]\">\n            <Spinner className=\"size-4\" />\n          </span>\n        )}\n        <div role=\"status\" className=\"sr-only\">\n          {announce}\n        </div>\n      </div>\n    </MotionConfig>\n  )\n}\n",
+      "type": "registry:component"
+    }
+  ],
+  "meta": {
+    "tier": "free",
+    "added": "2026-11-02",
+    "usedIn": [],
+    "props": [
+      {
+        "name": "status",
+        "type": "LoadingRegionStatus",
+        "default": null,
+        "required": true,
+        "description": "Where the data is: \"loading\" (fetching), \"ready\" (show the children), \"empty\" (nothing came) or \"error\"."
+      },
+      {
+        "name": "children",
+        "type": "ReactNode",
+        "default": null,
+        "required": true,
+        "description": "The real content. It stays on screen while the same region loads again."
+      },
+      {
+        "name": "skeleton",
+        "type": "ReactNode",
+        "default": null,
+        "required": false,
+        "description": "A skeleton with the shape and size of the content. Give it when the layout is known before the data is there; leave it out when it is not, and the region shows a spinner instead."
+      },
+      {
+        "name": "minHeight",
+        "type": "number | string",
+        "default": "160",
+        "required": false,
+        "description": "The least height of the box in pixels (or any CSS length), kept in every state. Match it to the content. Default 160."
+      },
+      {
+        "name": "empty",
+        "type": "ReactNode",
+        "default": null,
+        "required": false,
+        "description": "Content for \"empty\", such as an `EmptyState`. Default is a line of text."
+      },
+      {
+        "name": "error",
+        "type": "ReactNode",
+        "default": null,
+        "required": false,
+        "description": "Content for \"error\". Default is the `labels.error` line."
+      },
+      {
+        "name": "onRetry",
+        "type": "() => void",
+        "default": null,
+        "required": false,
+        "description": "Called by the retry button. With no handler there is no button."
+      },
+      {
+        "name": "delay",
+        "type": "number",
+        "default": "300",
+        "required": false,
+        "description": "Milliseconds to wait before any indicator shows. Default 300."
+      },
+      {
+        "name": "minDuration",
+        "type": "number",
+        "default": "500",
+        "required": false,
+        "description": "Milliseconds an indicator that has appeared stays at least. Default 500."
+      },
+      {
+        "name": "labels",
+        "type": "LoadingRegionLabels",
+        "default": null,
+        "required": false,
+        "description": "Text overrides, with English defaults."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "default": null,
+        "required": false,
+        "description": "Classes for the box."
+      }
+    ],
+    "a11y": [
+      {
+        "topic": "screen-reader",
+        "text": "The box is aria-busy while it waits. A persistent role=\"status\" line says Loading (or Updating on a reload) once an indicator shows, then Loaded, the error or the empty text. A load that finishes before the delay announces nothing. The skeleton is aria-hidden; the error is plain text with a real button."
+      },
+      {
+        "topic": "keyboard",
+        "text": "The retry button is a native button with a 44 px target and a visible focus ring. Nothing else in the region takes focus, and the old content stays focusable while it reloads.",
+        "keys": [
+          "Tab",
+          "Enter",
+          "Space"
+        ]
+      },
+      {
+        "topic": "motion",
+        "text": "The spinner stops and the fade between states is off under reduced motion (MotionConfig reducedMotion is user). Only opacity animates."
+      }
+    ]
+  },
+  "categories": [
+    "surfaces"
+  ],
+  "type": "registry:component"
+}

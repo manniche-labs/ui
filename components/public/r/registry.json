@@ -12984,6 +12984,232 @@
       ]
     },
     {
+      "name": "skeleton",
+      "type": "registry:component",
+      "title": "Skeleton",
+      "description": "A grey stand-in for content on its way, with a fixed size so nothing moves when the real content arrives; pulses slowly and stands still under reduced motion. Also SkeletonText for lines of text.",
+      "registryDependencies": [
+        "utils"
+      ],
+      "files": [
+        {
+          "path": "registry/manniche/skeleton/skeleton.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "categories": [
+        "surfaces"
+      ],
+      "meta": {
+        "tier": "free",
+        "added": "2026-11-02",
+        "usedIn": [],
+        "props": [
+          {
+            "name": "width",
+            "type": "Size",
+            "default": "'100%'",
+            "required": false,
+            "description": "Width of the block. A number is pixels; a string is any CSS length (\"100%\", \"12rem\"). Default \"100%\"."
+          },
+          {
+            "name": "height",
+            "type": "Size",
+            "default": "16",
+            "required": false,
+            "description": "Height of the block, the same units. Default 16."
+          },
+          {
+            "name": "circle",
+            "type": "boolean",
+            "default": "false",
+            "required": false,
+            "description": "A circle of the given `width` (and the same height), for avatars."
+          },
+          {
+            "name": "className",
+            "type": "string",
+            "default": null,
+            "required": false,
+            "description": "Classes for the block."
+          }
+        ],
+        "extends": "Omit<ComponentPropsWithoutRef<'div'>, 'children' | 'style'>",
+        "a11y": [
+          {
+            "topic": "screen-reader",
+            "text": "Every block is aria-hidden, so a screen reader hears nothing from it. The region around it (loading-region) says that something is loading; used alone, give the container aria-busy and a role=\"status\" line."
+          },
+          {
+            "topic": "motion",
+            "text": "The slow pulse is motion-safe only: under reduced motion the block is a flat grey, with no shimmer and no movement. Sizes are fixed, so the swap to real content moves nothing."
+          }
+        ]
+      }
+    },
+    {
+      "name": "skeleton-demo",
+      "type": "registry:example",
+      "title": "Skeleton demo",
+      "description": "How to use Skeleton.",
+      "registryDependencies": [
+        "@manniche/skeleton"
+      ],
+      "files": [
+        {
+          "path": "registry/manniche/examples/skeleton-demo.tsx",
+          "type": "registry:example"
+        }
+      ],
+      "categories": [
+        "surfaces"
+      ]
+    },
+    {
+      "name": "loading-region",
+      "type": "registry:component",
+      "title": "Loading region",
+      "description": "A box that handles waiting: nothing for 300 ms, then a skeleton when the layout is known or a spinner when it is not, shown for at least 500 ms; keeps old data and shows a small spinner on reload; busy and status text for screen readers; error and empty at the same height.",
+      "dependencies": [
+        "lucide-react",
+        "motion"
+      ],
+      "registryDependencies": [
+        "utils"
+      ],
+      "files": [
+        {
+          "path": "registry/manniche/loading-region/loading-region.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "categories": [
+        "surfaces"
+      ],
+      "meta": {
+        "tier": "free",
+        "added": "2026-11-02",
+        "usedIn": [],
+        "props": [
+          {
+            "name": "status",
+            "type": "LoadingRegionStatus",
+            "default": null,
+            "required": true,
+            "description": "Where the data is: \"loading\" (fetching), \"ready\" (show the children), \"empty\" (nothing came) or \"error\"."
+          },
+          {
+            "name": "children",
+            "type": "ReactNode",
+            "default": null,
+            "required": true,
+            "description": "The real content. It stays on screen while the same region loads again."
+          },
+          {
+            "name": "skeleton",
+            "type": "ReactNode",
+            "default": null,
+            "required": false,
+            "description": "A skeleton with the shape and size of the content. Give it when the layout is known before the data is there; leave it out when it is not, and the region shows a spinner instead."
+          },
+          {
+            "name": "minHeight",
+            "type": "number | string",
+            "default": "160",
+            "required": false,
+            "description": "The least height of the box in pixels (or any CSS length), kept in every state. Match it to the content. Default 160."
+          },
+          {
+            "name": "empty",
+            "type": "ReactNode",
+            "default": null,
+            "required": false,
+            "description": "Content for \"empty\", such as an `EmptyState`. Default is a line of text."
+          },
+          {
+            "name": "error",
+            "type": "ReactNode",
+            "default": null,
+            "required": false,
+            "description": "Content for \"error\". Default is the `labels.error` line."
+          },
+          {
+            "name": "onRetry",
+            "type": "() => void",
+            "default": null,
+            "required": false,
+            "description": "Called by the retry button. With no handler there is no button."
+          },
+          {
+            "name": "delay",
+            "type": "number",
+            "default": "300",
+            "required": false,
+            "description": "Milliseconds to wait before any indicator shows. Default 300."
+          },
+          {
+            "name": "minDuration",
+            "type": "number",
+            "default": "500",
+            "required": false,
+            "description": "Milliseconds an indicator that has appeared stays at least. Default 500."
+          },
+          {
+            "name": "labels",
+            "type": "LoadingRegionLabels",
+            "default": null,
+            "required": false,
+            "description": "Text overrides, with English defaults."
+          },
+          {
+            "name": "className",
+            "type": "string",
+            "default": null,
+            "required": false,
+            "description": "Classes for the box."
+          }
+        ],
+        "a11y": [
+          {
+            "topic": "screen-reader",
+            "text": "The box is aria-busy while it waits. A persistent role=\"status\" line says Loading (or Updating on a reload) once an indicator shows, then Loaded, the error or the empty text. A load that finishes before the delay announces nothing. The skeleton is aria-hidden; the error is plain text with a real button."
+          },
+          {
+            "topic": "keyboard",
+            "text": "The retry button is a native button with a 44 px target and a visible focus ring. Nothing else in the region takes focus, and the old content stays focusable while it reloads.",
+            "keys": [
+              "Tab",
+              "Enter",
+              "Space"
+            ]
+          },
+          {
+            "topic": "motion",
+            "text": "The spinner stops and the fade between states is off under reduced motion (MotionConfig reducedMotion is user). Only opacity animates."
+          }
+        ]
+      }
+    },
+    {
+      "name": "loading-region-demo",
+      "type": "registry:example",
+      "title": "Loading region demo",
+      "description": "How to use Loading region.",
+      "registryDependencies": [
+        "@manniche/loading-region",
+        "@manniche/skeleton"
+      ],
+      "files": [
+        {
+          "path": "registry/manniche/examples/loading-region-demo.tsx",
+          "type": "registry:example"
+        }
+      ],
+      "categories": [
+        "surfaces"
+      ]
+    },
+    {
       "name": "bar-chart",
       "type": "registry:component",
       "title": "Bar chart",

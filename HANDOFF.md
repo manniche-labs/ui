@@ -35,6 +35,10 @@ Three patterns from the NoPain Studio Notion/Figma redesign (Studio PR #219), bu
 
 ManiLens found no rule or security issues; four minor correctness findings were fixed before merge (see CHANGELOG 23/10, Fixed) and checked with the keyboard in Chrome. **Not on /lab yet**: going live needs Mikkel's yes, then Danish and German texts in the site's `server/lab-ui-tekster.mjs`.
 
+## Loading (2/11, skeleton + loading-region)
+
+`skeleton` (with `SkeletonText`) and `loading-region`, both in surfaces. The rule they follow: nothing for 300 ms, then a skeleton when the layout is known or a spinner when it is not, shown at least 500 ms, old data kept on reload, `aria-busy` plus a `role="status"` line, error and empty at the same height. Checked in Chromium at 390 and 1440 px and under reduced motion: layout shift 0 from skeleton to content, to empty and to error. The library had no skeleton before, so there was no shadcn one to extend. **Not on /lab yet**: needs Mikkel's yes, then Danish and German texts in the site's `server/lab-ui-tekster.mjs`.
+
 ## Open PRs
 
 None after #57. The primitive fixes are merged too: #34 (bubble-chart closes on Escape after hover, `Pills` at 44 px, week-schedule fits 7 days at 320 px, colour transitions removed) and #35 (dot-matrix tooltip opens below the top rows, donut legend names wrap, `data-tile` `headingLevel`). Both were checked in Chromium at 1440 and 320 px.
