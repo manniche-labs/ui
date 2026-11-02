@@ -118,6 +118,8 @@ There is also a hosted MCP server just for this registry, with no key: `https://
 | `integration-card` | Integrations that open into a card with a connect button |
 | `data-tile` | The tile a figure or chart sits in: name, control, figure, fine print; `inverted` lifts the one that matters, `compact` for dense dashboards |
 | `empty-state` | Says something is empty: icon, title, one line, example labels and the action that starts things; dashed card or `plain` inside a tile, `live` after a search |
+| `skeleton` | Grey stand-in for content on its way: fixed size, theme colour, slow pulse that stands still under reduced motion; `SkeletonText` for lines |
+| `loading-region` | A box that handles waiting: nothing for 300 ms, then a skeleton (layout known) or a spinner (unknown), shown at least 500 ms; keeps old data on reload; aria-busy and status text; error and empty at the same height |
 | `grouped-list` | A list in date groups (Today, This week, Later, No date) or your own, with folding headings, counts, Show N more and an empty state; pairs with `selection-bar` |
 | `chart-kit` | Shared parts of the Tiles charts: number formatting, axis ticks, smooth line, one tooltip, the big display figure, change pill, pill switch, screen-reader table, static plots for HTML files |
 | `bar-chart` | Column chart with round caps, today's dot, a pale comparison bar and automatic weekly buckets when bars get thin |

@@ -1,5 +1,12 @@
 # Changelog
 
+## 2026-11-02
+
+### Added
+
+- `skeleton` (surfaces): a grey stand-in for content that is on its way. It has a fixed size (`width`, `height`, `circle`), uses the theme's `muted` colour, pulses slowly and stands still under reduced motion (no shimmer). `aria-hidden`. `SkeletonText` draws lines of text, the last one shorter. The library had no skeleton before.
+- `loading-region` (surfaces): a box that handles waiting, so a page does not flash or jump. It shows nothing for the first `delay` ms (default 300), then a `skeleton` when you pass one (the layout is known) or a spinner with a line of text when you do not (the screen may turn out to be A or B). An indicator that has appeared stays at least `minDuration` ms (default 500). When data that is already shown loads again, it stays on screen and only a small spinner shows. `status` is `loading`, `ready`, `empty` or `error`; error (with a retry button) and empty keep the same `minHeight`, so nothing moves. The box is `aria-busy` while it waits, and a persistent `role="status"` line says Loading, then Loaded, the error or the empty text; a load that ends before the delay announces nothing. Text comes through `labels`. The idea came from a rule of thumb about when a skeleton lies; the time limits are the common 0.3 s and 0.5 s practice, not a standard.
+
 ## 2026-10-28
 
 ### Removed

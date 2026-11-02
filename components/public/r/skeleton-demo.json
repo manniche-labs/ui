@@ -1,0 +1,20 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "skeleton-demo",
+  "title": "Skeleton demo",
+  "description": "How to use Skeleton.",
+  "registryDependencies": [
+    "@manniche/skeleton"
+  ],
+  "files": [
+    {
+      "path": "registry/manniche/examples/skeleton-demo.tsx",
+      "content": "import { Skeleton, SkeletonText } from '@/registry/manniche/skeleton/skeleton'\n\nexport default function SkeletonDemo() {\n  return (\n    <section aria-label=\"Skeleton\" className=\"grid w-full gap-6\">\n      <div className=\"flex items-center gap-3\">\n        <Skeleton circle width={44} />\n        <div className=\"grid flex-1 gap-2\">\n          <Skeleton width=\"45%\" height={14} />\n          <Skeleton width=\"30%\" height={12} />\n        </div>\n      </div>\n      <SkeletonText lines={3} />\n      <Skeleton height={120} className=\"rounded-xl\" />\n      <p className=\"text-[13.5px] text-muted-foreground\">\n        Fixed sizes, the theme&apos;s muted colour, and a slow pulse that stands still under reduced motion.\n      </p>\n    </section>\n  )\n}\n",
+      "type": "registry:example"
+    }
+  ],
+  "categories": [
+    "surfaces"
+  ],
+  "type": "registry:example"
+}
